@@ -1,0 +1,38 @@
+#
+#             Murder Mystery rewards configuration
+#
+#                    Placeholders list:
+#             %PLAYER% - Current player name
+#             %ATTACKER% - Attacker name (for murder/detective kill rewards) (usually same as %PLAYER%)
+#             %VICTIM% - Victim name (for murder/detective kill rewards)
+#             %MAPNAME% - Name of map
+#             %ARENA-ID% - Arena Identifier
+#             %PLAYERAMOUNT% - Number of players in game
+#
+#        Commands are executed by default BY CONSOLE, use "p:" to preform command by player
+#  You can use chance to execute command adding "chance(NUMBER):" (ex chance(10):) at the beginning of command
+#
+#  Commands examples:
+#    - p:say Hello everyone in %MAPNAME%!     # Player will say "Hello everyone in <map name here>"
+#    - broadcast Game %ARENA-ID% has ended!   # Will broadcast "Game <arena name here> has ended" message
+#    - chance(1):p:say I was very lucky!              # Player has 1% chance to say "I was very lucky!"
+#    - p:chance(99):spawn                             # Player has 99% chance to teleport to spawn
+#       ^ YOU CAN EVEN SWAP CHANCE WITH PLAYER!
+#    - chance(50):eco give %PLAYER% 10                # Console has 10% chance to give player 10$
+#
+
+# Rewards must be enabled via config.yml first!
+rewards:
+  # Commands performed when game is finished
+  endgame:
+    - say %MAPNAME% has ended!
+    - say Ooh and there were playing %PLAYERAMOUNT% players
+  # Commands executed when detective is killed
+  detectivekill:
+    - eco give %ATTACKER% 2
+    - chance(10):eco give %VICTIM% 8
+  # Commands executed when murderer is killed
+  murdererkill:
+    - eco give %ATTACKER% 2
+    - chance(10):eco give %VICTIM% 8
+

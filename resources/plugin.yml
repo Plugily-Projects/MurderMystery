@@ -1,0 +1,32 @@
+name: MurderMystery
+main: pl.plajer.murdermystery.Main
+author: [Plajer]
+version: 0.0.3b
+depend: [HolographicDisplays, CorpseReborn]
+softdepend: [PlaceholderAPI, LeaderHeads]
+
+commands:
+  MurderMystery:
+    description: Murder mystery Commands
+    usage: "\u00A76Correct usage: /mm [stats/leave/join]"
+    aliases: [mm, murder]
+  MurderMysteryAdmin:
+    description:
+    usage: "\u00A76Correct usage: /mma [option]"
+    aliases: [mma, murderadmin]
+    
+permissions:
+  murdermystery.admin.*:
+    default: op
+    children:
+      murdermystery.updatenotify: true
+      murdermystery.admin: true
+      murdermystery.admin.setup: true
+      murdermystery.admin.create: true
+      murdermystery.admin.delete: true
+      murdermystery.admin.list: true
+      murdermystery.admin.stopgame: true
+      murdermystery.admin.forcestart: true
+      murdermystery.admin.addsign: true
+      murdermystery.admin.sign.create: true
+      murdermystery.admin.sign.break: true

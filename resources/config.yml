@@ -1,0 +1,88 @@
+#     Murder Mystery configuration file
+#
+#    You can edit here the basic things of MM
+#      Please read everything CAREFULLY!
+#   You don't want to break anything, do you?
+#
+
+# Select locale of MM, default it's English.
+# Available locales:
+#    default - English language. Uses 'language.yml'.
+#    de - Deutsche sprache
+#    pl - Język polski
+#
+locale: default
+
+# Enable bossbar support?
+Bossbar-Enabled: true
+
+# How many seconds game should take to start.
+Starting-Waiting-Time: 60
+
+# How many seconds classic game should play.
+Classic-Gameplay-Time: 270
+
+# Should we hook into bungee cord? (If you wanna use arena per server option)
+# You STILL need to use external addon for HUB server game signs
+# Murder Mystery doesn't offer that addon.
+# Check here for more info: todo
+BungeeActivated: false
+
+# Enable this option when you're using MySQL, otherwise it won't work.
+# Be careful when changing this because there is NO migrator between
+# flat file and MySQL for player stats.
+DatabaseActivated: false
+
+# Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
+# This saves inventory of players and restores it after player leaves arena.
+# Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
+InventoryManager: false
+
+# Basic permissions for game, permissions explained here: todo
+Basic-Permissions:
+  Full-Games-Permission: "murdermystery.fullgames"
+  # <arena> represents arena name (NOT MAP NAME!), for example: 'murdermystery.join.MM02'
+  # use ''murdermystery.join.*' to enable access to all arenas
+  Join-Permission: "'murdermystery.join.<arena>"
+
+# Should /mm leave command be blocked?
+Disable-Leave-Command: false
+
+# Commands which can be used in game, remove all of them to disable
+Whitelisted-Commands:
+- me
+- help
+
+# Enable in game rewards? See rewards.yml for more...
+Rewards-Enabled: false
+
+# Should we block every not Murder Mystery associated commands in game?
+Block-Commands-In-Game: true
+
+# Should we fire some cool fireworks at location of every player after the game ends?
+Firework-When-Game-Ends: true
+
+# Should blocks behind game signs change their color based on game state?
+# They will change color to:
+# - white (waiting for players) stained glass
+# - yellow (starting) stained glass
+# - orange (in game) stained glass
+# - gray (ending) stained glass
+# - black (restarting) stained glass
+Signs-Block-States-Enabled: true
+
+Update-Notifier:
+  # Should we check for updates on plugin start/after admin join?
+  # You REALLY should have this true!
+  Enabled: true
+  # Should we inform you when beta version is out?
+  # BETA IS NOT ALWAYS AS STABLE AS NORMAL RELEASE!
+  Notify-Beta-Versions: true
+
+# Should plugin send 'debug spam' to console? IT CAN HELP IF THERE IS SOME WEIRD BEHAVIOUR OCCURRING CAUSED BY THIS PLUGIN
+Debug: false
+
+# Don't modify.
+Version: 1
+
+# No way! You've reached the end! But... where's the dragon!?

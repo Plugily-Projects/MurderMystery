@@ -1,0 +1,12 @@
+# Configuration for Bungeecord support.
+# Remember to enable it in config.yml (BungeeActivated option)
+
+# Your bungeecord server name where player will be teleported after game (main lobby with signs etc.)
+Hub: lobby
+
+# Should game server be closed after game?
+Shutdown-When-Game-Ends: false
+
+# This is useful for bungee game systems.
+# Game state will be visible at MOTD.
+MOTD-manager: true

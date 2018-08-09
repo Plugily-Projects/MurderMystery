@@ -1,0 +1,187 @@
+/*
+ * Murder Mystery is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Murder Mystery is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package pl.plajer.murdermystery.commands;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.LinkedHashMap;
+import java.util.UUID;
+
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.arena.Arena;
+import pl.plajer.murdermystery.arena.ArenaManager;
+import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.arena.ArenaState;
+import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
+import pl.plajer.murdermystery.user.User;
+import pl.plajer.murdermystery.user.UserManager;
+
+/**
+ * @author Plajer
+ * <p>
+ * Created at 05.08.2018
+ */
+public class GameCommands extends MainCommand {
+
+  private Main plugin;
+
+  public GameCommands(Main plugin) {
+    super(plugin, false);
+    this.plugin = plugin;
+  }
+
+  public void sendStats(CommandSender sender) {
+    if (checkSenderIsConsole(sender)) {
+      return;
+    }
+    User user = UserManager.getUser(((Player) sender).getUniqueId());
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header"));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Kills") + user.getInt("kills"));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Deaths") + user.getInt("deaths"));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getInt("wins"));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getInt("loses"));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getInt("gamesplayed"));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Score") + user.getInt("highestscore"));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
+  }
+
+  public void sendStatsOther(CommandSender sender, String p) {
+    Player player = Bukkit.getPlayerExact(p);
+    if (player == null || UserManager.getUser(player.getUniqueId()) == null) {
+      sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
+      return;
+    }
+    User user = UserManager.getUser(player.getUniqueId());
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header-Other").replace("%player%", player.getName()));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Kills") + user.getInt("kills"));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Deaths") + user.getInt("deaths"));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getInt("wins"));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getInt("loses"));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getInt("gamesplayed"));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Score") + user.getInt("highestscore"));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
+  }
+
+  public void sendTopStatistics(CommandSender sender, String stat) {
+    try {
+      StatsStorage.StatisticType statisticType = StatsStorage.StatisticType.valueOf(stat.toUpperCase());
+      if (statisticType == StatsStorage.StatisticType.CONTRIBUTION_POINTS) {
+        sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Invalid-Name"));
+        return;
+      }
+
+      LinkedHashMap<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
+      sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Header"));
+      for (int i = 0; i < 10; i++) {
+        try {
+          UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
+          sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
+                  .replace("%position%", String.valueOf(i + 1))
+                  .replace("%name%", Bukkit.getOfflinePlayer(current).getName())
+                  .replace("%value%", String.valueOf(stats.get(current)))
+                  .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " ")))); //Games_played > Games played etc
+          stats.remove(current);
+        } catch (IndexOutOfBoundsException ex) {
+          sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
+                  .replace("%position%", String.valueOf(i + 1))
+                  .replace("%name%", "Empty")
+                  .replace("%value%", "0")
+                  .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
+        } catch (NullPointerException ex) {
+          UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
+          if (plugin.isDatabaseActivated()) {
+            ResultSet set = plugin.getMySQLDatabase().executeQuery("SELECT name FROM playerstats WHERE UUID='" + current.toString() + "'");
+            try {
+              if (set.next()) {
+                sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
+                        .replace("%position%", String.valueOf(i + 1))
+                        .replace("%name%", set.getString(1))
+                        .replace("%value%", String.valueOf(stats.get(current)))
+                        .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
+                return;
+              }
+            } catch (SQLException ignored) {
+            }
+          }
+          sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
+                  .replace("%position%", String.valueOf(i + 1))
+                  .replace("%name%", "Unknown Player")
+                  .replace("%value%", String.valueOf(stats.get(current)))
+                  .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
+        }
+      }
+    } catch (IllegalArgumentException e) {
+      sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Invalid-Name"));
+    }
+  }
+
+  public void leaveGame(CommandSender sender) {
+    if (checkSenderIsConsole(sender)) {
+      return;
+    }
+    if (!plugin.getConfig().getBoolean("Disable-Leave-Command", false)) {
+      Player p = (Player) sender;
+      if (!checkIsInGameInstance((Player) sender)) {
+        return;
+      }
+      p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
+      if (plugin.isBungeeActivated()) {
+        plugin.getBungeeManager().connectToHub(p);
+        System.out.print(p.getName() + " is teleported to the Hub Server");
+      } else {
+        ArenaRegistry.getArena(p).teleportToEndLocation(p);
+        ArenaManager.leaveAttempt(p, ArenaRegistry.getArena(p));
+        System.out.print(p.getName() + " has left the arena! He is teleported to the end location.");
+      }
+    }
+  }
+
+  public void joinGame(CommandSender sender, String arenaString) {
+    if (checkSenderIsConsole(sender)) {
+      return;
+    }
+    for (Arena arena : ArenaRegistry.getArenas()) {
+      if (arenaString.equalsIgnoreCase(arena.getID())) {
+        ArenaManager.joinAttempt((Player) sender, arena);
+        return;
+      }
+    }
+    sender.sendMessage(ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+  }
+
+  public void joinRandomGame(CommandSender sender) {
+    if (checkSenderIsConsole(sender)) {
+      return;
+    }
+    if (plugin.isBungeeActivated()) {
+      return;
+    }
+    for (Arena arena : ArenaRegistry.getArenas()) {
+      if (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
+        ArenaManager.joinAttempt((Player) sender, arena);
+        return;
+      }
+    }
+    sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Free-Arenas"));
+  }
+
+}
