@@ -219,7 +219,7 @@ public class MainCommand implements CommandExecutor {
         }
       }
       return false;
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
       return false;
     }

@@ -90,7 +90,7 @@ public class QuitEvent implements Listener {
           plugin.getFileStats().saveStat(player, s);
         }
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }

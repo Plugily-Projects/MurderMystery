@@ -47,7 +47,7 @@ public class ArenaUtils {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
-  public static void updateInnocentLocator(Arena arena){
+  public static void updateInnocentLocator(Arena arena) {
     try {
       if (!arena.isMurdererLocatorReceived()) {
         ItemStack innocentLocator = new ItemStack(Material.COMPASS, 1);
@@ -68,12 +68,12 @@ public class ArenaUtils {
         Bukkit.getPlayer(arena.getMurderer()).setCompassTarget(p.getLocation());
         break;
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
 
-  private static void addBowLocator(Arena arena, Location loc){
+  private static void addBowLocator(Arena arena, Location loc) {
     try {
       ItemStack bowLocator = new ItemStack(Material.COMPASS, 1);
       ItemMeta bowMeta = bowLocator.getItemMeta();
@@ -85,7 +85,7 @@ public class ArenaUtils {
           p.setCompassTarget(loc);
         }
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
@@ -123,7 +123,7 @@ public class ArenaUtils {
       });
       arena.setBowHologram(hologram);
       addBowLocator(arena, hologram.getLocation());
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
@@ -136,7 +136,7 @@ public class ArenaUtils {
       //todo multi last words
       hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Last-Words.Default"));
       arena.addCorpse(new ArenaCorpse(hologram, corpse));
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
@@ -161,7 +161,7 @@ public class ArenaUtils {
         default:
           return false;
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
       return false;
     }

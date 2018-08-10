@@ -47,7 +47,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.handlers.RewardsHandler;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
@@ -102,7 +101,7 @@ public class ArenaEvents implements Listener {
       } else {
         e.setCancelled(true);
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
@@ -114,7 +113,7 @@ public class ArenaEvents implements Listener {
         e.setCancelled(true);
         e.getArrow().remove();
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
@@ -165,7 +164,7 @@ public class ArenaEvents implements Listener {
         e.getPlayer().getInventory().setItem(1, arrow);
         e.getPlayer().getInventory().setItem(8, new ItemStack(Material.GOLD_INGOT, 0));
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
@@ -213,7 +212,7 @@ public class ArenaEvents implements Listener {
         ArenaUtils.dropBowAndAnnounce(arena, victim);
         ArenaUtils.spawnCorpse(victim, arena);
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
@@ -286,7 +285,7 @@ public class ArenaEvents implements Listener {
           }
         }
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
@@ -342,7 +341,7 @@ public class ArenaEvents implements Listener {
       player.getInventory().setItem(0, spectatorItem);
 
       player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
@@ -366,7 +365,7 @@ public class ArenaEvents implements Listener {
         user.setFakeDead(true);
         user.setInt("gold", 0);
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }

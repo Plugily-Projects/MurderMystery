@@ -365,7 +365,7 @@ public class Arena extends BukkitRunnable {
         default:
           break; //o.o?
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }

@@ -64,7 +64,7 @@ public class ChatEvents implements Listener {
       }
       event.getRecipients().clear();
       event.getRecipients().addAll(ArenaRegistry.getArena(event.getPlayer()).getPlayers());
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
@@ -108,7 +108,7 @@ public class ChatEvents implements Listener {
         event.getRecipients().clear();
         event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }

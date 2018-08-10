@@ -205,7 +205,7 @@ public class SetupInventoryEvents implements Listener {
           plugin.getSignManager().getLoadedSigns().put(s, arena);
         }
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }

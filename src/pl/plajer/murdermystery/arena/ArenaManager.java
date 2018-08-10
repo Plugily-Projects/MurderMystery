@@ -158,7 +158,7 @@ public class ArenaManager {
         ArenaUtils.showPlayer(player, arena);
       }
       arena.showPlayers();
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
@@ -248,7 +248,7 @@ public class ArenaManager {
       }
       user.setInt("gold", 0);
       user.setInt("local_kills", 0);
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
@@ -298,7 +298,7 @@ public class ArenaManager {
         }
       }
       Main.debug("Game stop event finish, arena " + arena.getID(), System.currentTimeMillis());
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }

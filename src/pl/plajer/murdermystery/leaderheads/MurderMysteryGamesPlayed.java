@@ -32,7 +32,7 @@ import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
  */
 public class MurderMysteryGamesPlayed extends OnlineDataCollector {
 
-  public MurderMysteryGamesPlayed(){
+  public MurderMysteryGamesPlayed() {
     super("murdermystery-played", "MurderMystery", BoardType.DEFAULT, ChatManager.colorMessage("Leaderheads.Top-Command-Inv-Title"),
             ChatManager.colorMessage("Leaderheads.Top-Command-Name").replace("%stat%", "kills"), Arrays.asList(null, null, ChatManager.colorMessage("Leaderheads.Leaderboard-Value.Games-Played"), null));
   }

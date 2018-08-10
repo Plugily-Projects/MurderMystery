@@ -122,7 +122,7 @@ public class JoinEvent implements Listener {
       }
       final Player player = event.getPlayer();
       Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> MySQLConnectionUtils.loadPlayerStats(player, plugin));
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }

@@ -94,7 +94,7 @@ public class Events implements Listener {
       }
       event.setCancelled(true);
       event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
@@ -125,7 +125,7 @@ public class Events implements Listener {
           ArenaManager.leaveAttempt(event.getPlayer(), arena);
         }
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }

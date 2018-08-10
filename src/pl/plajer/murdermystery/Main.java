@@ -49,7 +49,6 @@ import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Metrics;
 import pl.plajerlair.core.services.ReportedException;
-import pl.plajerlair.core.services.ServiceRegistry;
 
 /**
  * @author Plajer

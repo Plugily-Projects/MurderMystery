@@ -108,7 +108,7 @@ public class RewardsHandler {
     if (!enabled) {
       return;
     }
-    if(attacker == null && victim == null){
+    if (attacker == null && victim == null) {
       return;
     }
     Player eventPlayer = attacker == null ? victim : attacker;
@@ -139,10 +139,10 @@ public class RewardsHandler {
 
   private String formatCommandPlaceholders(String command, Arena arena, @Nullable Player attacker, @Nullable Player victim) {
     String formatted = command;
-    if(attacker != null) {
+    if (attacker != null) {
       formatted = StringUtils.replace(formatted, "%ATTACKER%", attacker.getName());
     }
-    if(victim != null){
+    if (victim != null) {
       formatted = StringUtils.replace(formatted, "%VICTIM%", victim.getName());
     }
     formatted = StringUtils.replace(formatted, "%ARENA-ID%", arena.getID());
