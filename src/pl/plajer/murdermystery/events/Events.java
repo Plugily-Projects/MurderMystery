@@ -37,6 +37,7 @@ import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
+import pl.plajerlair.core.services.ReportedException;
 
 /**
  * @author Plajer
@@ -70,54 +71,62 @@ public class Events implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onCommandExecute(PlayerCommandPreprocessEvent event) {
-    Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    if (arena == null) {
-      return;
-    }
-    if (!plugin.getConfig().getBoolean("Block-Commands-In-Game", true)) {
-      return;
-    }
-    for (String msg : plugin.getConfig().getStringList("Whitelisted-Commands")) {
-      if (event.getMessage().contains(msg)) {
+    try {
+      Arena arena = ArenaRegistry.getArena(event.getPlayer());
+      if (arena == null) {
         return;
       }
-    }
-    if (event.getMessage().startsWith("/mm") || event.getMessage().contains("leave")
-            || event.getMessage().contains("stats") || event.getMessage().startsWith("/mma")) {
-      return;
+      if (!plugin.getConfig().getBoolean("Block-Commands-In-Game", true)) {
+        return;
+      }
+      for (String msg : plugin.getConfig().getStringList("Whitelisted-Commands")) {
+        if (event.getMessage().contains(msg)) {
+          return;
+        }
+      }
+      if (event.getMessage().startsWith("/mm") || event.getMessage().contains("leave")
+              || event.getMessage().contains("stats") || event.getMessage().startsWith("/mma")) {
+        return;
 
+      }
+      if (event.getPlayer().isOp()) {
+        return;
+      }
+      event.setCancelled(true);
+      event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
-    if (event.getPlayer().isOp()) {
-      return;
-    }
-    event.setCancelled(true);
-    event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
   }
 
   @EventHandler(priority = EventPriority.LOWEST)
   public void onLeave(PlayerInteractEvent event) {
-    if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-      return;
-    }
-    Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    if (arena == null) {
-      return;
-    }
-    ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
-    if (itemStack == null || itemStack.getItemMeta() == null || itemStack.getItemMeta().getDisplayName() == null) {
-      return;
-    }
-    String key = SpecialItemManager.getRelatedSpecialItem(itemStack);
-    if (key == null) {
-      return;
-    }
-    if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Leave")) {
-      event.setCancelled(true);
-      if (plugin.isBungeeActivated()) {
-        plugin.getBungeeManager().connectToHub(event.getPlayer());
-      } else {
-        ArenaManager.leaveAttempt(event.getPlayer(), arena);
+    try {
+      if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+        return;
       }
+      Arena arena = ArenaRegistry.getArena(event.getPlayer());
+      if (arena == null) {
+        return;
+      }
+      ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
+      if (itemStack == null || itemStack.getItemMeta() == null || itemStack.getItemMeta().getDisplayName() == null) {
+        return;
+      }
+      String key = SpecialItemManager.getRelatedSpecialItem(itemStack);
+      if (key == null) {
+        return;
+      }
+      if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Leave")) {
+        event.setCancelled(true);
+        if (plugin.isBungeeActivated()) {
+          plugin.getBungeeManager().connectToHub(event.getPlayer());
+        } else {
+          ArenaManager.leaveAttempt(event.getPlayer(), arena);
+        }
+      }
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
   }
 

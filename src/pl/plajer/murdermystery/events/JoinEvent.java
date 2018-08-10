@@ -29,6 +29,7 @@ import pl.plajer.murdermystery.database.FileStats;
 import pl.plajer.murdermystery.database.MySQLConnectionUtils;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.user.UserManager;
+import pl.plajerlair.core.services.ReportedException;
 
 /**
  * @author Plajer
@@ -71,14 +72,15 @@ public class JoinEvent implements Listener {
 
   @EventHandler
   public void onJoinCheckVersion(final PlayerJoinEvent event) {
-    //we want to be the first :)
-    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      if (event.getPlayer().isOp() && !plugin.isDataEnabled()) {
-        event.getPlayer().sendMessage(ChatColor.RED + "[Murder Mystery] It seems that you've disabled bStats statistics.");
-        event.getPlayer().sendMessage(ChatColor.RED + "Please consider enabling it to help us develop our plugins better!");
-        event.getPlayer().sendMessage(ChatColor.RED + "Enable it in plugins/bStats/config.yml file");
-      }
-      //todo
+    try {
+      //we want to be the first :)
+      Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        if (event.getPlayer().isOp() && !plugin.isDataEnabled()) {
+          event.getPlayer().sendMessage(ChatColor.RED + "[Murder Mystery] It seems that you've disabled bStats statistics.");
+          event.getPlayer().sendMessage(ChatColor.RED + "Please consider enabling it to help us develop our plugins better!");
+          event.getPlayer().sendMessage(ChatColor.RED + "Enable it in plugins/bStats/config.yml file");
+        }
+        //todo
       /*if (event.getPlayer().hasPermission("murdermystery.updatenotify")) {
         if (plugin.getConfig().getBoolean("Update-Notifier.Enabled", true)) {
           String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("MurderMystery").getDescription().getVersion();
@@ -107,18 +109,21 @@ public class JoinEvent implements Listener {
           }
         }
       }*/
-    }, 25);
-    if (plugin.isBungeeActivated()) {
-      ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
-    }
-    UserManager.registerUser(event.getPlayer().getUniqueId());
-    if (!plugin.isDatabaseActivated()) {
-      for (String s : FileStats.STATISTICS.keySet()) {
-        plugin.getFileStats().loadStat(event.getPlayer(), s);
+      }, 25);
+      if (plugin.isBungeeActivated()) {
+        ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
       }
-      return;
+      UserManager.registerUser(event.getPlayer().getUniqueId());
+      if (!plugin.isDatabaseActivated()) {
+        for (String s : FileStats.STATISTICS.keySet()) {
+          plugin.getFileStats().loadStat(event.getPlayer(), s);
+        }
+        return;
+      }
+      final Player player = event.getPlayer();
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> MySQLConnectionUtils.loadPlayerStats(player, plugin));
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
-    final Player player = event.getPlayer();
-    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> MySQLConnectionUtils.loadPlayerStats(player, plugin));
   }
 }

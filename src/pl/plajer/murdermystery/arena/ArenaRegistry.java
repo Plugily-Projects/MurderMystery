@@ -30,6 +30,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajerlair.core.services.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
 
@@ -107,55 +108,59 @@ public class ArenaRegistry {
   }
 
   public static void registerArenas() {
-    Main.debug("Initial arenas registration", System.currentTimeMillis());
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    if (ArenaRegistry.getArenas() != null) {
-      if (ArenaRegistry.getArenas().size() > 0) {
-        for (Arena arena : ArenaRegistry.getArenas()) {
-          arena.cleanUpArena();
+    try {
+      Main.debug("Initial arenas registration", System.currentTimeMillis());
+      FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+      if (ArenaRegistry.getArenas() != null) {
+        if (ArenaRegistry.getArenas().size() > 0) {
+          for (Arena arena : ArenaRegistry.getArenas()) {
+            arena.cleanUpArena();
+          }
         }
       }
-    }
-    ArenaRegistry.getArenas().clear();
-    if (!config.contains("instances")) {
-      Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.No-Instances-Created"));
-      return;
-    }
+      ArenaRegistry.getArenas().clear();
+      if (!config.contains("instances")) {
+        Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.No-Instances-Created"));
+        return;
+      }
 
-    for (String ID : config.getConfigurationSection("instances").getKeys(false)) {
-      Arena arena;
-      String s = "instances." + ID + ".";
-      if (s.contains("default")) {
-        continue;
-      }
-      arena = new Arena(ID, plugin);
-      arena.setMinimumPlayers(config.getInt(s + "minimumplayers"));
-      arena.setMaximumPlayers(config.getInt(s + "maximumplayers"));
-      arena.setMapName(config.getString(s + "mapname"));
-      List<Location> playerSpawnPoints = new ArrayList<>();
-      for (String loc : config.getStringList(s + "playerspawnpoints")) {
-        playerSpawnPoints.add(MinigameUtils.getLocation(loc));
-      }
-      arena.setPlayerSpawnPoints(playerSpawnPoints);
-      List<Location> goldSpawnPoints = new ArrayList<>();
-      for (String loc : config.getStringList(s + "goldspawnpoints")) {
-        goldSpawnPoints.add(MinigameUtils.getLocation(loc));
-      }
-      arena.setGoldSpawnPoints(goldSpawnPoints);
-      arena.setLobbyLocation(MinigameUtils.getLocation(config.getString(s + "lobbylocation")));
-      arena.setEndLocation(MinigameUtils.getLocation(config.getString(s + "Endlocation")));
+      for (String ID : config.getConfigurationSection("instances").getKeys(false)) {
+        Arena arena;
+        String s = "instances." + ID + ".";
+        if (s.contains("default")) {
+          continue;
+        }
+        arena = new Arena(ID, plugin);
+        arena.setMinimumPlayers(config.getInt(s + "minimumplayers"));
+        arena.setMaximumPlayers(config.getInt(s + "maximumplayers"));
+        arena.setMapName(config.getString(s + "mapname"));
+        List<Location> playerSpawnPoints = new ArrayList<>();
+        for (String loc : config.getStringList(s + "playerspawnpoints")) {
+          playerSpawnPoints.add(MinigameUtils.getLocation(loc));
+        }
+        arena.setPlayerSpawnPoints(playerSpawnPoints);
+        List<Location> goldSpawnPoints = new ArrayList<>();
+        for (String loc : config.getStringList(s + "goldspawnpoints")) {
+          goldSpawnPoints.add(MinigameUtils.getLocation(loc));
+        }
+        arena.setGoldSpawnPoints(goldSpawnPoints);
+        arena.setLobbyLocation(MinigameUtils.getLocation(config.getString(s + "lobbylocation")));
+        arena.setEndLocation(MinigameUtils.getLocation(config.getString(s + "Endlocation")));
 
-      if (!config.getBoolean(s + "isdone", false)) {
-        Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", ID).replace("%error%", "NOT VALIDATED"));
-        arena.setReady(false);
+        if (!config.getBoolean(s + "isdone", false)) {
+          Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", ID).replace("%error%", "NOT VALIDATED"));
+          arena.setReady(false);
+          ArenaRegistry.registerArena(arena);
+          continue;
+        }
         ArenaRegistry.registerArena(arena);
-        continue;
+        arena.start();
+        Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Instance-Started").replace("%arena%", ID));
       }
-      ArenaRegistry.registerArena(arena);
-      arena.start();
-      Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Instance-Started").replace("%arena%", ID));
+      Main.debug("Arenas registration completed", System.currentTimeMillis());
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
-    Main.debug("Arenas registration completed", System.currentTimeMillis());
   }
 
   public static List<Arena> getArenas() {

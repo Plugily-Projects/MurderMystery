@@ -21,11 +21,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
+import pl.plajerlair.core.services.ReportedException;
 
 /**
  * @author Plajer
@@ -40,16 +42,20 @@ public class LobbyEvent implements Listener {
 
   @EventHandler
   public void onLobbyDamage(EntityDamageEvent event) {
-    if (event.getEntity().getType() != EntityType.PLAYER) {
-      return;
+    try {
+      if (event.getEntity().getType() != EntityType.PLAYER) {
+        return;
+      }
+      Player player = (Player) event.getEntity();
+      Arena arena = ArenaRegistry.getArena(player);
+      if (arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
+        return;
+      }
+      event.setCancelled(true);
+      player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+    } catch (Exception ex){
+      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
     }
-    Player player = (Player) event.getEntity();
-    Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
-      return;
-    }
-    event.setCancelled(true);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
   }
 
 }

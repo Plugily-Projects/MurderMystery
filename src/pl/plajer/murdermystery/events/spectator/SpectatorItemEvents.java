@@ -37,6 +37,7 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.UserManager;
+import pl.plajerlair.core.services.ReportedException;
 import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
@@ -55,20 +56,24 @@ public class SpectatorItemEvents implements Listener {
 
   @EventHandler
   public void onSpectatorItemClick(PlayerInteractEvent e) {
-    if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-      if (ArenaRegistry.getArena(e.getPlayer()) == null) {
-        return;
-      }
-      ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
-      if (stack != null && stack.hasItemMeta()) {
-        if (stack.getItemMeta().getDisplayName() == null) {
+    try {
+      if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+        if (ArenaRegistry.getArena(e.getPlayer()) == null) {
           return;
         }
-        if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
-          e.setCancelled(true);
-          openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
+        ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
+        if (stack != null && stack.hasItemMeta()) {
+          if (stack.getItemMeta().getDisplayName() == null) {
+            return;
+          }
+          if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
+            e.setCancelled(true);
+            openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
+          }
         }
       }
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
   }
 
@@ -102,32 +107,36 @@ public class SpectatorItemEvents implements Listener {
 
   @EventHandler
   public void onSpectatorInventoryClick(InventoryClickEvent e) {
-    Player p = (Player) e.getWhoClicked();
-    if (ArenaRegistry.getArena(p) == null) {
-      return;
-    }
-    Arena arena = ArenaRegistry.getArena(p);
-    if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
-            || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
-      return;
-    }
-    if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
-      e.setCancelled(true);
-      if ((e.isLeftClick() || e.isRightClick())) {
-        ItemMeta meta = e.getCurrentItem().getItemMeta();
-        for (Player player : arena.getPlayers()) {
-          if (player.getName().equalsIgnoreCase(meta.getDisplayName()) || ChatColor.stripColor(meta.getDisplayName()).contains(player.getName())) {
-            p.sendMessage(ChatManager.formatMessage(arena, ChatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), player));
-            p.teleport(player);
-            p.closeInventory();
-            e.setCancelled(true);
-            return;
-
-          }
-        }
-        p.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
+    try {
+      Player p = (Player) e.getWhoClicked();
+      if (ArenaRegistry.getArena(p) == null) {
+        return;
       }
-      e.setCancelled(true);
+      Arena arena = ArenaRegistry.getArena(p);
+      if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
+              || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
+        return;
+      }
+      if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
+        e.setCancelled(true);
+        if ((e.isLeftClick() || e.isRightClick())) {
+          ItemMeta meta = e.getCurrentItem().getItemMeta();
+          for (Player player : arena.getPlayers()) {
+            if (player.getName().equalsIgnoreCase(meta.getDisplayName()) || ChatColor.stripColor(meta.getDisplayName()).contains(player.getName())) {
+              p.sendMessage(ChatManager.formatMessage(arena, ChatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), player));
+              p.teleport(player);
+              p.closeInventory();
+              e.setCancelled(true);
+              return;
+
+            }
+          }
+          p.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
+        }
+        e.setCancelled(true);
+      }
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
   }
 

@@ -43,6 +43,7 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.handlers.language.Locale;
+import pl.plajerlair.core.services.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
 
@@ -77,31 +78,35 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onSignChange(SignChangeEvent e) {
-    if (!e.getPlayer().hasPermission("murdermystery.admin.sign.create")
-            || !e.getLine(0).equalsIgnoreCase("[murdermystery]")) {
-      return;
-    }
-    if (e.getLine(1).isEmpty()) {
-      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Please-Type-Arena-Name"));
-      return;
-    }
-    for (Arena arena : ArenaRegistry.getArenas()) {
-      if (arena.getID().equalsIgnoreCase(e.getLine(1))) {
-        for (int i = 0; i < signLines.size(); i++) {
-          e.setLine(i, formatSign(signLines.get(i), arena));
-        }
-        loadedSigns.put((Sign) e.getBlock().getState(), arena);
-        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
-        String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + ",0.0,0.0";
-        List<String> locs = ConfigUtils.getConfig(plugin, "arenas").getStringList("instances." + arena.getID() + ".signs");
-        locs.add(location);
-        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-        config.set("instances." + arena.getID() + ".signs", locs);
-        ConfigUtils.saveConfig(plugin, config, "arenas");
+    try {
+      if (!e.getPlayer().hasPermission("murdermystery.admin.sign.create")
+              || !e.getLine(0).equalsIgnoreCase("[murdermystery]")) {
         return;
       }
+      if (e.getLine(1).isEmpty()) {
+        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Please-Type-Arena-Name"));
+        return;
+      }
+      for (Arena arena : ArenaRegistry.getArenas()) {
+        if (arena.getID().equalsIgnoreCase(e.getLine(1))) {
+          for (int i = 0; i < signLines.size(); i++) {
+            e.setLine(i, formatSign(signLines.get(i), arena));
+          }
+          loadedSigns.put((Sign) e.getBlock().getState(), arena);
+          e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
+          String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + ",0.0,0.0";
+          List<String> locs = ConfigUtils.getConfig(plugin, "arenas").getStringList("instances." + arena.getID() + ".signs");
+          locs.add(location);
+          FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+          config.set("instances." + arena.getID() + ".signs", locs);
+          ConfigUtils.saveConfig(plugin, config, "arenas");
+          return;
+        }
+      }
+      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Arena-Doesnt-Exists"));
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
-    e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Arena-Doesnt-Exists"));
   }
 
   private String formatSign(String msg, Arena a) {
@@ -120,66 +125,74 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onSignDestroy(BlockBreakEvent e) {
-    if (!e.getPlayer().hasPermission("murdermystery.admin.sign.break")
-            || loadedSigns.get(e.getBlock().getState()) == null) {
-      return;
-    }
-    loadedSigns.remove(e.getBlock().getState());
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + "," + "0.0,0.0";
-    for (String arena : config.getConfigurationSection("instances").getKeys(false)) {
-      for (String sign : config.getStringList("instances." + arena + ".signs")) {
-        if (sign.equals(location)) {
-          List<String> signs = config.getStringList("instances." + arena + ".signs");
-          signs.remove(location);
-          config.set(arena + ".signs", signs);
-          ConfigUtils.saveConfig(plugin, config, "arenas");
-          e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Removed"));
-          return;
+    try {
+      if (!e.getPlayer().hasPermission("murdermystery.admin.sign.break")
+              || loadedSigns.get(e.getBlock().getState()) == null) {
+        return;
+      }
+      loadedSigns.remove(e.getBlock().getState());
+      FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+      String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + "," + "0.0,0.0";
+      for (String arena : config.getConfigurationSection("instances").getKeys(false)) {
+        for (String sign : config.getStringList("instances." + arena + ".signs")) {
+          if (sign.equals(location)) {
+            List<String> signs = config.getStringList("instances." + arena + ".signs");
+            signs.remove(location);
+            config.set(arena + ".signs", signs);
+            ConfigUtils.saveConfig(plugin, config, "arenas");
+            e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Removed"));
+            return;
+          }
         }
       }
+      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.RED + "Couldn't remove sign from configuration! Please do this manually!");
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
-    e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.RED + "Couldn't remove sign from configuration! Please do this manually!");
   }
 
   @EventHandler
   public void onJoinAttempt(PlayerInteractEvent e) {
-    if (e.getAction() == Action.RIGHT_CLICK_BLOCK
-            && e.getClickedBlock().getState() instanceof Sign && loadedSigns.containsKey(e.getClickedBlock().getState())) {
+    try {
+      if (e.getAction() == Action.RIGHT_CLICK_BLOCK
+              && e.getClickedBlock().getState() instanceof Sign && loadedSigns.containsKey(e.getClickedBlock().getState())) {
 
-      Arena arena = loadedSigns.get(e.getClickedBlock().getState());
-      if (arena == null) {
-        return;
-      }
-      if (ArenaRegistry.isInArena(e.getPlayer())) {
-        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
-        return;
-      }
-      if (!(arena.getPlayers().size() >= arena.getMaximumPlayers())) {
-        ArenaManager.joinAttempt(e.getPlayer(), arena);
-        return;
-      }
-      if (e.getPlayer().hasPermission(PermissionsManager.getJoinFullGames())) {
-        for (Player player : arena.getPlayers()) {
-          if (!player.hasPermission(PermissionsManager.getJoinFullGames())) {
-            if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
-              ArenaManager.leaveAttempt(player, arena);
-              player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
-              for (Player p : arena.getPlayers()) {
-                p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), player));
+        Arena arena = loadedSigns.get(e.getClickedBlock().getState());
+        if (arena == null) {
+          return;
+        }
+        if (ArenaRegistry.isInArena(e.getPlayer())) {
+          e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
+          return;
+        }
+        if (!(arena.getPlayers().size() >= arena.getMaximumPlayers())) {
+          ArenaManager.joinAttempt(e.getPlayer(), arena);
+          return;
+        }
+        if (e.getPlayer().hasPermission(PermissionsManager.getJoinFullGames())) {
+          for (Player player : arena.getPlayers()) {
+            if (!player.hasPermission(PermissionsManager.getJoinFullGames())) {
+              if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+                ArenaManager.leaveAttempt(player, arena);
+                player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
+                for (Player p : arena.getPlayers()) {
+                  p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), player));
+                }
+                ArenaManager.joinAttempt(e.getPlayer(), arena);
+                return;
+              } else {
+                ArenaManager.joinAttempt(e.getPlayer(), arena);
+                return;
               }
-              ArenaManager.joinAttempt(e.getPlayer(), arena);
-              return;
-            } else {
-              ArenaManager.joinAttempt(e.getPlayer(), arena);
-              return;
             }
           }
+          e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.No-Slots-For-Premium"));
+        } else {
+          e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Full-Game-No-Permission"));
         }
-        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.No-Slots-For-Premium"));
-      } else {
-        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Full-Game-No-Permission"));
       }
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
   }
 

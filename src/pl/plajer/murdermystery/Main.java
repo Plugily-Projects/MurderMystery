@@ -48,6 +48,8 @@ import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Metrics;
+import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.ServiceRegistry;
 
 /**
  * @author Plajer
@@ -89,44 +91,47 @@ public class Main extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-    LanguageManager.init(this);
-    bossbarEnabled = getConfig().getBoolean("Bossbar-Enabled", true);
-    saveDefaultConfig();
-    if (!(version.equalsIgnoreCase("v1_9_R1") || version.equalsIgnoreCase("v1_10_R1") || version.equalsIgnoreCase("v1_11_R1")
-            || version.equalsIgnoreCase("v1_12_R1"))) {
-      MessageUtils.thisVersionIsNotSupported();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by Murder Mystery!");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider changing your server version?");
-      forceDisable = true;
-      getServer().getPluginManager().disablePlugin(this);
-      return;
-    }
     try {
-      Class.forName("org.spigotmc.SpigotConfig");
-    } catch (Exception e) {
-      MessageUtils.thisVersionIsNotSupported();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server software is not supported by Murder Mystery!");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
-      forceDisable = true;
-      getServer().getPluginManager().disablePlugin(this);
-      return;
-    }
-    debug = getConfig().getBoolean("Debug", false);
-    debug("Main setup start", System.currentTimeMillis());
-    setupFiles();
-    initializeClasses();
-
-    if (databaseActivated) {
-      for (Player p : Bukkit.getOnlinePlayers()) {
-        Bukkit.getScheduler().runTaskAsynchronously(this, () -> MySQLConnectionUtils.loadPlayerStats(p, this));
+      //todo later
+      //ServiceRegistry.registerService(this);
+      version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+      LanguageManager.init(this);
+      bossbarEnabled = getConfig().getBoolean("Bossbar-Enabled", true);
+      saveDefaultConfig();
+      if (!(version.equalsIgnoreCase("v1_9_R1") || version.equalsIgnoreCase("v1_10_R1") || version.equalsIgnoreCase("v1_11_R1")
+              || version.equalsIgnoreCase("v1_12_R1"))) {
+        MessageUtils.thisVersionIsNotSupported();
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by Murder Mystery!");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider changing your server version?");
+        forceDisable = true;
+        getServer().getPluginManager().disablePlugin(this);
+        return;
       }
-    } else {
-      fileStats.loadStatsForPlayersOnline();
-    }
+      try {
+        Class.forName("org.spigotmc.SpigotConfig");
+      } catch (Exception e) {
+        MessageUtils.thisVersionIsNotSupported();
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server software is not supported by Murder Mystery!");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
+        forceDisable = true;
+        getServer().getPluginManager().disablePlugin(this);
+        return;
+      }
+      debug = getConfig().getBoolean("Debug", false);
+      debug("Main setup start", System.currentTimeMillis());
+      setupFiles();
+      initializeClasses();
 
-    String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("MurderMystery").getDescription().getVersion();
-    //todo
+      if (databaseActivated) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+          Bukkit.getScheduler().runTaskAsynchronously(this, () -> MySQLConnectionUtils.loadPlayerStats(p, this));
+        }
+      } else {
+        fileStats.loadStatsForPlayersOnline();
+      }
+
+      String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("MurderMystery").getDescription().getVersion();
+      //todo
     /*if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
       try {
         UpdateChecker.checkUpdate(currentVersion);
@@ -150,6 +155,9 @@ public class Main extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "WWW site todo");
       }
     }*/
+    } catch (Exception ex) {
+      new ReportedException(this, ex);
+    }
   }
 
   @Override
@@ -250,7 +258,7 @@ public class Main extends JavaPlugin {
       Main.debug("Hooking into PlaceholderAPI", System.currentTimeMillis());
       new PlaceholderManager().register();
     }
-    if(Bukkit.getPluginManager().isPluginEnabled("LeaderHeads")){
+    if (Bukkit.getPluginManager().isPluginEnabled("LeaderHeads")) {
       Main.debug("Hooking into LeaderHeads", System.currentTimeMillis());
       new MurderMysteryDeaths();
       new MurderMysteryGamesPlayed();

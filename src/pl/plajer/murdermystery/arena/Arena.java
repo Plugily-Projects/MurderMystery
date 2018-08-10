@@ -60,6 +60,7 @@ import pl.plajer.murdermystery.murdermysteryapi.MMGameStateChangeEvent;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
+import pl.plajerlair.core.services.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.MinigameScoreboard;
 import pl.plajerlair.core.utils.MinigameUtils;
@@ -130,238 +131,242 @@ public class Arena extends BukkitRunnable {
   }
 
   public void run() {
-    //idle task
-    if (getPlayers().size() == 0 && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
-      return;
-    }
-    updateScoreboard();
-    switch (getArenaState()) {
-      case WAITING_FOR_PLAYERS:
-        if (plugin.isBungeeActivated()) {
-          plugin.getServer().setWhitelist(false);
-        }
-        if (getPlayers().size() < getMinimumPlayers()) {
-          if (getTimer() <= 0) {
-            setTimer(15);
-            String message = ChatManager.formatMessage(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), getMinimumPlayers());
+    try {
+      //idle task
+      if (getPlayers().size() == 0 && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+        return;
+      }
+      updateScoreboard();
+      switch (getArenaState()) {
+        case WAITING_FOR_PLAYERS:
+          if (plugin.isBungeeActivated()) {
+            plugin.getServer().setWhitelist(false);
+          }
+          if (getPlayers().size() < getMinimumPlayers()) {
+            if (getTimer() <= 0) {
+              setTimer(15);
+              String message = ChatManager.formatMessage(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), getMinimumPlayers());
+              for (Player p : getPlayers()) {
+                p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
+              }
+              return;
+            }
+          } else {
+            if (plugin.isBossbarEnabled()) {
+              gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
+            }
             for (Player p : getPlayers()) {
-              p.sendMessage(ChatManager.PLUGIN_PREFIX + message);
+              p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
+            }
+            setArenaState(ArenaState.STARTING);
+            setTimer(Main.STARTING_TIMER_TIME);
+            this.showPlayers();
+          }
+          setTimer(getTimer() - 1);
+          break;
+        case STARTING:
+          if (plugin.isBossbarEnabled()) {
+            gameBar.setTitle(ChatManager.colorMessage("Bossbar.Starting-In").replace("%time%", String.valueOf(getTimer())));
+            gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 60));
+          }
+          for (Player p : getPlayers()) {
+            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Role-Chances-Action-Bar")));
+          }
+          if (getTimer() == 0) {
+            MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
+            Bukkit.getPluginManager().callEvent(gameStartEvent);
+            setArenaState(ArenaState.IN_GAME);
+            if (plugin.isBossbarEnabled()) {
+              gameBar.setProgress(1.0);
+            }
+            setTimer(5);
+            teleportAllToStartLocation();
+            for (Player player : getPlayers()) {
+              player.getInventory().clear();
+              player.setGameMode(GameMode.ADVENTURE);
+              ArenaUtils.hidePlayersOutsideTheGame(player, this);
+              player.updateInventory();
+              addStat(player, "gamesplayed");
+              setTimer(Main.CLASSIC_TIMER_TIME);
+              player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
+            }
+            Set<Player> playersToSet = getPlayers();
+            Player murderer = (Player) playersToSet.toArray()[new Random().nextInt(playersToSet.size())];
+            this.murderer = murderer.getUniqueId();
+            playersToSet.remove(murderer);
+            MessageUtils.sendTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"), 5, 40, 5);
+            MessageUtils.sendSubTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
+
+            Player detective = (Player) playersToSet.toArray()[new Random().nextInt(playersToSet.size())];
+            this.detective = detective.getUniqueId();
+            MessageUtils.sendTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"), 5, 40, 5);
+            MessageUtils.sendSubTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
+            playersToSet.remove(detective);
+
+            detective.getInventory().setItem(1, new ItemStack(Material.BOW, 1));
+            detective.getInventory().setItem(9, new ItemStack(Material.ARROW, 64));
+
+            for (Player p : playersToSet) {
+              MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"), 5, 40, 5);
+              MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
+            }
+            if (plugin.isBossbarEnabled()) {
+              gameBar.setTitle(ChatManager.colorMessage("Bossbar.In-Game-Info"));
             }
             return;
           }
-        } else {
-          if (plugin.isBossbarEnabled()) {
-            gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
+          setTimer(getTimer() - 1);
+          break;
+        case IN_GAME:
+          if (plugin.isBungeeActivated()) {
+            if (getMaximumPlayers() <= getPlayers().size()) {
+              plugin.getServer().setWhitelist(true);
+            } else {
+              plugin.getServer().setWhitelist(false);
+            }
           }
-          for (Player p : getPlayers()) {
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
-          }
-          setArenaState(ArenaState.STARTING);
-          setTimer(Main.STARTING_TIMER_TIME);
-          this.showPlayers();
-        }
-        setTimer(getTimer() - 1);
-        break;
-      case STARTING:
-        if (plugin.isBossbarEnabled()) {
-          gameBar.setTitle(ChatManager.colorMessage("Bossbar.Starting-In").replace("%time%", String.valueOf(getTimer())));
-          gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 60));
-        }
-        for (Player p : getPlayers()) {
-          p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Role-Chances-Action-Bar")));
-        }
-        if (getTimer() == 0) {
-          MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
-          Bukkit.getPluginManager().callEvent(gameStartEvent);
-          setArenaState(ArenaState.IN_GAME);
-          if (plugin.isBossbarEnabled()) {
-            gameBar.setProgress(1.0);
-          }
-          setTimer(5);
-          teleportAllToStartLocation();
-          for (Player player : getPlayers()) {
-            player.getInventory().clear();
-            player.setGameMode(GameMode.ADVENTURE);
-            ArenaUtils.hidePlayersOutsideTheGame(player, this);
-            player.updateInventory();
-            addStat(player, "gamesplayed");
-            setTimer(Main.CLASSIC_TIMER_TIME);
-            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
-          }
-          Set<Player> playersToSet = getPlayers();
-          Player murderer = (Player) playersToSet.toArray()[new Random().nextInt(playersToSet.size())];
-          this.murderer = murderer.getUniqueId();
-          playersToSet.remove(murderer);
-          MessageUtils.sendTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"), 5, 40, 5);
-          MessageUtils.sendSubTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
-
-          Player detective = (Player) playersToSet.toArray()[new Random().nextInt(playersToSet.size())];
-          this.detective = detective.getUniqueId();
-          MessageUtils.sendTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"), 5, 40, 5);
-          MessageUtils.sendSubTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
-          playersToSet.remove(detective);
-
-          detective.getInventory().setItem(1, new ItemStack(Material.BOW, 1));
-          detective.getInventory().setItem(9, new ItemStack(Material.ARROW, 64));
-
-          for (Player p : playersToSet) {
-            MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"), 5, 40, 5);
-            MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
-          }
-          if (plugin.isBossbarEnabled()) {
-            gameBar.setTitle(ChatManager.colorMessage("Bossbar.In-Game-Info"));
-          }
-          return;
-        }
-        setTimer(getTimer() - 1);
-        break;
-      case IN_GAME:
-        if (plugin.isBungeeActivated()) {
-          if (getMaximumPlayers() <= getPlayers().size()) {
-            plugin.getServer().setWhitelist(true);
-          } else {
-            plugin.getServer().setWhitelist(false);
-          }
-        }
-        if (getTimer() <= 0) {
-          setArenaState(ArenaState.ENDING);
-          ArenaManager.stopGame(false, this);
-          setTimer(5);
-        }
-        if (getTimer() <= (Main.CLASSIC_TIMER_TIME - 10) && getTimer() > (Main.CLASSIC_TIMER_TIME - 15)) {
-          for (Player p : getPlayers()) {
-            p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword").replace("%time%", String.valueOf(getTimer() - (Main.CLASSIC_TIMER_TIME - 15))));
-            p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
-          }
-          if (getTimer() == (Main.CLASSIC_TIMER_TIME - 14)) {
-            Bukkit.getPlayer(murderer).getInventory().setItem(1, new ItemStack(Material.IRON_SWORD, 1));
-            Bukkit.getPlayer(murderer).getInventory().setHeldItemSlot(0);
-          }
-        }
-
-        if(getTimer() == 30 || getTimer() == 60){
-          for(Player p : getPlayers()){
-            MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", String.valueOf(getTimer())), 5, 30, 5);
-            MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle").replace("%time%", String.valueOf(getTimer())), 5, 30, 5);
-          }
-        }
-
-        if(getTimer() <= 30 || getPlayersLeft().size() == 2){
-          ArenaUtils.updateInnocentLocator(this);
-        }
-
-        switch (getPlayersLeft().size()) {
-          //game end
-          case 0:
+          if (getTimer() <= 0) {
             setArenaState(ArenaState.ENDING);
             ArenaManager.stopGame(false, this);
             setTimer(5);
-            return;
+          }
+          if (getTimer() <= (Main.CLASSIC_TIMER_TIME - 10) && getTimer() > (Main.CLASSIC_TIMER_TIME - 15)) {
+            for (Player p : getPlayers()) {
+              p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword").replace("%time%", String.valueOf(getTimer() - (Main.CLASSIC_TIMER_TIME - 15))));
+              p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
+            }
+            if (getTimer() == (Main.CLASSIC_TIMER_TIME - 14)) {
+              Bukkit.getPlayer(murderer).getInventory().setItem(1, new ItemStack(Material.IRON_SWORD, 1));
+              Bukkit.getPlayer(murderer).getInventory().setHeldItemSlot(0);
+            }
+          }
 
-          //winner check
-          case 1:
-            if (getPlayersLeft().get(0).getUniqueId() == murderer) {
-              for (Player p : getPlayers()) {
-                MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), 5, 40, 5);
-                MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone"), 5, 40, 5);
-                if (p.getUniqueId() == murderer) {
-                  MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), 5, 40, 5);
-                }
-              }
-              ArenaManager.stopGame(false, this);
+          if (getTimer() == 30 || getTimer() == 60) {
+            for (Player p : getPlayers()) {
+              MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", String.valueOf(getTimer())), 5, 30, 5);
+              MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle").replace("%time%", String.valueOf(getTimer())), 5, 30, 5);
+            }
+          }
+
+          if (getTimer() <= 30 || getPlayersLeft().size() == 2) {
+            ArenaUtils.updateInnocentLocator(this);
+          }
+
+          switch (getPlayersLeft().size()) {
+            //game end
+            case 0:
               setArenaState(ArenaState.ENDING);
+              ArenaManager.stopGame(false, this);
               setTimer(5);
               return;
-            }
 
-            //murderer speed add
-          case 2:
-            Bukkit.getPlayer(murderer).addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
-            break;
-        }
-
-        //don't spawn it every time
-        if (new Random().nextInt(2) == 2) {
-          spawnSomeGold();
-        }
-        setTimer(getTimer() - 1);
-        break;
-      case ENDING:
-        if (plugin.isBungeeActivated()) {
-          plugin.getServer().setWhitelist(false);
-        }
-        if (getTimer() <= 0) {
-          if (plugin.isBossbarEnabled()) {
-            gameBar.setTitle(ChatManager.colorMessage("Bossbar.Game-Ended"));
-          }
-
-          for (Player player : getPlayers()) {
-            UserManager.getUser(player.getUniqueId()).removeScoreboard();
-            player.setGameMode(GameMode.SURVIVAL);
-            for (Player players : Bukkit.getOnlinePlayers()) {
-              player.showPlayer(players);
-              players.hidePlayer(player);
-            }
-            for (PotionEffect effect : player.getActivePotionEffects()) {
-              player.removePotionEffect(effect.getType());
-            }
-            player.setFlying(false);
-            player.setAllowFlight(false);
-            player.getInventory().clear();
-
-            player.getInventory().setArmorContents(null);
-            if (plugin.isBossbarEnabled()) {
-              gameBar.removePlayer(player);
-            }
-            player.setFireTicks(0);
-            player.setFoodLevel(20);
-            for (Player players : plugin.getServer().getOnlinePlayers()) {
-              if (ArenaRegistry.getArena(players) != null) {
-                players.showPlayer(player);
+            //winner check
+            case 1:
+              if (getPlayersLeft().get(0).getUniqueId() == murderer) {
+                for (Player p : getPlayers()) {
+                  MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), 5, 40, 5);
+                  MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone"), 5, 40, 5);
+                  if (p.getUniqueId() == murderer) {
+                    MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), 5, 40, 5);
+                  }
+                }
+                ArenaManager.stopGame(false, this);
+                setArenaState(ArenaState.ENDING);
+                setTimer(5);
+                return;
               }
-              player.showPlayer(players);
-            }
-          }
-          teleportAllToEndLocation();
 
-          if (plugin.isInventoryManagerEnabled()) {
-            for (Player player : getPlayers()) {
-              plugin.getInventoryManager().loadInventory(player);
-            }
+              //murderer speed add
+            case 2:
+              Bukkit.getPlayer(murderer).addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
+              break;
           }
 
-          for (Player p : getPlayers()) {
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
+          //don't spawn it every time
+          if (new Random().nextInt(2) == 2) {
+            spawnSomeGold();
           }
-
-          for (User user : UserManager.getUsers(this)) {
-            user.setSpectator(false);
-            user.setFakeDead(false);
-          }
-          plugin.getRewardsHandler().performEndGameRewards(this);
-          players.clear();
+          setTimer(getTimer() - 1);
+          break;
+        case ENDING:
           if (plugin.isBungeeActivated()) {
-            if (ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
-              plugin.getServer().shutdown();
+            plugin.getServer().setWhitelist(false);
+          }
+          if (getTimer() <= 0) {
+            if (plugin.isBossbarEnabled()) {
+              gameBar.setTitle(ChatManager.colorMessage("Bossbar.Game-Ended"));
+            }
+
+            for (Player player : getPlayers()) {
+              UserManager.getUser(player.getUniqueId()).removeScoreboard();
+              player.setGameMode(GameMode.SURVIVAL);
+              for (Player players : Bukkit.getOnlinePlayers()) {
+                player.showPlayer(players);
+                players.hidePlayer(player);
+              }
+              for (PotionEffect effect : player.getActivePotionEffects()) {
+                player.removePotionEffect(effect.getType());
+              }
+              player.setFlying(false);
+              player.setAllowFlight(false);
+              player.getInventory().clear();
+
+              player.getInventory().setArmorContents(null);
+              if (plugin.isBossbarEnabled()) {
+                gameBar.removePlayer(player);
+              }
+              player.setFireTicks(0);
+              player.setFoodLevel(20);
+              for (Player players : plugin.getServer().getOnlinePlayers()) {
+                if (ArenaRegistry.getArena(players) != null) {
+                  players.showPlayer(player);
+                }
+                player.showPlayer(players);
+              }
+            }
+            teleportAllToEndLocation();
+
+            if (plugin.isInventoryManagerEnabled()) {
+              for (Player player : getPlayers()) {
+                plugin.getInventoryManager().loadInventory(player);
+              }
+            }
+
+            for (Player p : getPlayers()) {
+              p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
+            }
+
+            for (User user : UserManager.getUsers(this)) {
+              user.setSpectator(false);
+              user.setFakeDead(false);
+            }
+            plugin.getRewardsHandler().performEndGameRewards(this);
+            players.clear();
+            if (plugin.isBungeeActivated()) {
+              if (ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
+                plugin.getServer().shutdown();
+              }
+            }
+            setArenaState(ArenaState.RESTARTING);
+          }
+          setTimer(getTimer() - 1);
+          break;
+        case RESTARTING:
+          getPlayers().clear();
+          setArenaState(ArenaState.WAITING_FOR_PLAYERS);
+          cleanUpArena();
+
+          if (plugin.isBungeeActivated()) {
+            for (Player player : plugin.getServer().getOnlinePlayers()) {
+              this.addPlayer(player);
             }
           }
-          setArenaState(ArenaState.RESTARTING);
-        }
-        setTimer(getTimer() - 1);
-        break;
-      case RESTARTING:
-        getPlayers().clear();
-        setArenaState(ArenaState.WAITING_FOR_PLAYERS);
-        cleanUpArena();
-
-        if (plugin.isBungeeActivated()) {
-          for (Player player : plugin.getServer().getOnlinePlayers()) {
-            this.addPlayer(player);
-          }
-        }
-        break;
-      default:
-        break; //o.o?
+          break;
+        default:
+          break; //o.o?
+      }
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
   }
 
@@ -375,6 +380,7 @@ public class Arena extends BukkitRunnable {
         continue;
       }
       User user = UserManager.getUser(p.getUniqueId());
+      scoreboard = new MinigameScoreboard("PL_MM", "PL_CR", ChatManager.colorMessage("Scoreboard.Title"));
       List<String> lines;
       String access = "";
       if (ArenaUtils.isRole(ArenaUtils.Role.MURDERER, p)) {
@@ -393,10 +399,10 @@ public class Arena extends BukkitRunnable {
           lines = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content." + getArenaState().getFormattedName()).split(";"));
         }
       }
-      scoreboard = new MinigameScoreboard(ChatManager.colorMessage("Scoreboard.Title"), lines);
-      for (int i = 0; i < lines.size(); i++) {
-        scoreboard.setValue(i, formatScoreboardLine(lines.get(i), user));
+      for (String line : lines) {
+        scoreboard.addRow(formatScoreboardLine(line, user));
       }
+      scoreboard.finish();
       scoreboard.display(p);
     }
   }

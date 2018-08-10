@@ -19,11 +19,14 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.handlers.language.Locale;
 import pl.plajer.murdermystery.utils.MessageUtils;
+import pl.plajerlair.core.services.ReportedException;
 import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
@@ -47,7 +50,7 @@ public class ChatManager {
     try {
       return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage(message));
     } catch (NullPointerException e1) {
-      e1.printStackTrace();
+      new ReportedException(JavaPlugin.getPlugin(Main.class), e1);
       MessageUtils.errorOccured();
       Bukkit.getConsoleSender().sendMessage("Game message not found!");
       if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
@@ -58,15 +61,6 @@ public class ChatManager {
       Bukkit.getConsoleSender().sendMessage("Access string: " + message);
       return "ERR_MESSAGE_NOT_FOUND";
     }
-  }
-
-  public static String formatMessage(Arena arena, String message, Player[] players) {
-    String returnString = message;
-    for (Player player : players) {
-      returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
-    }
-    returnString = colorRawMessage(formatPlaceholders(returnString, arena));
-    return returnString;
   }
 
   public static String formatMessage(Arena arena, String message, int integer) {

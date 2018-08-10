@@ -189,29 +189,6 @@ public class SpectatorEvents implements Listener {
     }
   }
 
-  @EventHandler(priority = EventPriority.HIGHEST)
-  public void onTarget(EntityTargetEvent e) {
-    if (!(e.getTarget() instanceof Player)) {
-      return;
-    }
-    if (UserManager.getUser(e.getTarget().getUniqueId()).isSpectator() || UserManager.getUser(e.getTarget().getUniqueId()).isFakeDead()) {
-      if (e.getEntity() instanceof ExperienceOrb || e.getEntity() instanceof Zombie || e.getEntity() instanceof Wolf) {
-        e.setCancelled(true);
-        e.setTarget(null);
-      }
-    }
-  }
-
-  //this will spawn orb at spec location when it's taken by spectator
-  @EventHandler
-  public void onPickup(PlayerExpChangeEvent e) {
-    if (UserManager.getUser(e.getPlayer().getUniqueId()).isSpectator()) {
-      Location loc = e.getPlayer().getLocation();
-      e.setAmount(0);
-      Bukkit.getScheduler().runTaskLater(plugin, () -> loc.getWorld().spawnEntity(loc, EntityType.EXPERIENCE_ORB), 30);
-    }
-  }
-
   @EventHandler
   public void onSpectate(PlayerPickupItemEvent event) {
     if (UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) {

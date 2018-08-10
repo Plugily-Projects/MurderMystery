@@ -34,6 +34,7 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
+import pl.plajerlair.core.services.ReportedException;
 
 /**
  * @author Plajer
@@ -52,55 +53,63 @@ public class ChatEvents implements Listener {
 
   @EventHandler
   public void onChat(AsyncPlayerChatEvent event) {
-    if (ArenaRegistry.getArena(event.getPlayer()) == null) {
-      for (Player player : event.getRecipients()) {
-        if (ArenaRegistry.getArena(event.getPlayer()) == null) {
-          return;
+    try {
+      if (ArenaRegistry.getArena(event.getPlayer()) == null) {
+        for (Player player : event.getRecipients()) {
+          if (ArenaRegistry.getArena(event.getPlayer()) == null) {
+            return;
+          }
+          event.getRecipients().remove(player);
         }
-        event.getRecipients().remove(player);
       }
+      event.getRecipients().clear();
+      event.getRecipients().addAll(ArenaRegistry.getArena(event.getPlayer()).getPlayers());
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
-    event.getRecipients().clear();
-    event.getRecipients().addAll(ArenaRegistry.getArena(event.getPlayer()).getPlayers());
   }
 
   @EventHandler
   public void onChatIngame(AsyncPlayerChatEvent event) {
-    Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    if (arena == null) {
-      return;
-    }
-    if (plugin.isChatFormatEnabled()) {
-      event.setCancelled(true);
-      Iterator<Player> iterator = event.getRecipients().iterator();
-      List<Player> remove = new ArrayList<>();
-      while (iterator.hasNext()) {
-        Player player = iterator.next();
-        remove.add(player);
+    try {
+      Arena arena = ArenaRegistry.getArena(event.getPlayer());
+      if (arena == null) {
+        return;
       }
-      for (Player player : remove) {
-        event.getRecipients().remove(player);
-      }
-      remove.clear();
-      String message;
-      String eventMessage = event.getMessage();
-      boolean dead = !arena.getPlayersLeft().contains(event.getPlayer());
-      for (String regexChar : regexChars) {
-        if (eventMessage.contains(regexChar)) {
-          eventMessage = eventMessage.replaceAll(Pattern.quote(regexChar), "");
+      if (plugin.isChatFormatEnabled()) {
+        event.setCancelled(true);
+        Iterator<Player> iterator = event.getRecipients().iterator();
+        List<Player> remove = new ArrayList<>();
+        while (iterator.hasNext()) {
+          Player player = iterator.next();
+          remove.add(player);
         }
-      }
-      message = formatChatPlaceholders(LanguageManager.getLanguageMessage("In-Game.Game-Chat-Format"), UserManager.getUser(event.getPlayer().getUniqueId()), eventMessage);
-      for (Player player : arena.getPlayers()) {
-        if (dead && arena.getPlayersLeft().contains(player)) {
-          continue;
+        for (Player player : remove) {
+          event.getRecipients().remove(player);
         }
-        player.sendMessage(message);
+        remove.clear();
+        String message;
+        String eventMessage = event.getMessage();
+        boolean dead = !arena.getPlayersLeft().contains(event.getPlayer());
+        for (String regexChar : regexChars) {
+          if (eventMessage.contains(regexChar)) {
+            eventMessage = eventMessage.replaceAll(Pattern.quote(regexChar), "");
+          }
+        }
+        message = formatChatPlaceholders(LanguageManager.getLanguageMessage("In-Game.Game-Chat-Format"), UserManager.getUser(event.getPlayer().getUniqueId()), eventMessage);
+        for (Player player : arena.getPlayers()) {
+          if (dead && arena.getPlayersLeft().contains(player)) {
+            continue;
+          }
+          player.sendMessage(message);
+        }
+        Bukkit.getConsoleSender().sendMessage(message);
+      } else {
+        event.getRecipients().clear();
+        event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
       }
-      Bukkit.getConsoleSender().sendMessage(message);
-    } else {
-      event.getRecipients().clear();
-      event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
   }
 

@@ -36,6 +36,7 @@ import org.golde.bukkit.corpsereborn.nms.Corpses;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
+import pl.plajerlair.core.services.ReportedException;
 
 /**
  * @author Plajer
@@ -47,101 +48,122 @@ public class ArenaUtils {
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
   public static void updateInnocentLocator(Arena arena){
-    if(!arena.isMurdererLocatorReceived()) {
-      ItemStack innocentLocator = new ItemStack(Material.COMPASS, 1);
-      ItemMeta innocentMeta = innocentLocator.getItemMeta();
-      innocentMeta.setDisplayName(ChatManager.colorMessage("In-Game.Innocent-Locator-Item-Name"));
-      innocentLocator.setItemMeta(innocentMeta);
-      Bukkit.getPlayer(arena.getMurderer()).getInventory().setItem(4, innocentLocator);
-      arena.setMurdererLocatorReceived(true);
+    try {
+      if (!arena.isMurdererLocatorReceived()) {
+        ItemStack innocentLocator = new ItemStack(Material.COMPASS, 1);
+        ItemMeta innocentMeta = innocentLocator.getItemMeta();
+        innocentMeta.setDisplayName(ChatManager.colorMessage("In-Game.Innocent-Locator-Item-Name"));
+        innocentLocator.setItemMeta(innocentMeta);
+        Bukkit.getPlayer(arena.getMurderer()).getInventory().setItem(4, innocentLocator);
+        arena.setMurdererLocatorReceived(true);
 
-      for(Player p : arena.getPlayersLeft()){
-        if(p.getUniqueId() == arena.getMurderer()) continue;
-        MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Watch-Out-Title"), 5, 40, 5);
-        MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Watch-Out-Subtitle"), 5, 40, 5);
+        for (Player p : arena.getPlayersLeft()) {
+          if (p.getUniqueId() == arena.getMurderer()) continue;
+          MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Watch-Out-Title"), 5, 40, 5);
+          MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Watch-Out-Subtitle"), 5, 40, 5);
+        }
       }
-    }
-    for(Player p : arena.getPlayersLeft()){
-      if(p.getUniqueId() == arena.getMurderer()) continue;
-      Bukkit.getPlayer(arena.getMurderer()).setCompassTarget(p.getLocation());
-      break;
+      for (Player p : arena.getPlayersLeft()) {
+        if (p.getUniqueId() == arena.getMurderer()) continue;
+        Bukkit.getPlayer(arena.getMurderer()).setCompassTarget(p.getLocation());
+        break;
+      }
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
   }
 
   private static void addBowLocator(Arena arena, Location loc){
-    ItemStack bowLocator = new ItemStack(Material.COMPASS, 1);
-    ItemMeta bowMeta = bowLocator.getItemMeta();
-    bowMeta.setDisplayName(ChatManager.colorMessage("In-Game.Bow-Locator-Item-Name"));
-    bowLocator.setItemMeta(bowMeta);
-    for(Player p : arena.getPlayersLeft()){
-      if(isRole(Role.INNOCENT, p)){
-        p.getInventory().setItem(4, bowLocator);
-        p.setCompassTarget(loc);
+    try {
+      ItemStack bowLocator = new ItemStack(Material.COMPASS, 1);
+      ItemMeta bowMeta = bowLocator.getItemMeta();
+      bowMeta.setDisplayName(ChatManager.colorMessage("In-Game.Bow-Locator-Item-Name"));
+      bowLocator.setItemMeta(bowMeta);
+      for (Player p : arena.getPlayersLeft()) {
+        if (isRole(Role.INNOCENT, p)) {
+          p.getInventory().setItem(4, bowLocator);
+          p.setCompassTarget(loc);
+        }
       }
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
   }
 
   public static void dropBowAndAnnounce(Arena arena, Player victim) {
-    for (Player p : arena.getPlayers()) {
-      MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title"), 5, 40, 5);
-    }
-    for (Player p : arena.getPlayersLeft()) {
-      MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle"), 5, 40, 5);
-    }
+    try {
+      for (Player p : arena.getPlayers()) {
+        MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title"), 5, 40, 5);
+      }
+      for (Player p : arena.getPlayersLeft()) {
+        MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle"), 5, 40, 5);
+      }
 
-    Hologram hologram = HologramsAPI.createHologram(plugin, victim.getLocation().clone().add(0, 0.5, 0));
-    ItemLine itemLine = hologram.appendItemLine(new ItemStack(Material.BOW, 1));
+      Hologram hologram = HologramsAPI.createHologram(plugin, victim.getLocation().clone().add(0, 0.5, 0));
+      ItemLine itemLine = hologram.appendItemLine(new ItemStack(Material.BOW, 1));
 
-    itemLine.setPickupHandler(player -> {
-      if (isRole(Role.INNOCENT, player)) {
-        player.playSound(player.getLocation(), Sound.BLOCK_LAVA_POP, 1F, 2F);
-        hologram.delete();
+      itemLine.setPickupHandler(player -> {
+        if (isRole(Role.INNOCENT, player)) {
+          player.playSound(player.getLocation(), Sound.BLOCK_LAVA_POP, 1F, 2F);
+          hologram.delete();
 
-        for(Player loopPlayer : arena.getPlayersLeft()){
-          if(isRole(Role.INNOCENT, loopPlayer)) {
-            loopPlayer.getInventory().setItem(4, new ItemStack(Material.AIR, 1));
+          for (Player loopPlayer : arena.getPlayersLeft()) {
+            if (isRole(Role.INNOCENT, loopPlayer)) {
+              loopPlayer.getInventory().setItem(4, new ItemStack(Material.AIR, 1));
+            }
+          }
+
+          arena.setFakeDetective(victim.getUniqueId());
+          victim.getInventory().setItem(0, new ItemStack(Material.BOW, 1));
+          victim.getInventory().setItem(9, new ItemStack(Material.ARROW, 64));
+          for (Player loopPlayer : arena.getPlayers()) {
+            loopPlayer.sendMessage(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message"));
           }
         }
-
-        arena.setFakeDetective(victim.getUniqueId());
-        victim.getInventory().setItem(0, new ItemStack(Material.BOW, 1));
-        victim.getInventory().setItem(9, new ItemStack(Material.ARROW, 64));
-        for (Player loopPlayer : arena.getPlayers()) {
-          loopPlayer.sendMessage(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message"));
-        }
-      }
-    });
-    arena.setBowHologram(hologram);
-    addBowLocator(arena, hologram.getLocation());
+      });
+      arena.setBowHologram(hologram);
+      addBowLocator(arena, hologram.getLocation());
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
+    }
   }
 
   public static void spawnCorpse(Player p, Arena arena) {
-    Corpses.CorpseData corpse = CorpseAPI.spawnCorpse(p, p.getLocation());
-    Hologram hologram = HologramsAPI.createHologram(plugin, p.getLocation().clone().add(0, 1.5, 0));
-    hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Corpse-Last-Words").replace("%player%", p.getName()));
-    //todo multi last words
-    hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Last-Words.Default"));
-    arena.addCorpse(new ArenaCorpse(hologram, corpse));
+    try {
+      Corpses.CorpseData corpse = CorpseAPI.spawnCorpse(p, p.getLocation());
+      Hologram hologram = HologramsAPI.createHologram(plugin, p.getLocation().clone().add(0, 1.5, 0));
+      hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Corpse-Last-Words").replace("%player%", p.getName()));
+      //todo multi last words
+      hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Last-Words.Default"));
+      arena.addCorpse(new ArenaCorpse(hologram, corpse));
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
+    }
   }
 
   public static boolean isRole(Role role, Player p) {
-    Arena arena = ArenaRegistry.getArena(p);
-    if (arena == null) {
-      return false;
-    }
-    switch (role) {
-      case DETECTIVE:
-        return arena.getDetective() == p.getUniqueId();
-      case FAKE_DETECTIVE:
-        return arena.getFakeDetective() != null && arena.getFakeDetective() == p.getUniqueId();
-      case MURDERER:
-        return arena.getMurderer() == p.getUniqueId();
-      case ANY_DETECTIVE:
-        return arena.getDetective() == p.getUniqueId() || (arena.getFakeDetective() != null && arena.getFakeDetective() == p.getUniqueId());
-      case INNOCENT:
-        return arena.getDetective() != p.getUniqueId() && (arena.getFakeDetective() != null && arena.getFakeDetective() != p.getUniqueId()) && arena.getMurderer() != p.getUniqueId();
-      default:
+    try {
+      Arena arena = ArenaRegistry.getArena(p);
+      if (arena == null) {
         return false;
+      }
+      switch (role) {
+        case DETECTIVE:
+          return arena.getDetective() == p.getUniqueId();
+        case FAKE_DETECTIVE:
+          return arena.getFakeDetective() != null && arena.getFakeDetective() == p.getUniqueId();
+        case MURDERER:
+          return arena.getMurderer() == p.getUniqueId();
+        case ANY_DETECTIVE:
+          return arena.getDetective() == p.getUniqueId() || (arena.getFakeDetective() != null && arena.getFakeDetective() == p.getUniqueId());
+        case INNOCENT:
+          return arena.getDetective() != p.getUniqueId() && (arena.getFakeDetective() != null && arena.getFakeDetective() != p.getUniqueId()) && arena.getMurderer() != p.getUniqueId();
+        default:
+          return false;
+      }
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
+      return false;
     }
   }
 
