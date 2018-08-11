@@ -84,7 +84,7 @@ public class GameCommands extends MainCommand {
   public void sendTopStatistics(CommandSender sender, String stat) {
     try {
       StatsStorage.StatisticType statisticType = StatsStorage.StatisticType.valueOf(stat.toUpperCase());
-      if (statisticType == StatsStorage.StatisticType.CONTRIBUTION_POINTS) {
+      if (statisticType == StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE || statisticType == StatsStorage.StatisticType.CONTRIBUTION_MURDERER) {
         sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Invalid-Name"));
         return;
       }

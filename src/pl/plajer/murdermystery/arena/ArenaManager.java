@@ -200,11 +200,13 @@ public class ArenaManager {
           MessageUtils.sendTitle(Bukkit.getPlayer(newMurderer), ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"), 5, 40, 5);
           MessageUtils.sendSubTitle(Bukkit.getPlayer(newMurderer), ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
           Bukkit.getPlayer(newMurderer).getInventory().setItem(1, new ItemStack(Material.IRON_SWORD, 1));
-
+          user.setInt("contribution_murderer", 0);
         } else if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, p)) {
           arena.setDetectiveDead(true);
           if (ArenaUtils.isRole(ArenaUtils.Role.FAKE_DETECTIVE, p)) {
             arena.setFakeDetective(null);
+          } else {
+            user.setInt("contribution_detective", 0);
           }
           ArenaUtils.dropBowAndAnnounce(arena, p);
         }

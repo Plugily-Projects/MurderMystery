@@ -47,7 +47,8 @@ public class FileStats {
     STATISTICS.put("loses", StatsStorage.StatisticType.LOSES);
     STATISTICS.put("deaths", StatsStorage.StatisticType.DEATHS);
     STATISTICS.put("highestscore", StatsStorage.StatisticType.HIGHEST_SCORE);
-    STATISTICS.put("contributionpoints", StatsStorage.StatisticType.CONTRIBUTION_POINTS);
+    STATISTICS.put("contribution_detective", StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE);
+    STATISTICS.put("contribution_murderer", StatsStorage.StatisticType.CONTRIBUTION_MURDERER);
   }
 
   private Main plugin;

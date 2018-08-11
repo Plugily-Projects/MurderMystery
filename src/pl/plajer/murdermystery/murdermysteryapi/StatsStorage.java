@@ -87,7 +87,8 @@ public class StatsStorage {
    * Available statistics to get.
    */
   public enum StatisticType {
-    CONTRIBUTION_POINTS("contribution_points"), DEATHS("deaths"), GAMES_PLAYED("gamesplayed"), HIGHEST_SCORE("highestscore"), KILLS("kills"), LOSES("loses"), WINS("wins");
+    CONTRIBUTION_DETECTIVE("contribdetective"), CONTRIBUTION_MURDERER("contribmurderer"), DEATHS("deaths"), GAMES_PLAYED("gamesplayed"), HIGHEST_SCORE("highestscore"), KILLS("kills"),
+    LOSES("loses"), WINS("wins");
 
     String name;
 

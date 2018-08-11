@@ -22,19 +22,23 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -170,7 +174,8 @@ public class Arena extends BukkitRunnable {
             gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 60));
           }
           for (Player p : getPlayers()) {
-            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Role-Chances-Action-Bar")));
+            User user = UserManager.getUser(p.getUniqueId());
+            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user)));
           }
           if (getTimer() == 0) {
             MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
@@ -190,14 +195,37 @@ public class Arena extends BukkitRunnable {
               setTimer(Main.CLASSIC_TIMER_TIME);
               player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
             }
+
+            Map<User, Double> murdererChances = new HashMap<>();
+            Map<User, Double> detectiveChances = new HashMap<>();
+            for(Player p : getPlayers()){
+              User user = UserManager.getUser(p.getUniqueId());
+              int murderer = user.getInt("contribution_murderer");
+              int detective = user.getInt("contribution_detective");
+              if(murderer == 0){
+                murdererChances.put(user, 0.0);
+              } else {
+                murdererChances.put(user, (double) user.getInt("contribution_murderer") / (double) getPlayers().size());
+              }
+              if(detective == 0){
+                detectiveChances.put(user, 0.0);
+              } else {
+                detectiveChances.put(user, (double) user.getInt("contribution_detective") / (double) getPlayers().size());
+              }
+            }
+            Map<User, Double> sortedMurderer = murdererChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
+                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+            Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
+                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
             Set<Player> playersToSet = getPlayers();
-            Player murderer = (Player) playersToSet.toArray()[new Random().nextInt(playersToSet.size())];
+            Player murderer = ((User) sortedMurderer.entrySet().toArray()[0]).toPlayer();
             this.murderer = murderer.getUniqueId();
             playersToSet.remove(murderer);
             MessageUtils.sendTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"), 5, 40, 5);
             MessageUtils.sendSubTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
 
-            Player detective = (Player) playersToSet.toArray()[new Random().nextInt(playersToSet.size())];
+            Player detective = ((User) sortedDetective.entrySet().toArray()[0]).toPlayer();
             this.detective = detective.getUniqueId();
             MessageUtils.sendTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"), 5, 40, 5);
             MessageUtils.sendSubTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
@@ -368,6 +396,21 @@ public class Arena extends BukkitRunnable {
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
+  }
+
+  private String formatRoleChance(User user) {
+    String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Role-Chances-Action-Bar");
+    if (user.getInt("contribution_murderer") == 0) {
+      message = StringUtils.replace(message, "%murderer_chance%", "0.0%");
+    } else {
+      message = StringUtils.replace(message, "%murderer_chance%", String.valueOf((double) user.getInt("contribution_murderer") / (double) getPlayers().size() - 1.0) + "%");
+    }
+    if (user.getInt("contribution_detective") == 0) {
+      message = StringUtils.replace(message, "%detective_chance%", "0.0%");
+    } else {
+      message = StringUtils.replace(message, "%detective_chance%", String.valueOf((double) user.getInt("contribution_detective") / (double) getPlayers().size() - 1.0) + "%");
+    }
+    return message;
   }
 
   private void updateScoreboard() {

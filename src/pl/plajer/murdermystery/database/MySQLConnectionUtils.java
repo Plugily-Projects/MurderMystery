@@ -49,14 +49,16 @@ public class MySQLConnectionUtils {
       int deaths;
       int wins;
       int loses;
-      int contributionpoints;
+      int contribDetective;
+      int contribMurderer;
       gamesplayed = database.getStat(player.getUniqueId().toString(), "gamesplayed");
       kills = database.getStat(player.getUniqueId().toString(), "kills");
       highestscore = database.getStat(player.getUniqueId().toString(), "highestwave");
       deaths = database.getStat(player.getUniqueId().toString(), "deaths");
       wins = database.getStat(player.getUniqueId().toString(), "wins");
       loses = database.getStat(player.getUniqueId().toString(), "loses");
-      contributionpoints = database.getStat(player.getUniqueId().toString(), "contributionpoints");
+      contribDetective = database.getStat(player.getUniqueId().toString(), "contribdetective");
+      contribMurderer = database.getStat(player.getUniqueId().toString(), "contribmurderer");
       User user = UserManager.getUser(player.getUniqueId());
       user.setInt("gamesplayed", gamesplayed);
       user.setInt("kills", kills);
@@ -64,7 +66,8 @@ public class MySQLConnectionUtils {
       user.setInt("deaths", deaths);
       user.setInt("wins", wins);
       user.setInt("loses", loses);
-      user.setInt("contributionpoints", contributionpoints);
+      user.setInt("contribution_detective", contribDetective);
+      user.setInt("contribution_murderer", contribMurderer);
       b = true;
     } catch (SQLException e1) {
       System.out.print("CONNECTION FAILED FOR PLAYER " + player.getName());
@@ -85,14 +88,16 @@ public class MySQLConnectionUtils {
         int deaths;
         int wins;
         int loses;
-        int contributionpoints;
+        int contribDetective;
+        int contribMurderer;
         gamesplayed = database.getStat(player.getUniqueId().toString(), "gamesplayed");
         kills = database.getStat(player.getUniqueId().toString(), "kills");
         highestscore = database.getStat(player.getUniqueId().toString(), "highestwave");
         deaths = database.getStat(player.getUniqueId().toString(), "deaths");
         wins = database.getStat(player.getUniqueId().toString(), "wins");
         loses = database.getStat(player.getUniqueId().toString(), "loses");
-        contributionpoints = database.getStat(player.getUniqueId().toString(), "contributionpoints");
+        contribDetective = database.getStat(player.getUniqueId().toString(), "contribdetective");
+        contribMurderer = database.getStat(player.getUniqueId().toString(), "contribmurderer");
         User user = UserManager.getUser(player.getUniqueId());
         user.setInt("gamesplayed", gamesplayed);
         user.setInt("kills", kills);
@@ -100,7 +105,8 @@ public class MySQLConnectionUtils {
         user.setInt("deaths", deaths);
         user.setInt("wins", wins);
         user.setInt("loses", loses);
-        user.setInt("contributionpoints", contributionpoints);
+        user.setInt("contribution_detective", contribDetective);
+        user.setInt("contribution_murderer", contribMurderer);
       } catch (SQLException e1) {
         System.out.print("CONNECTION FAILED TWICE FOR PLAYER " + player.getName());
         e1.printStackTrace();
