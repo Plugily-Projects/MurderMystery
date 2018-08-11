@@ -198,16 +198,16 @@ public class Arena extends BukkitRunnable {
 
             Map<User, Double> murdererChances = new HashMap<>();
             Map<User, Double> detectiveChances = new HashMap<>();
-            for(Player p : getPlayers()){
+            for (Player p : getPlayers()) {
               User user = UserManager.getUser(p.getUniqueId());
               int murderer = user.getInt("contribution_murderer");
               int detective = user.getInt("contribution_detective");
-              if(murderer == 0){
+              if (murderer == 0) {
                 murdererChances.put(user, 0.0);
               } else {
                 murdererChances.put(user, (double) user.getInt("contribution_murderer") / (double) getPlayers().size());
               }
-              if(detective == 0){
+              if (detective == 0) {
                 detectiveChances.put(user, 0.0);
               } else {
                 detectiveChances.put(user, (double) user.getInt("contribution_detective") / (double) getPlayers().size());
@@ -215,17 +215,19 @@ public class Arena extends BukkitRunnable {
             }
             Map<User, Double> sortedMurderer = murdererChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
                     Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-            Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
-                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
             Set<Player> playersToSet = getPlayers();
-            Player murderer = ((User) sortedMurderer.entrySet().toArray()[0]).toPlayer();
+            Player murderer = ((User) sortedMurderer.keySet().toArray()[0]).toPlayer();
             this.murderer = murderer.getUniqueId();
             playersToSet.remove(murderer);
             MessageUtils.sendTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"), 5, 40, 5);
             MessageUtils.sendSubTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
+            detectiveChances.remove(sortedMurderer.keySet().toArray()[0]);
 
-            Player detective = ((User) sortedDetective.entrySet().toArray()[0]).toPlayer();
+            Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
+                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
+            Player detective = ((User) sortedDetective.keySet().toArray()[0]).toPlayer();
             this.detective = detective.getUniqueId();
             MessageUtils.sendTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"), 5, 40, 5);
             MessageUtils.sendSubTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
@@ -403,12 +405,12 @@ public class Arena extends BukkitRunnable {
     if (user.getInt("contribution_murderer") == 0) {
       message = StringUtils.replace(message, "%murderer_chance%", "0.0%");
     } else {
-      message = StringUtils.replace(message, "%murderer_chance%", String.valueOf((double) user.getInt("contribution_murderer") / (double) getPlayers().size() - 1.0) + "%");
+      message = StringUtils.replace(message, "%murderer_chance%", String.valueOf(MinigameUtils.round((double) user.getInt("contribution_murderer") / (double) getPlayers().size() - 1.0, 2)) + "%");
     }
     if (user.getInt("contribution_detective") == 0) {
       message = StringUtils.replace(message, "%detective_chance%", "0.0%");
     } else {
-      message = StringUtils.replace(message, "%detective_chance%", String.valueOf((double) user.getInt("contribution_detective") / (double) getPlayers().size() - 1.0) + "%");
+      message = StringUtils.replace(message, "%detective_chance%", String.valueOf(MinigameUtils.round((double) user.getInt("contribution_detective") / (double) getPlayers().size() - 1.0, 2)) + "%");
     }
     return message;
   }

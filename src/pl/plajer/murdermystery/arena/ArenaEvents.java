@@ -265,7 +265,11 @@ public class ArenaEvents implements Listener {
             MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), 5, 40, 5);
           }
           arena.setHero(attacker.getUniqueId());
-          user.addInt("contribution_detective", new Random().nextInt(8) + 1);
+          if(ArenaUtils.isRole(ArenaUtils.Role.INNOCENT, attacker) || ArenaUtils.isRole(ArenaUtils.Role.FAKE_DETECTIVE, attacker)){
+            user.addInt("contribution_detective", new Random().nextInt(8) + 1);
+          } else {
+            user.addInt("contribution_murderer", new Random().nextInt(2) + 1);
+          }
           ArenaManager.stopGame(false, arena);
           arena.setArenaState(ArenaState.ENDING);
           arena.setTimer(5);
@@ -275,6 +279,7 @@ public class ArenaEvents implements Listener {
       } else if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, victim)) {
         ArenaUtils.dropBowAndAnnounce(arena, victim);
       } else if (ArenaUtils.isRole(ArenaUtils.Role.INNOCENT, victim)) {
+        user.addInt("contribution_detective", new Random().nextInt(2) + 1);
         if (ArenaUtils.isRole(ArenaUtils.Role.MURDERER, attacker)) {
           MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"), 5, 40, 5);
         } else {
