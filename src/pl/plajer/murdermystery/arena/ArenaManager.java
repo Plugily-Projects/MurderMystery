@@ -249,6 +249,7 @@ public class ArenaManager {
         plugin.getInventoryManager().loadInventory(p);
       }
       user.setInt("gold", 0);
+      user.setInt("local_score", 0);
       user.setInt("local_kills", 0);
     } catch (Exception ex) {
       new ReportedException(plugin, ex);

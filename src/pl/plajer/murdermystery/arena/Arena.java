@@ -286,6 +286,15 @@ public class Arena extends BukkitRunnable {
             }
           }
 
+          //every 30 secs survive reward
+          if(getTimer() % 30 == 0){
+            for(Player p : getPlayersLeft()){
+              if(ArenaUtils.isRole(ArenaUtils.Role.INNOCENT, p)){
+                ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.SURVIVE_TIME);
+              }
+            }
+          }
+
           if (getTimer() == 30 || getTimer() == 60) {
             for (Player p : getPlayers()) {
               MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", String.valueOf(getTimer())), 5, 30, 5);
@@ -315,6 +324,7 @@ public class Arena extends BukkitRunnable {
                     MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), 5, 40, 5);
                   }
                 }
+                ArenaUtils.addScore(UserManager.getUser(murderer), ArenaUtils.ScoreAction.WIN_GAME);
                 ArenaManager.stopGame(false, this);
                 setArenaState(ArenaState.ENDING);
                 setTimer(5);
@@ -482,7 +492,7 @@ public class Arena extends BukkitRunnable {
     //should be for murderer only
     formattedLine = StringUtils.replace(formattedLine, "%KILLS%", String.valueOf(user.getInt("local_kills")));
     //todo
-    formattedLine = StringUtils.replace(formattedLine, "%SCORE%", "soon");
+    formattedLine = StringUtils.replace(formattedLine, "%SCORE%", String.valueOf(user.getInt("local_score")));
     formattedLine = ChatManager.colorRawMessage(formattedLine);
     return formattedLine;
   }

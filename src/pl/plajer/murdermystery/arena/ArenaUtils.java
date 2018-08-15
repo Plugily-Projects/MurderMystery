@@ -22,6 +22,7 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,6 +36,7 @@ import org.golde.bukkit.corpsereborn.nms.Corpses;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.core.services.ReportedException;
 
@@ -46,6 +48,26 @@ import pl.plajerlair.core.services.ReportedException;
 public class ArenaUtils {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
+
+  public static void addScore(User user, ScoreAction action) {
+    String msg = ChatManager.colorMessage("In-Game.Messages.Bonus-Score");
+    msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
+    if(action == ScoreAction.DETECTIVE_WIN_GAME){
+      int innocents = 0;
+      for(Player p : user.getArena().getPlayersLeft()){
+        if(isRole(Role.INNOCENT, p)){
+          innocents++;
+        }
+      }
+      msg = StringUtils.replace(msg, "%score%", String.valueOf(100 * innocents));
+      msg = StringUtils.replace(msg, "%score%", action.getAction().replace("%amount%", String.valueOf(innocents)));
+      user.toPlayer().sendMessage(msg);
+      return;
+    }
+    msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
+    msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getAction()));
+    user.toPlayer().sendMessage(msg);
+  }
 
   public static void updateInnocentLocator(Arena arena) {
     try {
@@ -193,6 +215,29 @@ public class ArenaUtils {
       }
       player.hidePlayer(players);
       players.hidePlayer(player);
+    }
+  }
+
+  public enum ScoreAction {
+    KILL_PLAYER(100, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Kill-Player")), KILL_MURDERER(200, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Kill-Murderer")),
+    GOLD_PICKUP(15, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Gold-Pickup")), SURVIVE_TIME(150, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Survive")),
+    SURVIVE_GAME(200, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Survive-Till-End")), WIN_GAME(100, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Win-Game")),
+    DETECTIVE_WIN_GAME(0, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Detective-Reward")), INNOCENT_KILL(-100, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Innocent-Kill"));
+
+    int points;
+    String action;
+
+    ScoreAction(int points, String action) {
+      this.points = points;
+      this.action = action;
+    }
+
+    public int getPoints() {
+      return points;
+    }
+
+    public String getAction() {
+      return action;
     }
   }
 

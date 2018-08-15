@@ -160,6 +160,18 @@ In-Game:
       Detective-Subtitle: "&eFind and kill the murderer!"
       Innocent-Title: "&eROLE: INNOCENT"
       Innocent-Subtitle: "&eStay alive as long as possible!"
+    Bonus-Score: "&e+%score% score (%action%)"
+    Score-Actions:
+      Kill-Player: "for killing player"
+      Kill-Murderer: "for killing murderer"
+      Gold-Pickup: "for gold pickup"
+      Survive: "for surviving 30 seconds"
+      #for innocents
+      Survive-Till-End: "for surviving till end"
+      #for murderer or detective
+      Win-Game: "for winning the game"
+      Detective-Reward: "for %amount% innocents survived"
+      Innocent-Kill: "for killing innocent"
     Picked-Up-Gold: "&ePicked up gold!"
     Previous-Role-Left-Title: "&cPrevious %role% has left!"
     Previous-Role-Left-Subtitle: "&cSelecting new %role%!"

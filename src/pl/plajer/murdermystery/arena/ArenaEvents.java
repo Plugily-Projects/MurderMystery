@@ -146,6 +146,7 @@ public class ArenaEvents implements Listener {
       }
       e.getPlayer().getInventory().setItem(8, stack);
       user.addInt("gold", 1);
+      ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP);
       e.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Picked-Up-Gold"));
 
       if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, e.getPlayer())) {
@@ -183,6 +184,11 @@ public class ArenaEvents implements Listener {
         return;
       }
 
+      //better check this for future even if anyone else cannot use sword
+      if(!ArenaUtils.isRole(ArenaUtils.Role.MURDERER, attacker)){
+        return;
+      }
+
       Arena arena = ArenaRegistry.getArena(attacker);
       //todo support for skins later
       if (attacker.getInventory().getItemInMainHand().getType() != Material.IRON_SWORD) {
@@ -204,6 +210,7 @@ public class ArenaEvents implements Listener {
       victim.damage(100.0);
       victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
       user.addInt("local_kills", 1);
+      ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER);
 
       arena.getPlayersLeft().remove(victim);
       if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, victim)) {
@@ -245,6 +252,7 @@ public class ArenaEvents implements Listener {
 
       if (ArenaUtils.isRole(ArenaUtils.Role.MURDERER, attacker)) {
         user.addInt("local_kills", 1);
+        ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER);
       }
 
       ArenaUtils.spawnCorpse(victim, arena);
@@ -257,11 +265,18 @@ public class ArenaEvents implements Listener {
           if (ArenaUtils.isRole(ArenaUtils.Role.MURDERER, p)) {
             MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), 5, 40, 5);
           }
-          arena.setHero(attacker.getUniqueId());
-          ArenaManager.stopGame(false, arena);
-          arena.setArenaState(ArenaState.ENDING);
-          arena.setTimer(5);
+          if(ArenaUtils.isRole(ArenaUtils.Role.INNOCENT, p)) {
+            ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.SURVIVE_GAME);
+          } else if(ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, p)){
+            ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.WIN_GAME);
+            ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.DETECTIVE_WIN_GAME);
+          }
         }
+        ArenaUtils.addScore(UserManager.getUser(attacker.getUniqueId()), ArenaUtils.ScoreAction.KILL_MURDERER);
+        arena.setHero(attacker.getUniqueId());
+        ArenaManager.stopGame(false, arena);
+        arena.setArenaState(ArenaState.ENDING);
+        arena.setTimer(5);
         MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), 5, 40, 5);
         MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
       } else if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, victim)) {
@@ -278,6 +293,7 @@ public class ArenaEvents implements Listener {
           MessageUtils.sendTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"), 5, 40, 5);
           MessageUtils.sendSubTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Killed-Innocent"), 5, 40, 5);
           attacker.damage(100.0);
+          ArenaUtils.addScore(UserManager.getUser(attacker.getUniqueId()), ArenaUtils.ScoreAction.INNOCENT_KILL);
           ArenaUtils.spawnCorpse(attacker, arena);
 
           if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, attacker)) {
