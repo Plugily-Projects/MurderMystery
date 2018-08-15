@@ -98,6 +98,7 @@ public class Arena extends BukkitRunnable {
   //instead of 3 location fields we use map with GameLocation enum
   private Map<GameLocation, Location> gameLocations = new HashMap<>();
   private boolean ready = true;
+  private Map<String, List<String>> scoreboardContents = new HashMap<>();
 
   public Arena(String ID, Main plugin) {
     this.plugin = plugin;
@@ -106,6 +107,21 @@ public class Arena extends BukkitRunnable {
     if (plugin.isBossbarEnabled()) {
       gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Main-Title"), BarColor.BLUE, BarStyle.SOLID);
     }
+    List<String> lines;
+    for (ArenaState state : ArenaState.values()) {
+      if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
+        lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content." + getArenaState().getFormattedName());
+      } else {
+        lines = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content." + getArenaState().getFormattedName()).split(";"));
+      }
+      scoreboardContents.put(state.getFormattedName(), lines);
+    }
+    if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
+      lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content.Playing-Murderer");
+    } else {
+      lines = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content.Playing-Murderer").split(";"));
+    }
+    scoreboardContents.put(ArenaState.IN_GAME.getFormattedName() + "-Murderer", lines);
   }
 
   public boolean isReady() {
@@ -173,9 +189,16 @@ public class Arena extends BukkitRunnable {
             gameBar.setTitle(ChatManager.colorMessage("Bossbar.Starting-In").replace("%time%", String.valueOf(getTimer())));
             gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 60));
           }
+          int totalMurderer = 0;
+          int totalDetective = 0;
           for (Player p : getPlayers()) {
             User user = UserManager.getUser(p.getUniqueId());
-            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user)));
+            totalMurderer += user.getInt("contribution_murderer");
+            totalDetective += user.getInt("contribution_detective");
+          }
+          for (Player p : getPlayers()) {
+            User user = UserManager.getUser(p.getUniqueId());
+            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
           }
           if (getTimer() == 0) {
             MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
@@ -200,18 +223,8 @@ public class Arena extends BukkitRunnable {
             Map<User, Double> detectiveChances = new HashMap<>();
             for (Player p : getPlayers()) {
               User user = UserManager.getUser(p.getUniqueId());
-              int murderer = user.getInt("contribution_murderer");
-              int detective = user.getInt("contribution_detective");
-              if (murderer == 0) {
-                murdererChances.put(user, 0.0);
-              } else {
-                murdererChances.put(user, (double) user.getInt("contribution_murderer") / (double) getPlayers().size());
-              }
-              if (detective == 0) {
-                detectiveChances.put(user, 0.0);
-              } else {
-                detectiveChances.put(user, (double) user.getInt("contribution_detective") / (double) getPlayers().size());
-              }
+              murdererChances.put(user, ((double) user.getInt("contribution_murderer") / (double) totalMurderer) * 100.0);
+              detectiveChances.put(user, ((double) user.getInt("contribution_detective") / (double) totalDetective) * 100.0);
             }
             Map<User, Double> sortedMurderer = murdererChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
                     Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
@@ -219,6 +232,7 @@ public class Arena extends BukkitRunnable {
             Set<Player> playersToSet = getPlayers();
             Player murderer = ((User) sortedMurderer.keySet().toArray()[0]).toPlayer();
             this.murderer = murderer.getUniqueId();
+            UserManager.getUser(this.murderer).setInt("contribution_murderer", 1);
             playersToSet.remove(murderer);
             MessageUtils.sendTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"), 5, 40, 5);
             MessageUtils.sendSubTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
@@ -229,6 +243,7 @@ public class Arena extends BukkitRunnable {
 
             Player detective = ((User) sortedDetective.keySet().toArray()[0]).toPlayer();
             this.detective = detective.getUniqueId();
+            UserManager.getUser(this.detective).setInt("contribution_detective", 1);
             MessageUtils.sendTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"), 5, 40, 5);
             MessageUtils.sendSubTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
             playersToSet.remove(detective);
@@ -400,18 +415,10 @@ public class Arena extends BukkitRunnable {
     }
   }
 
-  private String formatRoleChance(User user) {
+  private String formatRoleChance(User user, int murdererPts, int detectivePts) {
     String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Role-Chances-Action-Bar");
-    if (user.getInt("contribution_murderer") == 0) {
-      message = StringUtils.replace(message, "%murderer_chance%", "0.0%");
-    } else {
-      message = StringUtils.replace(message, "%murderer_chance%", String.valueOf(MinigameUtils.round((double) user.getInt("contribution_murderer") / (double) getPlayers().size() - 1.0, 2)) + "%");
-    }
-    if (user.getInt("contribution_detective") == 0) {
-      message = StringUtils.replace(message, "%detective_chance%", "0.0%");
-    } else {
-      message = StringUtils.replace(message, "%detective_chance%", String.valueOf(MinigameUtils.round((double) user.getInt("contribution_detective") / (double) getPlayers().size() - 1.0, 2)) + "%");
-    }
+    message = StringUtils.replace(message, "%murderer_chance%", String.valueOf(MinigameUtils.round(((double) user.getInt("contribution_murderer") / (double) murdererPts) * 100.0, 2)) + "%");
+    message = StringUtils.replace(message, "%detective_chance%", String.valueOf(MinigameUtils.round(((double) user.getInt("contribution_detective") / (double) detectivePts) * 100.0, 2)) + "%");
     return message;
   }
 
@@ -426,22 +433,10 @@ public class Arena extends BukkitRunnable {
       }
       User user = UserManager.getUser(p.getUniqueId());
       scoreboard = new MinigameScoreboard("PL_MM", "PL_CR", ChatManager.colorMessage("Scoreboard.Title"));
-      List<String> lines;
-      String access = "";
+      List<String> lines = scoreboardContents.get(getArenaState().getFormattedName());
       if (ArenaUtils.isRole(ArenaUtils.Role.MURDERER, p)) {
-        access = "-Murderer";
-      }
-      if (getArenaState() == ArenaState.IN_GAME) {
-        if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
-          lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content.Playing" + access);
-        } else {
-          lines = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content.Playing" + access).split(";"));
-        }
-      } else {
-        if (LanguageManager.getPluginLocale() == Locale.ENGLISH) {
-          lines = LanguageManager.getLanguageFile().getStringList("Scoreboard.Content." + getArenaState().getFormattedName());
-        } else {
-          lines = Arrays.asList(ChatManager.colorMessage("Scoreboard.Content." + getArenaState().getFormattedName()).split(";"));
+        if (getArenaState() == ArenaState.IN_GAME) {
+          lines = scoreboardContents.get(getArenaState().getFormattedName() + "-Murderer");
         }
       }
       for (String line : lines) {
@@ -454,40 +449,40 @@ public class Arena extends BukkitRunnable {
 
   private String formatScoreboardLine(String line, User user) {
     String formattedLine = line;
-    formattedLine = formattedLine.replace("%TIME%", String.valueOf(getTimer()));
-    formattedLine = formattedLine.replace("%FORMATTED_TIME%", MinigameUtils.formatIntoMMSS(getTimer()));
+    formattedLine = StringUtils.replace(formattedLine, "%TIME%", String.valueOf(getTimer()));
+    formattedLine = StringUtils.replace(formattedLine, "%FORMATTED_TIME%", MinigameUtils.formatIntoMMSS(getTimer()));
     int innocents = 0;
     for (Player p : getPlayersLeft()) {
       if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, p)) continue;
       innocents++;
     }
     if (!getPlayersLeft().contains(user.toPlayer())) {
-      formattedLine = formattedLine.replace("%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Dead"));
+      formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Dead"));
     } else {
       if (murderer == user.toPlayer().getUniqueId()) {
-        formattedLine = formattedLine.replace("%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
+        formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
       } else if (detective == user.toPlayer().getUniqueId() || (fakeDetective != null && fakeDetective == user.toPlayer().getUniqueId())) {
-        formattedLine = formattedLine.replace("%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Detective"));
+        formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Detective"));
       } else {
-        formattedLine = formattedLine.replace("%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Innocent"));
+        formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Innocent"));
       }
     }
-    formattedLine = formattedLine.replace("%INNOCENTS%", String.valueOf(innocents));
-    formattedLine = formattedLine.replace("%PLAYERS%", String.valueOf(getPlayers().size()));
-    formattedLine = formattedLine.replace("%MIN_PLAYERS%", String.valueOf(getMinimumPlayers()));
+    formattedLine = StringUtils.replace(formattedLine, "%INNOCENTS%", String.valueOf(innocents));
+    formattedLine = StringUtils.replace(formattedLine, "%PLAYERS%", String.valueOf(getPlayers().size()));
+    formattedLine = StringUtils.replace(formattedLine, "%MIN_PLAYERS%", String.valueOf(getMinimumPlayers()));
     if (detectiveDead && fakeDetective == null) {
-      formattedLine = formattedLine.replace("%DETECTIVE_STATUS%", ChatManager.colorMessage("Scoreboard.Detective-Died-No-Bow"));
+      formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", ChatManager.colorMessage("Scoreboard.Detective-Died-No-Bow"));
     }
     if (detectiveDead && fakeDetective != null) {
-      formattedLine = formattedLine.replace("%DETECTIVE_STATUS%", ChatManager.colorMessage("Scoreboard.Detective-Died-Bow"));
+      formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", ChatManager.colorMessage("Scoreboard.Detective-Died-Bow"));
     }
     if (!detectiveDead) {
-      formattedLine = formattedLine.replace("%DETECTIVE_STATUS%", ChatManager.colorMessage("Scoreboard.Detective-Status-Normal"));
+      formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", ChatManager.colorMessage("Scoreboard.Detective-Status-Normal"));
     }
     //should be for murderer only
-    formattedLine = formattedLine.replace("%KILLS%", String.valueOf(user.getInt("local_kills")));
+    formattedLine = StringUtils.replace(formattedLine, "%KILLS%", String.valueOf(user.getInt("local_kills")));
     //todo
-    formattedLine = formattedLine.replace("%SCORE%", "soon");
+    formattedLine = StringUtils.replace(formattedLine, "%SCORE%", "soon");
     formattedLine = ChatManager.colorRawMessage(formattedLine);
     return formattedLine;
   }

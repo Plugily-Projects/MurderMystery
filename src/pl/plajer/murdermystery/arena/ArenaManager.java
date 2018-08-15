@@ -200,13 +200,13 @@ public class ArenaManager {
           MessageUtils.sendTitle(Bukkit.getPlayer(newMurderer), ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"), 5, 40, 5);
           MessageUtils.sendSubTitle(Bukkit.getPlayer(newMurderer), ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
           Bukkit.getPlayer(newMurderer).getInventory().setItem(1, new ItemStack(Material.IRON_SWORD, 1));
-          user.setInt("contribution_murderer", 0);
+          user.setInt("contribution_murderer", 1);
         } else if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, p)) {
           arena.setDetectiveDead(true);
           if (ArenaUtils.isRole(ArenaUtils.Role.FAKE_DETECTIVE, p)) {
             arena.setFakeDetective(null);
           } else {
-            user.setInt("contribution_detective", 0);
+            user.setInt("contribution_detective", 1);
           }
           ArenaUtils.dropBowAndAnnounce(arena, p);
         }
@@ -276,13 +276,19 @@ public class ArenaManager {
       } else {
         summaryMessages = Arrays.asList(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Summary-Message").split(";"));
       }
+      Random rand = new Random();
       for (final Player p : arena.getPlayers()) {
+        User user = UserManager.getUser(p.getUniqueId());
+        if(ArenaUtils.isRole(ArenaUtils.Role.FAKE_DETECTIVE, p) || ArenaUtils.isRole(ArenaUtils.Role.INNOCENT, p)){
+          user.setInt("contribution_murderer", rand.nextInt(4) + 1);
+          user.setInt("contribution_detective", rand.nextInt(4) + 1);
+        }
         p.getInventory().clear();
         p.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
         for (String msg : summaryMessages) {
           MessageUtils.sendCenteredMessage(p, formatSummaryPlaceholders(msg, arena));
         }
-        UserManager.getUser(p.getUniqueId()).removeScoreboard();
+        user.removeScoreboard();
         if (!quickStop) {
           if (plugin.getConfig().getBoolean("Firework-When-Game-Ends", true)) {
             new BukkitRunnable() {
