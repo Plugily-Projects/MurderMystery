@@ -442,7 +442,7 @@ public class Arena extends BukkitRunnable {
         continue;
       }
       User user = UserManager.getUser(p.getUniqueId());
-      scoreboard = new MinigameScoreboard("PL_MM", "PL_CR", ChatManager.colorMessage("Scoreboard.Title"));
+      scoreboard = new MinigameScoreboard("PL_MM", "MM_CR", ChatManager.colorMessage("Scoreboard.Title"));
       List<String> lines = scoreboardContents.get(getArenaState().getFormattedName());
       if (ArenaUtils.isRole(ArenaUtils.Role.MURDERER, p)) {
         if (getArenaState() == ArenaState.IN_GAME) {
