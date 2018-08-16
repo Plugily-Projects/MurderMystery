@@ -176,6 +176,9 @@ public class ArenaManager {
       MMGameLeaveAttemptEvent gameLeaveAttemptEvent = new MMGameLeaveAttemptEvent(p, arena);
       Bukkit.getPluginManager().callEvent(gameLeaveAttemptEvent);
       User user = UserManager.getUser(p.getUniqueId());
+      if(user.getInt("local_score") > user.getInt("highestscore")){
+        user.setInt("highestscore", user.getInt("local_score"));
+      }
       if (arena.getArenaState() == ArenaState.IN_GAME) {
         //-1 cause we didn't remove player yet
         if (arena.getPlayersLeft().size() - 1 == 1) {
