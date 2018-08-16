@@ -52,10 +52,10 @@ public class ArenaUtils {
   public static void addScore(User user, ScoreAction action) {
     String msg = ChatManager.colorMessage("In-Game.Messages.Bonus-Score");
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
-    if(action == ScoreAction.DETECTIVE_WIN_GAME){
+    if (action == ScoreAction.DETECTIVE_WIN_GAME) {
       int innocents = 0;
-      for(Player p : user.getArena().getPlayersLeft()){
-        if(isRole(Role.INNOCENT, p)){
+      for (Player p : user.getArena().getPlayersLeft()) {
+        if (isRole(Role.INNOCENT, p)) {
           innocents++;
         }
       }

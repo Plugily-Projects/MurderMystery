@@ -176,7 +176,7 @@ public class ArenaManager {
       MMGameLeaveAttemptEvent gameLeaveAttemptEvent = new MMGameLeaveAttemptEvent(p, arena);
       Bukkit.getPluginManager().callEvent(gameLeaveAttemptEvent);
       User user = UserManager.getUser(p.getUniqueId());
-      if(user.getInt("local_score") > user.getInt("highestscore")){
+      if (user.getInt("local_score") > user.getInt("highestscore")) {
         user.setInt("highestscore", user.getInt("local_score"));
       }
       if (arena.getArenaState() == ArenaState.IN_GAME) {
@@ -283,7 +283,7 @@ public class ArenaManager {
       Random rand = new Random();
       for (final Player p : arena.getPlayers()) {
         User user = UserManager.getUser(p.getUniqueId());
-        if(ArenaUtils.isRole(ArenaUtils.Role.FAKE_DETECTIVE, p) || ArenaUtils.isRole(ArenaUtils.Role.INNOCENT, p)){
+        if (ArenaUtils.isRole(ArenaUtils.Role.FAKE_DETECTIVE, p) || ArenaUtils.isRole(ArenaUtils.Role.INNOCENT, p)) {
           user.setInt("contribution_murderer", rand.nextInt(4) + 1);
           user.setInt("contribution_detective", rand.nextInt(4) + 1);
         }

@@ -287,9 +287,9 @@ public class Arena extends BukkitRunnable {
           }
 
           //every 30 secs survive reward
-          if(getTimer() % 30 == 0){
-            for(Player p : getPlayersLeft()){
-              if(ArenaUtils.isRole(ArenaUtils.Role.INNOCENT, p)){
+          if (getTimer() % 30 == 0) {
+            for (Player p : getPlayersLeft()) {
+              if (ArenaUtils.isRole(ArenaUtils.Role.INNOCENT, p)) {
                 ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.SURVIVE_TIME);
               }
             }
