@@ -18,8 +18,6 @@
 
 package pl.plajer.murdermystery.arena;
 
-import java.util.Random;
-
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -35,6 +33,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -68,6 +67,19 @@ public class ArenaEvents implements Listener {
   public ArenaEvents(Main plugin) {
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
+  }
+
+  @EventHandler
+  public void onFallDamage(EntityDamageEvent e) {
+    if (!(e.getEntity() instanceof Player)) {
+      return;
+    }
+    if (!ArenaRegistry.isInArena((Player) e.getEntity())) {
+      return;
+    }
+    if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
+      e.setCancelled(true);
+    }
   }
 
   @EventHandler
@@ -185,7 +197,7 @@ public class ArenaEvents implements Listener {
       }
 
       //better check this for future even if anyone else cannot use sword
-      if(!ArenaUtils.isRole(ArenaUtils.Role.MURDERER, attacker)){
+      if (!ArenaUtils.isRole(ArenaUtils.Role.MURDERER, attacker)) {
         return;
       }
 
@@ -265,9 +277,9 @@ public class ArenaEvents implements Listener {
           if (ArenaUtils.isRole(ArenaUtils.Role.MURDERER, p)) {
             MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), 5, 40, 5);
           }
-          if(ArenaUtils.isRole(ArenaUtils.Role.INNOCENT, p)) {
+          if (ArenaUtils.isRole(ArenaUtils.Role.INNOCENT, p)) {
             ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.SURVIVE_GAME);
-          } else if(ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, p)){
+          } else if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, p)) {
             ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.WIN_GAME);
             ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.DETECTIVE_WIN_GAME);
           }
