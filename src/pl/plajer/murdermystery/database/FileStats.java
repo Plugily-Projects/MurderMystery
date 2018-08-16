@@ -77,7 +77,11 @@ public class FileStats {
     if (config.contains(player.getUniqueId().toString() + "." + stat)) {
       user.setInt(stat, config.getInt(player.getUniqueId().toString() + "." + stat));
     } else {
-      user.setInt(stat, 0);
+      if (stat.equals("contribution_detective") || stat.equals("contribution_murderer")) {
+        user.setInt(stat, 1);
+      } else {
+        user.setInt(stat, 0);
+      }
     }
   }
 
