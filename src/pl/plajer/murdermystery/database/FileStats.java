@@ -15,7 +15,6 @@
 
 package pl.plajer.murdermystery.database;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +27,6 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
-import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
@@ -62,14 +60,7 @@ public class FileStats {
   public void saveStat(Player player, String stat) {
     User user = UserManager.getUser(player.getUniqueId());
     config.set(player.getUniqueId().toString() + "." + stat, user.getInt(stat));
-    try {
-      config.save(ConfigUtils.getFile(plugin, "stats"));
-    } catch (IOException e) {
-      e.printStackTrace();
-      MessageUtils.errorOccured();
-      Bukkit.getConsoleSender().sendMessage("Cannot save stats.yml file!");
-      Bukkit.getConsoleSender().sendMessage("Restart the server, file COULD BE OVERRIDDEN!");
-    }
+    ConfigUtils.saveConfig(plugin, config, "stats");
   }
 
   public void loadStat(Player player, String stat) {

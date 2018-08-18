@@ -22,9 +22,12 @@ package pl.plajer.murdermystery.handlers.language;
  */
 public enum Locale {
 
+  CHINESE_SIMPLIFIED("简体中文", "zh_Hans", "POEditor contributors (壁灯)"),
   ENGLISH("English", "en_GB", "Plajer"),
+  FRENCH("Français", "fr_FR", "POEditor contributors (Dianox)"),
   GERMAN("Deutsch", "de_DE", "Tigerkatze"),
-  POLISH("Polski", "pl_PL", "Plajer");
+  KOREAN("한국의", "ko_KR", "POEditor contributors (human0324)"),
+  POLISH("Polski", "pl_PL", "Plajer & POEditor contributors (Owen Port)");
 
   String formattedName;
   String prefix;

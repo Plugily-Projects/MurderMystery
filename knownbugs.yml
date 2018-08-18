@@ -1,5 +1,0 @@
-- corpses doesn't really remove themself after the game
-- scoreboard role name is buggy (starts with 0something)
-- locales not working
-- language.yml is not final
-- rewards.yml don't fully work

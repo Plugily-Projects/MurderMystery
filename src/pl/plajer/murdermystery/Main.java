@@ -234,6 +234,20 @@ public class Main extends JavaPlugin {
         case "deutsch":
         case "de":
           return "German";
+        case "简体中文":
+        case "中文":
+        case "chinese":
+        case "zh":
+          return "Chinese (Simplified)";
+        case "french":
+        case "francais":
+        case "français":
+        case "fr":
+          return "French";
+        case "korean":
+        case "한국의":
+        case "kr":
+          return "Korean";
         default:
           return "English";
       }
