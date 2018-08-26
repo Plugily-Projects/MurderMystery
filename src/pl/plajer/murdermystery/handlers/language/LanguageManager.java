@@ -22,8 +22,6 @@ import com.wasteofplastic.askyblock.ASkyBlock;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.util.Properties;
 
 import org.bukkit.Bukkit;

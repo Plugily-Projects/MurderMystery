@@ -1,7 +1,7 @@
 name: MurderMystery
 main: pl.plajer.murdermystery.Main
 author: [Plajer]
-version: 0.0.5b
+version: 0.0.6b
 depend: [HolographicDisplays, CorpseReborn]
 softdepend: [PlaceholderAPI, LeaderHeads]
 
