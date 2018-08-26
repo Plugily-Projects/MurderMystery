@@ -20,6 +20,7 @@ import com.wasteofplastic.askyblock.ASLocale;
 import com.wasteofplastic.askyblock.ASkyBlock;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
@@ -31,6 +32,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.utils.MessageUtils;
+import pl.plajerlair.core.services.LocaleService;
+import pl.plajerlair.core.services.ServiceRegistry;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
@@ -59,58 +62,45 @@ public class LanguageManager {
   }
 
   private static void loadProperties() {
-    if (pluginLocale == Locale.ENGLISH) {
+    LocaleService service = ServiceRegistry.getLocaleService(plugin);
+    if (service.isValidVersion()) {
+      LocaleService.DownloadStatus status = service.demandLocaleDownload(pluginLocale.getPrefix());
+      if (status == LocaleService.DownloadStatus.FAIL) {
+        pluginLocale = Locale.ENGLISH;
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Locale service couldn't download latest locale for plugin! English locale will be used instead!");
+        return;
+      } else if (status == LocaleService.DownloadStatus.SUCCESS) {
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Downloaded locale " + pluginLocale.getPrefix() + " properly!");
+      } else if (status == LocaleService.DownloadStatus.LATEST) {
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Locale " + pluginLocale.getPrefix() + " is latest! Awesome!");
+      }
+    } else {
+      pluginLocale = Locale.ENGLISH;
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Your plugin version is too old to use latest locale! Please update plugin to access latest updates of locale!");
       return;
     }
     try {
-      properties.load(new InputStreamReader(plugin.getResource("locales/" + pluginLocale.getPrefix() + ".properties"), Charset.forName("UTF-8")));
+      properties.load(new FileReader(new File(plugin.getDataFolder() + "/locales/" + pluginLocale.getPrefix() + ".properties")));
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
   private static void setupLocale() {
-    String locale = plugin.getConfig().getString("locale", "default");
-    switch (locale.toLowerCase()) {
-      case "default":
-      case "english":
-      case "en":
-        pluginLocale = Locale.ENGLISH;
-        break;
-      case "german":
-      case "deutsch":
-      case "de":
-        pluginLocale = Locale.GERMAN;
-        break;
-      case "polish":
-      case "polski":
-      case "pl":
-        pluginLocale = Locale.POLISH;
-        break;
-      case "简体中文":
-      case "中文":
-      case "chinese":
-      case "zh":
-        pluginLocale = Locale.CHINESE_SIMPLIFIED;
-        break;
-      case "french":
-      case "francais":
-      case "français":
-      case "fr":
-        pluginLocale = Locale.FRENCH;
-        break;
-      case "korean":
-      case "한국의":
-      case "kr":
-        pluginLocale = Locale.KOREAN;
-        break;
-      default:
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Plugin locale is invalid! Using default one...");
-        pluginLocale = Locale.ENGLISH;
-        break;
+    String localeName = plugin.getConfig().getString("locale", "default").toLowerCase();
+    for (Locale locale : Locale.values()) {
+      for (String alias : locale.getAliases()) {
+        if (alias.equals(localeName)) {
+          pluginLocale = locale;
+          break;
+        }
+      }
     }
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Murder Mystery] Loaded locale " + pluginLocale.getFormattedName() + " ("
-            + pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
+    if (pluginLocale == null) {
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Plugin locale is invalid! Using default one...");
+      pluginLocale = Locale.ENGLISH;
+    }
+    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Murder Mystery] Loaded locale " + pluginLocale.getFormattedName() + " (" + pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
     loadProperties();
   }
 

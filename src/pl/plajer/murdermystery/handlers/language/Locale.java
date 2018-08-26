@@ -15,6 +15,9 @@
 
 package pl.plajer.murdermystery.handlers.language;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author Plajer
  * <p>
@@ -22,21 +25,23 @@ package pl.plajer.murdermystery.handlers.language;
  */
 public enum Locale {
 
-  CHINESE_SIMPLIFIED("简体中文", "zh_Hans", "POEditor contributors (壁灯)"),
-  ENGLISH("English", "en_GB", "Plajer"),
-  FRENCH("Français", "fr_FR", "POEditor contributors (Dianox)"),
-  GERMAN("Deutsch", "de_DE", "Tigerkatze"),
-  KOREAN("한국의", "ko_KR", "POEditor contributors (human0324)"),
-  POLISH("Polski", "pl_PL", "Plajer & POEditor contributors (Owen Port)");
+  CHINESE_SIMPLIFIED("简体中文", "zh_Hans", "POEditor contributors (壁灯)", Arrays.asList("简体中文", "中文", "chinese", "zh")),
+  ENGLISH("English", "en_GB", "Plajer", Arrays.asList("default", "english", "en")),
+  FRENCH("Français", "fr_FR", "POEditor contributors (Dianox)", Arrays.asList("french", "francais", "français", "fr")),
+  GERMAN("Deutsch", "de_DE", "Tigerkatze", Arrays.asList("deutsch", "german", "de")),
+  KOREAN("한국의", "ko_KR", "POEditor contributors (human0324)", Arrays.asList("korean", "한국의", "kr")),
+  POLISH("Polski", "pl_PL", "Plajer & POEditor contributors (Owen Port)", Arrays.asList("polish", "polski", "pl"));
 
   String formattedName;
   String prefix;
   String author;
+  List<String> aliases;
 
-  Locale(String formattedName, String prefix, String author) {
+  Locale(String formattedName, String prefix, String author, List<String> aliases) {
     this.prefix = prefix;
     this.formattedName = formattedName;
     this.author = author;
+    this.aliases = aliases;
   }
 
   public String getFormattedName() {
@@ -49,6 +54,10 @@ public enum Locale {
 
   public String getPrefix() {
     return prefix;
+  }
+
+  public List<String> getAliases() {
+    return aliases;
   }
 
 }
