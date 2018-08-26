@@ -13,6 +13,9 @@
 #    fr - Langue française
 #    zh - 简体中文
 #    kr - 한국어
+#    id - Bhasa Indonesia
+#    hu - Magyar nyelv
+#    cs - Český jazyk
 #
 locale: default
 
