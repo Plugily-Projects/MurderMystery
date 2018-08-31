@@ -49,13 +49,13 @@ import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Metrics;
 import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.ServiceRegistry;
 
 /**
  * @author Plajer
  * <p>
  * Created at 03.08.2018
  */
-//todo locales not working
 public class Main extends JavaPlugin {
 
   public static int STARTING_TIMER_TIME = 60;
@@ -90,9 +90,8 @@ public class Main extends JavaPlugin {
 
   @Override
   public void onEnable() {
+    ServiceRegistry.registerService(this);
     try {
-      //todo later
-      //ServiceRegistry.registerService(this);
       version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
       LanguageManager.init(this);
       bossbarEnabled = getConfig().getBoolean("Bossbar-Enabled", true);

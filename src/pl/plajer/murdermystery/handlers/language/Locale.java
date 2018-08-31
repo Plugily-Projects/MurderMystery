@@ -25,7 +25,8 @@ import java.util.List;
  */
 public enum Locale {
 
-  CHINESE_SIMPLIFIED("简体中文", "zh_Hans", "POEditor contributors (壁灯)", Arrays.asList("简体中文", "中文", "chinese", "zh")),
+  CHINESE_SIMPLIFIED("简体中文", "zh_Hans", "POEditor contributors (壁灯)", Arrays.asList("简体中文", "chinese", "zh")),
+  CHINESE_TRADITIONAL("简体中文", "zh_HK", "POEditor contributors (ColaIan)", Arrays.asList("中文(傳統)", "中國傳統", "chinese_traditional", "zh_hk")),
   CZECH("Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")),
   ENGLISH("English", "en_GB", "Plajer", Arrays.asList("default", "english", "en")),
   FRENCH("Français", "fr_FR", "POEditor contributors (Dianox)", Arrays.asList("french", "francais", "français", "fr")),

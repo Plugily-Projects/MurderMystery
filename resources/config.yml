@@ -16,6 +16,7 @@
 #    id - Bhasa Indonesia
 #    hu - Magyar nyelv
 #    cs - Český jazyk
+#    zh_hk - 中文(傳統)
 #
 locale: default
 
