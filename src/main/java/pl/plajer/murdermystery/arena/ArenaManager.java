@@ -111,6 +111,8 @@ public class ArenaManager {
         }
 
         arena.addPlayer(p);
+        p.setLevel(0);
+        p.setExp(1);
         p.setFoodLevel(20);
         p.setGameMode(GameMode.SURVIVAL);
         p.setAllowFlight(true);
@@ -229,6 +231,8 @@ public class ArenaManager {
         arena.getGameBar().removePlayer(p);
       }
       p.setFoodLevel(20);
+      p.setLevel(0);
+      p.setExp(0);
       p.setFlying(false);
       p.setAllowFlight(false);
       for (PotionEffect effect : p.getActivePotionEffects()) {
