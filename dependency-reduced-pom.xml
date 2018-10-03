@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>pl.plajer.murdermystery</groupId>
   <artifactId>MurderMystery</artifactId>
-  <version>0.0.6b</version>
+  <version>0.0.7b</version>
   <licenses>
     <license>
       <name>GNU General Public License v3</name>
@@ -42,6 +42,10 @@
                   <pattern>pl.plajerlair.core</pattern>
                   <shadedPattern>pl.plajer.murdermystery.plajerlair.core</shadedPattern>
                 </relocation>
+                <relocation>
+                  <pattern>org.bstats</pattern>
+                  <shadedPattern>pl.plajer.murdermystery.utils</shadedPattern>
+                </relocation>
               </relocations>
             </configuration>
           </execution>
@@ -69,7 +73,11 @@
     </repository>
     <repository>
       <id>plajerlair-repo</id>
-      <url>https://plajer.xyz/mvn/repo</url>
+      <url>https://maven.plajer.xyz/minecraft</url>
+    </repository>
+    <repository>
+      <id>bstats-repo</id>
+      <url>http://repo.bstats.org/content/repositories/releases/</url>
     </repository>
   </repositories>
   <dependencies>

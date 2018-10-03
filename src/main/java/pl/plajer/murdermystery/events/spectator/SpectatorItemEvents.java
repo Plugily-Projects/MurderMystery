@@ -37,7 +37,7 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.UserManager;
-import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
@@ -79,11 +79,10 @@ public class SpectatorItemEvents implements Listener {
 
   private void openSpectatorMenu(World world, Player p) {
     Inventory inventory = plugin.getServer().createInventory(null, MinigameUtils.serializeInt(ArenaRegistry.getArena(p).getPlayers().size()),
-            ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
-    //todo multi arena per world not safe
+        ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
     for (Player player : world.getPlayers()) {
       Arena arena = ArenaRegistry.getArena(player);
-      if (arena != null && !UserManager.getUser(player.getUniqueId()).isFakeDead()) {
+      if (arena != null && ArenaRegistry.getArena(p).getPlayers().contains(player) && !UserManager.getUser(player.getUniqueId()).isSpectator()) {
         ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1);
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
         meta.setOwner(player.getName());
@@ -114,7 +113,7 @@ public class SpectatorItemEvents implements Listener {
       }
       Arena arena = ArenaRegistry.getArena(p);
       if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
-              || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
+          || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
         return;
       }
       if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {

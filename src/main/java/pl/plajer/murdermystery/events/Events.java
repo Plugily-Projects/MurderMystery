@@ -37,7 +37,7 @@ import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
-import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -85,7 +85,7 @@ public class Events implements Listener {
         }
       }
       if (event.getMessage().startsWith("/mm") || event.getMessage().contains("leave")
-              || event.getMessage().contains("stats") || event.getMessage().startsWith("/mma")) {
+          || event.getMessage().contains("stats") || event.getMessage().startsWith("/mma")) {
         return;
 
       }

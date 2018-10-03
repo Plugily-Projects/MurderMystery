@@ -57,9 +57,9 @@ public class StatsStorage {
    * @return Map of UUID keys and Integer values sorted in ascending order of requested statistic type
    */
   public static Map<UUID, Integer> getStats(StatisticType stat) {
-    Main.debug("Village API getStats(" + stat.getName() + ") run", System.currentTimeMillis());
+    Main.debug(Main.LogLevel.INFO, "Village API getStats(" + stat.getName() + ") run");
     if (plugin.isDatabaseActivated()) {
-      return plugin.getMySQLDatabase().getColumn(stat.getName());
+      return plugin.getMySQLManager().getColumn(stat.getName());
     } else {
       FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
       Map<UUID, Integer> stats = new TreeMap<>();
@@ -79,8 +79,8 @@ public class StatsStorage {
    * @see StatisticType
    */
   public static int getUserStats(Player player, StatisticType statisticType) {
-    Main.debug("Village API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run", System.currentTimeMillis());
-    return UserManager.getUser(player.getUniqueId()).getInt(statisticType.name);
+    Main.debug(Main.LogLevel.INFO, "Village API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
+    return UserManager.getUser(player.getUniqueId()).getStat(statisticType);
   }
 
   /**
@@ -88,7 +88,7 @@ public class StatsStorage {
    */
   public enum StatisticType {
     CONTRIBUTION_DETECTIVE("contribdetective"), CONTRIBUTION_MURDERER("contribmurderer"), DEATHS("deaths"), GAMES_PLAYED("gamesplayed"), HIGHEST_SCORE("highestscore"), KILLS("kills"),
-    LOSES("loses"), WINS("wins");
+    LOSES("loses"), WINS("wins"), /** @apiNote non presistent */ GOLD("gold"), @Deprecated LOCAL_KILLS("local_kills"), @Deprecated LOCAL_SCORE("local_score");
 
     String name;
 

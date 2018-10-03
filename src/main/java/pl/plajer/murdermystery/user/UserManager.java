@@ -35,7 +35,7 @@ public class UserManager {
   private static HashMap<UUID, User> users = new HashMap<>();
 
   public static void registerUser(UUID uuid) {
-    Main.debug("Registering new user with UUID: " + uuid, System.currentTimeMillis());
+    Main.debug(Main.LogLevel.INFO, "Registering new user with UUID: " + uuid);
     users.put(uuid, new User(uuid));
   }
 

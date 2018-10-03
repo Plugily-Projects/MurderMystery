@@ -196,7 +196,7 @@ public class SpectatorEvents implements Listener {
       return;
     }
     if (arena.getArenaState() != ArenaState.IN_GAME
-            || UserManager.getUser(event.getPlayer().getUniqueId()).isFakeDead()) {
+            || UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) {
       event.setCancelled(true);
     }
   }
@@ -204,7 +204,7 @@ public class SpectatorEvents implements Listener {
   @EventHandler
   public void onInteractEntityInteract(PlayerInteractEntityEvent event) {
     User user = UserManager.getUser(event.getPlayer().getUniqueId());
-    if (user.isFakeDead() || user.isSpectator()) {
+    if (user.isSpectator()) {
       event.setCancelled(true);
     }
   }

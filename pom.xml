@@ -21,7 +21,7 @@
 
     <groupId>pl.plajer.murdermystery</groupId>
     <artifactId>MurderMystery</artifactId>
-    <version>0.0.6b</version>
+    <version>0.0.7 pre</version>
 
     <properties>
         <java.version>1.8</java.version>
@@ -54,7 +54,11 @@
         </repository>
         <repository>
             <id>plajerlair-repo</id>
-            <url>https://plajer.xyz/mvn/repo</url>
+            <url>https://maven.plajer.xyz/minecraft</url>
+        </repository>
+        <repository>
+            <id>bstats-repo</id>
+            <url>http://repo.bstats.org/content/repositories/releases/</url>
         </repository>
     </repositories>
     <dependencies>
@@ -73,7 +77,7 @@
         <dependency>
             <groupId>pl.plajerlair</groupId>
             <artifactId>plcore</artifactId>
-            <version>1.1.0</version>
+            <version>1.2.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -87,6 +91,12 @@
             <artifactId>placeholderapi</artifactId>
             <version>2.8.6</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>1.2</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.wasteofplastic</groupId>
@@ -173,6 +183,10 @@
                                 <relocation>
                                     <pattern>pl.plajerlair.core</pattern>
                                     <shadedPattern>pl.plajer.murdermystery.plajerlair.core</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <shadedPattern>pl.plajer.murdermystery.utils</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
