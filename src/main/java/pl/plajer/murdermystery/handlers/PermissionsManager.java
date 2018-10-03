@@ -53,7 +53,7 @@ public class PermissionsManager {
   private static void setupPermissions() {
     PermissionsManager.setJoinFullGames(plugin.getConfig().getString("Basic-Permissions.Full-Games-Permission", "murdermystery.fullgames"));
     PermissionsManager.setJoinPerm(plugin.getConfig().getString("Basic-Permissions.Join-Permission", "murdermystery.join.<arena>"));
-    Main.debug("Basic permissions registered", System.currentTimeMillis());
+    Main.debug(Main.LogLevel.INFO, "Basic permissions registered");
   }
 
 }

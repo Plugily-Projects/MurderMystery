@@ -49,10 +49,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
+import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
@@ -108,7 +109,7 @@ public class ArenaEvents implements Listener {
             }
             String progress = MinigameUtils.getProgressBar(ticks, 5 * 20, 10, "■", "&a", "&c");
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatManager.colorMessage("In-Game.Cooldown-Format")
-                    .replace("%progress%", progress).replace("%time%", String.valueOf((double) (100 - ticks) / 20))));
+                .replace("%progress%", progress).replace("%time%", String.valueOf((double) (100 - ticks) / 20))));
             ticks += 10;
           }
         }.runTaskTimer(plugin, 10, 10);
@@ -157,7 +158,7 @@ public class ArenaEvents implements Listener {
         stack.setAmount(stack.getAmount() + 1);
       }
       e.getPlayer().getInventory().setItem(8, stack);
-      user.addInt("gold", 1);
+      user.addStat(StatsStorage.StatisticType.GOLD, 1);
       ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP);
       e.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Picked-Up-Gold"));
 
@@ -165,8 +166,8 @@ public class ArenaEvents implements Listener {
         return;
       }
 
-      if (user.getInt("gold") == 10) {
-        user.setInt("gold", 0);
+      if (user.getStat(StatsStorage.StatisticType.GOLD) == 10) {
+        user.setStat(StatsStorage.StatisticType.GOLD, 0);
         MessageUtils.sendTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold"), 5, 40, 5);
         MessageUtils.sendSubTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle"), 5, 40, 5);
         e.getPlayer().getInventory().setItem(0, new ItemStack(Material.BOW, 1));
@@ -221,7 +222,7 @@ public class ArenaEvents implements Listener {
       //todo god damage override add
       victim.damage(100.0);
       victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
-      user.addInt("local_kills", 1);
+      user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
       ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER);
 
       arena.getPlayersLeft().remove(victim);
@@ -263,7 +264,7 @@ public class ArenaEvents implements Listener {
       User user = UserManager.getUser(attacker.getUniqueId());
 
       if (ArenaUtils.isRole(ArenaUtils.Role.MURDERER, attacker)) {
-        user.addInt("local_kills", 1);
+        user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
         ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER);
       }
 
@@ -348,17 +349,16 @@ public class ArenaEvents implements Listener {
         player.setFlying(false);
         player.setAllowFlight(false);
         User user = UserManager.getUser(player.getUniqueId());
-        user.setInt("gold", 0);
+        user.setStat(StatsStorage.StatisticType.GOLD, 0);
         player.teleport(arena.getEndLocation());
         return;
       }
       User user = UserManager.getUser(player.getUniqueId());
-      arena.addStat(player, "deaths");
+      arena.addStat(player, StatsStorage.StatisticType.DEATHS);
       player.teleport(loc);
       user.setSpectator(true);
       player.setGameMode(GameMode.SURVIVAL);
-      user.setFakeDead(true);
-      user.setInt("gold", 0);
+      user.setStat(StatsStorage.StatisticType.GOLD, 0);
       ArenaUtils.hidePlayer(player, arena);
       player.setAllowFlight(true);
       player.setFlying(true);
@@ -394,8 +394,7 @@ public class ArenaEvents implements Listener {
         user.setSpectator(true);
         player.setGameMode(GameMode.SURVIVAL);
         player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-        user.setFakeDead(true);
-        user.setInt("gold", 0);
+        user.setStat(StatsStorage.StatisticType.GOLD, 0);
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);

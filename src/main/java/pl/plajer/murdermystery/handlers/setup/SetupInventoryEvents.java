@@ -34,9 +34,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
-import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.core.utils.LocationUtils;
 
 /**
  * @author Plajer
@@ -60,8 +60,8 @@ public class SetupInventoryEvents implements Listener {
       }
       Player player = (Player) event.getWhoClicked();
       if (!player.hasPermission("murdermystery.admin.create") || !event.getInventory().getName().contains("MM Arena:")
-              || event.getInventory().getHolder() != null || event.getCurrentItem() == null
-              || !event.getCurrentItem().hasItemMeta() || !event.getCurrentItem().getItemMeta().hasDisplayName()) {
+          || event.getInventory().getHolder() != null || event.getCurrentItem() == null
+          || !event.getCurrentItem().hasItemMeta() || !event.getCurrentItem().getItemMeta().hasDisplayName()) {
         return;
       }
 
@@ -152,18 +152,18 @@ public class SetupInventoryEvents implements Listener {
           event.getWhoClicked().sendMessage(ChatColor.GREEN + "This arena was already validated and is ready to use!");
           return;
         }
-        String[] locations = new String[]{"lobbylocation", "Endlocation"};
-        String[] spawns = new String[]{"goldspawnpoints", "playerspawnpoints"};
+        String[] locations = new String[] {"lobbylocation", "Endlocation"};
+        String[] spawns = new String[] {"goldspawnpoints", "playerspawnpoints"};
         for (String s : locations) {
           if (!ConfigUtils.getConfig(plugin, "arenas").isSet("instances." + arena.getID() + "." + s) || ConfigUtils.getConfig(plugin, "arenas")
-                  .getString("instances." + arena.getID() + "." + s).equals(MinigameUtils.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
+              .getString("instances." + arena.getID() + "." + s).equals(LocationUtils.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
             event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)");
             return;
           }
         }
         for (String s : spawns) {
           if (!ConfigUtils.getConfig(plugin, "arenas").isSet("instances." + arena.getID() + "." + s) || ConfigUtils.getConfig(plugin, "arenas")
-                  .getStringList("instances." + arena.getID() + "." + s).size() < 3) {
+              .getStringList("instances." + arena.getID() + "." + s).size() < 3) {
             event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawns properly: " + s + " (must be minimum 3 spawns)");
             return;
           }
@@ -185,20 +185,20 @@ public class SetupInventoryEvents implements Listener {
         arena.setReady(true);
         List<Location> playerSpawnPoints = new ArrayList<>();
         for (String loc : config.getStringList("instances." + arena.getID() + ".playerspawnpoints")) {
-          playerSpawnPoints.add(MinigameUtils.getLocation(loc));
+          playerSpawnPoints.add(LocationUtils.getLocation(loc));
         }
         arena.setPlayerSpawnPoints(playerSpawnPoints);
         List<Location> goldSpawnPoints = new ArrayList<>();
         for (String loc : config.getStringList("instances." + arena.getID() + ".goldspawnpoints")) {
-          goldSpawnPoints.add(MinigameUtils.getLocation(loc));
+          goldSpawnPoints.add(LocationUtils.getLocation(loc));
         }
         arena.setGoldSpawnPoints(goldSpawnPoints);
 
         arena.setMinimumPlayers(config.getInt("instances." + arena.getID() + ".minimumplayers"));
         arena.setMaximumPlayers(config.getInt("instances." + arena.getID() + ".maximumplayers"));
         arena.setMapName(config.getString("instances." + arena.getID() + ".mapname"));
-        arena.setLobbyLocation(MinigameUtils.getLocation(config.getString("instances." + arena.getID() + ".lobbylocation")));
-        arena.setEndLocation(MinigameUtils.getLocation(config.getString("instances." + arena.getID() + ".Endlocation")));
+        arena.setLobbyLocation(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".lobbylocation")));
+        arena.setEndLocation(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".Endlocation")));
         ArenaRegistry.registerArena(arena);
         arena.start();
         for (Sign s : signsToUpdate) {

@@ -29,9 +29,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.core.utils.LocationUtils;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -80,12 +80,12 @@ public class ArenaRegistry {
   }
 
   public static void registerArena(Arena arena) {
-    Main.debug("Registering new game instance, " + arena.getID(), System.currentTimeMillis());
+    Main.debug(Main.LogLevel.INFO, "Registering new game instance, " + arena.getID());
     arenas.add(arena);
   }
 
   public static void unregisterArena(Arena arena) {
-    Main.debug("Unegistering game instance, " + arena.getID(), System.currentTimeMillis());
+    Main.debug(Main.LogLevel.INFO, "Unegistering game instance, " + arena.getID());
     arenas.remove(arena);
   }
 
@@ -108,16 +108,19 @@ public class ArenaRegistry {
 
   public static void registerArenas() {
     try {
-      Main.debug("Initial arenas registration", System.currentTimeMillis());
-      FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+      Main.debug(Main.LogLevel.INFO, "Initial arenas registration");
       if (ArenaRegistry.getArenas() != null) {
         if (ArenaRegistry.getArenas().size() > 0) {
           for (Arena arena : ArenaRegistry.getArenas()) {
             arena.cleanUpArena();
           }
+          for (Arena arena : new ArrayList<>(ArenaRegistry.getArenas())) {
+            unregisterArena(arena);
+          }
         }
       }
-      ArenaRegistry.getArenas().clear();
+      FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+
       if (!config.contains("instances")) {
         Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.No-Instances-Created"));
         return;
@@ -130,21 +133,21 @@ public class ArenaRegistry {
           continue;
         }
         arena = new Arena(ID, plugin);
-        arena.setMinimumPlayers(config.getInt(s + "minimumplayers"));
-        arena.setMaximumPlayers(config.getInt(s + "maximumplayers"));
-        arena.setMapName(config.getString(s + "mapname"));
+        arena.setMinimumPlayers(config.getInt(s + "minimumplayers", 2));
+        arena.setMaximumPlayers(config.getInt(s + "maximumplayers", 4));
+        arena.setMapName(config.getString(s + "mapname", "none"));
         List<Location> playerSpawnPoints = new ArrayList<>();
         for (String loc : config.getStringList(s + "playerspawnpoints")) {
-          playerSpawnPoints.add(MinigameUtils.getLocation(loc));
+          playerSpawnPoints.add(LocationUtils.getLocation(loc));
         }
         arena.setPlayerSpawnPoints(playerSpawnPoints);
         List<Location> goldSpawnPoints = new ArrayList<>();
         for (String loc : config.getStringList(s + "goldspawnpoints")) {
-          goldSpawnPoints.add(MinigameUtils.getLocation(loc));
+          goldSpawnPoints.add(LocationUtils.getLocation(loc));
         }
         arena.setGoldSpawnPoints(goldSpawnPoints);
-        arena.setLobbyLocation(MinigameUtils.getLocation(config.getString(s + "lobbylocation")));
-        arena.setEndLocation(MinigameUtils.getLocation(config.getString(s + "Endlocation")));
+        arena.setLobbyLocation(LocationUtils.getLocation(config.getString(s + "lobbylocation", "world,364.0,63.0,-72.0,0.0,0.0")));
+        arena.setEndLocation(LocationUtils.getLocation(config.getString(s + "Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
 
         if (!config.getBoolean(s + "isdone", false)) {
           Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", ID).replace("%error%", "NOT VALIDATED"));
@@ -156,7 +159,7 @@ public class ArenaRegistry {
         arena.start();
         Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Instance-Started").replace("%arena%", ID));
       }
-      Main.debug("Arenas registration completed", System.currentTimeMillis());
+      Main.debug(Main.LogLevel.INFO, "Arenas registration completed");
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }

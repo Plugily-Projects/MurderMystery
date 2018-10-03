@@ -38,7 +38,7 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -80,13 +80,17 @@ public class ArenaUtils {
         arena.setMurdererLocatorReceived(true);
 
         for (Player p : arena.getPlayersLeft()) {
-          if (p.getUniqueId() == arena.getMurderer()) continue;
+          if (p.getUniqueId() == arena.getMurderer()) {
+            continue;
+          }
           MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Watch-Out-Title"), 5, 40, 5);
           MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Watch-Out-Subtitle"), 5, 40, 5);
         }
       }
       for (Player p : arena.getPlayersLeft()) {
-        if (p.getUniqueId() == arena.getMurderer()) continue;
+        if (p.getUniqueId() == arena.getMurderer()) {
+          continue;
+        }
         Bukkit.getPlayer(arena.getMurderer()).setCompassTarget(p.getLocation());
         break;
       }
@@ -138,9 +142,7 @@ public class ArenaUtils {
           arena.setFakeDetective(victim.getUniqueId());
           victim.getInventory().setItem(0, new ItemStack(Material.BOW, 1));
           victim.getInventory().setItem(9, new ItemStack(Material.ARROW, 64));
-          for (Player loopPlayer : arena.getPlayers()) {
-            loopPlayer.sendMessage(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message"));
-          }
+          ChatManager.broadcast(arena, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message"));
         }
       });
       arena.setBowHologram(hologram);

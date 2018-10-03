@@ -22,6 +22,8 @@ import com.wasteofplastic.askyblock.ASkyBlock;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import org.bukkit.Bukkit;
@@ -29,9 +31,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajerlair.core.services.LocaleService;
 import pl.plajerlair.core.services.ServiceRegistry;
+import pl.plajerlair.core.services.locale.Locale;
+import pl.plajerlair.core.services.locale.LocaleRegistry;
+import pl.plajerlair.core.services.locale.LocaleService;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
@@ -42,7 +47,7 @@ import pl.plajerlair.core.utils.ConfigUtils;
 public class LanguageManager {
 
   private static Main plugin;
-  private static Locale pluginLocale = Locale.ENGLISH;
+  private static Locale pluginLocale;
   private static Properties properties = new Properties();
 
   public static void init(Main pl) {
@@ -50,13 +55,28 @@ public class LanguageManager {
     if (!new File(plugin.getDataFolder() + File.separator + "language.yml").exists()) {
       plugin.saveResource("language.yml", false);
     }
+    registerLocales();
     setupLocale();
     //we will wait until server is loaded, we won't soft depend those plugins
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      if (pluginLocale == Locale.ENGLISH) {
+      if (isDefaultLanguageUsed()) {
         suggestLocale();
       }
     }, 100);
+  }
+
+  private static void registerLocales() {
+    LocaleRegistry.registerLocale(new Locale("Chinese (Simplified)", "简体中文", "zh_Hans", "POEditor contributors (壁灯)", Arrays.asList("简体中文", "中文", "chinese", "zh")));
+    LocaleRegistry.registerLocale(new Locale("Chinese (Traditional)", "简体中文", "zh_HK", "POEditor contributors (ColaIan)", Arrays.asList("中文(傳統)", "中國傳統", "chinese_traditional", "zh_hk")));
+    LocaleRegistry.registerLocale(new Locale("Czech", "Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")));
+    LocaleRegistry.registerLocale(new Locale("English", "English", "en_GB", "Plajer", Arrays.asList("default", "english", "en")));
+    LocaleRegistry.registerLocale(new Locale("French", "Français", "fr_FR", "POEditor contributors", Arrays.asList("french", "francais", "français", "fr")));
+    LocaleRegistry.registerLocale(new Locale("German", "Deutsch", "de_DE", "Tigerkatze and POEditor contributors", Arrays.asList("deutsch", "german", "de")));
+    LocaleRegistry.registerLocale(new Locale("Hungarian", "Magyar", "hu_HU", "POEditor contributors (montlikadani)", Arrays.asList("hungarian", "magyar", "hu")));
+    LocaleRegistry.registerLocale(new Locale("Indonesian", "Indonesia", "id_ID", "POEditor contributors", Arrays.asList("indonesian", "indonesia", "id")));
+    LocaleRegistry.registerLocale(new Locale("Korean", "한국의", "ko_KR", "POEditor contributors", Arrays.asList("korean", "한국의", "kr")));
+    LocaleRegistry.registerLocale(new Locale("Polish", "Polski", "pl_PL", "Plajer", Arrays.asList("polish", "polski", "pl")));
+    LocaleRegistry.registerLocale(new Locale("Romanian", "Românesc", "ro_RO", "POEditor contributors (Andrei)", Arrays.asList("romanian", "romanesc", "românesc", "ro")));
   }
 
   private static void loadProperties() {
@@ -64,7 +84,7 @@ public class LanguageManager {
     if (service.isValidVersion()) {
       LocaleService.DownloadStatus status = service.demandLocaleDownload(pluginLocale.getPrefix());
       if (status == LocaleService.DownloadStatus.FAIL) {
-        pluginLocale = Locale.ENGLISH;
+        pluginLocale = LocaleRegistry.getByName("English");
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Locale service couldn't download latest locale for plugin! English locale will be used instead!");
         return;
       } else if (status == LocaleService.DownloadStatus.SUCCESS) {
@@ -73,7 +93,7 @@ public class LanguageManager {
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Locale " + pluginLocale.getPrefix() + " is latest! Awesome!");
       }
     } else {
-      pluginLocale = Locale.ENGLISH;
+      pluginLocale = LocaleRegistry.getByName("English");
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Your plugin version is too old to use latest locale! Please update plugin to access latest updates of locale!");
       return;
     }
@@ -86,7 +106,7 @@ public class LanguageManager {
 
   private static void setupLocale() {
     String localeName = plugin.getConfig().getString("locale", "default").toLowerCase();
-    for (Locale locale : Locale.values()) {
+    for (Locale locale : LocaleRegistry.getRegisteredLocales()) {
       for (String alias : locale.getAliases()) {
         if (alias.equals(localeName)) {
           pluginLocale = locale;
@@ -96,10 +116,10 @@ public class LanguageManager {
     }
     if (pluginLocale == null) {
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Plugin locale is invalid! Using default one...");
-      pluginLocale = Locale.ENGLISH;
+      pluginLocale = LocaleRegistry.getByName("English");
     }
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Murder Mystery] Loaded locale " + pluginLocale.getFormattedName() + " (" + pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
-    loadProperties();
+    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Murder Mystery] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: " +
+        pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());loadProperties();
   }
 
   private static void suggestLocale() {
@@ -115,6 +135,7 @@ public class LanguageManager {
           case "fr-FR":
           case "zh-CN":
           case "ko-KR":
+          case "ro-RO":
             hasLocale = true;
             localeName = locale.getLocaleName();
         }
@@ -128,12 +149,13 @@ public class LanguageManager {
           case "KR":
           case "FR":
           case "ZH":
+          case "RO":
             hasLocale = true;
             localeName = locale.getDisplayName();
         }
       }
     } catch (Exception e) {
-      Main.debug("[WARN] Plugin has occured a problem suggesting locale, probably API change.", System.currentTimeMillis());
+      Main.debug(Main.LogLevel.WARN, "[WARN] Plugin has occured a problem suggesting locale, probably API change.");
     }
     if (hasLocale) {
       MessageUtils.info();
@@ -143,9 +165,8 @@ public class LanguageManager {
     }
   }
 
-  //todo do something with me
-  public static FileConfiguration getLanguageFile() {
-    return ConfigUtils.getConfig(plugin, "language");
+  public static boolean isDefaultLanguageUsed() {
+    return pluginLocale.getName().equals("English");
   }
 
   public static String getDefaultLanguageMessage(String message) {
@@ -159,19 +180,27 @@ public class LanguageManager {
     return "ERR_MESSAGE_NOT_FOUND";
   }
 
-  public static String getLanguageMessage(String message) {
-    if (pluginLocale != Locale.ENGLISH) {
-      try {
-        return properties.getProperty(ChatColor.translateAlternateColorCodes('&', message));
-      } catch (NullPointerException ex) {
-        MessageUtils.errorOccured();
-        Bukkit.getConsoleSender().sendMessage("Game message not found!");
-        Bukkit.getConsoleSender().sendMessage("Please regenerate your language.yml file! If error still occurs report it to the developer!");
-        Bukkit.getConsoleSender().sendMessage("Access string: " + message);
-        return "ERR_MESSAGE_NOT_FOUND";
-      }
+  public static List<String> getLanguageList(String path) {
+    if (isDefaultLanguageUsed()) {
+      return ConfigUtils.getConfig(plugin, "language").getStringList(path);
+    } else {
+      return Arrays.asList(ChatManager.colorMessage(path).split(";"));
     }
-    return ConfigUtils.getConfig(plugin, "language").getString(message);
+  }
+
+  public static String getLanguageMessage(String message) {
+    if (isDefaultLanguageUsed()) {
+      return ConfigUtils.getConfig(plugin, "language").getString(message, "ERR_MESSAGE_NOT_FOUND");
+    }
+    try {
+      return properties.getProperty(ChatColor.translateAlternateColorCodes('&', message));
+    } catch (NullPointerException ex) {
+      MessageUtils.errorOccured();
+      Bukkit.getConsoleSender().sendMessage("Game message not found!");
+      Bukkit.getConsoleSender().sendMessage("Please regenerate your language.yml file! If error still occurs report it to the developer!");
+      Bukkit.getConsoleSender().sendMessage("Access string: " + message);
+      return "ERR_MESSAGE_NOT_FOUND";
+    }
   }
 
   public static Locale getPluginLocale() {

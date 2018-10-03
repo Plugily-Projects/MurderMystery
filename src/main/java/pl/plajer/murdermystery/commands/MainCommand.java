@@ -36,9 +36,9 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.setup.SetupInventory;
 import pl.plajer.murdermystery.utils.StringMatcher;
-import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.core.utils.LocationUtils;
 
 /**
  * @author Plajer
@@ -68,12 +68,12 @@ public class MainCommand implements CommandExecutor {
     return adminCommands;
   }
 
-  boolean checkSenderIsConsole(CommandSender sender) {
-    if (sender instanceof ConsoleCommandSender) {
+  boolean checkSenderPlayer(CommandSender sender) {
+    if (!(sender instanceof Player)) {
       sender.sendMessage(ChatManager.colorMessage("Commands.Only-By-Player"));
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   boolean checkIsInGameInstance(Player player) {
@@ -139,7 +139,7 @@ public class MainCommand implements CommandExecutor {
         }
         if (args.length > 1) {
           if (args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("edit")) {
-            if (checkSenderIsConsole(sender) || !hasPermission(sender, "murdermystery.admin.create")) {
+            if (!checkSenderPlayer(sender) || !hasPermission(sender, "murdermystery.admin.create")) {
               return true;
             }
             adminCommands.performSetup(sender, args);
@@ -250,7 +250,7 @@ public class MainCommand implements CommandExecutor {
       if (args.length == 3) {
         if (args[2].equalsIgnoreCase("startloc")) {
           String location = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + "," + player.getLocation().getZ()
-                  + "," + player.getLocation().getYaw() + "," + player.getLocation().getPitch();
+              + "," + player.getLocation().getYaw() + "," + player.getLocation().getPitch();
           List<String> locs = new ArrayList<>(config.getStringList("instances." + args[0] + ".playerspawnpoints"));
           locs.add(location);
           config.set("instances." + args[0] + ".playerspawnpoints", locs);
@@ -258,7 +258,7 @@ public class MainCommand implements CommandExecutor {
         }
         if (args[2].equalsIgnoreCase("gold")) {
           String location = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + "," + player.getLocation().getZ()
-                  + "," + player.getLocation().getYaw() + "," + player.getLocation().getPitch();
+              + "," + player.getLocation().getYaw() + "," + player.getLocation().getPitch();
           List<String> locs = new ArrayList<>(config.getStringList("instances." + args[0] + ".goldspawnpoints"));
           locs.add(location);
           config.set("instances." + args[0] + ".goldspawnpoints", locs);
@@ -274,14 +274,14 @@ public class MainCommand implements CommandExecutor {
     if (args.length == 3) {
       if (args[2].equalsIgnoreCase("lobbylocation") || args[2].equalsIgnoreCase("lobbyloc")) {
         String location = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + "," + player.getLocation().getZ()
-                + "," + player.getLocation().getYaw() + "," + player.getLocation().getPitch();
+            + "," + player.getLocation().getYaw() + "," + player.getLocation().getPitch();
         config.set("instances." + args[0] + ".lobbylocation", location);
-        player.sendMessage("Murder Mystery: Lobby location for arena/instance " + args[0] + " set to " + MinigameUtils.locationToString(player.getLocation()));
+        player.sendMessage("Murder Mystery: Lobby location for arena/instance " + args[0] + " set to " + LocationUtils.locationToString(player.getLocation()));
       } else if (args[2].equalsIgnoreCase("Endlocation") || args[2].equalsIgnoreCase("Endloc")) {
         String location = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + "," + player.getLocation().getZ()
-                + "," + player.getLocation().getYaw() + "," + player.getLocation().getPitch();
+            + "," + player.getLocation().getYaw() + "," + player.getLocation().getPitch();
         config.set("instances." + args[0] + ".Endlocation", location);
-        player.sendMessage("Murder Mystery: End location for arena/instance " + args[0] + " set to " + MinigameUtils.locationToString(player.getLocation()));
+        player.sendMessage("Murder Mystery: End location for arena/instance " + args[0] + " set to " + LocationUtils.locationToString(player.getLocation()));
       } else {
         player.sendMessage(ChatColor.RED + "Invalid Command!");
         player.sendMessage(ChatColor.RED + "Usage: /mm <arena> set <lobbylocation/endlocation>");
@@ -344,9 +344,9 @@ public class MainCommand implements CommandExecutor {
   private void createInstanceInConfig(String ID, String worldName) {
     String path = "instances." + ID + ".";
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    MinigameUtils.saveLoc(plugin, config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    MinigameUtils.saveLoc(plugin, config, "arenas", path + "Startlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    MinigameUtils.saveLoc(plugin, config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    LocationUtils.saveLoc(plugin, config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    LocationUtils.saveLoc(plugin, config, "arenas", path + "Startlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    LocationUtils.saveLoc(plugin, config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
     config.set(path + "playerspawnpoints", new ArrayList<>());
     config.set(path + "goldspawnpoints", new ArrayList<>());
     config.set(path + "minimumplayers", 1);
@@ -361,19 +361,19 @@ public class MainCommand implements CommandExecutor {
 
     List<Location> playerSpawnPoints = new ArrayList<>();
     for (String loc : config.getStringList(path + "playerspawnpoints")) {
-      playerSpawnPoints.add(MinigameUtils.getLocation(loc));
+      playerSpawnPoints.add(LocationUtils.getLocation(loc));
     }
     arena.setPlayerSpawnPoints(playerSpawnPoints);
     List<Location> goldSpawnPoints = new ArrayList<>();
     for (String loc : config.getStringList(path + "goldspawnpoints")) {
-      goldSpawnPoints.add(MinigameUtils.getLocation(loc));
+      goldSpawnPoints.add(LocationUtils.getLocation(loc));
     }
     arena.setGoldSpawnPoints(goldSpawnPoints);
     arena.setMinimumPlayers(ConfigUtils.getConfig(plugin, "arenas").getInt(path + "minimumplayers"));
     arena.setMaximumPlayers(ConfigUtils.getConfig(plugin, "arenas").getInt(path + "maximumplayers"));
     arena.setMapName(ConfigUtils.getConfig(plugin, "arenas").getString(path + "mapname"));
-    arena.setLobbyLocation(MinigameUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path + "lobbylocation")));
-    arena.setEndLocation(MinigameUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path + "Endlocation")));
+    arena.setLobbyLocation(LocationUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path + "lobbylocation")));
+    arena.setEndLocation(LocationUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path + "Endlocation")));
     arena.setReady(false);
 
     ArenaRegistry.registerArena(arena);

@@ -78,7 +78,7 @@ public class AdminCommands extends MainCommand {
       return;
     }
     sender.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + "Murder Mystery " + ChatColor.GRAY + plugin.getDescription().getVersion());
-    if (!checkSenderIsConsole(sender)) {
+    if (!checkSenderPlayer(sender)) {
       sender.sendMessage(ChatColor.RED + " []" + ChatColor.GRAY + " = optional  " + ChatColor.GOLD + "<>" + ChatColor.GRAY + " = required");
       sender.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");
       for (CommandData data : command) {
@@ -117,7 +117,7 @@ public class AdminCommands extends MainCommand {
   }
 
   public void stopGame(CommandSender sender) {
-    if (checkSenderIsConsole(sender) || !hasPermission(sender, "murdermystery.admin.stopgame")) {
+    if (!checkSenderPlayer(sender) || !hasPermission(sender, "murdermystery.admin.stopgame")) {
       return;
     }
     if (!checkIsInGameInstance((Player) sender)) {
@@ -127,7 +127,7 @@ public class AdminCommands extends MainCommand {
   }
 
   public void forceStartGame(CommandSender sender) {
-    if (checkSenderIsConsole(sender) || !hasPermission(sender, "murdermystery.admin.forcestart")) {
+    if (!checkSenderPlayer(sender) || !hasPermission(sender, "murdermystery.admin.forcestart")) {
       return;
     }
     if (!checkIsInGameInstance((Player) sender)) {
@@ -152,7 +152,7 @@ public class AdminCommands extends MainCommand {
   }
 
   public void addSign(CommandSender sender, String arena) {
-    if (checkSenderIsConsole(sender)) {
+    if (!checkSenderPlayer(sender)) {
       return;
     }
     Player player = (Player) sender;
@@ -179,7 +179,7 @@ public class AdminCommands extends MainCommand {
   }
 
   public void deleteArena(CommandSender sender, String arenaString) {
-    if (checkSenderIsConsole(sender) || !hasPermission(sender, "murdermystery.admin.delete")) {
+    if (!checkSenderPlayer(sender) || !hasPermission(sender, "murdermystery.admin.delete")) {
       return;
     }
     Arena arena = ArenaRegistry.getArena(arenaString);
@@ -196,14 +196,14 @@ public class AdminCommands extends MainCommand {
   }
 
   public void createArena(CommandSender sender, String[] args) {
-    if (checkSenderIsConsole(sender) || !hasPermission(sender, "murdermystery.admin.create")) {
+    if (!checkSenderPlayer(sender) || !hasPermission(sender, "murdermystery.admin.create")) {
       return;
     }
     createArenaCommand((Player) sender, args);
   }
 
   public void performSetup(CommandSender sender, String[] args) {
-    if (checkSenderIsConsole(sender) || !hasPermission(sender, "murdermystery.admin.setup")) {
+    if (!checkSenderPlayer(sender) || !hasPermission(sender, "murdermystery.admin.setup")) {
       return;
     }
     performSetup((Player) sender, args);
