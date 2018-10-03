@@ -2,3 +2,4 @@
 * Added PAPI placeholders in chat (chat formatting must be enabled)
 * General code improvements and changes
 * Added %MAPNAME% placeholder in scoreboard
+* Added checking for minimum players amount in lobby to start
