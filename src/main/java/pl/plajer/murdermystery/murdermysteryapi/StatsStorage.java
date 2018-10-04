@@ -87,17 +87,23 @@ public class StatsStorage {
    * Available statistics to get.
    */
   public enum StatisticType {
-    CONTRIBUTION_DETECTIVE("contribdetective"), CONTRIBUTION_MURDERER("contribmurderer"), DEATHS("deaths"), GAMES_PLAYED("gamesplayed"), HIGHEST_SCORE("highestscore"), KILLS("kills"),
-    LOSES("loses"), WINS("wins"), /** @apiNote non presistent */ GOLD("gold"), @Deprecated LOCAL_KILLS("local_kills"), @Deprecated LOCAL_SCORE("local_score");
+    CONTRIBUTION_DETECTIVE("contribdetective", true), CONTRIBUTION_MURDERER("contribmurderer", true), DEATHS("deaths", true), GAMES_PLAYED("gamesplayed", true), HIGHEST_SCORE("highestscore", true),
+    KILLS("kills", true), LOSES("loses", true), WINS("wins", true), GOLD("gold", false), @Deprecated LOCAL_KILLS("local_kills", false), @Deprecated LOCAL_SCORE("local_score", false);
 
-    String name;
+    private String name;
+    private boolean persistent;
 
-    StatisticType(String name) {
+    StatisticType(String name, boolean persistent) {
       this.name = name;
+      this.persistent = persistent;
     }
 
     public String getName() {
       return name;
+    }
+
+    public boolean isPersistent() {
+      return persistent;
     }
   }
 

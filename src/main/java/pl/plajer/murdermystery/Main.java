@@ -203,6 +203,9 @@ public class Main extends JavaPlugin {
     for (Player player : getServer().getOnlinePlayers()) {
       User user = UserManager.getUser(player.getUniqueId());
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        if(!stat.isPersistent()) {
+          continue;
+        }
         if (isDatabaseActivated()) {
           getMySQLManager().setStat(player, stat, user.getStat(stat));
         } else {
