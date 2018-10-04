@@ -45,6 +45,9 @@ public class FileStats {
   }
 
   public void saveStat(Player player, StatsStorage.StatisticType stat) {
+    if(!stat.isPersistent()) {
+      return;
+    }
     User user = UserManager.getUser(player.getUniqueId());
     config.set(player.getUniqueId().toString() + "." + stat, user.getStat(stat));
     ConfigUtils.saveConfig(plugin, config, "stats");

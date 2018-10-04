@@ -66,6 +66,9 @@ public class QuitEvent implements Listener {
       if (plugin.isDatabaseActivated()) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
           for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+            if(!stat.isPersistent()) {
+              return;
+            }
             int i;
             try {
               i = plugin.getMySQLManager().getStat(player, stat);
