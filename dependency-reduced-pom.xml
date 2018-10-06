@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>pl.plajer.murdermystery</groupId>
   <artifactId>MurderMystery</artifactId>
-  <version>0.0.7 pre</version>
+  <version>0.0.8 pre</version>
   <licenses>
     <license>
       <name>GNU General Public License v3</name>
@@ -11,6 +11,12 @@
     </license>
   </licenses>
   <build>
+    <resources>
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>

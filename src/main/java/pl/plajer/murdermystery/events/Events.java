@@ -15,8 +15,14 @@
 
 package pl.plajer.murdermystery.events;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,14 +35,23 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.arena.ArenaState;
+import pl.plajer.murdermystery.arena.ArenaUtils;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
+import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
+import pl.plajer.murdermystery.user.User;
+import pl.plajer.murdermystery.user.UserManager;
+import pl.plajer.murdermystery.utils.CooldownUtils;
+import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
@@ -67,6 +82,78 @@ public class Events implements Listener {
       return;
     }
     event.setCancelled(true);
+  }
+
+  @EventHandler
+  public void onSwordThrow(PlayerInteractEvent e) {
+    try {
+      Arena arena = ArenaRegistry.getArena(e.getPlayer());
+      if (arena == null) {
+        return;
+      }
+      if(!ArenaUtils.isRole(ArenaUtils.Role.MURDERER, e.getPlayer())) {
+        return;
+      }
+      final Player attacker = e.getPlayer();
+      final User attackerUser = UserManager.getUser(attacker.getUniqueId());
+      //todo not hardcoded!
+      if(attacker.getInventory().getItemInMainHand().getType() == Material.IRON_SWORD) {
+        if(attackerUser.getCooldown("sword_shoot") > 0) {
+          return;
+        }
+        attackerUser.setCooldown("sword_shoot", 5);
+        attacker.getInventory().setItemInMainHand(null);
+        final ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(attacker.getLocation(), EntityType.ARMOR_STAND);
+        stand.setVisible(false);
+        stand.setInvulnerable(true);
+        stand.setHelmet(new ItemStack(Material.IRON_SWORD, 1));
+        new BukkitRunnable() {
+          double t = 0;
+          Location loc = attacker.getLocation();
+          Vector direction = loc.getDirection().normalize();
+
+          @Override
+          public void run() {
+            t += 0.5;
+            double x = direction.getX() * t;
+            double y = direction.getY() * t + 1.5;
+            double z = direction.getZ() * t;
+            loc.add(x, y, z);
+            stand.teleport(loc);
+            for (Entity en : loc.getChunk().getEntities()) {
+              if (!(en instanceof LivingEntity && en instanceof Player)) {
+                continue;
+              }
+              Player victim = (Player) en;
+              if (victim.getLocation().distance(loc) < 1.5) {
+                if (!victim.equals(attacker)) {
+                  ArenaUtils.spawnCorpse(victim, arena);
+                  victim.damage(100.0);
+                  victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
+                  MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"), 5, 40, 5);
+                  MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"), 5, 40, 5);
+                  attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
+                  ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER);
+                  if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, victim)) {
+                    if (ArenaUtils.isRole(ArenaUtils.Role.FAKE_DETECTIVE, victim)) {
+                      arena.setFakeDetective(null);
+                    }
+                    ArenaUtils.dropBowAndAnnounce(arena, victim);
+                  }
+                }
+              }
+            }
+            loc.subtract(x, y, z);
+            if (t > 15) {
+              this.cancel();
+            }
+          }
+        }.runTaskTimer(plugin, 0, 1);
+        CooldownUtils.applyActionBarCooldown(attacker, 5);
+      }
+    } catch (Exception ex) {
+      new ReportedException(plugin, ex);
+    }
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)

@@ -21,7 +21,7 @@
 
     <groupId>pl.plajer.murdermystery</groupId>
     <artifactId>MurderMystery</artifactId>
-    <version>0.0.7 pre</version>
+    <version>0.0.8 pre</version>
 
     <properties>
         <java.version>1.8</java.version>
@@ -150,6 +150,12 @@
         </dependency>
     </dependencies>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

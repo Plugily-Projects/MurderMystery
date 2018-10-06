@@ -52,6 +52,7 @@ import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
+import pl.plajer.murdermystery.utils.CooldownUtils;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.MinigameUtils;
@@ -96,23 +97,7 @@ public class ArenaEvents implements Listener {
       if (user.getCooldown("bow_shot") == 0) {
         user.setCooldown("bow_shot", 5);
         Player player = (Player) e.getEntity();
-        new BukkitRunnable() {
-          int ticks = 0;
-
-          @Override
-          public void run() {
-            if (!ArenaRegistry.isInArena(player) || ArenaRegistry.getArena(player).getArenaState() != ArenaState.IN_GAME) {
-              this.cancel();
-            }
-            if (ticks >= 100) {
-              this.cancel();
-            }
-            String progress = MinigameUtils.getProgressBar(ticks, 5 * 20, 10, "■", "&a", "&c");
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatManager.colorMessage("In-Game.Cooldown-Format")
-                .replace("%progress%", progress).replace("%time%", String.valueOf((double) (100 - ticks) / 20))));
-            ticks += 10;
-          }
-        }.runTaskTimer(plugin, 10, 10);
+        CooldownUtils.applyActionBarCooldown(player, 5);
       } else {
         e.setCancelled(true);
       }
@@ -308,6 +293,7 @@ public class ArenaEvents implements Listener {
           attacker.damage(100.0);
           ArenaUtils.addScore(UserManager.getUser(attacker.getUniqueId()), ArenaUtils.ScoreAction.INNOCENT_KILL);
           ArenaUtils.spawnCorpse(attacker, arena);
+          plugin.getRewardsHandler().performDetectiveKillRewards(attacker, victim);
 
           if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, attacker)) {
             arena.setDetectiveDead(true);
