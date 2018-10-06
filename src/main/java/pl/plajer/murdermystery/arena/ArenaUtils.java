@@ -66,6 +66,7 @@ public class ArenaUtils {
     }
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getAction()));
+    msg = StringUtils.replace(msg, "%action%", action.getAction());
     user.toPlayer().sendMessage(msg);
   }
 

@@ -4,6 +4,7 @@
 * Fixed gold not spawning
 * Fixed starting scoreboard gamestate wasn't displayed
 * Murderer sword won't be taken now when he receives additional arrows
+* Now actions that gives you score (like +15 score for gold pickup will properly format without %action% placeholder)
 
 ### 0.0.7 Beta (03.10.2018)
 * Added PAPI placeholders in chat (chat formatting must be enabled)
