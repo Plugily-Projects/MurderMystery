@@ -108,8 +108,12 @@ public class Arena extends BukkitRunnable {
     if (plugin.isBossbarEnabled()) {
       gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Main-Title"), BarColor.BLUE, BarStyle.SOLID);
     }
-    List<String> lines = LanguageManager.getLanguageList("Scoreboard.Content." + getArenaState().getFormattedName());
+    List<String> lines;
     for (ArenaState state : ArenaState.values()) {
+      if(state == ArenaState.RESTARTING) {
+        continue;
+      }
+      lines = LanguageManager.getLanguageList("Scoreboard.Content." + state.getFormattedName());
       scoreboardContents.put(state.getFormattedName(), lines);
     }
     lines = LanguageManager.getLanguageList("Scoreboard.Content.Playing-Murderer");
@@ -331,7 +335,7 @@ public class Arena extends BukkitRunnable {
                 return;
               }
 
-              //murderer speed add
+            //murderer speed add
             case 2:
               Bukkit.getPlayer(murderer).addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
               break;
@@ -445,8 +449,6 @@ public class Arena extends BukkitRunnable {
         if (getArenaState() == ArenaState.IN_GAME) {
           lines = scoreboardContents.get(getArenaState().getFormattedName() + "-Murderer");
         }
-      } else {
-        lines = scoreboardContents.get(getArenaState().getFormattedName());
       }
       for (String line : lines) {
         scoreboard.addRow(formatScoreboardLine(line, user));
