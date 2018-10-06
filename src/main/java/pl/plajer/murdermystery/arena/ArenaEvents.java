@@ -157,7 +157,11 @@ public class ArenaEvents implements Listener {
         } else {
           arrow.setAmount(arrow.getAmount() + 1);
         }
-        e.getPlayer().getInventory().setItem(1, arrow);
+        if(ArenaUtils.isRole(ArenaUtils.Role.MURDERER, e.getPlayer())) {
+          e.getPlayer().getInventory().setItem(2, arrow);
+        } else {
+          e.getPlayer().getInventory().setItem(1, arrow);
+        }
         e.getPlayer().getInventory().setItem(8, new ItemStack(Material.GOLD_INGOT, 0));
       }
     } catch (Exception ex) {
