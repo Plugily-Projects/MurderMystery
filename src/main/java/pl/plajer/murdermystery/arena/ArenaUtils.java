@@ -157,8 +157,16 @@ public class ArenaUtils {
       Corpses.CorpseData corpse = CorpseAPI.spawnCorpse(p, p.getLocation());
       Hologram hologram = HologramsAPI.createHologram(plugin, p.getLocation().clone().add(0, 1.5, 0));
       hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Corpse-Last-Words").replace("%player%", p.getName()));
-      //todo multi last words
-      hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Last-Words.Default"));
+      //todo priority note to wiki
+      if(p.hasPermission("murdermystery.lastwords.meme")) {
+        hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Last-Words.Meme"));
+      } else if(p.hasPermission("murdermystery.lastwords.rage")) {
+        hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Last-Words.Rage"));
+      } else if(p.hasPermission("murdermystery.lastwords.pro")) {
+        hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Last-Words.Pro"));
+      } else {
+        hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Last-Words.Default"));
+      }
       arena.addCorpse(new ArenaCorpse(hologram, corpse));
     } catch (Exception ex) {
       new ReportedException(plugin, ex);

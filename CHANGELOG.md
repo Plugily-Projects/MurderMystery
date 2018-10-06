@@ -1,5 +1,6 @@
 ### 0.0.8 Beta (06.2018)
 * Added throwable sword for murderer
+* Added multiple last words
 
 ### 0.0.7 Beta (03.10.2018)
 * Added PAPI placeholders in chat (chat formatting must be enabled)
