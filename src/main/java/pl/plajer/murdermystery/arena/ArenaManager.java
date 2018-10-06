@@ -283,7 +283,7 @@ public class ArenaManager {
         p.getInventory().clear();
         p.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
         for (String msg : summaryMessages) {
-          MessageUtils.sendCenteredMessage(p, formatSummaryPlaceholders(msg, arena));
+          MinigameUtils.sendCenteredMessage(p, formatSummaryPlaceholders(msg, arena));
         }
         user.removeScoreboard();
         if (!quickStop) {
