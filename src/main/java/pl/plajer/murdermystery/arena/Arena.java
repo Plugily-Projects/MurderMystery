@@ -338,7 +338,7 @@ public class Arena extends BukkitRunnable {
           }
 
           //don't spawn it every time
-          if (new Random().nextInt(2) == 2) {
+          if (new Random().nextInt(2) == 1) {
             spawnSomeGold();
           }
           setTimer(getTimer() - 1);
@@ -445,6 +445,8 @@ public class Arena extends BukkitRunnable {
         if (getArenaState() == ArenaState.IN_GAME) {
           lines = scoreboardContents.get(getArenaState().getFormattedName() + "-Murderer");
         }
+      } else {
+        lines = scoreboardContents.get(getArenaState().getFormattedName());
       }
       for (String line : lines) {
         scoreboard.addRow(formatScoreboardLine(line, user));

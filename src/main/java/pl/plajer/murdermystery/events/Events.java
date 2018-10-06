@@ -15,6 +15,7 @@
 
 package pl.plajer.murdermystery.events;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -36,6 +37,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 
@@ -102,11 +104,14 @@ public class Events implements Listener {
           return;
         }
         attackerUser.setCooldown("sword_shoot", 5);
-        attacker.getInventory().setItemInMainHand(null);
+        attacker.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
         final ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(attacker.getLocation(), EntityType.ARMOR_STAND);
         stand.setVisible(false);
         stand.setInvulnerable(true);
-        stand.setHelmet(new ItemStack(Material.IRON_SWORD, 1));
+        stand.setItemInHand(new ItemStack(Material.IRON_SWORD, 1));
+        stand.setRightArmPose(new EulerAngle(0, 0, 1));
+        stand.setCollidable(false);
+        stand.setSilent(true);
         new BukkitRunnable() {
           double t = 0;
           Location loc = attacker.getLocation();
@@ -116,7 +121,7 @@ public class Events implements Listener {
           public void run() {
             t += 0.5;
             double x = direction.getX() * t;
-            double y = direction.getY() * t + 1.5;
+            double y = direction.getY() * t + 0.5;
             double z = direction.getZ() * t;
             loc.add(x, y, z);
             stand.teleport(loc);
@@ -125,7 +130,10 @@ public class Events implements Listener {
                 continue;
               }
               Player victim = (Player) en;
-              if (victim.getLocation().distance(loc) < 1.5) {
+              if(ArenaRegistry.isInArena(victim) && UserManager.getUser(victim.getUniqueId()).isSpectator()) {
+                continue;
+              }
+              if (victim.getLocation().distance(loc) < 1.0) {
                 if (!victim.equals(attacker)) {
                   ArenaUtils.spawnCorpse(victim, arena);
                   victim.damage(100.0);
@@ -144,9 +152,11 @@ public class Events implements Listener {
               }
             }
             loc.subtract(x, y, z);
-            if (t > 15) {
+            if (t > 20) {
               this.cancel();
+              stand.remove();
             }
+            Bukkit.getScheduler().runTaskLater(plugin, () -> attacker.getInventory().setItem(1, new ItemStack(Material.IRON_SWORD)), 5 * 21);
           }
         }.runTaskTimer(plugin, 0, 1);
         CooldownUtils.applyActionBarCooldown(attacker, 5);
