@@ -18,9 +18,6 @@
 
 package pl.plajer.murdermystery.arena;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -44,7 +41,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
@@ -55,7 +51,6 @@ import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.CooldownUtils;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.core.services.exception.ReportedException;
-import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
  * @author Plajer
@@ -143,7 +138,7 @@ public class ArenaEvents implements Listener {
         stack.setAmount(stack.getAmount() + 1);
       }
       e.getPlayer().getInventory().setItem(8, stack);
-      user.addStat(StatsStorage.StatisticType.GOLD, 1);
+      user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, 1);
       ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP);
       e.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Picked-Up-Gold"));
 
@@ -151,8 +146,8 @@ public class ArenaEvents implements Listener {
         return;
       }
 
-      if (user.getStat(StatsStorage.StatisticType.GOLD) == 10) {
-        user.setStat(StatsStorage.StatisticType.GOLD, 0);
+      if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) == 10) {
+        user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
         MessageUtils.sendTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold"), 5, 40, 5);
         MessageUtils.sendSubTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle"), 5, 40, 5);
         e.getPlayer().getInventory().setItem(0, new ItemStack(Material.BOW, 1));
@@ -335,7 +330,7 @@ public class ArenaEvents implements Listener {
         player.setFlying(false);
         player.setAllowFlight(false);
         User user = UserManager.getUser(player.getUniqueId());
-        user.setStat(StatsStorage.StatisticType.GOLD, 0);
+        user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
         player.teleport(arena.getEndLocation());
         return;
       }
@@ -344,7 +339,7 @@ public class ArenaEvents implements Listener {
       player.teleport(loc);
       user.setSpectator(true);
       player.setGameMode(GameMode.SURVIVAL);
-      user.setStat(StatsStorage.StatisticType.GOLD, 0);
+      user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
       ArenaUtils.hidePlayer(player, arena);
       player.setAllowFlight(true);
       player.setFlying(true);
@@ -380,7 +375,7 @@ public class ArenaEvents implements Listener {
         user.setSpectator(true);
         player.setGameMode(GameMode.SURVIVAL);
         player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-        user.setStat(StatsStorage.StatisticType.GOLD, 0);
+        user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);

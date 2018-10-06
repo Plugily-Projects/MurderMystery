@@ -117,7 +117,7 @@ public class ArenaManager {
         p.setFlying(true);
         User user = UserManager.getUser(p.getUniqueId());
         user.setSpectator(true);
-        user.setStat(StatsStorage.StatisticType.GOLD, 0);
+        user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
         p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1));
         ArenaUtils.hidePlayer(p, arena);
 
@@ -249,7 +249,7 @@ public class ArenaManager {
       if (!plugin.isBungeeActivated() && plugin.isInventoryManagerEnabled()) {
         InventoryUtils.loadInventory(plugin, p);
       }
-      user.setStat(StatsStorage.StatisticType.GOLD, 0);
+      user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
       user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, 0);
       user.setStat(StatsStorage.StatisticType.LOCAL_KILLS, 0);
     } catch (Exception ex) {
