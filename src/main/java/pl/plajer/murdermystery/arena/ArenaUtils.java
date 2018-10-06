@@ -35,6 +35,7 @@ import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.MessageUtils;
@@ -55,7 +56,7 @@ public class ArenaUtils {
     if (action == ScoreAction.DETECTIVE_WIN_GAME) {
       int innocents = 0;
       for (Player p : user.getArena().getPlayersLeft()) {
-        if (isRole(Role.INNOCENT, p)) {
+        if (Role.isRole(Role.INNOCENT, p)) {
           innocents++;
         }
       }
@@ -107,7 +108,7 @@ public class ArenaUtils {
       bowMeta.setDisplayName(ChatManager.colorMessage("In-Game.Bow-Locator-Item-Name"));
       bowLocator.setItemMeta(bowMeta);
       for (Player p : arena.getPlayersLeft()) {
-        if (isRole(Role.INNOCENT, p)) {
+        if (Role.isRole(Role.INNOCENT, p)) {
           p.getInventory().setItem(4, bowLocator);
           p.setCompassTarget(loc);
         }
@@ -130,12 +131,12 @@ public class ArenaUtils {
       ItemLine itemLine = hologram.appendItemLine(new ItemStack(Material.BOW, 1));
 
       itemLine.setPickupHandler(player -> {
-        if (isRole(Role.INNOCENT, player)) {
+        if (Role.isRole(Role.INNOCENT, player)) {
           player.playSound(player.getLocation(), Sound.BLOCK_LAVA_POP, 1F, 2F);
           hologram.delete();
 
           for (Player loopPlayer : arena.getPlayersLeft()) {
-            if (isRole(Role.INNOCENT, loopPlayer)) {
+            if (Role.isRole(Role.INNOCENT, loopPlayer)) {
               loopPlayer.getInventory().setItem(4, new ItemStack(Material.AIR, 1));
             }
           }
@@ -150,53 +151,6 @@ public class ArenaUtils {
       addBowLocator(arena, hologram.getLocation());
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
-    }
-  }
-
-  public static void spawnCorpse(Player p, Arena arena) {
-    try {
-      Corpses.CorpseData corpse = CorpseAPI.spawnCorpse(p, p.getLocation());
-      Hologram hologram = HologramsAPI.createHologram(plugin, p.getLocation().clone().add(0, 1.5, 0));
-      hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Corpse-Last-Words").replace("%player%", p.getName()));
-      //todo priority note to wiki
-      if(p.hasPermission("murdermystery.lastwords.meme")) {
-        hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Last-Words.Meme"));
-      } else if(p.hasPermission("murdermystery.lastwords.rage")) {
-        hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Last-Words.Rage"));
-      } else if(p.hasPermission("murdermystery.lastwords.pro")) {
-        hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Last-Words.Pro"));
-      } else {
-        hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Last-Words.Default"));
-      }
-      arena.addCorpse(new ArenaCorpse(hologram, corpse));
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
-  }
-
-  public static boolean isRole(Role role, Player p) {
-    try {
-      Arena arena = ArenaRegistry.getArena(p);
-      if (arena == null) {
-        return false;
-      }
-      switch (role) {
-        case DETECTIVE:
-          return arena.getDetective() == p.getUniqueId();
-        case FAKE_DETECTIVE:
-          return arena.getFakeDetective() != null && arena.getFakeDetective() == p.getUniqueId();
-        case MURDERER:
-          return arena.getMurderer() == p.getUniqueId();
-        case ANY_DETECTIVE:
-          return arena.getDetective() == p.getUniqueId() || (arena.getFakeDetective() != null && arena.getFakeDetective() == p.getUniqueId());
-        case INNOCENT:
-          return arena.getDetective() != p.getUniqueId() && (arena.getFakeDetective() != null && arena.getFakeDetective() != p.getUniqueId()) && arena.getMurderer() != p.getUniqueId();
-        default:
-          return false;
-      }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-      return false;
     }
   }
 
@@ -250,10 +204,6 @@ public class ArenaUtils {
     public String getAction() {
       return action;
     }
-  }
-
-  public enum Role {
-    DETECTIVE, FAKE_DETECTIVE, MURDERER, ANY_DETECTIVE, INNOCENT
   }
 
 }

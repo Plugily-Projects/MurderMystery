@@ -18,7 +18,6 @@ package pl.plajer.murdermystery.events;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -45,15 +44,15 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
-import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.arena.ArenaUtils;
+import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
-import pl.plajer.murdermystery.utils.CooldownUtils;
 import pl.plajer.murdermystery.utils.MessageUtils;
+import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
@@ -93,7 +92,7 @@ public class Events implements Listener {
       if (arena == null) {
         return;
       }
-      if(!ArenaUtils.isRole(ArenaUtils.Role.MURDERER, e.getPlayer())) {
+      if(!Role.isRole(Role.MURDERER, e.getPlayer())) {
         return;
       }
       final Player attacker = e.getPlayer();
@@ -135,15 +134,15 @@ public class Events implements Listener {
               }
               if (victim.getLocation().distance(loc) < 1.0) {
                 if (!victim.equals(attacker)) {
-                  ArenaUtils.spawnCorpse(victim, arena);
+                  Utils.spawnCorpse(victim, arena);
                   victim.damage(100.0);
                   victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
                   MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"), 5, 40, 5);
                   MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"), 5, 40, 5);
                   attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
                   ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER);
-                  if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, victim)) {
-                    if (ArenaUtils.isRole(ArenaUtils.Role.FAKE_DETECTIVE, victim)) {
+                  if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
+                    if (Role.isRole(Role.FAKE_DETECTIVE, victim)) {
                       arena.setFakeDetective(null);
                     }
                     ArenaUtils.dropBowAndAnnounce(arena, victim);
@@ -159,7 +158,7 @@ public class Events implements Listener {
             Bukkit.getScheduler().runTaskLater(plugin, () -> attacker.getInventory().setItem(1, new ItemStack(Material.IRON_SWORD)), 5 * 21);
           }
         }.runTaskTimer(plugin, 0, 1);
-        CooldownUtils.applyActionBarCooldown(attacker, 5);
+        Utils.applyActionBarCooldown(attacker, 5);
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);

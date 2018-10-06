@@ -56,6 +56,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.murdermysteryapi.MMGameStartEvent;
@@ -293,7 +294,7 @@ public class Arena extends BukkitRunnable {
           //every 30 secs survive reward
           if (getTimer() % 30 == 0) {
             for (Player p : getPlayersLeft()) {
-              if (ArenaUtils.isRole(ArenaUtils.Role.INNOCENT, p)) {
+              if (Role.isRole(Role.INNOCENT, p)) {
                 ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.SURVIVE_TIME);
               }
             }
@@ -445,7 +446,7 @@ public class Arena extends BukkitRunnable {
       User user = UserManager.getUser(p.getUniqueId());
       scoreboard = new GameScoreboard("PL_MM", "MM_CR", ChatManager.colorMessage("Scoreboard.Title"));
       List<String> lines = scoreboardContents.get(getArenaState().getFormattedName());
-      if (ArenaUtils.isRole(ArenaUtils.Role.MURDERER, p)) {
+      if (Role.isRole(Role.MURDERER, p)) {
         if (getArenaState() == ArenaState.IN_GAME) {
           lines = scoreboardContents.get(getArenaState().getFormattedName() + "-Murderer");
         }
@@ -465,7 +466,7 @@ public class Arena extends BukkitRunnable {
     formattedLine = StringUtils.replace(formattedLine, "%MAPNAME%", mapName);
     int innocents = 0;
     for (Player p : getPlayersLeft()) {
-      if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, p)) {
+      if (Role.isRole(Role.ANY_DETECTIVE, p)) {
         continue;
       }
       innocents++;

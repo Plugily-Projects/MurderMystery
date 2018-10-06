@@ -37,6 +37,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
@@ -48,6 +49,7 @@ import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
+import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.InventoryUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
@@ -183,10 +185,10 @@ public class ArenaManager {
         if (arena.getPlayersLeft().size() - 1 == 1) {
           return;
         }
-        if (ArenaUtils.isRole(ArenaUtils.Role.MURDERER, p)) {
+        if (Role.isRole(Role.MURDERER, p)) {
           List<UUID> players = new ArrayList<>();
           for (Player player : arena.getPlayersLeft()) {
-            if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, player)) {
+            if (Role.isRole(Role.ANY_DETECTIVE, player)) {
               continue;
             }
             players.add(player.getUniqueId());
@@ -203,16 +205,16 @@ public class ArenaManager {
           MessageUtils.sendSubTitle(Bukkit.getPlayer(newMurderer), ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
           Bukkit.getPlayer(newMurderer).getInventory().setItem(1, new ItemStack(Material.IRON_SWORD, 1));
           user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
-        } else if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, p)) {
+        } else if (Role.isRole(Role.ANY_DETECTIVE, p)) {
           arena.setDetectiveDead(true);
-          if (ArenaUtils.isRole(ArenaUtils.Role.FAKE_DETECTIVE, p)) {
+          if (Role.isRole(Role.FAKE_DETECTIVE, p)) {
             arena.setFakeDetective(null);
           } else {
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
           }
           ArenaUtils.dropBowAndAnnounce(arena, p);
         }
-        ArenaUtils.spawnCorpse(p, arena);
+        Utils.spawnCorpse(p, arena);
       }
       p.getInventory().clear();
       p.getInventory().setArmorContents(null);
@@ -276,7 +278,7 @@ public class ArenaManager {
       Random rand = new Random();
       for (final Player p : arena.getPlayers()) {
         User user = UserManager.getUser(p.getUniqueId());
-        if (ArenaUtils.isRole(ArenaUtils.Role.FAKE_DETECTIVE, p) || ArenaUtils.isRole(ArenaUtils.Role.INNOCENT, p)) {
+        if (Role.isRole(Role.FAKE_DETECTIVE, p) || Role.isRole(Role.INNOCENT, p)) {
           user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, rand.nextInt(4) + 1);
           user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, rand.nextInt(4) + 1);
         }

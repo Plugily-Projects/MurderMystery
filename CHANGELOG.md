@@ -5,6 +5,8 @@
 * Fixed starting scoreboard gamestate wasn't displayed
 * Murderer sword won't be taken now when he receives additional arrows
 * Now actions that gives you score (like +15 score for gold pickup will properly format without %action% placeholder)
+* Added 1.13 and 1.13.1 support
+* Removed 1.9 and 1.10 support
 
 ### 0.0.7 Beta (03.10.2018)
 * Added PAPI placeholders in chat (chat formatting must be enabled)

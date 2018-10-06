@@ -15,17 +15,25 @@
 
 package pl.plajer.murdermystery.utils;
 
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
+import org.golde.bukkit.corpsereborn.nms.Corpses;
 
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.arena.Arena;
+import pl.plajer.murdermystery.arena.ArenaCorpse;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
@@ -33,7 +41,7 @@ import pl.plajerlair.core.utils.MinigameUtils;
  * <p>
  * Created at 06.10.2018
  */
-public class CooldownUtils {
+public class Utils {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
@@ -55,6 +63,27 @@ public class CooldownUtils {
         ticks += 10;
       }
     }.runTaskTimer(plugin, 10, 10);
+  }
+
+  public static void spawnCorpse(Player p, Arena arena) {
+    try {
+      Corpses.CorpseData corpse = CorpseAPI.spawnCorpse(p, p.getLocation());
+      Hologram hologram = HologramsAPI.createHologram(plugin, p.getLocation().clone().add(0, 1.5, 0));
+      hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Corpse-Last-Words").replace("%player%", p.getName()));
+      //todo priority note to wiki
+      if(p.hasPermission("murdermystery.lastwords.meme")) {
+        hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Last-Words.Meme"));
+      } else if(p.hasPermission("murdermystery.lastwords.rage")) {
+        hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Last-Words.Rage"));
+      } else if(p.hasPermission("murdermystery.lastwords.pro")) {
+        hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Last-Words.Pro"));
+      } else {
+        hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Last-Words.Default"));
+      }
+      arena.addCorpse(new ArenaCorpse(hologram, corpse));
+    } catch (Exception ex) {
+      new ReportedException(plugin, ex);
+    }
   }
 
 }
