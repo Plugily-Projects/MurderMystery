@@ -218,7 +218,7 @@ public class ArenaEvents implements Listener {
           arena.setFakeDetective(null);
         }
         ArenaUtils.dropBowAndAnnounce(arena, victim);
-        Utils.spawnCorpse(victim, arena);
+        plugin.getCorpseHandler().spawnCorpse(victim, arena);
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
@@ -253,7 +253,7 @@ public class ArenaEvents implements Listener {
         ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER);
       }
 
-      Utils.spawnCorpse(victim, arena);
+      plugin.getCorpseHandler().spawnCorpse(victim, arena);
       MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"), 5, 40, 5);
 
       if (Role.isRole(Role.MURDERER, victim)) {
@@ -292,7 +292,7 @@ public class ArenaEvents implements Listener {
           MessageUtils.sendSubTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Killed-Innocent"), 5, 40, 5);
           attacker.damage(100.0);
           ArenaUtils.addScore(UserManager.getUser(attacker.getUniqueId()), ArenaUtils.ScoreAction.INNOCENT_KILL);
-          Utils.spawnCorpse(attacker, arena);
+          plugin.getCorpseHandler().spawnCorpse(attacker, arena);
           plugin.getRewardsHandler().performDetectiveKillRewards(attacker, victim);
 
           if (Role.isRole(Role.ANY_DETECTIVE, attacker)) {

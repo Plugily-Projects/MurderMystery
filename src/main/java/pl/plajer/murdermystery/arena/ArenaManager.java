@@ -213,7 +213,7 @@ public class ArenaManager {
           }
           ArenaUtils.dropBowAndAnnounce(arena, p);
         }
-        Utils.spawnCorpse(p, arena);
+        plugin.getCorpseHandler().spawnCorpse(p, arena);
       }
       p.getInventory().clear();
       p.getInventory().setArmorContents(null);

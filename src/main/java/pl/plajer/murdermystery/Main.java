@@ -32,6 +32,7 @@ import pl.plajer.murdermystery.events.spectator.SpectatorEvents;
 import pl.plajer.murdermystery.events.spectator.SpectatorItemEvents;
 import pl.plajer.murdermystery.handlers.BungeeManager;
 import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajer.murdermystery.handlers.CorpseHandler;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.handlers.PlaceholderManager;
 import pl.plajer.murdermystery.handlers.RewardsHandler;
@@ -78,6 +79,7 @@ public class Main extends JavaPlugin {
   private FileStats fileStats;
   private SignManager signManager;
   private MainCommand mainCommand;
+  private CorpseHandler corpseHandler;
   private boolean databaseActivated = false;
 
   public static void debug(LogLevel level, String thing) {
@@ -289,12 +291,12 @@ public class Main extends JavaPlugin {
     new SpectatorItemEvents(this);
     rewardsHandler = new RewardsHandler(this);
     signManager = new SignManager(this);
+    corpseHandler = new CorpseHandler(this);
 
     new BukkitRunnable() {
 
       @Override
       public void run() {
-        // Find the holograms created by your plugin
         for (Hologram hologram : HologramsAPI.getHolograms(Main.this)) {
           long tenMinutesMillis = 60 * 1000;
           long elapsedMillis = System.currentTimeMillis() - hologram.getCreationTimestamp();
@@ -371,6 +373,10 @@ public class Main extends JavaPlugin {
 
   public MainCommand getMainCommand() {
     return mainCommand;
+  }
+
+  public CorpseHandler getCorpseHandler() {
+    return corpseHandler;
   }
 
   public enum LogLevel {

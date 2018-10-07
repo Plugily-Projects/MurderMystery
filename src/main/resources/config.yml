@@ -40,6 +40,12 @@ DatabaseActivated: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
 InventoryManager: false
 
+# Should we override corpses spawn from CorpsesReborn plugin?
+# When player will die outside game corpse won't be spawned!
+# Disable this if you don't want this!
+# WARNING: If disabled, two corpses will be spawned when player in-game dies
+Override-Corpses-Spawn: true
+
 # Basic permissions for game, permissions explained here: todo
 Basic-Permissions:
   Full-Games-Permission: "murdermystery.fullgames"
