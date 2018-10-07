@@ -181,6 +181,10 @@ public class Arena extends BukkitRunnable {
             gameBar.setTitle(ChatManager.colorMessage("Bossbar.Starting-In").replace("%time%", String.valueOf(getTimer())));
             gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 60));
           }
+          for (Player player : getPlayers()) {
+            player.setExp((float) (getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 60)));
+            player.setLevel(getTimer());
+          }
           if (getPlayers().size() < getMinimumPlayers()) {
             gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
             gameBar.setProgress(1.0);
