@@ -14,6 +14,7 @@
 * You cannot join game now infinitely through command
 * Added corpses override option in config
 * Now players that will leave game will be visible by other players outside game
+* Fixed some potions amplifiers were 1 level higher, amplifiers are counted from 0
 
 ### 0.0.7 Beta (03.10.2018)
 * Added PAPI placeholders in chat (chat formatting must be enabled)

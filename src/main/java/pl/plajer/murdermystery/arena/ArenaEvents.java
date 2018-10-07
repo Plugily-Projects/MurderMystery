@@ -52,6 +52,8 @@ import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
+import pl.plajerlair.core.utils.ItemBuilder;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * @author Plajer
@@ -325,7 +327,7 @@ public class ArenaEvents implements Listener {
       e.getDrops().clear();
       e.setDroppedExp(0);
       e.getEntity().spigot().respawn();
-      e.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 1));
+      e.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
       Player player = e.getEntity();
       if (arena.getArenaState() == ArenaState.STARTING) {
         player.teleport(loc);
@@ -352,19 +354,14 @@ public class ArenaEvents implements Listener {
       arena.getPlayersLeft().remove(player);
       ChatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
 
-      ItemStack spectatorItem = new ItemStack(Material.COMPASS, 1);
-      ItemMeta spectatorMeta = spectatorItem.getItemMeta();
-      spectatorMeta.setDisplayName(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"));
-      spectatorItem.setItemMeta(spectatorMeta);
-      player.getInventory().setItem(0, spectatorItem);
-
+      player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
+      player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
       player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }
 
-  //todo maybe bugged, test?
   @EventHandler
   public void onRespawn(PlayerRespawnEvent e) {
     try {

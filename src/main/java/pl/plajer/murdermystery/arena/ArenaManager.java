@@ -101,7 +101,7 @@ public class ArenaManager {
         p.getInventory().clear();
 
         p.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
-        p.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator.Settings-Menu.Item-Name")).build());
+        p.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
         p.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
 
         for (PotionEffect potionEffect : p.getActivePotionEffects()) {
@@ -118,7 +118,7 @@ public class ArenaManager {
         User user = UserManager.getUser(p.getUniqueId());
         user.setSpectator(true);
         user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
-        p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1));
+        p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
         ArenaUtils.hidePlayer(p, arena);
 
         for (Player spectator : arena.getPlayers()) {

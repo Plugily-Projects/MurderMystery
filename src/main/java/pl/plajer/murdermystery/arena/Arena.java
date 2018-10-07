@@ -342,7 +342,7 @@ public class Arena extends BukkitRunnable {
 
               //murderer speed add
             case 2:
-              Bukkit.getPlayer(murderer).addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
+              Bukkit.getPlayer(murderer).addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0));
               break;
           }
 
