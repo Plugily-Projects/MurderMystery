@@ -45,7 +45,7 @@ import pl.plajer.murdermystery.leaderheads.MurderMysteryHighestScore;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryKills;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryLoses;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryWins;
-import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
+import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;

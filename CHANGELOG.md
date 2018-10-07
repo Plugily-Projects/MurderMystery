@@ -8,6 +8,8 @@
 * Added 1.13 and 1.13.1 support
 * Removed 1.9 and 1.10 support
 * Added spectator settings
+* API recode
+* JavaDocs created
 
 ### 0.0.7 Beta (03.10.2018)
 * Added PAPI placeholders in chat (chat formatting must be enabled)

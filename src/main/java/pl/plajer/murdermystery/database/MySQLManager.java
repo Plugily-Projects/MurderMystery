@@ -26,7 +26,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import pl.plajer.murdermystery.Main;
-import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
+import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.core.database.MySQLDatabase;
 

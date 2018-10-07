@@ -23,7 +23,7 @@ import me.robin.leaderheads.objects.BoardType;
 import org.bukkit.entity.Player;
 
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
+import pl.plajer.murdermystery.api.StatsStorage;
 
 /**
  * @author Plajer

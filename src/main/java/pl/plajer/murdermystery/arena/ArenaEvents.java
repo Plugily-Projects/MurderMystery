@@ -46,7 +46,7 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
-import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
+import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
