@@ -22,9 +22,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
+import pl.plajerlair.core.database.MySQLDatabase;
 
 /**
  * @author Plajer
@@ -39,35 +41,14 @@ public class MySQLConnectionUtils {
     ResultSet resultSet = database.executeQuery("SELECT UUID from playerstats WHERE UUID='" + player.getUniqueId().toString() + "'");
     try {
       if (!resultSet.next()) {
-        database.insertPlayer(player);
+        plugin.getMySQLManager().insertPlayer(player);
         b = true;
       }
 
-      int gamesplayed;
-      int kills;
-      int highestscore;
-      int deaths;
-      int wins;
-      int loses;
-      int contribDetective;
-      int contribMurderer;
-      gamesplayed = database.getStat(player.getUniqueId().toString(), "gamesplayed");
-      kills = database.getStat(player.getUniqueId().toString(), "kills");
-      highestscore = database.getStat(player.getUniqueId().toString(), "highestwave");
-      deaths = database.getStat(player.getUniqueId().toString(), "deaths");
-      wins = database.getStat(player.getUniqueId().toString(), "wins");
-      loses = database.getStat(player.getUniqueId().toString(), "loses");
-      contribDetective = database.getStat(player.getUniqueId().toString(), "contribdetective");
-      contribMurderer = database.getStat(player.getUniqueId().toString(), "contribmurderer");
       User user = UserManager.getUser(player.getUniqueId());
-      user.setInt("gamesplayed", gamesplayed);
-      user.setInt("kills", kills);
-      user.setInt("highestwave", highestscore);
-      user.setInt("deaths", deaths);
-      user.setInt("wins", wins);
-      user.setInt("loses", loses);
-      user.setInt("contribution_detective", contribDetective);
-      user.setInt("contribution_murderer", contribMurderer);
+      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        user.setStat(stat, plugin.getMySQLManager().getStat(player, stat));
+      }
       b = true;
     } catch (SQLException e1) {
       System.out.print("CONNECTION FAILED FOR PLAYER " + player.getName());
@@ -79,34 +60,13 @@ public class MySQLConnectionUtils {
     if (!b) {
       try {
         if (!resultSet.next()) {
-          database.insertPlayer(player);
+          plugin.getMySQLManager().insertPlayer(player);
         }
 
-        int gamesplayed;
-        int kills;
-        int highestscore;
-        int deaths;
-        int wins;
-        int loses;
-        int contribDetective;
-        int contribMurderer;
-        gamesplayed = database.getStat(player.getUniqueId().toString(), "gamesplayed");
-        kills = database.getStat(player.getUniqueId().toString(), "kills");
-        highestscore = database.getStat(player.getUniqueId().toString(), "highestwave");
-        deaths = database.getStat(player.getUniqueId().toString(), "deaths");
-        wins = database.getStat(player.getUniqueId().toString(), "wins");
-        loses = database.getStat(player.getUniqueId().toString(), "loses");
-        contribDetective = database.getStat(player.getUniqueId().toString(), "contribdetective");
-        contribMurderer = database.getStat(player.getUniqueId().toString(), "contribmurderer");
         User user = UserManager.getUser(player.getUniqueId());
-        user.setInt("gamesplayed", gamesplayed);
-        user.setInt("kills", kills);
-        user.setInt("highestwave", highestscore);
-        user.setInt("deaths", deaths);
-        user.setInt("wins", wins);
-        user.setInt("loses", loses);
-        user.setInt("contribution_detective", contribDetective);
-        user.setInt("contribution_murderer", contribMurderer);
+        for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+          user.setStat(stat, plugin.getMySQLManager().getStat(player, stat));
+        }
       } catch (SQLException e1) {
         System.out.print("CONNECTION FAILED TWICE FOR PLAYER " + player.getName());
         e1.printStackTrace();

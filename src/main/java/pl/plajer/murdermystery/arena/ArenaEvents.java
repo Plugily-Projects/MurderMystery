@@ -18,9 +18,6 @@
 
 package pl.plajer.murdermystery.arena;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -44,16 +41,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
+import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajerlair.core.services.ReportedException;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajer.murdermystery.utils.Utils;
+import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -88,30 +86,14 @@ public class ArenaEvents implements Listener {
       if (!(e.getEntity() instanceof Player)) {
         return;
       }
-      if (!ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, (Player) e.getEntity())) {
+      if (!Role.isRole(Role.ANY_DETECTIVE, (Player) e.getEntity())) {
         return;
       }
       User user = UserManager.getUser(e.getEntity().getUniqueId());
       if (user.getCooldown("bow_shot") == 0) {
         user.setCooldown("bow_shot", 5);
         Player player = (Player) e.getEntity();
-        new BukkitRunnable() {
-          int ticks = 0;
-
-          @Override
-          public void run() {
-            if (!ArenaRegistry.isInArena(player) || ArenaRegistry.getArena(player).getArenaState() != ArenaState.IN_GAME) {
-              this.cancel();
-            }
-            if (ticks >= 100) {
-              this.cancel();
-            }
-            String progress = MinigameUtils.getProgressBar(ticks, 5 * 20, 10, "■", "&a", "&c");
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatManager.colorMessage("In-Game.Cooldown-Format")
-                    .replace("%progress%", progress).replace("%time%", String.valueOf((double) (100 - ticks) / 20))));
-            ticks += 10;
-          }
-        }.runTaskTimer(plugin, 10, 10);
+        Utils.applyActionBarCooldown(player, 5);
       } else {
         e.setCancelled(true);
       }
@@ -157,16 +139,16 @@ public class ArenaEvents implements Listener {
         stack.setAmount(stack.getAmount() + 1);
       }
       e.getPlayer().getInventory().setItem(8, stack);
-      user.addInt("gold", 1);
+      user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, 1);
       ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP);
       e.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Picked-Up-Gold"));
 
-      if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, e.getPlayer())) {
+      if (Role.isRole(Role.ANY_DETECTIVE, e.getPlayer())) {
         return;
       }
 
-      if (user.getInt("gold") == 10) {
-        user.setInt("gold", 0);
+      if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) == 10) {
+        user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
         MessageUtils.sendTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold"), 5, 40, 5);
         MessageUtils.sendSubTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle"), 5, 40, 5);
         e.getPlayer().getInventory().setItem(0, new ItemStack(Material.BOW, 1));
@@ -176,7 +158,11 @@ public class ArenaEvents implements Listener {
         } else {
           arrow.setAmount(arrow.getAmount() + 1);
         }
-        e.getPlayer().getInventory().setItem(1, arrow);
+        if(Role.isRole(Role.MURDERER, e.getPlayer())) {
+          e.getPlayer().getInventory().setItem(2, arrow);
+        } else {
+          e.getPlayer().getInventory().setItem(1, arrow);
+        }
         e.getPlayer().getInventory().setItem(8, new ItemStack(Material.GOLD_INGOT, 0));
       }
     } catch (Exception ex) {
@@ -197,7 +183,7 @@ public class ArenaEvents implements Listener {
       }
 
       //better check this for future even if anyone else cannot use sword
-      if (!ArenaUtils.isRole(ArenaUtils.Role.MURDERER, attacker)) {
+      if (!Role.isRole(Role.MURDERER, attacker)) {
         return;
       }
 
@@ -212,27 +198,27 @@ public class ArenaEvents implements Listener {
       }
 
       User user = UserManager.getUser(attacker.getUniqueId());
-      if (ArenaUtils.isRole(ArenaUtils.Role.MURDERER, victim)) {
+      if (Role.isRole(Role.MURDERER, victim)) {
         plugin.getRewardsHandler().performMurdererKillRewards(attacker, victim);
-      } else if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, victim)) {
+      } else if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
         plugin.getRewardsHandler().performDetectiveKillRewards(attacker, victim);
       }
 
       //todo god damage override add
       victim.damage(100.0);
       victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
-      user.addInt("local_kills", 1);
+      user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
       ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER);
 
       arena.getPlayersLeft().remove(victim);
-      if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, victim)) {
+      if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
         //if already true, no effect is done :)
         arena.setDetectiveDead(true);
-        if (ArenaUtils.isRole(ArenaUtils.Role.FAKE_DETECTIVE, victim)) {
+        if (Role.isRole(Role.FAKE_DETECTIVE, victim)) {
           arena.setFakeDetective(null);
         }
         ArenaUtils.dropBowAndAnnounce(arena, victim);
-        ArenaUtils.spawnCorpse(victim, arena);
+        Utils.spawnCorpse(victim, arena);
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
@@ -262,24 +248,24 @@ public class ArenaEvents implements Listener {
       victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
       User user = UserManager.getUser(attacker.getUniqueId());
 
-      if (ArenaUtils.isRole(ArenaUtils.Role.MURDERER, attacker)) {
-        user.addInt("local_kills", 1);
+      if (Role.isRole(Role.MURDERER, attacker)) {
+        user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
         ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER);
       }
 
-      ArenaUtils.spawnCorpse(victim, arena);
+      Utils.spawnCorpse(victim, arena);
       MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"), 5, 40, 5);
 
-      if (ArenaUtils.isRole(ArenaUtils.Role.MURDERER, victim)) {
+      if (Role.isRole(Role.MURDERER, victim)) {
         for (Player p : arena.getPlayers()) {
           MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), 5, 40, 5);
           MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
-          if (ArenaUtils.isRole(ArenaUtils.Role.MURDERER, p)) {
+          if (Role.isRole(Role.MURDERER, p)) {
             MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), 5, 40, 5);
           }
-          if (ArenaUtils.isRole(ArenaUtils.Role.INNOCENT, p)) {
+          if (Role.isRole(Role.INNOCENT, p)) {
             ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.SURVIVE_GAME);
-          } else if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, p)) {
+          } else if (Role.isRole(Role.ANY_DETECTIVE, p)) {
             ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.WIN_GAME);
             ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.DETECTIVE_WIN_GAME);
           }
@@ -291,26 +277,27 @@ public class ArenaEvents implements Listener {
         arena.setTimer(5);
         MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), 5, 40, 5);
         MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
-      } else if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, victim)) {
+      } else if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
         ArenaUtils.dropBowAndAnnounce(arena, victim);
-      } else if (ArenaUtils.isRole(ArenaUtils.Role.INNOCENT, victim)) {
-        if (ArenaUtils.isRole(ArenaUtils.Role.MURDERER, attacker)) {
+      } else if (Role.isRole(Role.INNOCENT, victim)) {
+        if (Role.isRole(Role.MURDERER, attacker)) {
           MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"), 5, 40, 5);
         } else {
           MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Player-Killed-You"), 5, 40, 5);
         }
 
         //if else, murderer killed, so don't kill him :)
-        if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, attacker) || ArenaUtils.isRole(ArenaUtils.Role.INNOCENT, attacker)) {
+        if (Role.isRole(Role.ANY_DETECTIVE, attacker) || Role.isRole(Role.INNOCENT, attacker)) {
           MessageUtils.sendTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"), 5, 40, 5);
           MessageUtils.sendSubTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Killed-Innocent"), 5, 40, 5);
           attacker.damage(100.0);
           ArenaUtils.addScore(UserManager.getUser(attacker.getUniqueId()), ArenaUtils.ScoreAction.INNOCENT_KILL);
-          ArenaUtils.spawnCorpse(attacker, arena);
+          Utils.spawnCorpse(attacker, arena);
+          plugin.getRewardsHandler().performDetectiveKillRewards(attacker, victim);
 
-          if (ArenaUtils.isRole(ArenaUtils.Role.ANY_DETECTIVE, attacker)) {
+          if (Role.isRole(Role.ANY_DETECTIVE, attacker)) {
             arena.setDetectiveDead(true);
-            if (ArenaUtils.isRole(ArenaUtils.Role.FAKE_DETECTIVE, attacker)) {
+            if (Role.isRole(Role.FAKE_DETECTIVE, attacker)) {
               arena.setFakeDetective(null);
             }
             ArenaUtils.dropBowAndAnnounce(arena, victim);
@@ -348,17 +335,16 @@ public class ArenaEvents implements Listener {
         player.setFlying(false);
         player.setAllowFlight(false);
         User user = UserManager.getUser(player.getUniqueId());
-        user.setInt("gold", 0);
+        user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
         player.teleport(arena.getEndLocation());
         return;
       }
       User user = UserManager.getUser(player.getUniqueId());
-      arena.addStat(player, "deaths");
+      arena.addStat(player, StatsStorage.StatisticType.DEATHS);
       player.teleport(loc);
       user.setSpectator(true);
       player.setGameMode(GameMode.SURVIVAL);
-      user.setFakeDead(true);
-      user.setInt("gold", 0);
+      user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
       ArenaUtils.hidePlayer(player, arena);
       player.setAllowFlight(true);
       player.setFlying(true);
@@ -394,8 +380,7 @@ public class ArenaEvents implements Listener {
         user.setSpectator(true);
         player.setGameMode(GameMode.SURVIVAL);
         player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-        user.setFakeDead(true);
-        user.setInt("gold", 0);
+        user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);

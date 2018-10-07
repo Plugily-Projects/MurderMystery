@@ -28,8 +28,9 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.database.FileStats;
 import pl.plajer.murdermystery.database.MySQLConnectionUtils;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
+import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
 import pl.plajer.murdermystery.user.UserManager;
-import pl.plajerlair.core.services.ReportedException;
+import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -48,7 +49,7 @@ public class JoinEvent implements Listener {
   @EventHandler
   public void onLogin(PlayerLoginEvent e) {
     if (!plugin.isBungeeActivated() && !plugin.getServer().hasWhitelist()
-            || e.getResult() != PlayerLoginEvent.Result.KICK_WHITELIST) {
+        || e.getResult() != PlayerLoginEvent.Result.KICK_WHITELIST) {
       return;
     }
     if (e.getPlayer().hasPermission(PermissionsManager.getJoinFullGames())) {
@@ -74,14 +75,9 @@ public class JoinEvent implements Listener {
   public void onJoinCheckVersion(final PlayerJoinEvent event) {
     try {
       //we want to be the first :)
+      /*
       Bukkit.getScheduler().runTaskLater(plugin, () -> {
-        if (event.getPlayer().isOp() && !plugin.isDataEnabled()) {
-          event.getPlayer().sendMessage(ChatColor.RED + "[Murder Mystery] It seems that you've disabled bStats statistics.");
-          event.getPlayer().sendMessage(ChatColor.RED + "Please consider enabling it to help us develop our plugins better!");
-          event.getPlayer().sendMessage(ChatColor.RED + "Enable it in plugins/bStats/config.yml file");
-        }
-        //todo
-      /*if (event.getPlayer().hasPermission("murdermystery.updatenotify")) {
+      if (event.getPlayer().hasPermission("murdermystery.updatenotify")) {
         if (plugin.getConfig().getBoolean("Update-Notifier.Enabled", true)) {
           String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("MurderMystery").getDescription().getVersion();
           String latestVersion;
@@ -108,15 +104,15 @@ public class JoinEvent implements Listener {
             event.getPlayer().sendMessage(ChatColor.RED + "WWW site todo");
           }
         }
-      }*/
-      }, 25);
+      }
+      }, 25);*/
       if (plugin.isBungeeActivated()) {
         ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
       }
       UserManager.registerUser(event.getPlayer().getUniqueId());
       if (!plugin.isDatabaseActivated()) {
-        for (String s : FileStats.STATISTICS.keySet()) {
-          plugin.getFileStats().loadStat(event.getPlayer(), s);
+        for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+          plugin.getFileStats().loadStat(event.getPlayer(), stat);
         }
         return;
       }

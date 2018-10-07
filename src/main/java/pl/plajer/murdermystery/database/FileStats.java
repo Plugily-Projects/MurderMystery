@@ -36,19 +36,6 @@ import pl.plajerlair.core.utils.ConfigUtils;
  */
 public class FileStats {
 
-  public final static Map<String, StatsStorage.StatisticType> STATISTICS = new HashMap<>();
-
-  static {
-    STATISTICS.put("gamesplayed", StatsStorage.StatisticType.GAMES_PLAYED);
-    STATISTICS.put("kills", StatsStorage.StatisticType.KILLS);
-    STATISTICS.put("wins", StatsStorage.StatisticType.WINS);
-    STATISTICS.put("loses", StatsStorage.StatisticType.LOSES);
-    STATISTICS.put("deaths", StatsStorage.StatisticType.DEATHS);
-    STATISTICS.put("highestscore", StatsStorage.StatisticType.HIGHEST_SCORE);
-    STATISTICS.put("contribution_detective", StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE);
-    STATISTICS.put("contribution_murderer", StatsStorage.StatisticType.CONTRIBUTION_MURDERER);
-  }
-
   private Main plugin;
   private FileConfiguration config;
 
@@ -57,21 +44,24 @@ public class FileStats {
     config = ConfigUtils.getConfig(plugin, "stats");
   }
 
-  public void saveStat(Player player, String stat) {
+  public void saveStat(Player player, StatsStorage.StatisticType stat) {
+    if(!stat.isPersistent()) {
+      return;
+    }
     User user = UserManager.getUser(player.getUniqueId());
-    config.set(player.getUniqueId().toString() + "." + stat, user.getInt(stat));
+    config.set(player.getUniqueId().toString() + "." + stat, user.getStat(stat));
     ConfigUtils.saveConfig(plugin, config, "stats");
   }
 
-  public void loadStat(Player player, String stat) {
+  public void loadStat(Player player, StatsStorage.StatisticType stat) {
     User user = UserManager.getUser(player.getUniqueId());
     if (config.contains(player.getUniqueId().toString() + "." + stat)) {
-      user.setInt(stat, config.getInt(player.getUniqueId().toString() + "." + stat));
+      user.setStat(stat, config.getInt(player.getUniqueId().toString() + "." + stat));
     } else {
-      if (stat.equals("contribution_detective") || stat.equals("contribution_murderer")) {
-        user.setInt(stat, 1);
+      if (stat == StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE || stat == StatsStorage.StatisticType.CONTRIBUTION_MURDERER) {
+        user.setStat(stat, 1);
       } else {
-        user.setInt(stat, 0);
+        user.setStat(stat, 0);
       }
     }
   }
@@ -82,8 +72,8 @@ public class FileStats {
         ArenaRegistry.getArenas().get(0).teleportToLobby(player);
       }
       if (!plugin.isDatabaseActivated()) {
-        for (String s : FileStats.STATISTICS.keySet()) {
-          loadStat(player, s);
+        for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+          loadStat(player, stat);
         }
         continue;
       }

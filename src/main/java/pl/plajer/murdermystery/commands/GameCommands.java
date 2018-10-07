@@ -50,17 +50,17 @@ public class GameCommands extends MainCommand {
   }
 
   public void sendStats(CommandSender sender) {
-    if (checkSenderIsConsole(sender)) {
+    if (!checkSenderPlayer(sender)) {
       return;
     }
     User user = UserManager.getUser(((Player) sender).getUniqueId());
     sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header"));
-    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Kills") + user.getInt("kills"));
-    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Deaths") + user.getInt("deaths"));
-    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getInt("wins"));
-    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getInt("loses"));
-    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getInt("gamesplayed"));
-    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Score") + user.getInt("highestscore"));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Kills") + user.getStat(StatsStorage.StatisticType.KILLS));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Deaths") + user.getStat(StatsStorage.StatisticType.DEATHS));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getStat(StatsStorage.StatisticType.WINS));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getStat(StatsStorage.StatisticType.LOSES));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getStat(StatsStorage.StatisticType.GAMES_PLAYED));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Score") + user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE));
     sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
   }
 
@@ -72,12 +72,12 @@ public class GameCommands extends MainCommand {
     }
     User user = UserManager.getUser(player.getUniqueId());
     sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header-Other").replace("%player%", player.getName()));
-    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Kills") + user.getInt("kills"));
-    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Deaths") + user.getInt("deaths"));
-    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getInt("wins"));
-    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getInt("loses"));
-    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getInt("gamesplayed"));
-    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Score") + user.getInt("highestscore"));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Kills") + user.getStat(StatsStorage.StatisticType.KILLS));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Deaths") + user.getStat(StatsStorage.StatisticType.DEATHS));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getStat(StatsStorage.StatisticType.WINS));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getStat(StatsStorage.StatisticType.LOSES));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getStat(StatsStorage.StatisticType.GAMES_PLAYED));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Score") + user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE));
     sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
   }
 
@@ -135,7 +135,7 @@ public class GameCommands extends MainCommand {
   }
 
   public void leaveGame(CommandSender sender) {
-    if (checkSenderIsConsole(sender)) {
+    if (!checkSenderPlayer(sender)) {
       return;
     }
     if (!plugin.getConfig().getBoolean("Disable-Leave-Command", false)) {
@@ -156,7 +156,7 @@ public class GameCommands extends MainCommand {
   }
 
   public void joinGame(CommandSender sender, String arenaString) {
-    if (checkSenderIsConsole(sender)) {
+    if (!checkSenderPlayer(sender)) {
       return;
     }
     for (Arena arena : ArenaRegistry.getArenas()) {
@@ -169,7 +169,7 @@ public class GameCommands extends MainCommand {
   }
 
   public void joinRandomGame(CommandSender sender) {
-    if (checkSenderIsConsole(sender)) {
+    if (!checkSenderPlayer(sender)) {
       return;
     }
     if (plugin.isBungeeActivated()) {

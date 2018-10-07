@@ -22,7 +22,6 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 import pl.plajer.murdermystery.Main;
@@ -30,6 +29,7 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.database.FileStats;
 import pl.plajer.murdermystery.murdermysteryapi.MMPlayerStatisticChangeEvent;
+import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
 
 /**
  * @author Plajer
@@ -41,15 +41,12 @@ public class User {
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private static long cooldownCounter = 0;
   private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
-  private Scoreboard scoreboard;
   private UUID uuid;
-  private boolean fakeDead = false;
   private boolean spectator = false;
-  private Map<String, Integer> ints = new HashMap<>();
+  private Map<StatsStorage.StatisticType, Integer> stats = new HashMap<>();
   private Map<String, Double> cooldowns = new HashMap<>();
 
   public User(UUID uuid) {
-    scoreboard = scoreboardManager.getNewScoreboard();
     this.uuid = uuid;
   }
 
@@ -59,14 +56,6 @@ public class User {
 
   public Arena getArena() {
     return ArenaRegistry.getArena(Bukkit.getPlayer(uuid));
-  }
-
-  public boolean isFakeDead() {
-    return fakeDead;
-  }
-
-  public void setFakeDead(boolean b) {
-    fakeDead = b;
   }
 
   public Player toPlayer() {
@@ -81,36 +70,36 @@ public class User {
     spectator = b;
   }
 
-  public int getInt(String s) {
-    if (!ints.containsKey(s)) {
-      ints.put(s, 0);
+  public int getStat(StatsStorage.StatisticType stat) {
+    if (!stats.containsKey(stat)) {
+      stats.put(stat, 0);
       return 0;
-    } else if (ints.get(s) == null) {
+    } else if (stats.get(stat) == null) {
       return 0;
     }
-    return ints.get(s);
+    return stats.get(stat);
   }
 
   public void removeScoreboard() {
     this.toPlayer().setScoreboard(scoreboardManager.getNewScoreboard());
   }
 
-  public void setInt(String s, int i) {
-    ints.put(s, i);
+  public void setStat(StatsStorage.StatisticType s, int i) {
+    stats.put(s, i);
 
     //statistics manipulation events are called async when using mysql
     Bukkit.getScheduler().runTask(plugin, () -> {
-      MMPlayerStatisticChangeEvent playerStatisticChangeEvent = new MMPlayerStatisticChangeEvent(getArena(), toPlayer(), FileStats.STATISTICS.get(s), i);
+      MMPlayerStatisticChangeEvent playerStatisticChangeEvent = new MMPlayerStatisticChangeEvent(getArena(), toPlayer(), s, i);
       Bukkit.getPluginManager().callEvent(playerStatisticChangeEvent);
     });
   }
 
-  public void addInt(String s, int i) {
-    ints.put(s, getInt(s) + i);
+  public void addStat(StatsStorage.StatisticType s, int i) {
+    stats.put(s, getStat(s) + i);
 
     //statistics manipulation events are called async when using mysql
     Bukkit.getScheduler().runTask(plugin, () -> {
-      MMPlayerStatisticChangeEvent playerStatisticChangeEvent = new MMPlayerStatisticChangeEvent(getArena(), toPlayer(), FileStats.STATISTICS.get(s), getInt(s));
+      MMPlayerStatisticChangeEvent playerStatisticChangeEvent = new MMPlayerStatisticChangeEvent(getArena(), toPlayer(), s, getStat(s));
       Bukkit.getPluginManager().callEvent(playerStatisticChangeEvent);
     });
   }
