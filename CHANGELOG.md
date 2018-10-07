@@ -11,6 +11,7 @@
 * API recode
 * JavaDocs created
 * Fixed throwable sword angle
+* You cannot join game now infinitely through command
 
 ### 0.0.7 Beta (03.10.2018)
 * Added PAPI placeholders in chat (chat formatting must be enabled)
