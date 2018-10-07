@@ -20,8 +20,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import pl.plajer.murdermystery.Main;
-import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.api.StatsStorage;
+import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajerlair.core.utils.ConfigUtils;
@@ -42,7 +42,7 @@ public class FileStats {
   }
 
   public void saveStat(Player player, StatsStorage.StatisticType stat) {
-    if(!stat.isPersistent()) {
+    if (!stat.isPersistent()) {
       return;
     }
     User user = UserManager.getUser(player.getUniqueId());
@@ -69,7 +69,7 @@ public class FileStats {
         ArenaRegistry.getArenas().get(0).teleportToLobby(player);
       }
       if (!plugin.isDatabaseActivated()) {
-        for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
           loadStat(player, stat);
         }
         continue;

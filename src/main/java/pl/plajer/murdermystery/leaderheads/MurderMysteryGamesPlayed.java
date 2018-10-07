@@ -22,8 +22,8 @@ import me.robin.leaderheads.objects.BoardType;
 
 import org.bukkit.entity.Player;
 
-import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.api.StatsStorage;
+import pl.plajer.murdermystery.handlers.ChatManager;
 
 /**
  * @author Plajer
@@ -34,7 +34,7 @@ public class MurderMysteryGamesPlayed extends OnlineDataCollector {
 
   public MurderMysteryGamesPlayed() {
     super("murdermystery-played", "MurderMystery", BoardType.DEFAULT, ChatManager.colorMessage("Leaderheads.Top-Command-Inv-Title"),
-            ChatManager.colorMessage("Leaderheads.Top-Command-Name").replace("%stat%", "kills"), Arrays.asList(null, null, ChatManager.colorMessage("Leaderheads.Leaderboard-Value.Games-Played"), null));
+        ChatManager.colorMessage("Leaderheads.Top-Command-Name").replace("%stat%", "kills"), Arrays.asList(null, null, ChatManager.colorMessage("Leaderheads.Leaderboard-Value.Games-Played"), null));
   }
 
   @Override

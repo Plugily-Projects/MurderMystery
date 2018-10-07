@@ -43,10 +43,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
-import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
@@ -158,7 +158,7 @@ public class ArenaEvents implements Listener {
         } else {
           arrow.setAmount(arrow.getAmount() + 1);
         }
-        if(Role.isRole(Role.MURDERER, e.getPlayer())) {
+        if (Role.isRole(Role.MURDERER, e.getPlayer())) {
           e.getPlayer().getInventory().setItem(2, arrow);
         } else {
           e.getPlayer().getInventory().setItem(1, arrow);

@@ -14,7 +14,7 @@ commands:
     description:
     usage: "\u00A76Correct usage: /mma [option]"
     aliases: [mma, murderadmin]
-    
+
 permissions:
   murdermystery.admin.*:
     default: op

@@ -33,9 +33,9 @@ package pl.plajer.murdermystery.api.events.player;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
+import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.api.events.MurderMysteryEvent;
 import pl.plajer.murdermystery.arena.Arena;
-import pl.plajer.murdermystery.api.StatsStorage;
 
 /**
  * @author Plajer

@@ -54,8 +54,9 @@ public enum Role {
 
   /**
    * Checks whether player is playing specified role or not
+   *
    * @param role role to check
-   * @param p player to check
+   * @param p    player to check
    * @return true if is playing it, false otherwise
    */
   public static boolean isRole(Role role, Player p) {

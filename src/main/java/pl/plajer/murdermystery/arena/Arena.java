@@ -56,12 +56,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.api.StatsStorage;
+import pl.plajer.murdermystery.api.events.game.MMGameStartEvent;
+import pl.plajer.murdermystery.api.events.game.MMGameStateChangeEvent;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
-import pl.plajer.murdermystery.api.events.game.MMGameStartEvent;
-import pl.plajer.murdermystery.api.events.game.MMGameStateChangeEvent;
-import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
@@ -111,7 +111,7 @@ public class Arena extends BukkitRunnable {
     }
     List<String> lines;
     for (ArenaState state : ArenaState.values()) {
-      if(state == ArenaState.RESTARTING) {
+      if (state == ArenaState.RESTARTING) {
         continue;
       }
       lines = LanguageManager.getLanguageList("Scoreboard.Content." + state.getFormattedName());
@@ -340,7 +340,7 @@ public class Arena extends BukkitRunnable {
                 return;
               }
 
-            //murderer speed add
+              //murderer speed add
             case 2:
               Bukkit.getPlayer(murderer).addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
               break;

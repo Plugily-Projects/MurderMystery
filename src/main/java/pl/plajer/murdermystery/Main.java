@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaEvents;
 import pl.plajer.murdermystery.arena.ArenaManager;
@@ -46,7 +47,6 @@ import pl.plajer.murdermystery.leaderheads.MurderMysteryHighestScore;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryKills;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryLoses;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryWins;
-import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
@@ -205,7 +205,7 @@ public class Main extends JavaPlugin {
     for (Player player : getServer().getOnlinePlayers()) {
       User user = UserManager.getUser(player.getUniqueId());
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        if(!stat.isPersistent()) {
+        if (!stat.isPersistent()) {
           continue;
         }
         if (isDatabaseActivated()) {

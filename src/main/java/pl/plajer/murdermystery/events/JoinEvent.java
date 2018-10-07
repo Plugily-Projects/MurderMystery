@@ -23,10 +23,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.database.MySQLConnectionUtils;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
-import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajerlair.core.services.exception.ReportedException;
 
@@ -109,7 +109,7 @@ public class JoinEvent implements Listener {
       }
       UserManager.registerUser(event.getPlayer().getUniqueId());
       if (!plugin.isDatabaseActivated()) {
-        for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
           plugin.getFileStats().loadStat(event.getPlayer(), stat);
         }
         return;

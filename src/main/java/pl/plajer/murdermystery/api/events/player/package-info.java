@@ -17,4 +17,5 @@
 /**
  * All in-game player related events.
  */
+
 package pl.plajer.murdermystery.api.events.player;

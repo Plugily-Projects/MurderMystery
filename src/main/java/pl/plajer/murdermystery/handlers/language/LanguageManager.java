@@ -28,7 +28,6 @@ import java.util.Properties;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
@@ -119,7 +118,8 @@ public class LanguageManager {
       pluginLocale = LocaleRegistry.getByName("English");
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Murder Mystery] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: " +
-        pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());loadProperties();
+        pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
+    loadProperties();
   }
 
   private static void suggestLocale() {
