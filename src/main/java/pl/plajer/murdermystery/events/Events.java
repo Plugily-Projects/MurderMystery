@@ -41,14 +41,15 @@ import org.bukkit.util.Vector;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.arena.ArenaUtils;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
-import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
@@ -92,14 +93,14 @@ public class Events implements Listener {
       if (arena == null) {
         return;
       }
-      if(!Role.isRole(Role.MURDERER, e.getPlayer())) {
+      if (!Role.isRole(Role.MURDERER, e.getPlayer())) {
         return;
       }
       final Player attacker = e.getPlayer();
       final User attackerUser = UserManager.getUser(attacker.getUniqueId());
       //todo not hardcoded!
-      if(attacker.getInventory().getItemInMainHand().getType() == Material.IRON_SWORD) {
-        if(attackerUser.getCooldown("sword_shoot") > 0) {
+      if (attacker.getInventory().getItemInMainHand().getType() == Material.IRON_SWORD) {
+        if (attackerUser.getCooldown("sword_shoot") > 0) {
           return;
         }
         attackerUser.setCooldown("sword_shoot", 5);
@@ -108,7 +109,7 @@ public class Events implements Listener {
         stand.setVisible(false);
         stand.setInvulnerable(true);
         stand.setItemInHand(new ItemStack(Material.IRON_SWORD, 1));
-        stand.setRightArmPose(new EulerAngle(0, 0, 1));
+        stand.setRightArmPose(new EulerAngle(Math.toRadians(350.0), Math.toRadians(attacker.getLocation().getPitch() * -1.0), Math.toRadians(90.0)));
         stand.setCollidable(false);
         stand.setSilent(true);
         new BukkitRunnable() {
@@ -129,7 +130,7 @@ public class Events implements Listener {
                 continue;
               }
               Player victim = (Player) en;
-              if(ArenaRegistry.isInArena(victim) && UserManager.getUser(victim.getUniqueId()).isSpectator()) {
+              if (ArenaRegistry.isInArena(victim) && UserManager.getUser(victim.getUniqueId()).isSpectator()) {
                 continue;
               }
               if (victim.getLocation().distance(loc) < 1.0) {
@@ -155,7 +156,11 @@ public class Events implements Listener {
               this.cancel();
               stand.remove();
             }
-            Bukkit.getScheduler().runTaskLater(plugin, () -> attacker.getInventory().setItem(1, new ItemStack(Material.IRON_SWORD)), 5 * 21);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+              if (arena.getArenaState() == ArenaState.IN_GAME) {
+                attacker.getInventory().setItem(1, new ItemStack(Material.IRON_SWORD));
+              }
+            }, 5 * 21);
           }
         }.runTaskTimer(plugin, 0, 1);
         Utils.applyActionBarCooldown(attacker, 5);
