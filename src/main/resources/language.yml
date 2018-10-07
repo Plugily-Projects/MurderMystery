@@ -139,6 +139,10 @@ In-Game:
     Spectator-Item-Name: "&7Players list"
     Spectator-Menu-Name: "Alive players list"
     Target-Player-Role: "&7Role: %ROLE%"
+    Settings-Menu:
+      Item-Name: "&7Spectator settings"
+      Inventory-Name: "&7Spectator settings"
+      Speed-Name: "&aSpeed"
   Messages:
     Lobby-Messages:
       Start-In: "&7The game starts in &b%TIME%&7 seconds!"

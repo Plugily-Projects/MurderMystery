@@ -1,4 +1,4 @@
-### 0.0.8 Beta (06.2018)
+### 0.0.8 Beta (06/07.10.2018)
 * Added throwable sword for murderer
 * Added multiple last words
 * Fixed gold not spawning
@@ -7,6 +7,7 @@
 * Now actions that gives you score (like +15 score for gold pickup will properly format without %action% placeholder)
 * Added 1.13 and 1.13.1 support
 * Removed 1.9 and 1.10 support
+* Added spectator settings
 
 ### 0.0.7 Beta (03.10.2018)
 * Added PAPI placeholders in chat (chat formatting must be enabled)

@@ -37,6 +37,7 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.UserManager;
+import pl.plajerlair.core.minigame.spectator.SpectatorSettingsMenu;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.MinigameUtils;
 
@@ -48,10 +49,13 @@ import pl.plajerlair.core.utils.MinigameUtils;
 public class SpectatorItemEvents implements Listener {
 
   private Main plugin;
+  private SpectatorSettingsMenu spectatorSettingsMenu;
 
   public SpectatorItemEvents(Main plugin) {
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    spectatorSettingsMenu = new SpectatorSettingsMenu(plugin, ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Inventory-Name"),
+        ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Speed-Name"));
   }
 
   @EventHandler
@@ -69,6 +73,9 @@ public class SpectatorItemEvents implements Listener {
           if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
             e.setCancelled(true);
             openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
+          } else if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator.Settings-Menu.Item-Name"))) {
+            e.setCancelled(true);
+            spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
           }
         }
       }
