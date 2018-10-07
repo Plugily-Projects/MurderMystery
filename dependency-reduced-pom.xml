@@ -85,6 +85,10 @@
       <id>bstats-repo</id>
       <url>http://repo.bstats.org/content/repositories/releases/</url>
     </repository>
+    <repository>
+      <id>filoghost-repo</id>
+      <url>https://ci.filoghost.me/plugin/repository/everything/</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -158,6 +162,12 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>com.gmail.filoghost.holographicdisplays</groupId>
+      <artifactId>holographicdisplays-api</artifactId>
+      <version>2.3.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
       <version>3.0.2</version>
@@ -181,13 +191,6 @@
       <version>1.0.0</version>
       <scope>system</scope>
       <systemPath>${project.basedir}/lib/LeaderHeadsAPI.jar</systemPath>
-    </dependency>
-    <dependency>
-      <groupId>com.filoghost</groupId>
-      <artifactId>holographics-displays</artifactId>
-      <version>1.0.0</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/lib/HolographicDisplays.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>me.robin</groupId>
