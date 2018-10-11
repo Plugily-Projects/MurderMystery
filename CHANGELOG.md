@@ -1,3 +1,6 @@
+### 1.0.0 Pre release (11.10.2018)
+* Minimum amount of players cannot be now less than 2 (game will automatically set it to 2 if so)
+
 ### 0.0.8 Beta (06/07.10.2018)
 * Added throwable sword for murderer
 * Added multiple last words

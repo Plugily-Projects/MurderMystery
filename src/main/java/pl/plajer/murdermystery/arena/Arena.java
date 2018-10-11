@@ -597,6 +597,11 @@ public class Arena extends BukkitRunnable {
    * @param minimumPlayers players needed to start arena
    */
   public void setMinimumPlayers(int minimumPlayers) {
+    if(minimumPlayers < 2) {
+      Main.debug(Main.LogLevel.WARN, "Minimum players amount for arena cannot be less than 2! Setting amount to 2!");
+      this.minimumPlayers = 2;
+      return;
+    }
     this.minimumPlayers = minimumPlayers;
   }
 
