@@ -22,7 +22,9 @@ import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,6 +33,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -245,7 +248,7 @@ public class Events implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGH)
-  //highest priority to fully protecc our game (i didn't set it because my test server was destroyed, n-no......)
+  //highest priority to fully protect our game (i didn't set it because my test server was destroyed, n-no......)
   public void onBlockBreakEvent(BlockBreakEvent event) {
     if (!ArenaRegistry.isInArena(event.getPlayer())) {
       return;
@@ -254,12 +257,22 @@ public class Events implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGH)
-  //highest priority to fully protecc our game (i didn't set it because my test server was destroyed, n-no......)
+  //highest priority to fully protect our game (i didn't set it because my test server was destroyed, n-no......)
   public void onBuild(BlockPlaceEvent event) {
     if (!ArenaRegistry.isInArena(event.getPlayer())) {
       return;
     }
     event.setCancelled(true);
+  }
+
+  @EventHandler(priority = EventPriority.HIGH)
+  //highest priority to fully protect our game (i didn't set it because my test server was destroyed, n-no......)
+  public void HangingBreakEvent(HangingBreakEvent event){
+    if(event.getCause() == HangingBreakEvent.RemoveCause.ENTITY || event.getCause() == HangingBreakEvent.RemoveCause.EXPLOSION){
+      if(event.getEntity() instanceof ItemFrame || event.getEntity() instanceof Painting){
+        event.setCancelled(true);
+      }
+    }
   }
 
   @EventHandler
