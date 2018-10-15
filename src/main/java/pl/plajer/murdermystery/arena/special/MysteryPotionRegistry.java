@@ -53,4 +53,8 @@ public class MysteryPotionRegistry {
   public static MysteryPotion getRandomPotion() {
     return mysteryPotions.get(rand.nextInt(mysteryPotions.size()));
   }
+
+  public static List<MysteryPotion> getMysteryPotions() {
+    return mysteryPotions;
+  }
 }

@@ -35,6 +35,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -45,6 +46,7 @@ import org.bukkit.potion.PotionEffectType;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.role.Role;
+import pl.plajer.murdermystery.arena.special.MysteryPotion;
 import pl.plajer.murdermystery.arena.special.MysteryPotionRegistry;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
@@ -335,6 +337,25 @@ public class ArenaEvents implements Listener {
           e.getPlayer().getInventory().getItem(8).setAmount(e.getPlayer().getInventory().getItem(8).getAmount() - 1);
           e.getPlayer().getInventory().setItem(3, new ItemBuilder(XMaterial.POTION.parseItem()).name(MysteryPotionRegistry.getRandomPotion().getName()).build());
         }
+      }
+    }
+  }
+
+  @EventHandler
+  public void onPotionDrink(PlayerItemConsumeEvent e) {
+    if(e.getItem().getType() != XMaterial.POTION.parseMaterial() || !e.getItem().hasItemMeta() || !e.getItem().getItemMeta().hasDisplayName()) {
+      return;
+    }
+    Arena arena = ArenaRegistry.getArena(e.getPlayer());
+    if(arena == null) {
+      return;
+    }
+    for(MysteryPotion potion : MysteryPotionRegistry.getMysteryPotions()) {
+      if(potion.getName().equals(e.getItem().getItemMeta().getDisplayName())) {
+        e.getItem().setType(Material.AIR);
+        e.getPlayer().addPotionEffect(potion.getPotionEffect());
+        e.getPlayer().sendTitle(null, potion.getSubtitle(), 5, 40, 5);
+        return;
       }
     }
   }
