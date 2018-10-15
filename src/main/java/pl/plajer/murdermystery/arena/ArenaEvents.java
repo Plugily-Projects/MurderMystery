@@ -324,13 +324,11 @@ public class ArenaEvents implements Listener {
         if (block.getSpecialBlockType() == SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON) {
           User user = UserManager.getUser(e.getPlayer().getUniqueId());
           if (e.getPlayer().getInventory().getItem(3) != null) {
-            //todo localized
-            e.getPlayer().sendMessage(ChatManager.colorRawMessage("&c&lPlease drink your current potion!"));
+            e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Drink-Potion"));
             return;
           }
           if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < 1) {
-            //todo localized
-            e.getPlayer().sendMessage(ChatManager.colorRawMessage("&c&lYou need 1 gold to get random potion!"));
+            e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold").replace("%amount%", String.valueOf(1)));
             return;
           }
           user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) - 1);

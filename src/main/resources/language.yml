@@ -181,6 +181,9 @@ In-Game:
     Previous-Role-Left-Subtitle: "&cSelecting new %role%!"
     Corpse-Last-Words: "&7%player%&e's last words:"
     Murderer-Get-Sword: "&eThe Murderer gets their sword in &c%time% &eseconds!"
+    Special-Blocks:
+      Cauldron-Drink-Potion: "&cPlease drink your current potion!"
+      Not-Enough-Gold: "&cYou need %amount% gold for this!"
     Bow-Messages:
       Bow-Dropped-Title: "&6The Bow has been dropped!"
       Bow-Dropped-Subtitle: "&eFind the Bow for a chance to kill the Murderer."
