@@ -34,9 +34,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * @author Plajer
@@ -143,7 +145,23 @@ public class SetupInventoryEvents implements Listener {
         player.performCommand("mm " + arena.getID() + " add gold");
         player.closeInventory();
         return;
+      }
+      if(name.contains("Add mystery cauldron")) {
+        event.setCancelled(true);
+        if(event.getWhoClicked().getTargetBlock(null, 10) == null ||
+            event.getWhoClicked().getTargetBlock(null, 10).getType() != XMaterial.CAULDRON.parseMaterial()) {
+          event.getWhoClicked().sendMessage(ChatColor.RED + "Please target cauldron to continue!");
+          return;
+        }
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+        String loc = LocationUtils.locationToString(event.getWhoClicked().getTargetBlock(null, 10).getLocation());
 
+        List<String> locs = new ArrayList<>(config.getStringList("instances." + arena.getID() + ".mystery-cauldrons"));
+        locs.add(loc);
+        config.set("instances." + arena.getID() + ".mystery-cauldrons", locs);
+        ConfigUtils.saveConfig(plugin, config, "arenas");
+        player.sendMessage("Murder Mystery: New mystery cauldron for arena/instance " + arena.getID() + " was added");
+        return;
       }
       if (name.contains("Register arena")) {
         event.setCancelled(true);
@@ -194,6 +212,15 @@ public class SetupInventoryEvents implements Listener {
         }
         arena.setGoldSpawnPoints(goldSpawnPoints);
 
+        List<SpecialBlock> specialBlocks = new ArrayList<>();
+        if(config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
+          for (String loc : config.getStringList("instances." + arena.getID() + ".mystery-cauldrons")) {
+            specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
+          }
+        }
+        for(SpecialBlock block : specialBlocks) {
+          arena.loadSpecialBlock(block);
+        }
         arena.setMinimumPlayers(config.getInt("instances." + arena.getID() + ".minimumplayers"));
         arena.setMaximumPlayers(config.getInt("instances." + arena.getID() + ".maximumplayers"));
         arena.setMapName(config.getString("instances." + arena.getID() + ".mapname"));

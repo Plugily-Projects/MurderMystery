@@ -34,17 +34,19 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.role.Role;
+import pl.plajer.murdermystery.arena.special.MysteryPotionRegistry;
+import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.user.User;
@@ -305,6 +307,37 @@ public class ArenaEvents implements Listener {
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
+    }
+  }
+
+  @EventHandler
+  public void onCauldronUse(PlayerInteractEvent e) {
+    Arena arena = ArenaRegistry.getArena(e.getPlayer());
+    if (arena == null || e.getClickedBlock() == null || e.getClickedBlock().getType() == null) {
+      return;
+    }
+    if (e.getClickedBlock().getType() != XMaterial.CAULDRON.parseMaterial()) {
+      return;
+    }
+    for (SpecialBlock block : arena.getSpecialBlocks()) {
+      if (block.getLocation().equals(e.getClickedBlock().getLocation())) {
+        if (block.getSpecialBlockType() == SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON) {
+          User user = UserManager.getUser(e.getPlayer().getUniqueId());
+          if (e.getPlayer().getInventory().getItem(3) != null) {
+            //todo localized
+            e.getPlayer().sendMessage(ChatManager.colorRawMessage("&c&lPlease drink your current potion!"));
+            return;
+          }
+          if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < 1) {
+            //todo localized
+            e.getPlayer().sendMessage(ChatManager.colorRawMessage("&c&lYou need 1 gold to get random potion!"));
+            return;
+          }
+          user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) - 1);
+          e.getPlayer().getInventory().getItem(8).setAmount(e.getPlayer().getInventory().getItem(8).getAmount() - 1);
+          e.getPlayer().getInventory().setItem(3, new ItemBuilder(XMaterial.POTION.parseItem()).name(MysteryPotionRegistry.getRandomPotion().getName()).build());
+        }
+      }
     }
   }
 

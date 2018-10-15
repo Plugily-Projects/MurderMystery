@@ -28,6 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
@@ -146,6 +147,16 @@ public class ArenaRegistry {
           goldSpawnPoints.add(LocationUtils.getLocation(loc));
         }
         arena.setGoldSpawnPoints(goldSpawnPoints);
+
+        List<SpecialBlock> specialBlocks = new ArrayList<>();
+        if(config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
+          for (String loc : config.getStringList("instances." + arena.getID() + ".mystery-cauldrons")) {
+            specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
+          }
+        }
+        for(SpecialBlock block : specialBlocks) {
+          arena.loadSpecialBlock(block);
+        }
         arena.setLobbyLocation(LocationUtils.getLocation(config.getString(s + "lobbylocation", "world,364.0,63.0,-72.0,0.0,0.0")));
         arena.setEndLocation(LocationUtils.getLocation(config.getString(s + "Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
 

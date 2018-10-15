@@ -28,6 +28,7 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.LocationUtils;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * @author Plajer
@@ -40,7 +41,7 @@ public class SetupInventory {
   private Inventory inventory;
 
   public SetupInventory(Arena arena) {
-    this.inventory = Bukkit.createInventory(null, 9 * 2, "MM Arena: " + arena.getID());
+    this.inventory = Bukkit.createInventory(null, 9 * 4, "MM Arena: " + arena.getID());
 
     addItem(new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
         .name(ChatColor.GOLD + "► Set" + ChatColor.RED + " ending " + ChatColor.GOLD + "location")
@@ -100,10 +101,28 @@ public class SetupInventory {
         .lore(ChatColor.GRAY + "on the place you're standing at.")
         .lore(isOptionDoneList("instances." + arena.getID() + ".goldspawnpoints"))
         .build());
-    inventory.addItem(new ItemBuilder(new ItemStack(Material.FIREWORK))
+    addItem(new ItemBuilder(new ItemStack(Material.FIREWORK))
         .name(ChatColor.GOLD + "► " + ChatColor.GREEN + "Register arena")
         .lore(ChatColor.GRAY + "Click this when you're done with configuration.")
         .lore(ChatColor.GRAY + "It will validate and register arena.")
+        .build());
+    inventory.setItem(17, new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
+        .name(ChatColor.GOLD + "► View setup video")
+        .lore(ChatColor.GRAY + "Having problems with setup or wanna")
+        .lore(ChatColor.GRAY + "know some useful tips? Click to get video link!")
+        .build());
+
+    //special blocks
+    inventory.setItem(27, new ItemBuilder(XMaterial.PAPER.parseItem())
+        .name(ChatColor.GOLD + "Special blocks section")
+        .lore(ChatColor.GRAY + "Items on the right will allow")
+        .lore(ChatColor.GRAY + "you to add special game blocks!")
+        .build());
+    inventory.setItem(28, new ItemBuilder(XMaterial.CAULDRON.parseItem())
+        .name(ChatColor.GOLD + "► Add mystery cauldron")
+        .lore(ChatColor.GRAY + "Target a cauldron and add it to the game")
+        .lore(ChatColor.GRAY + "it will cost 1 gold per potion!")
+        .lore(ChatColor.GRAY + "Configure cauldron potions in specialblocks.yml file!")
         .build());
   }
 

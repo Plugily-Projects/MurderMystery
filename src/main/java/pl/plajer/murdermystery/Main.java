@@ -20,6 +20,7 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaEvents;
 import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.arena.special.MysteryPotionRegistry;
 import pl.plajer.murdermystery.commands.MainCommand;
 import pl.plajer.murdermystery.database.FileStats;
 import pl.plajer.murdermystery.database.MySQLConnectionUtils;
@@ -73,7 +74,7 @@ public class Main extends JavaPlugin {
   private RewardsHandler rewardsHandler;
   private boolean inventoryManagerEnabled = false;
   private boolean chatFormat = true;
-  private List<String> fileNames = Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql");
+  private List<String> fileNames = Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks");
   private MySQLDatabase database;
   private MySQLManager mySQLManager;
   private FileStats fileStats;
@@ -292,6 +293,7 @@ public class Main extends JavaPlugin {
     rewardsHandler = new RewardsHandler(this);
     signManager = new SignManager(this);
     corpseHandler = new CorpseHandler(this);
+    MysteryPotionRegistry.init(this);
 
     new BukkitRunnable() {
 

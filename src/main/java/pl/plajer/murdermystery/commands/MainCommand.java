@@ -32,6 +32,7 @@ import org.bukkit.entity.Player;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.setup.SetupInventory;
 import pl.plajerlair.core.services.exception.ReportedException;
@@ -354,6 +355,7 @@ public class MainCommand implements CommandExecutor {
     config.set(path + "signs", new ArrayList<>());
     config.set(path + "isdone", false);
     config.set(path + "world", worldName);
+    config.set(path + "mystery-cauldrons",  new ArrayList<>());
     ConfigUtils.saveConfig(plugin, config, "arenas");
 
     Arena arena = new Arena(ID, plugin);
@@ -368,6 +370,16 @@ public class MainCommand implements CommandExecutor {
       goldSpawnPoints.add(LocationUtils.getLocation(loc));
     }
     arena.setGoldSpawnPoints(goldSpawnPoints);
+
+    List<SpecialBlock> specialBlocks = new ArrayList<>();
+    if(config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
+      for (String loc : config.getStringList("instances." + arena.getID() + ".mystery-cauldrons")) {
+        specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
+      }
+    }
+    for(SpecialBlock block : specialBlocks) {
+      arena.loadSpecialBlock(block);
+    }
     arena.setMinimumPlayers(ConfigUtils.getConfig(plugin, "arenas").getInt(path + "minimumplayers"));
     arena.setMaximumPlayers(ConfigUtils.getConfig(plugin, "arenas").getInt(path + "maximumplayers"));
     arena.setMapName(ConfigUtils.getConfig(plugin, "arenas").getString(path + "mapname"));

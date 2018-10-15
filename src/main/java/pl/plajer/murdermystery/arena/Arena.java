@@ -60,6 +60,7 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.api.events.game.MMGameStartEvent;
 import pl.plajer.murdermystery.api.events.game.MMGameStateChangeEvent;
 import pl.plajer.murdermystery.arena.role.Role;
+import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
@@ -82,6 +83,7 @@ public class Arena extends BukkitRunnable {
   private List<Item> goldSpawned = new ArrayList<>();
   private List<Location> playerSpawnPoints = new ArrayList<>();
   private List<ArenaCorpse> corpses = new ArrayList<>();
+  private List<SpecialBlock> specialBlocks = new ArrayList<>();
   private Hologram bowHologram;
   private UUID murderer;
   private UUID detective;
@@ -815,6 +817,14 @@ public class Arena extends BukkitRunnable {
    */
   public void setEndLocation(Location endLoc) {
     gameLocations.put(GameLocation.END, endLoc);
+  }
+
+  public void loadSpecialBlock(SpecialBlock block) {
+    specialBlocks.add(block);
+  }
+
+  public List<SpecialBlock> getSpecialBlocks() {
+    return specialBlocks;
   }
 
   public void start() {
