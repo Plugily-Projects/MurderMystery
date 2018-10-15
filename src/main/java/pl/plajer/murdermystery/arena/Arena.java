@@ -478,9 +478,9 @@ public class Arena extends BukkitRunnable {
     if (!getPlayersLeft().contains(user.toPlayer())) {
       formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Dead"));
     } else {
-      if (murderer == user.toPlayer().getUniqueId()) {
+      if (Role.isRole(Role.MURDERER, user.toPlayer())) {
         formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
-      } else if (detective == user.toPlayer().getUniqueId() || (fakeDetective != null && fakeDetective == user.toPlayer().getUniqueId())) {
+      } else if (Role.isRole(Role.ANY_DETECTIVE, user.toPlayer())) {
         formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Detective"));
       } else {
         formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Innocent"));
@@ -516,6 +516,9 @@ public class Arena extends BukkitRunnable {
     goldSpawned.add(item);
   }
 
+  /**
+   * @return murderer - he must kill everyone to win
+   */
   public UUID getMurderer() {
     return murderer;
   }
@@ -524,10 +527,16 @@ public class Arena extends BukkitRunnable {
     this.murderer = murderer;
   }
 
+  /**
+   * @return detective - he must protect innocents and kill murderer
+   */
   public UUID getDetective() {
     return detective;
   }
 
+  /**
+   * @return fake detective - innocent that became detective
+   */
   public UUID getFakeDetective() {
     return fakeDetective;
   }
@@ -560,6 +569,9 @@ public class Arena extends BukkitRunnable {
     this.murdererLocatorReceived = murdererLocatorReceived;
   }
 
+  /**
+   * @return murderer killer
+   */
   public UUID getHero() {
     return hero;
   }
@@ -597,7 +609,7 @@ public class Arena extends BukkitRunnable {
    * @param minimumPlayers players needed to start arena
    */
   public void setMinimumPlayers(int minimumPlayers) {
-    if(minimumPlayers < 2) {
+    if (minimumPlayers < 2) {
       Main.debug(Main.LogLevel.WARN, "Minimum players amount for arena cannot be less than 2! Setting amount to 2!");
       this.minimumPlayers = 2;
       return;

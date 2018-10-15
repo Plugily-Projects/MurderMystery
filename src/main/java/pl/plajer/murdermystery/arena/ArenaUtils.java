@@ -80,7 +80,7 @@ public class ArenaUtils {
         arena.setMurdererLocatorReceived(true);
 
         for (Player p : arena.getPlayersLeft()) {
-          if (p.getUniqueId() == arena.getMurderer()) {
+          if(Role.isRole(Role.MURDERER, p)) {
             continue;
           }
           MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Watch-Out-Title"), 5, 40, 5);
@@ -88,7 +88,7 @@ public class ArenaUtils {
         }
       }
       for (Player p : arena.getPlayersLeft()) {
-        if (p.getUniqueId() == arena.getMurderer()) {
+        if(Role.isRole(Role.MURDERER, p)) {
           continue;
         }
         Bukkit.getPlayer(arena.getMurderer()).setCompassTarget(p.getLocation());

@@ -195,9 +195,6 @@ public class ArenaEvents implements Listener {
         e.setCancelled(true);
         return;
       }
-      if (arena.getMurderer() != attacker.getUniqueId()) {
-        return;
-      }
 
       User user = UserManager.getUser(attacker.getUniqueId());
       if (Role.isRole(Role.MURDERER, victim)) {
