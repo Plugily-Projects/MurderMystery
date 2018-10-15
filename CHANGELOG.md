@@ -3,6 +3,9 @@
 * Block destroying item frames and paintings
 * Added mystery cauldron and mystery potions (soon more)
 
+TODO FIXME Few gold ingots can be picked up but only adds one! maybe set stackable false idk
+TODO FIXME (maybe) detective can die infitinely by murderer wut
+
 ### 0.0.8 Beta (06/07.10.2018)
 * Added throwable sword for murderer
 * Added multiple last words

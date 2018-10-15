@@ -118,7 +118,7 @@ public class SetupInventory {
         .lore(ChatColor.GRAY + "Items on the right will allow")
         .lore(ChatColor.GRAY + "you to add special game blocks!")
         .build());
-    inventory.setItem(28, new ItemBuilder(XMaterial.CAULDRON.parseItem())
+    inventory.setItem(28, new ItemBuilder(XMaterial.ENDER_CHEST.parseItem())
         .name(ChatColor.GOLD + "► Add mystery cauldron")
         .lore(ChatColor.GRAY + "Target a cauldron and add it to the game")
         .lore(ChatColor.GRAY + "it will cost 1 gold per potion!")

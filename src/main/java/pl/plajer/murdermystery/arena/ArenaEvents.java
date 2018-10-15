@@ -18,6 +18,8 @@
 
 package pl.plajer.murdermystery.arena;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -351,10 +353,13 @@ public class ArenaEvents implements Listener {
       return;
     }
     for(MysteryPotion potion : MysteryPotionRegistry.getMysteryPotions()) {
-      if(potion.getName().equals(e.getItem().getItemMeta().getDisplayName())) {
-        e.getItem().setType(Material.AIR);
+      if(e.getItem().getItemMeta().getDisplayName().equals(potion.getName())) {
+        e.setCancelled(true);
+        e.getPlayer().sendMessage(potion.getSubtitle());
+        //somehow title cannot be sent here wattttttt
+        MessageUtils.sendSubTitle(e.getPlayer(), potion.getSubtitle(), 5, 40, 5);
+        e.getPlayer().getInventory().setItem(3, null);
         e.getPlayer().addPotionEffect(potion.getPotionEffect());
-        e.getPlayer().sendTitle(null, potion.getSubtitle(), 5, 40, 5);
         return;
       }
     }
