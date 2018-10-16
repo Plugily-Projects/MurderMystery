@@ -19,6 +19,7 @@
 package pl.plajer.murdermystery.arena;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -821,6 +822,18 @@ public class Arena extends BukkitRunnable {
 
   public void loadSpecialBlock(SpecialBlock block) {
     specialBlocks.add(block);
+    switch (block.getSpecialBlockType()) {
+      case HORSE_PURCHASE:
+        break;
+      case MYSTERY_CAULDRON:
+        Hologram holo = HologramsAPI.createHologram(plugin, block.getLocation().clone().add(0, 1, 0));
+        holo.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
+        break;
+      case PRAISE_PLAJER:
+        break;
+      case RAPID_TELEPORTATION:
+        break;
+    }
   }
 
   public List<SpecialBlock> getSpecialBlocks() {

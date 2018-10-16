@@ -23,9 +23,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -335,6 +337,10 @@ public class ArenaEvents implements Listener {
             e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold").replace("%amount%", String.valueOf(1)));
             return;
           }
+          e.getClickedBlock().getWorld().spawnParticle(Particle.FIREWORKS_SPARK, e.getClickedBlock().getLocation(), 10, 0.5, 0.5, 0.5);
+          Item item = e.getClickedBlock().getWorld().dropItemNaturally(e.getClickedBlock().getLocation().clone().add(0, 1, 0), new ItemStack(Material.POTION, 1));
+          item.setPickupDelay(10000);
+          Bukkit.getScheduler().runTaskLater(plugin, item::remove, 20);
           user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) - 1);
           e.getPlayer().getInventory().getItem(8).setAmount(e.getPlayer().getInventory().getItem(8).getAmount() - 1);
           e.getPlayer().getInventory().setItem(3, new ItemBuilder(XMaterial.POTION.parseItem()).name(MysteryPotionRegistry.getRandomPotion().getName()).build());
@@ -356,8 +362,7 @@ public class ArenaEvents implements Listener {
       if(e.getItem().getItemMeta().getDisplayName().equals(potion.getName())) {
         e.setCancelled(true);
         e.getPlayer().sendMessage(potion.getSubtitle());
-        //somehow title cannot be sent here wattttttt
-        MessageUtils.sendSubTitle(e.getPlayer(), potion.getSubtitle(), 5, 40, 5);
+        e.getPlayer().sendTitle("", potion.getSubtitle(), 5, 40, 5);
         e.getPlayer().getInventory().setItem(3, null);
         e.getPlayer().addPotionEffect(potion.getPotionEffect());
         return;

@@ -184,6 +184,7 @@ In-Game:
     Special-Blocks:
       Cauldron-Drink-Potion: "&cPlease drink your current potion!"
       Not-Enough-Gold: "&cYou need %amount% gold for this!"
+      Cauldron-Hologram: "&fMystery Potion - 1 &eGold"
     Bow-Messages:
       Bow-Dropped-Title: "&6The Bow has been dropped!"
       Bow-Dropped-Subtitle: "&eFind the Bow for a chance to kill the Murderer."
