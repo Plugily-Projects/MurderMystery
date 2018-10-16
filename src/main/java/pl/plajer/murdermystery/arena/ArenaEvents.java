@@ -18,15 +18,12 @@
 
 package pl.plajer.murdermystery.arena;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -37,8 +34,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -49,9 +44,6 @@ import org.bukkit.potion.PotionEffectType;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.role.Role;
-import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotion;
-import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
-import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.user.User;
@@ -138,14 +130,21 @@ public class ArenaEvents implements Listener {
       if (user.isSpectator() || arena.getArenaState() != ArenaState.IN_GAME) {
         return;
       }
+      if(user.getStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY) == /* magic number */ 3) {
+        e.setCancelled(true);
+        return;
+      }
       e.getItem().remove();
       e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
       arena.getGoldSpawned().remove(e.getItem());
       ItemStack stack = e.getPlayer().getInventory().getItem(8);
       if (stack == null) {
-        stack = new ItemStack(Material.GOLD_INGOT, 1);
+        stack = new ItemStack(Material.GOLD_INGOT, e.getItem().getItemStack().getAmount());
       } else {
-        stack.setAmount(stack.getAmount() + 1);
+        stack.setAmount(stack.getAmount() + e.getItem().getItemStack().getAmount());
+      }
+      if(user.getStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY) == /* magic number */ 4) {
+        stack.setAmount(stack.getAmount() + 3);
       }
       e.getPlayer().getInventory().setItem(8, stack);
       user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, 1);
