@@ -5,8 +5,6 @@
 * Added praise the developer block (end portal and levers)
 * Fixed only one gold ingot could be picked up from few ones in a stack
 
-TODO FIXME (maybe) detective can die infitinely by murderer wut
-
 ### 0.0.8 Beta (06/07.10.2018)
 * Added throwable sword for murderer
 * Added multiple last words
