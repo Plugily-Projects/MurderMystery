@@ -54,7 +54,6 @@ public class PrayerRegistry {
 
   public static void init(Main plugin) {
     PrayerRegistry.plugin = plugin;
-    //todo locale
     //good prayers
     prayers.add(new Prayer(Prayer.PrayerType.DETECTIVE_REVELATION, true, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Detective-Revelation")));
     prayers.add(new Prayer(Prayer.PrayerType.GOLD_RUSH, true, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Gold-Rush")));

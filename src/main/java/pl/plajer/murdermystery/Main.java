@@ -295,7 +295,7 @@ public class Main extends JavaPlugin {
     signManager = new SignManager(this);
     corpseHandler = new CorpseHandler(this);
     MysteryPotionRegistry.init(this);
-    PrayerRegistry.init();
+    PrayerRegistry.init(this);
 
     new BukkitRunnable() {
 

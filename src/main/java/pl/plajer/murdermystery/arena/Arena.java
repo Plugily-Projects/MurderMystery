@@ -503,7 +503,6 @@ public class Arena extends BukkitRunnable {
     }
     //should be for murderer only
     formattedLine = StringUtils.replace(formattedLine, "%KILLS%", String.valueOf(user.getStat(StatsStorage.StatisticType.LOCAL_KILLS)));
-    //todo
     formattedLine = StringUtils.replace(formattedLine, "%SCORE%", String.valueOf(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE)));
     formattedLine = ChatManager.colorRawMessage(formattedLine);
     return formattedLine;
