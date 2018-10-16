@@ -15,9 +15,14 @@
 
 package pl.plajer.murdermystery.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -55,6 +60,18 @@ public class Utils {
         ticks += 10;
       }
     }.runTaskTimer(plugin, 10, 10);
+  }
+
+  public static List<Block> getNearbyBlocks(Location location, int radius) {
+    List<Block> blocks = new ArrayList<>();
+    for(int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
+      for(int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
+        for(int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
+          blocks.add(location.getWorld().getBlockAt(x, y, z));
+        }
+      }
+    }
+    return blocks;
   }
 
 }

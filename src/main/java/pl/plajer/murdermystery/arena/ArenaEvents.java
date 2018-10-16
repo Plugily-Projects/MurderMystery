@@ -19,7 +19,6 @@
 package pl.plajer.murdermystery.arena;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -50,8 +49,8 @@ import org.bukkit.potion.PotionEffectType;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.role.Role;
-import pl.plajer.murdermystery.arena.special.MysteryPotion;
-import pl.plajer.murdermystery.arena.special.MysteryPotionRegistry;
+import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotion;
+import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
@@ -313,60 +312,6 @@ public class ArenaEvents implements Listener {
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
-    }
-  }
-
-  @EventHandler
-  public void onCauldronUse(PlayerInteractEvent e) {
-    Arena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena == null || e.getClickedBlock() == null || e.getClickedBlock().getType() == null) {
-      return;
-    }
-    if (e.getClickedBlock().getType() != XMaterial.CAULDRON.parseMaterial()) {
-      return;
-    }
-    for (SpecialBlock block : arena.getSpecialBlocks()) {
-      if (block.getLocation().equals(e.getClickedBlock().getLocation())) {
-        if (block.getSpecialBlockType() == SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON) {
-          User user = UserManager.getUser(e.getPlayer().getUniqueId());
-          if (e.getPlayer().getInventory().getItem(3) != null) {
-            e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Drink-Potion"));
-            return;
-          }
-          if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < 1) {
-            e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold").replace("%amount%", String.valueOf(1)));
-            return;
-          }
-          e.getClickedBlock().getWorld().spawnParticle(Particle.FIREWORKS_SPARK, e.getClickedBlock().getLocation(), 10, 0.5, 0.5, 0.5);
-          Item item = e.getClickedBlock().getWorld().dropItemNaturally(e.getClickedBlock().getLocation().clone().add(0, 1, 0), new ItemStack(Material.POTION, 1));
-          item.setPickupDelay(10000);
-          Bukkit.getScheduler().runTaskLater(plugin, item::remove, 20);
-          user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) - 1);
-          e.getPlayer().getInventory().getItem(8).setAmount(e.getPlayer().getInventory().getItem(8).getAmount() - 1);
-          e.getPlayer().getInventory().setItem(3, new ItemBuilder(XMaterial.POTION.parseItem()).name(MysteryPotionRegistry.getRandomPotion().getName()).build());
-        }
-      }
-    }
-  }
-
-  @EventHandler
-  public void onPotionDrink(PlayerItemConsumeEvent e) {
-    if(e.getItem().getType() != XMaterial.POTION.parseMaterial() || !e.getItem().hasItemMeta() || !e.getItem().getItemMeta().hasDisplayName()) {
-      return;
-    }
-    Arena arena = ArenaRegistry.getArena(e.getPlayer());
-    if(arena == null) {
-      return;
-    }
-    for(MysteryPotion potion : MysteryPotionRegistry.getMysteryPotions()) {
-      if(e.getItem().getItemMeta().getDisplayName().equals(potion.getName())) {
-        e.setCancelled(true);
-        e.getPlayer().sendMessage(potion.getSubtitle());
-        e.getPlayer().sendTitle("", potion.getSubtitle(), 5, 40, 5);
-        e.getPlayer().getInventory().setItem(3, null);
-        e.getPlayer().addPotionEffect(potion.getPotionEffect());
-        return;
-      }
     }
   }
 

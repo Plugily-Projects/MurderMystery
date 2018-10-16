@@ -822,14 +822,19 @@ public class Arena extends BukkitRunnable {
 
   public void loadSpecialBlock(SpecialBlock block) {
     specialBlocks.add(block);
+    Hologram holo;
     switch (block.getSpecialBlockType()) {
       case HORSE_PURCHASE:
         break;
       case MYSTERY_CAULDRON:
-        Hologram holo = HologramsAPI.createHologram(plugin, block.getLocation().clone().add(0, 1, 0));
+        holo = HologramsAPI.createHologram(plugin, block.getLocation().clone().add(0, 1, 0));
         holo.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
         break;
-      case PRAISE_PLAJER:
+      case PRAISE_DEVELOPER:
+        holo = HologramsAPI.createHologram(plugin, block.getLocation().clone().add(0, 1.6, 0));
+        for(String str : ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
+          holo.appendTextLine(str);
+        }
         break;
       case RAPID_TELEPORTATION:
         break;

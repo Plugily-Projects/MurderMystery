@@ -20,7 +20,8 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaEvents;
 import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
-import pl.plajer.murdermystery.arena.special.MysteryPotionRegistry;
+import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
+import pl.plajer.murdermystery.arena.special.pray.PrayerRegistry;
 import pl.plajer.murdermystery.commands.MainCommand;
 import pl.plajer.murdermystery.database.FileStats;
 import pl.plajer.murdermystery.database.MySQLConnectionUtils;
@@ -294,6 +295,7 @@ public class Main extends JavaPlugin {
     signManager = new SignManager(this);
     corpseHandler = new CorpseHandler(this);
     MysteryPotionRegistry.init(this);
+    PrayerRegistry.init();
 
     new BukkitRunnable() {
 

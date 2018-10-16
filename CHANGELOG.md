@@ -2,6 +2,7 @@
 * Minimum amount of players cannot be now less than 2 (game will automatically set it to 2 if so)
 * Block destroying item frames and paintings
 * Added mystery cauldron and mystery potions (soon more)
+* Added praise the developer block (end portal and levers)
 
 TODO FIXME Few gold ingots can be picked up but only adds one! maybe set stackable false idk
 TODO FIXME (maybe) detective can die infitinely by murderer wut
