@@ -67,6 +67,7 @@ import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
+import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.GameScoreboard;
@@ -826,11 +827,11 @@ public class Arena extends BukkitRunnable {
       case HORSE_PURCHASE:
         break;
       case MYSTERY_CAULDRON:
-        holo = HologramsAPI.createHologram(plugin, block.getLocation().clone().add(0, 1, 0));
+        holo = HologramsAPI.createHologram(plugin, Utils.getBlockCenter(block.getLocation()).clone().add(0, 1.2, 0));
         holo.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
         break;
       case PRAISE_DEVELOPER:
-        holo = HologramsAPI.createHologram(plugin, block.getLocation().clone().add(0, 1.6, 0));
+        holo = HologramsAPI.createHologram(plugin, Utils.getBlockCenter(block.getLocation().clone().add(0, 2.0, 0)));
         for(String str : ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
           holo.appendTextLine(str);
         }

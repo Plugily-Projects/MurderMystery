@@ -166,7 +166,7 @@ public class SetupInventoryEvents implements Listener {
       if(name.contains("Add confessional")) {
         event.setCancelled(true);
         if(event.getWhoClicked().getTargetBlock(null, 10) == null ||
-            event.getWhoClicked().getTargetBlock(null, 10).getType() != XMaterial.END_PORTAL.parseMaterial()) {
+            event.getWhoClicked().getTargetBlock(null, 10).getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
           event.getWhoClicked().sendMessage(ChatColor.RED + "Please target end portal to continue!");
           return;
         }

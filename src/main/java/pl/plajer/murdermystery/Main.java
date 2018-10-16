@@ -20,6 +20,7 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaEvents;
 import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.arena.special.SpecialBlockEvents;
 import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
 import pl.plajer.murdermystery.arena.special.pray.PrayerRegistry;
 import pl.plajer.murdermystery.commands.MainCommand;
@@ -296,22 +297,7 @@ public class Main extends JavaPlugin {
     corpseHandler = new CorpseHandler(this);
     MysteryPotionRegistry.init(this);
     PrayerRegistry.init(this);
-
-    new BukkitRunnable() {
-
-      @Override
-      public void run() {
-        for (Hologram hologram : HologramsAPI.getHolograms(Main.this)) {
-          long tenMinutesMillis = 60 * 1000;
-          long elapsedMillis = System.currentTimeMillis() - hologram.getCreationTimestamp();
-
-          if (elapsedMillis > tenMinutesMillis) {
-            hologram.delete();
-          }
-        }
-      }
-
-    }.runTaskTimer(this, 30 * 20L, 30 * 20L);
+    new SpecialBlockEvents(this);
   }
 
   private void setupFiles() {

@@ -21,6 +21,7 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -78,6 +79,10 @@ public class CorpseHandler implements Listener {
       }
       lastSpawnedCorpse = corpse;
       arena.addCorpse(new ArenaCorpse(hologram, corpse));
+      Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        hologram.delete();
+        Bukkit.getScheduler().runTaskLater(plugin, corpse::destroyCorpseFromEveryone, 20);
+      }, 15);
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }

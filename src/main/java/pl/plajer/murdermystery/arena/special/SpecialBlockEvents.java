@@ -110,9 +110,10 @@ public class SpecialBlockEvents implements Listener {
   }
 
   private void onPrayerClick(PlayerInteractEvent e) {
-    if (e.getClickedBlock().getType() != XMaterial.END_PORTAL.parseMaterial()) {
+    if (e.getClickedBlock().getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
       return;
     }
+    e.setCancelled(true);
     User user = UserManager.getUser(e.getPlayer().getUniqueId());
     if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < 1) {
       e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold").replace("%amount%", String.valueOf(1)));
