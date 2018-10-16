@@ -124,6 +124,15 @@ public class SetupInventory {
         .lore(ChatColor.GRAY + "it will cost 1 gold per potion!")
         .lore(ChatColor.GRAY + "Configure cauldron potions in specialblocks.yml file!")
         .build());
+    inventory.setItem(29, new ItemBuilder(XMaterial.END_PORTAL.parseItem())
+        .name(ChatColor.GOLD + "► Add confessional")
+        .lore(ChatColor.GRAY + "Target end portal and add praise to the developer")
+        .lore(ChatColor.GRAY + "confessional, gift for the developer costs 1 gold!")
+        .lore(ChatColor.GOLD + "Add some levers in radius of 3 blocks near the end portal")
+        .lore(ChatColor.GOLD + "to allow users to pray there!")
+        .lore(ChatColor.RED + "You can either get gifts or curses from prayer!")
+        .lore(ChatColor.RED + "If you don't gift anything to end portal you'll get only curses!")
+        .build());
   }
 
   private static String isOptionDone(String path) {

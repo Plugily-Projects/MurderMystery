@@ -356,6 +356,7 @@ public class MainCommand implements CommandExecutor {
     config.set(path + "isdone", false);
     config.set(path + "world", worldName);
     config.set(path + "mystery-cauldrons",  new ArrayList<>());
+    config.set(path + "confessionals", new ArrayList<>());
     ConfigUtils.saveConfig(plugin, config, "arenas");
 
     Arena arena = new Arena(ID, plugin);

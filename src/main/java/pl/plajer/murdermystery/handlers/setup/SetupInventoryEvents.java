@@ -163,6 +163,23 @@ public class SetupInventoryEvents implements Listener {
         player.sendMessage("Murder Mystery: New mystery cauldron for arena/instance " + arena.getID() + " was added");
         return;
       }
+      if(name.contains("Add confessional")) {
+        event.setCancelled(true);
+        if(event.getWhoClicked().getTargetBlock(null, 10) == null ||
+            event.getWhoClicked().getTargetBlock(null, 10).getType() != XMaterial.END_PORTAL.parseMaterial()) {
+          event.getWhoClicked().sendMessage(ChatColor.RED + "Please target end portal to continue!");
+          return;
+        }
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+        String loc = LocationUtils.locationToString(event.getWhoClicked().getTargetBlock(null, 10).getLocation());
+
+        List<String> locs = new ArrayList<>(config.getStringList("instances." + arena.getID() + ".confessionals"));
+        locs.add(loc);
+        config.set("instances." + arena.getID() + ".confessionals", locs);
+        ConfigUtils.saveConfig(plugin, config, "arenas");
+        player.sendMessage("Murder Mystery: New confessional for arena/instance " + arena.getID() + " was added");
+        return;
+      }
       if (name.contains("Register arena")) {
         event.setCancelled(true);
         event.getWhoClicked().closeInventory();
@@ -216,6 +233,11 @@ public class SetupInventoryEvents implements Listener {
         if(config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
           for (String loc : config.getStringList("instances." + arena.getID() + ".mystery-cauldrons")) {
             specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
+          }
+        }
+        if(config.isSet("instances." + arena.getID() + ".confessionals")) {
+          for (String loc : config.getStringList("instances." + arena.getID() + ".confessionals")) {
+            specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
           }
         }
         for(SpecialBlock block : specialBlocks) {

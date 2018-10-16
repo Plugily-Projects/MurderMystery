@@ -154,6 +154,11 @@ public class ArenaRegistry {
             specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
           }
         }
+        if(config.isSet("instances." + arena.getID() + ".confessionals")) {
+          for (String loc : config.getStringList("instances." + arena.getID() + ".confessionals")) {
+            specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
+          }
+        }
         for(SpecialBlock block : specialBlocks) {
           arena.loadSpecialBlock(block);
         }
