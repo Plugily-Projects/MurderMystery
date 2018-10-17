@@ -48,6 +48,7 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
+import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
@@ -130,23 +131,18 @@ public class ArenaEvents implements Listener {
       if (user.isSpectator() || arena.getArenaState() != ArenaState.IN_GAME) {
         return;
       }
-      if(user.getStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY) == /* magic number */ 3) {
+      if (user.getStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY) == /* magic number */ 3) {
         e.setCancelled(true);
         return;
       }
       e.getItem().remove();
       e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
       arena.getGoldSpawned().remove(e.getItem());
-      ItemStack stack = e.getPlayer().getInventory().getItem(8);
-      if (stack == null) {
-        stack = new ItemStack(Material.GOLD_INGOT, e.getItem().getItemStack().getAmount());
-      } else {
-        stack.setAmount(stack.getAmount() + e.getItem().getItemStack().getAmount());
+      ItemStack stack = new ItemStack(Material.GOLD_INGOT, e.getItem().getItemStack().getAmount());
+      if (user.getStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY) == /* magic number */ 4) {
+        stack.setAmount(stack.getAmount() + (3 * e.getItem().getItemStack().getAmount()));
       }
-      if(user.getStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY) == /* magic number */ 4) {
-        stack.setAmount(stack.getAmount() + 3);
-      }
-      e.getPlayer().getInventory().setItem(8, stack);
+      ItemPosition.setItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, stack);
       user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, 1);
       ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP);
       e.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Picked-Up-Gold"));
@@ -159,19 +155,9 @@ public class ArenaEvents implements Listener {
         user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
         MessageUtils.sendTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold"), 5, 40, 5);
         MessageUtils.sendSubTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle"), 5, 40, 5);
-        e.getPlayer().getInventory().setItem(0, new ItemStack(Material.BOW, 1));
-        ItemStack arrow = e.getPlayer().getInventory().getItem(2);
-        if (arrow == null) {
-          arrow = new ItemStack(Material.ARROW, 1);
-        } else {
-          arrow.setAmount(arrow.getAmount() + 1);
-        }
-        if (Role.isRole(Role.MURDERER, e.getPlayer())) {
-          e.getPlayer().getInventory().setItem(2, arrow);
-        } else {
-          e.getPlayer().getInventory().setItem(1, arrow);
-        }
-        e.getPlayer().getInventory().setItem(8, new ItemStack(Material.GOLD_INGOT, 0));
+        ItemPosition.setItem(e.getPlayer(), ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+        ItemPosition.setItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, 1));
+        e.getPlayer().getInventory().setItem(/* same for all roles */ ItemPosition.GOLD_INGOTS.getOtherRolesItemPosition(), new ItemStack(Material.GOLD_INGOT, 0));
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);

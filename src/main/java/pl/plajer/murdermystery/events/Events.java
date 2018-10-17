@@ -56,6 +56,7 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
+import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
@@ -162,7 +163,7 @@ public class Events implements Listener {
             }
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
               if (arena.getArenaState() == ArenaState.IN_GAME) {
-                attacker.getInventory().setItem(1, new ItemStack(Material.IRON_SWORD));
+                ItemPosition.setItem(attacker, ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
               }
             }, 5 * 21);
           }

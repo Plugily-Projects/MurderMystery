@@ -66,6 +66,7 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
+import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
@@ -261,8 +262,8 @@ public class Arena extends BukkitRunnable {
             MessageUtils.sendSubTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
             playersToSet.remove(detective);
 
-            detective.getInventory().setItem(1, new ItemStack(Material.BOW, 1));
-            detective.getInventory().setItem(9, new ItemStack(Material.ARROW, 64));
+            ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+            ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, 64));
 
             for (Player p : playersToSet) {
               MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"), 5, 40, 5);
@@ -294,7 +295,7 @@ public class Arena extends BukkitRunnable {
               p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
             }
             if (getTimer() == (Main.CLASSIC_TIMER_TIME - 14)) {
-              Bukkit.getPlayer(murderer).getInventory().setItem(1, new ItemStack(Material.IRON_SWORD, 1));
+              ItemPosition.setItem(Bukkit.getPlayer(murderer), ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
               Bukkit.getPlayer(murderer).getInventory().setHeldItemSlot(0);
             }
           }

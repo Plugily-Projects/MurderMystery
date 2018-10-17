@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -34,11 +33,10 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.arena.role.Role;
-import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotion;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
@@ -74,7 +72,7 @@ public class PrayerRegistry {
 
   public static Prayer getRandomBadPray() {
     Prayer prayer = prayers.get(rand.nextInt(prayers.size()));
-    if(prayer.isGoodPray()) {
+    if (prayer.isGoodPray()) {
       getRandomBadPray();
     }
     return prayer;
@@ -89,7 +87,7 @@ public class PrayerRegistry {
     Player player = user.toPlayer();
     final Arena arena = ArenaRegistry.getArena(user.toPlayer());
     List<String> prayMessage = LanguageManager.getLanguageList("In-Game.Messages.Special-Blocks.Praises.Message");
-    if(prayer.isGoodPray()) {
+    if (prayer.isGoodPray()) {
       prayMessage = prayMessage.stream().map(msg -> msg.replace("%feeling%", ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings.Blessed"))).collect(Collectors.toList());
     } else {
       prayMessage = prayMessage.stream().map(msg -> msg.replace("%feeling%", ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings.Cursed"))).collect(Collectors.toList());
@@ -100,14 +98,14 @@ public class PrayerRegistry {
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
         break;
       case BOW_TIME:
-        if(Role.isRole(Role.INNOCENT, player)) {
-          player.getInventory().setItem(0, new ItemStack(Material.BOW, 1));
-          player.getInventory().setItem(9, new ItemStack(Material.ARROW, 64));
+        if (Role.isRole(Role.INNOCENT, player)) {
+          ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+          ItemPosition.setItem(player, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, 64));
         }
         break;
       case DETECTIVE_REVELATION:
         String detectiveName;
-        if(arena.getDetective() != null) {
+        if (arena.getDetective() != null) {
           detectiveName = Bukkit.getOfflinePlayer(arena.getDetective()).getName();
         } else if (arena.getFakeDetective() != null) {
           detectiveName = Bukkit.getOfflinePlayer(arena.getFakeDetective()).getName();
@@ -122,7 +120,7 @@ public class PrayerRegistry {
         break;
       case INCOMING_DEATH:
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-          if(arena.getArenaState() == ArenaState.IN_GAME) {
+          if (arena.getArenaState() == ArenaState.IN_GAME) {
             player.damage(1000);
           }
         }, 20 * 60);

@@ -36,6 +36,7 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
+import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.core.services.exception.ReportedException;
 
@@ -76,7 +77,7 @@ public class ArenaUtils {
         ItemMeta innocentMeta = innocentLocator.getItemMeta();
         innocentMeta.setDisplayName(ChatManager.colorMessage("In-Game.Innocent-Locator-Item-Name"));
         innocentLocator.setItemMeta(innocentMeta);
-        Bukkit.getPlayer(arena.getMurderer()).getInventory().setItem(4, innocentLocator);
+        ItemPosition.setItem(Bukkit.getPlayer(arena.getMurderer()), ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
         arena.setMurdererLocatorReceived(true);
 
         for (Player p : arena.getPlayersLeft()) {
@@ -107,7 +108,7 @@ public class ArenaUtils {
       bowLocator.setItemMeta(bowMeta);
       for (Player p : arena.getPlayersLeft()) {
         if (Role.isRole(Role.INNOCENT, p)) {
-          p.getInventory().setItem(4, bowLocator);
+          ItemPosition.setItem(p, ItemPosition.BOW_LOCATOR, bowLocator);
           p.setCompassTarget(loc);
         }
       }
@@ -135,13 +136,13 @@ public class ArenaUtils {
 
           for (Player loopPlayer : arena.getPlayersLeft()) {
             if (Role.isRole(Role.INNOCENT, loopPlayer)) {
-              loopPlayer.getInventory().setItem(4, new ItemStack(Material.AIR, 1));
+              ItemPosition.setItem(loopPlayer, ItemPosition.BOW_LOCATOR, new ItemStack(Material.AIR, 1));
             }
           }
 
           arena.setFakeDetective(victim.getUniqueId());
-          victim.getInventory().setItem(0, new ItemStack(Material.BOW, 1));
-          victim.getInventory().setItem(9, new ItemStack(Material.ARROW, 64));
+          ItemPosition.setItem(victim, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+          ItemPosition.setItem(victim, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, 64));
           ChatManager.broadcast(arena, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message"));
         }
       });

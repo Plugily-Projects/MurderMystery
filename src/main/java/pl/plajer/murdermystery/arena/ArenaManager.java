@@ -47,6 +47,7 @@ import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
+import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.InventoryUtils;
@@ -205,7 +206,7 @@ public class ArenaManager {
           }
           MessageUtils.sendTitle(Bukkit.getPlayer(newMurderer), ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"), 5, 40, 5);
           MessageUtils.sendSubTitle(Bukkit.getPlayer(newMurderer), ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
-          Bukkit.getPlayer(newMurderer).getInventory().setItem(1, new ItemStack(Material.IRON_SWORD, 1));
+          ItemPosition.setItem(Bukkit.getPlayer(newMurderer), ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
           user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
         } else if (Role.isRole(Role.ANY_DETECTIVE, p)) {
           arena.setDetectiveDead(true);

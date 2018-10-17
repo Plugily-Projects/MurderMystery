@@ -35,6 +35,7 @@ import pl.plajer.murdermystery.arena.special.pray.PrayerRegistry;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
+import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.XMaterial;
@@ -105,8 +106,8 @@ public class SpecialBlockEvents implements Listener {
     item.setPickupDelay(10000);
     Bukkit.getScheduler().runTaskLater(plugin, item::remove, 20);
     user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) - 1);
-    e.getPlayer().getInventory().getItem(8).setAmount(e.getPlayer().getInventory().getItem(8).getAmount() - 1);
-    e.getPlayer().getInventory().setItem(3, new ItemBuilder(XMaterial.POTION.parseItem()).name(MysteryPotionRegistry.getRandomPotion().getName()).build());
+    ItemPosition.setItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, -1));
+    ItemPosition.setItem(e.getPlayer(), ItemPosition.POTION, new ItemBuilder(XMaterial.POTION.parseItem()).name(MysteryPotionRegistry.getRandomPotion().getName()).build());
   }
 
   private void onPrayerClick(PlayerInteractEvent e) {
@@ -150,7 +151,7 @@ public class SpecialBlockEvents implements Listener {
         e.setCancelled(true);
         e.getPlayer().sendMessage(potion.getSubtitle());
         e.getPlayer().sendTitle("", potion.getSubtitle(), 5, 40, 5);
-        e.getPlayer().getInventory().setItem(3, null);
+        ItemPosition.setItem(e.getPlayer(), ItemPosition.POTION, null);
         e.getPlayer().addPotionEffect(potion.getPotionEffect());
         return;
       }
