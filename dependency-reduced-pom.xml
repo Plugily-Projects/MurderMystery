@@ -11,6 +11,13 @@
     </license>
   </licenses>
   <build>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ftp</artifactId>
+        <version>3.0.0</version>
+      </extension>
+    </extensions>
     <resources>
       <resource>
         <filtering>true</filtering>
@@ -27,6 +34,17 @@
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.0.1</version>
+        <configuration>
+          <windowtitle>Murder Mystery API docs for v${project.version}</windowtitle>
+          <description>Minecraft survival minigame.
+                        Be the murderer, innocent or the detective! Don't be killed during the game to win! API documentation for hooking Murder Mystery with your plugin.</description>
+          <destDir>minecraft/murdermystery</destDir>
+          <isOffline>false</isOffline>
         </configuration>
       </plugin>
       <plugin>
@@ -203,6 +221,16 @@
       <systemPath>${project.basedir}/lib/CorpseReborn.jar</systemPath>
     </dependency>
   </dependencies>
+  <distributionManagement>
+    <repository>
+      <id>plajer-lair-repo</id>
+      <url>ftp://54.38.159.68</url>
+    </repository>
+    <site>
+      <id>plajer-lair-java-docs</id>
+      <url>ftp://54.38.159.68</url>
+    </site>
+  </distributionManagement>
   <properties>
     <java.version>1.8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
