@@ -31,19 +31,19 @@ public class MessageUtils {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
-  public static void sendTitle(Player player, String text, int fadeInTime, int showTime, int fadeOutTime) {
+  public static void sendTitle(Player player, String text) {
     if (plugin.is1_9_R1() || plugin.is1_10_R1()) {
       player.sendTitle(text, null);
     } else {
-      player.sendTitle(text, null, fadeInTime, showTime, fadeOutTime);
+      player.sendTitle(text, null, 5, 40, 5);
     }
   }
 
-  public static void sendSubTitle(Player player, String text, int fadeInTime, int showTime, int fadeOutTime) {
+  public static void sendSubTitle(Player player, String text) {
     if (plugin.is1_9_R1() || plugin.is1_10_R1()) {
       player.sendTitle(null, text);
     } else {
-      player.sendTitle(null, text, fadeInTime, showTime, fadeOutTime);
+      player.sendTitle(null, text, 5, 40, 5);
     }
   }
 

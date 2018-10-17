@@ -248,8 +248,8 @@ public class Arena extends BukkitRunnable {
             this.murderer = murderer.getUniqueId();
             UserManager.getUser(this.murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
             playersToSet.remove(murderer);
-            MessageUtils.sendTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"), 5, 40, 5);
-            MessageUtils.sendSubTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
+            MessageUtils.sendTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"));
+            MessageUtils.sendSubTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"));
             detectiveChances.remove(sortedMurderer.keySet().toArray()[0]);
 
             Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
@@ -258,16 +258,16 @@ public class Arena extends BukkitRunnable {
             Player detective = ((User) sortedDetective.keySet().toArray()[0]).toPlayer();
             this.detective = detective.getUniqueId();
             UserManager.getUser(this.detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
-            MessageUtils.sendTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"), 5, 40, 5);
-            MessageUtils.sendSubTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
+            MessageUtils.sendTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"));
+            MessageUtils.sendSubTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"));
             playersToSet.remove(detective);
 
             ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
             ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, 64));
 
             for (Player p : playersToSet) {
-              MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"), 5, 40, 5);
-              MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
+              MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"));
+              MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"));
             }
             if (plugin.isBossbarEnabled()) {
               gameBar.setTitle(ChatManager.colorMessage("Bossbar.In-Game-Info"));
@@ -311,8 +311,8 @@ public class Arena extends BukkitRunnable {
 
           if (getTimer() == 30 || getTimer() == 60) {
             for (Player p : getPlayers()) {
-              MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", String.valueOf(getTimer())), 5, 30, 5);
-              MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle").replace("%time%", String.valueOf(getTimer())), 5, 30, 5);
+              MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", String.valueOf(getTimer())));
+              MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle").replace("%time%", String.valueOf(getTimer())));
             }
           }
 
@@ -332,10 +332,10 @@ public class Arena extends BukkitRunnable {
             case 1:
               if (getPlayersLeft().get(0).getUniqueId() == murderer) {
                 for (Player p : getPlayers()) {
-                  MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), 5, 40, 5);
-                  MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone"), 5, 40, 5);
+                  MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"));
+                  MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone"));
                   if (p.getUniqueId() == murderer) {
-                    MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), 5, 40, 5);
+                    MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"));
                   }
                 }
                 ArenaUtils.addScore(UserManager.getUser(murderer), ArenaUtils.ScoreAction.WIN_GAME);

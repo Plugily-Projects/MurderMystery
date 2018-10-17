@@ -200,12 +200,12 @@ public class ArenaManager {
           arena.setMurderer(newMurderer);
           for (Player player : arena.getPlayers()) {
             MessageUtils.sendTitle(player, ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title").replace("%role%",
-                ChatManager.colorMessage("Scoreboard.Roles.Murderer")), 5, 40, 5);
+                ChatManager.colorMessage("Scoreboard.Roles.Murderer")));
             MessageUtils.sendSubTitle(player, ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle").replace("%role%",
-                ChatManager.colorMessage("Scoreboard.Roles.Murderer")), 5, 40, 5);
+                ChatManager.colorMessage("Scoreboard.Roles.Murderer")));
           }
-          MessageUtils.sendTitle(Bukkit.getPlayer(newMurderer), ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"), 5, 40, 5);
-          MessageUtils.sendSubTitle(Bukkit.getPlayer(newMurderer), ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
+          MessageUtils.sendTitle(Bukkit.getPlayer(newMurderer), ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"));
+          MessageUtils.sendSubTitle(Bukkit.getPlayer(newMurderer), ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"));
           ItemPosition.setItem(Bukkit.getPlayer(newMurderer), ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
           user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
         } else if (Role.isRole(Role.ANY_DETECTIVE, p)) {

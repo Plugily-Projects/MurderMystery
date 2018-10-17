@@ -84,8 +84,8 @@ public class ArenaUtils {
           if(Role.isRole(Role.MURDERER, p)) {
             continue;
           }
-          MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Watch-Out-Title"), 5, 40, 5);
-          MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Watch-Out-Subtitle"), 5, 40, 5);
+          MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Watch-Out-Title"));
+          MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Watch-Out-Subtitle"));
         }
       }
       for (Player p : arena.getPlayersLeft()) {
@@ -120,10 +120,10 @@ public class ArenaUtils {
   public static void dropBowAndAnnounce(Arena arena, Player victim) {
     try {
       for (Player p : arena.getPlayers()) {
-        MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title"), 5, 40, 5);
+        MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title"));
       }
       for (Player p : arena.getPlayersLeft()) {
-        MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle"), 5, 40, 5);
+        MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle"));
       }
 
       Hologram hologram = HologramsAPI.createHologram(plugin, victim.getLocation().clone().add(0, 0.5, 0));

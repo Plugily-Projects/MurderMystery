@@ -143,8 +143,8 @@ public class Events implements Listener {
                   plugin.getCorpseHandler().spawnCorpse(victim, arena);
                   victim.damage(100.0);
                   victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
-                  MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"), 5, 40, 5);
-                  MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"), 5, 40, 5);
+                  MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
+                  MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"));
                   attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
                   ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER);
                   if (Role.isRole(Role.ANY_DETECTIVE, victim)) {

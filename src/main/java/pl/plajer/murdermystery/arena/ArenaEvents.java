@@ -153,8 +153,8 @@ public class ArenaEvents implements Listener {
 
       if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) == 10) {
         user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
-        MessageUtils.sendTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold"), 5, 40, 5);
-        MessageUtils.sendSubTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle"), 5, 40, 5);
+        MessageUtils.sendTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold"));
+        MessageUtils.sendSubTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle"));
         ItemPosition.setItem(e.getPlayer(), ItemPosition.BOW, new ItemStack(Material.BOW, 1));
         ItemPosition.setItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, 1));
         e.getPlayer().getInventory().setItem(/* same for all roles */ ItemPosition.GOLD_INGOTS.getOtherRolesItemPosition(), new ItemStack(Material.GOLD_INGOT, 0));
@@ -245,14 +245,14 @@ public class ArenaEvents implements Listener {
       }
 
       plugin.getCorpseHandler().spawnCorpse(victim, arena);
-      MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"), 5, 40, 5);
+      MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
 
       if (Role.isRole(Role.MURDERER, victim)) {
         for (Player p : arena.getPlayers()) {
-          MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), 5, 40, 5);
-          MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
+          MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"));
+          MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"));
           if (Role.isRole(Role.MURDERER, p)) {
-            MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), 5, 40, 5);
+            MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"));
           }
           if (Role.isRole(Role.INNOCENT, p)) {
             ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.SURVIVE_GAME);
@@ -266,21 +266,21 @@ public class ArenaEvents implements Listener {
         ArenaManager.stopGame(false, arena);
         arena.setArenaState(ArenaState.ENDING);
         arena.setTimer(5);
-        MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), 5, 40, 5);
-        MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
+        MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"));
+        MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"));
       } else if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
         ArenaUtils.dropBowAndAnnounce(arena, victim);
       } else if (Role.isRole(Role.INNOCENT, victim)) {
         if (Role.isRole(Role.MURDERER, attacker)) {
-          MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"), 5, 40, 5);
+          MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"));
         } else {
-          MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Player-Killed-You"), 5, 40, 5);
+          MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Player-Killed-You"));
         }
 
         //if else, murderer killed, so don't kill him :)
         if (Role.isRole(Role.ANY_DETECTIVE, attacker) || Role.isRole(Role.INNOCENT, attacker)) {
-          MessageUtils.sendTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"), 5, 40, 5);
-          MessageUtils.sendSubTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Killed-Innocent"), 5, 40, 5);
+          MessageUtils. sendTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
+          MessageUtils.sendSubTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Killed-Innocent"));
           attacker.damage(100.0);
           ArenaUtils.addScore(UserManager.getUser(attacker.getUniqueId()), ArenaUtils.ScoreAction.INNOCENT_KILL);
           plugin.getCorpseHandler().spawnCorpse(attacker, arena);
