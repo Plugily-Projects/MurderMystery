@@ -140,7 +140,7 @@ public class ArenaEvents implements Listener {
       arena.getGoldSpawned().remove(e.getItem());
       ItemStack stack = new ItemStack(Material.GOLD_INGOT, e.getItem().getItemStack().getAmount());
       if (user.getStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY) == /* magic number */ 4) {
-        stack.setAmount(stack.getAmount() + (3 * e.getItem().getItemStack().getAmount()));
+        stack.setAmount(3 * e.getItem().getItemStack().getAmount());
       }
       ItemPosition.setItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, stack);
       user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, e.getItem().getItemStack().getAmount());
