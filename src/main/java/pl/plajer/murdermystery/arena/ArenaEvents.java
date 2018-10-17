@@ -143,7 +143,7 @@ public class ArenaEvents implements Listener {
         stack.setAmount(stack.getAmount() + (3 * e.getItem().getItemStack().getAmount()));
       }
       ItemPosition.setItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, stack);
-      user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, 1);
+      user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, e.getItem().getItemStack().getAmount());
       ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP);
       e.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Picked-Up-Gold"));
 
