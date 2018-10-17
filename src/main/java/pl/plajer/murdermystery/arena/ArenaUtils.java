@@ -33,6 +33,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
@@ -59,6 +60,7 @@ public class ArenaUtils {
           innocents++;
         }
       }
+      user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + (100 * innocents));
       msg = StringUtils.replace(msg, "%score%", String.valueOf(100 * innocents));
       msg = StringUtils.replace(msg, "%score%", action.getAction().replace("%amount%", String.valueOf(innocents)));
       user.toPlayer().sendMessage(msg);
@@ -67,6 +69,7 @@ public class ArenaUtils {
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getAction()));
     msg = StringUtils.replace(msg, "%action%", action.getAction());
+    user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + action.getPoints());
     user.toPlayer().sendMessage(msg);
   }
 
