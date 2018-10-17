@@ -61,12 +61,12 @@ public class SpecialBlockEvents implements Listener {
       return;
     }
     boolean leverBlock = false;
-    if(e.getClickedBlock().getType() == XMaterial.LEVER.parseMaterial()) {
+    if (e.getClickedBlock().getType() == XMaterial.LEVER.parseMaterial()) {
       leverBlock = true;
     }
     for (SpecialBlock specialBlock : arena.getSpecialBlocks()) {
-      if(leverBlock) {
-        if(Utils.getNearbyBlocks(specialBlock.getLocation(), 3).contains(e.getClickedBlock())) {
+      if (leverBlock) {
+        if (Utils.getNearbyBlocks(specialBlock.getLocation(), 3).contains(e.getClickedBlock())) {
           onPrayLeverClick(e);
           return;
         }
@@ -129,25 +129,25 @@ public class SpecialBlockEvents implements Listener {
 
   private void onPrayLeverClick(PlayerInteractEvent e) {
     User user = UserManager.getUser(e.getPlayer().getUniqueId());
-    if(user.getStat(StatsStorage.StatisticType.LOCAL_PRAISES) < 1) {
-      PrayerRegistry.applyPrayer(user, PrayerRegistry.getRandomBadPray());
-    } else {
-      PrayerRegistry.applyPrayer(user, PrayerRegistry.getRandomPray());
+    if (user.getStat(StatsStorage.StatisticType.LOCAL_PRAISES) < 1) {
+      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.No-Money-No-Pray"));
+      return;
     }
+    PrayerRegistry.applyRandomPrayer(user);
     user.setStat(StatsStorage.StatisticType.LOCAL_PRAISES, 0);
   }
 
   @EventHandler
   public void onMysteryPotionDrink(PlayerItemConsumeEvent e) {
-    if(e.getItem().getType() != XMaterial.POTION.parseMaterial() || !e.getItem().hasItemMeta() || !e.getItem().getItemMeta().hasDisplayName()) {
+    if (e.getItem().getType() != XMaterial.POTION.parseMaterial() || !e.getItem().hasItemMeta() || !e.getItem().getItemMeta().hasDisplayName()) {
       return;
     }
     Arena arena = ArenaRegistry.getArena(e.getPlayer());
-    if(arena == null) {
+    if (arena == null) {
       return;
     }
-    for(MysteryPotion potion : MysteryPotionRegistry.getMysteryPotions()) {
-      if(e.getItem().getItemMeta().getDisplayName().equals(potion.getName())) {
+    for (MysteryPotion potion : MysteryPotionRegistry.getMysteryPotions()) {
+      if (e.getItem().getItemMeta().getDisplayName().equals(potion.getName())) {
         e.setCancelled(true);
         e.getPlayer().sendMessage(potion.getSubtitle());
         e.getPlayer().sendTitle("", potion.getSubtitle(), 5, 40, 5);

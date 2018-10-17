@@ -70,19 +70,12 @@ public class PrayerRegistry {
     return prayers.get(rand.nextInt(prayers.size()));
   }
 
-  public static Prayer getRandomBadPray() {
-    Prayer prayer = prayers.get(rand.nextInt(prayers.size()));
-    if (prayer.isGoodPray()) {
-      getRandomBadPray();
-    }
-    return prayer;
-  }
-
   public static List<Prayer> getPrayers() {
     return prayers;
   }
 
-  public static void applyPrayer(User user, Prayer prayer) {
+  public static void applyRandomPrayer(User user) {
+    Prayer prayer = getRandomPray();
     user.setStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY, prayer.getPrayerType().ordinal());
     Player player = user.toPlayer();
     final Arena arena = ArenaRegistry.getArena(user.toPlayer());

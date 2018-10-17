@@ -187,6 +187,7 @@ In-Game:
       Cauldron-Hologram: "&fMystery Potion - 1 &eGold"
       Praise-Hologram: "&eClick to give gift;&ePull lever to pray"
       Prayed-Message: "&aYou prayed to the developer! Hope he will hear that!"
+      No-Money-No-Pray: "&cPay to pray!"
       Praises:
         Message:
           - ""
