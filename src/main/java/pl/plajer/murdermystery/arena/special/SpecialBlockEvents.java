@@ -37,6 +37,7 @@ import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.Utils;
+import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.XMaterial;
 
@@ -56,35 +57,39 @@ public class SpecialBlockEvents implements Listener {
 
   @EventHandler
   public void onSpecialBlockClick(PlayerInteractEvent e) {
-    Arena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena == null || e.getClickedBlock() == null || e.getClickedBlock().getType() == null) {
-      return;
-    }
-    boolean leverBlock = false;
-    if (e.getClickedBlock().getType() == XMaterial.LEVER.parseMaterial()) {
-      leverBlock = true;
-    }
-    for (SpecialBlock specialBlock : arena.getSpecialBlocks()) {
-      if (leverBlock) {
-        if (Utils.getNearbyBlocks(specialBlock.getLocation(), 3).contains(e.getClickedBlock())) {
-          onPrayLeverClick(e);
-          return;
+    try {
+      Arena arena = ArenaRegistry.getArena(e.getPlayer());
+      if (arena == null || e.getClickedBlock() == null || e.getClickedBlock().getType() == null) {
+        return;
+      }
+      boolean leverBlock = false;
+      if (e.getClickedBlock().getType() == XMaterial.LEVER.parseMaterial()) {
+        leverBlock = true;
+      }
+      for (SpecialBlock specialBlock : arena.getSpecialBlocks()) {
+        if (leverBlock) {
+          if (Utils.getNearbyBlocks(specialBlock.getLocation(), 3).contains(e.getClickedBlock())) {
+            onPrayLeverClick(e);
+            return;
+          }
+        }
+        if (e.getClickedBlock().getLocation().equals(specialBlock.getLocation())) {
+          switch (specialBlock.getSpecialBlockType()) {
+            case HORSE_PURCHASE:
+              return;
+            case MYSTERY_CAULDRON:
+              onCauldronClick(e);
+              return;
+            case PRAISE_DEVELOPER:
+              onPrayerClick(e);
+              return;
+            case RAPID_TELEPORTATION:
+              return;
+          }
         }
       }
-      if (e.getClickedBlock().getLocation().equals(specialBlock.getLocation())) {
-        switch (specialBlock.getSpecialBlockType()) {
-          case HORSE_PURCHASE:
-            return;
-          case MYSTERY_CAULDRON:
-            onCauldronClick(e);
-            return;
-          case PRAISE_DEVELOPER:
-            onPrayerClick(e);
-            return;
-          case RAPID_TELEPORTATION:
-            return;
-        }
-      }
+    } catch (Exception ex) {
+      new ReportedException(plugin, ex);
     }
   }
 
@@ -139,22 +144,26 @@ public class SpecialBlockEvents implements Listener {
 
   @EventHandler
   public void onMysteryPotionDrink(PlayerItemConsumeEvent e) {
-    if (e.getItem().getType() != XMaterial.POTION.parseMaterial() || !e.getItem().hasItemMeta() || !e.getItem().getItemMeta().hasDisplayName()) {
-      return;
-    }
-    Arena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena == null) {
-      return;
-    }
-    for (MysteryPotion potion : MysteryPotionRegistry.getMysteryPotions()) {
-      if (e.getItem().getItemMeta().getDisplayName().equals(potion.getName())) {
-        e.setCancelled(true);
-        e.getPlayer().sendMessage(potion.getSubtitle());
-        e.getPlayer().sendTitle("", potion.getSubtitle(), 5, 40, 5);
-        ItemPosition.setItem(e.getPlayer(), ItemPosition.POTION, null);
-        e.getPlayer().addPotionEffect(potion.getPotionEffect());
+    try {
+      if (e.getItem().getType() != XMaterial.POTION.parseMaterial() || !e.getItem().hasItemMeta() || !e.getItem().getItemMeta().hasDisplayName()) {
         return;
       }
+      Arena arena = ArenaRegistry.getArena(e.getPlayer());
+      if (arena == null) {
+        return;
+      }
+      for (MysteryPotion potion : MysteryPotionRegistry.getMysteryPotions()) {
+        if (e.getItem().getItemMeta().getDisplayName().equals(potion.getName())) {
+          e.setCancelled(true);
+          e.getPlayer().sendMessage(potion.getSubtitle());
+          e.getPlayer().sendTitle("", potion.getSubtitle(), 5, 40, 5);
+          ItemPosition.setItem(e.getPlayer(), ItemPosition.POTION, null);
+          e.getPlayer().addPotionEffect(potion.getPotionEffect());
+          return;
+        }
+      }
+    } catch (Exception ex){
+      new ReportedException(plugin, ex);
     }
   }
 
