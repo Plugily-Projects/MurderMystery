@@ -144,7 +144,7 @@ public class ArenaEvents implements Listener {
       }
       ItemPosition.setItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, stack);
       user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, e.getItem().getItemStack().getAmount());
-      ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP);
+      ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP, e.getItem().getItemStack().getAmount());
       e.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Picked-Up-Gold"));
 
       if (Role.isRole(Role.ANY_DETECTIVE, e.getPlayer())) {
@@ -199,7 +199,7 @@ public class ArenaEvents implements Listener {
       victim.damage(100.0);
       victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
       user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
-      ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER);
+      ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
 
       arena.getPlayersLeft().remove(victim);
       if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
@@ -241,7 +241,7 @@ public class ArenaEvents implements Listener {
 
       if (Role.isRole(Role.MURDERER, attacker)) {
         user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
-        ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER);
+        ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
       }
 
       plugin.getCorpseHandler().spawnCorpse(victim, arena);
@@ -255,13 +255,13 @@ public class ArenaEvents implements Listener {
             MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"));
           }
           if (Role.isRole(Role.INNOCENT, p)) {
-            ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.SURVIVE_GAME);
+            ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.SURVIVE_GAME, 0);
           } else if (Role.isRole(Role.ANY_DETECTIVE, p)) {
-            ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.WIN_GAME);
-            ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.DETECTIVE_WIN_GAME);
+            ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.WIN_GAME, 0);
+            ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.DETECTIVE_WIN_GAME, 0);
           }
         }
-        ArenaUtils.addScore(UserManager.getUser(attacker.getUniqueId()), ArenaUtils.ScoreAction.KILL_MURDERER);
+        ArenaUtils.addScore(UserManager.getUser(attacker.getUniqueId()), ArenaUtils.ScoreAction.KILL_MURDERER, 0);
         arena.setHero(attacker.getUniqueId());
         ArenaManager.stopGame(false, arena);
         arena.setArenaState(ArenaState.ENDING);
@@ -282,7 +282,7 @@ public class ArenaEvents implements Listener {
           MessageUtils. sendTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
           MessageUtils.sendSubTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Killed-Innocent"));
           attacker.damage(100.0);
-          ArenaUtils.addScore(UserManager.getUser(attacker.getUniqueId()), ArenaUtils.ScoreAction.INNOCENT_KILL);
+          ArenaUtils.addScore(UserManager.getUser(attacker.getUniqueId()), ArenaUtils.ScoreAction.INNOCENT_KILL, 0);
           plugin.getCorpseHandler().spawnCorpse(attacker, arena);
           plugin.getRewardsHandler().performDetectiveKillRewards(attacker, victim);
 

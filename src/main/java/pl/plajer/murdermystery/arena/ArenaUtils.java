@@ -50,9 +50,16 @@ public class ArenaUtils {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
-  public static void addScore(User user, ScoreAction action) {
+  public static void addScore(User user, ScoreAction action, int amount) {
     String msg = ChatManager.colorMessage("In-Game.Messages.Bonus-Score");
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
+    if(action == ScoreAction.GOLD_PICKUP && amount > 1) {
+      msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints() * amount));
+      msg = StringUtils.replace(msg, "%action%", action.getAction());
+      user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + (action.getPoints() * amount));
+      user.toPlayer().sendMessage(msg);
+      return;
+    }
     if (action == ScoreAction.DETECTIVE_WIN_GAME) {
       int innocents = 0;
       for (Player p : user.getArena().getPlayersLeft()) {
@@ -62,12 +69,11 @@ public class ArenaUtils {
       }
       user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + (100 * innocents));
       msg = StringUtils.replace(msg, "%score%", String.valueOf(100 * innocents));
-      msg = StringUtils.replace(msg, "%score%", action.getAction().replace("%amount%", String.valueOf(innocents)));
+      msg = StringUtils.replace(msg, "%action%", action.getAction().replace("%amount%", String.valueOf(innocents)));
       user.toPlayer().sendMessage(msg);
       return;
     }
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
-    msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getAction()));
     msg = StringUtils.replace(msg, "%action%", action.getAction());
     user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + action.getPoints());
     user.toPlayer().sendMessage(msg);

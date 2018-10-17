@@ -304,7 +304,7 @@ public class Arena extends BukkitRunnable {
           if (getTimer() % 30 == 0) {
             for (Player p : getPlayersLeft()) {
               if (Role.isRole(Role.INNOCENT, p)) {
-                ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.SURVIVE_TIME);
+                ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.SURVIVE_TIME, 0);
               }
             }
           }
@@ -338,7 +338,7 @@ public class Arena extends BukkitRunnable {
                     MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"));
                   }
                 }
-                ArenaUtils.addScore(UserManager.getUser(murderer), ArenaUtils.ScoreAction.WIN_GAME);
+                ArenaUtils.addScore(UserManager.getUser(murderer), ArenaUtils.ScoreAction.WIN_GAME, 0);
                 ArenaManager.stopGame(false, this);
                 setArenaState(ArenaState.ENDING);
                 setTimer(5);

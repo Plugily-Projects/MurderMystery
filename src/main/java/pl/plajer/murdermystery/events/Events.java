@@ -146,7 +146,7 @@ public class Events implements Listener {
                   MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
                   MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"));
                   attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
-                  ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER);
+                  ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
                   if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
                     if (Role.isRole(Role.FAKE_DETECTIVE, victim)) {
                       arena.setFakeDetective(null);
