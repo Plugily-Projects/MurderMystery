@@ -93,7 +93,7 @@ public class SpecialBlockEvents implements Listener {
       return;
     }
     User user = UserManager.getUser(e.getPlayer().getUniqueId());
-    if (e.getPlayer().getInventory().getItem(3) != null) {
+    if (e.getPlayer().getInventory().getItem(/* same for all roles */ ItemPosition.POTION.getOtherRolesItemPosition()) != null) {
       e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Drink-Potion"));
       return;
     }
@@ -124,7 +124,7 @@ public class SpecialBlockEvents implements Listener {
     user.setStat(StatsStorage.StatisticType.LOCAL_PRAISES, user.getStat(StatsStorage.StatisticType.LOCAL_PRAISES) + 1);
     e.getClickedBlock().getWorld().spawnParticle(Particle.FIREWORKS_SPARK, e.getClickedBlock().getLocation(), 10, 0.5, 0.5, 0.5);
     user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) - 1);
-    e.getPlayer().getInventory().getItem(8).setAmount(e.getPlayer().getInventory().getItem(8).getAmount() - 1);
+    ItemPosition.setItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, -1));
   }
 
   private void onPrayLeverClick(PlayerInteractEvent e) {

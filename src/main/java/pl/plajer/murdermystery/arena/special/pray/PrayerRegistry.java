@@ -126,13 +126,7 @@ public class PrayerRegistry {
         }, 20 * 60);
         break;
       case SINGLE_COMPENSATION:
-        ItemStack stack = player.getInventory().getItem(8);
-        if (stack == null) {
-          stack = new ItemStack(Material.GOLD_INGOT, 5);
-        } else {
-          stack.setAmount(stack.getAmount() + 5);
-        }
-        player.getInventory().setItem(8, stack);
+        ItemPosition.setItem(player, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, 5));
         break;
       case SLOWNESS_CURSE:
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0, false, false));
