@@ -34,6 +34,7 @@
             <url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
         </license>
     </licenses>
+
     <repositories>
         <repository>
             <id>spigot-repo</id>
@@ -174,6 +175,19 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <windowtitle>Murder Mystery API docs for v${project.version}</windowtitle>
+                    <description>Minecraft survival minigame.
+                        Be the murderer, innocent or the detective! Don't be killed during the game to win! API documentation for hooking Murder Mystery with your plugin.
+                    </description>
+                    <destDir>minecraft/murdermystery</destDir>
+                    <isOffline>false</isOffline>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
@@ -206,6 +220,24 @@
                 </executions>
             </plugin>
         </plugins>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ftp</artifactId>
+                <version>3.0.0</version>
+            </extension>
+        </extensions>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>plajer-lair-repo</id>
+            <url>ftp://54.38.159.68</url>
+        </repository>
+        <site>
+            <id>plajer-lair-java-docs</id>
+            <url>ftp://54.38.159.68</url>
+        </site>
+    </distributionManagement>
 
 </project>
