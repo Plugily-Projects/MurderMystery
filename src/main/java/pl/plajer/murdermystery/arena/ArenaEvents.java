@@ -219,7 +219,7 @@ public class ArenaEvents implements Listener {
   @EventHandler
   public void onArrowDamage(EntityDamageByEntityEvent e) {
     try {
-      if (!(e.getDamager() instanceof Arrow) || !(e.getEntity() instanceof Player)) {
+      if (!(e.getDamager() instanceof Arrow && e.getEntity() instanceof Player)) {
         return;
       }
       Player attacker = (Player) ((Arrow) e.getDamager()).getShooter();

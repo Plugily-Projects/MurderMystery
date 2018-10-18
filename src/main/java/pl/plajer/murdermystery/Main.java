@@ -199,12 +199,6 @@ public class Main extends JavaPlugin {
       return;
     }
     debug(LogLevel.INFO, "System disable");
-    for (Arena a : ArenaRegistry.getArenas()) {
-      for (Player p : a.getPlayers()) {
-        ArenaManager.leaveAttempt(p, a);
-        a.cleanUpArena();
-      }
-    }
     for (Player player : getServer().getOnlinePlayers()) {
       User user = UserManager.getUser(player.getUniqueId());
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
@@ -224,6 +218,12 @@ public class Main extends JavaPlugin {
     }
     if (isDatabaseActivated()) {
       getMySQLDatabase().getManager().shutdownConnPool();
+    }
+    for (Arena a : ArenaRegistry.getArenas()) {
+      for (Player p : a.getPlayers()) {
+        ArenaManager.leaveAttempt(p, a);
+        a.cleanUpArena();
+      }
     }
   }
 
