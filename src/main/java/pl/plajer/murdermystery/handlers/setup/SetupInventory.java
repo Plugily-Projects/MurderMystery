@@ -64,7 +64,7 @@ public class SetupInventory {
         .lore(ChatColor.GRAY + "on the place where you are standing.")
         .lore(ChatColor.DARK_GRAY + "(locations where players will be teleported")
         .lore(ChatColor.DARK_GRAY + "when game starts)")
-        .lore(isOptionDoneList("instances." + arena.getID() + ".playerspawnpoints"))
+        .lore(isOptionDoneList("instances." + arena.getID() + ".playerspawnpoints", 3))
         .build());
     addItem(new ItemBuilder(new ItemStack(Material.COAL, ConfigUtils.getConfig(plugin, "arenas").getInt("instances." + arena.getID() + ".minimumplayers")))
         .name(ChatColor.GOLD + "► Set" + ChatColor.DARK_GREEN + " minimum players " + ChatColor.GOLD + "size")
@@ -99,7 +99,7 @@ public class SetupInventory {
         .name(ChatColor.GOLD + "► Add" + ChatColor.YELLOW + " gold " + ChatColor.GOLD + "spawn")
         .lore(ChatColor.GRAY + "Add new gold spawn")
         .lore(ChatColor.GRAY + "on the place you're standing at.")
-        .lore(isOptionDoneList("instances." + arena.getID() + ".goldspawnpoints"))
+        .lore(isOptionDoneList("instances." + arena.getID() + ".goldspawnpoints", 3))
         .build());
     addItem(new ItemBuilder(new ItemStack(Material.FIREWORK))
         .name(ChatColor.GOLD + "► " + ChatColor.GREEN + "Register arena")
@@ -141,12 +141,11 @@ public class SetupInventory {
     return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
   }
 
-  private String isOptionDoneList(String path) {
-    if (ConfigUtils.getConfig(plugin, "arenas").isSet(path)) {
-      if (path.contains(".doors")) {
-        return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(value: " + ConfigUtils.getConfig(plugin, "arenas")
-            .getStringList(path).size() + ")";
-      }
+  private String isOptionDoneList(String path, int minimum) {
+    if (ConfigUtils.getConfig(plugin, "arenas").isSet(path)) {if(ConfigUtils.getConfig(plugin, "arenas").getStringList(path).size() < minimum) {
+      return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No - add more spawns";
+    }
+
       return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(value: " + ConfigUtils.getConfig(plugin, "arenas")
           .getStringList(path).size() + ")";
     }

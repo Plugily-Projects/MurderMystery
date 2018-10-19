@@ -349,7 +349,7 @@ public class MainCommand implements CommandExecutor {
     LocationUtils.saveLoc(plugin, config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
     config.set(path + "playerspawnpoints", new ArrayList<>());
     config.set(path + "goldspawnpoints", new ArrayList<>());
-    config.set(path + "minimumplayers", 1);
+    config.set(path + "minimumplayers", 2);
     config.set(path + "maximumplayers", 10);
     config.set(path + "mapname", ID);
     config.set(path + "signs", new ArrayList<>());
