@@ -59,8 +59,7 @@ public class BowTrailsHandler implements Listener {
       if (!(e.getEntity() instanceof Player && e.getProjectile() instanceof Arrow)) {
         return;
       }
-      if (!ArenaRegistry.isInArena((Player) e.getEntity()) || e.getProjectile() == null || e.getProjectile().isDead() ||
-          ((Arrow) e.getProjectile()).isInBlock() || e.getProjectile().isOnGround()) {
+      if (!ArenaRegistry.isInArena((Player) e.getEntity()) || e.getProjectile() == null || e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
         return;
       }
       //todo priority note to wiki
@@ -69,9 +68,10 @@ public class BowTrailsHandler implements Listener {
           new BukkitRunnable() {
             @Override
             public void run() {
-              if (e.getProjectile() == null || e.getProjectile().isDead() || ((Arrow) e.getProjectile()).isInBlock() || e.getProjectile().isOnGround()) {
+              if (e.getProjectile() == null || e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
                 this.cancel();
               }
+              e.getProjectile().getWorld().spawnParticle(registeredTrails.get(perm), e.getProjectile().getLocation(), 3, 0, 0, 0, 0);
             }
           }.runTaskTimer(plugin, 0, 0);
           break;

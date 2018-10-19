@@ -131,7 +131,6 @@ public class SetupInventory {
         .lore(ChatColor.GOLD + "Add some levers in radius of 3 blocks near the enchant table")
         .lore(ChatColor.GOLD + "to allow users to pray there!")
         .lore(ChatColor.RED + "You can either get gifts or curses from prayer!")
-        .lore(ChatColor.RED + "If you don't gift anything to enchant table you'll get only curses!")
         .build());
   }
 

@@ -175,6 +175,8 @@ public class ArenaEvents implements Listener {
       if (!ArenaUtils.areInSameArena(attacker, victim)) {
         return;
       }
+      //we are killing player via damage() method so event can be cancelled safely, will work for detective damage murderer and others
+      e.setCancelled(true);
 
       //better check this for future even if anyone else cannot use sword
       if (!Role.isRole(Role.MURDERER, attacker)) {
@@ -183,8 +185,8 @@ public class ArenaEvents implements Listener {
 
       Arena arena = ArenaRegistry.getArena(attacker);
       //todo support for skins later
+      //just don't kill user if item isn't murderer sword
       if (attacker.getInventory().getItemInMainHand().getType() != Material.IRON_SWORD) {
-        e.setCancelled(true);
         return;
       }
 
