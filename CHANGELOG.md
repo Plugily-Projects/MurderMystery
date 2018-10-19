@@ -1,10 +1,13 @@
-### 1.0.0 Pre release (11/17.10.2018)
+### 1.0.0 Pre release (11/19.10.2018)
 * Minimum amount of players cannot be now less than 2 (game will automatically set it to 2 if so)
 * Block destroying item frames and paintings
 * Added mystery cauldron and mystery potions (soon more)
 * Added praise the developer block (end portal and levers)
 * Fixed only one gold ingot could be picked up from few ones in a stack
 * Fixed scores weren't added to account
+* Added bow trails
+
+KNOWN ISSUE: getTargetBlock is broken when coords are negative, it adds one more coord, to investigate
 
 ### 0.0.8 Beta (06/07.10.2018)
 * Added throwable sword for murderer

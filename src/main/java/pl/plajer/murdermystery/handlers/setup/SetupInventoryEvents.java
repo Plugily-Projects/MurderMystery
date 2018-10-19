@@ -22,6 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
@@ -148,13 +149,14 @@ public class SetupInventoryEvents implements Listener {
       }
       if(name.contains("Add mystery cauldron")) {
         event.setCancelled(true);
-        if(event.getWhoClicked().getTargetBlock(null, 10) == null ||
-            event.getWhoClicked().getTargetBlock(null, 10).getType() != XMaterial.CAULDRON.parseMaterial()) {
+        Block block = event.getWhoClicked().getTargetBlock(null, 10);
+        if(block == null ||
+            block.getType() != XMaterial.CAULDRON.parseMaterial()) {
           event.getWhoClicked().sendMessage(ChatColor.RED + "Please target cauldron to continue!");
           return;
         }
         FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-        String loc = LocationUtils.locationToString(event.getWhoClicked().getTargetBlock(null, 10).getLocation());
+        String loc = LocationUtils.locationToString(block.getLocation());
 
         List<String> locs = new ArrayList<>(config.getStringList("instances." + arena.getID() + ".mystery-cauldrons"));
         locs.add(loc);
@@ -165,13 +167,14 @@ public class SetupInventoryEvents implements Listener {
       }
       if(name.contains("Add confessional")) {
         event.setCancelled(true);
-        if(event.getWhoClicked().getTargetBlock(null, 10) == null ||
-            event.getWhoClicked().getTargetBlock(null, 10).getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
-          event.getWhoClicked().sendMessage(ChatColor.RED + "Please target end portal to continue!");
+        Block block = event.getWhoClicked().getTargetBlock(null, 10);
+        if(block == null ||
+            block.getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
+          event.getWhoClicked().sendMessage(ChatColor.RED + "Please target enchanting table to continue!");
           return;
         }
         FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-        String loc = LocationUtils.locationToString(event.getWhoClicked().getTargetBlock(null, 10).getLocation());
+        String loc = LocationUtils.locationToString(block.getLocation());
 
         List<String> locs = new ArrayList<>(config.getStringList("instances." + arena.getID() + ".confessionals"));
         locs.add(loc);
