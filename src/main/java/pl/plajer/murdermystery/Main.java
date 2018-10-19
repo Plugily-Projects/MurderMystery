@@ -34,6 +34,7 @@ import pl.plajer.murdermystery.events.LobbyEvent;
 import pl.plajer.murdermystery.events.QuitEvent;
 import pl.plajer.murdermystery.events.spectator.SpectatorEvents;
 import pl.plajer.murdermystery.events.spectator.SpectatorItemEvents;
+import pl.plajer.murdermystery.handlers.BowTrailsHandler;
 import pl.plajer.murdermystery.handlers.BungeeManager;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.CorpseHandler;
@@ -295,6 +296,7 @@ public class Main extends JavaPlugin {
     rewardsHandler = new RewardsHandler(this);
     signManager = new SignManager(this);
     corpseHandler = new CorpseHandler(this);
+    new BowTrailsHandler(this);
     MysteryPotionRegistry.init(this);
     PrayerRegistry.init(this);
     new SpecialBlockEvents(this);

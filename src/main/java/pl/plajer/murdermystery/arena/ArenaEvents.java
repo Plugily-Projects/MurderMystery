@@ -279,7 +279,7 @@ public class ArenaEvents implements Listener {
 
         //if else, murderer killed, so don't kill him :)
         if (Role.isRole(Role.ANY_DETECTIVE, attacker) || Role.isRole(Role.INNOCENT, attacker)) {
-          MessageUtils. sendTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
+          MessageUtils.sendTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
           MessageUtils.sendSubTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Killed-Innocent"));
           attacker.damage(100.0);
           ArenaUtils.addScore(UserManager.getUser(attacker.getUniqueId()), ArenaUtils.ScoreAction.INNOCENT_KILL, 0);
