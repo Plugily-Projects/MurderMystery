@@ -74,11 +74,21 @@ public class ArenaEvents implements Listener {
     if (!(e.getEntity() instanceof Player)) {
       return;
     }
-    if (!ArenaRegistry.isInArena((Player) e.getEntity())) {
+    Arena arena = ArenaRegistry.getArena((Player) e.getEntity());
+    if (arena == null) {
       return;
     }
     if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
+      if(e.getDamage() >= 20.0) {
+        //kill the player for suicidal death, else do not
+        ((Player) e.getEntity()).damage(1000.0);
+      }
       e.setCancelled(true);
+    }
+    //kill the player and move to the spawn point
+    if(e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
+      ((Player) e.getEntity()).damage(1000.0);
+      e.getEntity().teleport(arena.getPlayerSpawnPoints().get(0));
     }
   }
 

@@ -36,6 +36,7 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
+import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
@@ -156,7 +157,7 @@ public class SetupInventoryEvents implements Listener {
           return;
         }
         FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-        String loc = LocationUtils.locationToString(block.getLocation());
+        String loc = LocationUtils.locationToString(Utils.fixLocation(block.getLocation()));
 
         List<String> locs = new ArrayList<>(config.getStringList("instances." + arena.getID() + ".mystery-cauldrons"));
         locs.add(loc);
@@ -174,7 +175,7 @@ public class SetupInventoryEvents implements Listener {
           return;
         }
         FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-        String loc = LocationUtils.locationToString(block.getLocation());
+        String loc = LocationUtils.locationToString(Utils.fixLocation(block.getLocation()));
 
         List<String> locs = new ArrayList<>(config.getStringList("instances." + arena.getID() + ".confessionals"));
         locs.add(loc);

@@ -31,6 +31,7 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajerlair.core.utils.LocationUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
@@ -87,4 +88,19 @@ public class Utils {
     return d;
   }
 
+  /**
+   * Due to spigot bug if coordinate is negative getTargetBlock will display negative coord -1
+   * @param loc location to fix coordinates for
+   * @return fixed location value
+   */
+  public static Location fixLocation(Location loc) {
+    Location fixedLocation = loc.clone();
+    if(loc.getZ() < 0) {
+      fixedLocation.add(0, 0, 1);
+    }
+    if(loc.getX() < 0) {
+      fixedLocation.add(1, 0, 0);
+    }
+    return fixedLocation;
+  }
 }
