@@ -82,7 +82,7 @@ public class SpecialItem {
 
     item.itemStack = stack;
     item.slot = config.getInt(name + ".slot");
-    SpecialItemManager.addEntityItem(name, item);
+    SpecialItemManager.addItem(name, item);
 
   }
 
