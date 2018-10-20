@@ -191,6 +191,9 @@ public class Events implements Listener {
           return;
         }
       }
+      if (event.getPlayer().isOp() || event.getPlayer().hasPermission("murdermystery.admin") || event.getPlayer().hasPermission("murdermystery.command.bypass")) {
+        return;
+      }
       if (event.getMessage().startsWith("/mm") || event.getMessage().contains("leave")
           || event.getMessage().contains("stats") || event.getMessage().startsWith("/mma")) {
         return;

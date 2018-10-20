@@ -21,6 +21,7 @@ permissions:
     default: op
     children:
       murdermystery.updatenotify: true
+      murdermystery.command.override: true
       murdermystery.admin: true
       murdermystery.admin.setup: true
       murdermystery.admin.create: true
