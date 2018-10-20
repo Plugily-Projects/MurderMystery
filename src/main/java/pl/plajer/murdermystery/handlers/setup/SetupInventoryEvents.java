@@ -148,10 +148,10 @@ public class SetupInventoryEvents implements Listener {
         player.closeInventory();
         return;
       }
-      if(name.contains("Add mystery cauldron")) {
+      if (name.contains("Add mystery cauldron")) {
         event.setCancelled(true);
         Block block = event.getWhoClicked().getTargetBlock(null, 10);
-        if(block == null ||
+        if (block == null ||
             block.getType() != XMaterial.CAULDRON.parseMaterial()) {
           event.getWhoClicked().sendMessage(ChatColor.RED + "Please target cauldron to continue!");
           return;
@@ -159,6 +159,7 @@ public class SetupInventoryEvents implements Listener {
         FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
         String loc = LocationUtils.locationToString(Utils.fixLocation(block.getLocation()));
 
+        arena.loadSpecialBlock(new SpecialBlock(Utils.fixLocation(block.getLocation()), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
         List<String> locs = new ArrayList<>(config.getStringList("instances." + arena.getID() + ".mystery-cauldrons"));
         locs.add(loc);
         config.set("instances." + arena.getID() + ".mystery-cauldrons", locs);
@@ -166,10 +167,10 @@ public class SetupInventoryEvents implements Listener {
         player.sendMessage("Murder Mystery: New mystery cauldron for arena/instance " + arena.getID() + " was added");
         return;
       }
-      if(name.contains("Add confessional")) {
+      if (name.contains("Add confessional")) {
         event.setCancelled(true);
         Block block = event.getWhoClicked().getTargetBlock(null, 10);
-        if(block == null ||
+        if (block == null ||
             block.getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
           event.getWhoClicked().sendMessage(ChatColor.RED + "Please target enchanting table to continue!");
           return;
@@ -177,6 +178,7 @@ public class SetupInventoryEvents implements Listener {
         FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
         String loc = LocationUtils.locationToString(Utils.fixLocation(block.getLocation()));
 
+        arena.loadSpecialBlock(new SpecialBlock(Utils.fixLocation(block.getLocation()), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
         List<String> locs = new ArrayList<>(config.getStringList("instances." + arena.getID() + ".confessionals"));
         locs.add(loc);
         config.set("instances." + arena.getID() + ".confessionals", locs);
@@ -234,17 +236,20 @@ public class SetupInventoryEvents implements Listener {
         arena.setGoldSpawnPoints(goldSpawnPoints);
 
         List<SpecialBlock> specialBlocks = new ArrayList<>();
-        if(config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
+        if (config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
           for (String loc : config.getStringList("instances." + arena.getID() + ".mystery-cauldrons")) {
             specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
           }
         }
-        if(config.isSet("instances." + arena.getID() + ".confessionals")) {
+        if (config.isSet("instances." + arena.getID() + ".confessionals")) {
           for (String loc : config.getStringList("instances." + arena.getID() + ".confessionals")) {
             specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
           }
         }
-        for(SpecialBlock block : specialBlocks) {
+        for (SpecialBlock block : specialBlocks) {
+          if (arena.getSpecialBlocks().contains(block)) {
+            continue;
+          }
           arena.loadSpecialBlock(block);
         }
         arena.setMinimumPlayers(config.getInt("instances." + arena.getID() + ".minimumplayers"));
