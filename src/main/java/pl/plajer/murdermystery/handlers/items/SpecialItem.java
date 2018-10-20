@@ -61,11 +61,6 @@ public class SpecialItem {
       config.set(name + ".lore", Arrays.asList(lore));
       config.set(name + ".material-name", material.toString());
       config.set(name + ".slot", slot);
-    } else {
-      if (!config.isSet(name + ".material-name")) {
-        config.set(name + ".material-name", material.toString());
-        Main.debug(Main.LogLevel.INFO, "Found outdated item in lobbyitems.yml! We've converted it to the newest version!");
-      }
     }
     ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "lobbyitems");
     SpecialItem item = new SpecialItem(name);
@@ -83,7 +78,6 @@ public class SpecialItem {
     item.itemStack = stack;
     item.slot = config.getInt(name + ".slot");
     SpecialItemManager.addItem(name, item);
-
   }
 
   public int getSlot() {
