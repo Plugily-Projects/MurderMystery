@@ -36,6 +36,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import me.clip.placeholderapi.PlaceholderAPI;
+
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -507,6 +509,9 @@ public class Arena extends BukkitRunnable {
     formattedLine = StringUtils.replace(formattedLine, "%KILLS%", String.valueOf(user.getStat(StatsStorage.StatisticType.LOCAL_KILLS)));
     formattedLine = StringUtils.replace(formattedLine, "%SCORE%", String.valueOf(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE)));
     formattedLine = ChatManager.colorRawMessage(formattedLine);
+    if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+      PlaceholderAPI.setPlaceholders(user.toPlayer(), formattedLine);
+    }
     return formattedLine;
   }
 
