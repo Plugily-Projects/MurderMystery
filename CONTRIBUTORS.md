@@ -6,7 +6,7 @@
 * Adolfo Garolfo - Spanish translator
 * Andrei - Romanian translator
 * [Borc55](https://www.spigotmc.org/members/borc55.108890/) - Czech translator
-* ColaIan - Chinese (Traditional) translator
+* [ColaIan](https://www.spigotmc.org/members/colaian.608965/) - Chinese (Traditional) translator
 * [Dianox](https://www.spigotmc.org/members/dianox.74931/) - French translator
 * EnderBoyHUN - Hungarian translator
 * HStreamGamer - Vietnamese translator
