@@ -7,8 +7,9 @@
 * Fixed scores weren't added to account
 * Added bow trails
 * Native 1.13 support added
-
-KNOWN ISSUE: getTargetBlock is broken when coords are negative, it adds one more coord, to investigate
+* Added PAPI placeholders in scoreboard
+* Added murdermystery.command.override permission
+* Added setup video link to the game
 
 ### 0.0.8 Beta (06/07.10.2018)
 * Added throwable sword for murderer
