@@ -36,6 +36,7 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
+import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
@@ -145,6 +146,12 @@ public class SetupInventoryEvents implements Listener {
       if (name.contains("Add gold spawn")) {
         event.setCancelled(true);
         player.performCommand("mm " + arena.getID() + " add gold");
+        player.closeInventory();
+        return;
+      }
+      if (name.contains("View setup video")) {
+        event.setCancelled(true);
+        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
         player.closeInventory();
         return;
       }

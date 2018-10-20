@@ -39,6 +39,7 @@ public class SetupInventory {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private Inventory inventory;
+  public static final String VIDEO_LINK = "https://bit.ly/2CuSR5E";
 
   public SetupInventory(Arena arena) {
     this.inventory = Bukkit.createInventory(null, 9 * 4, "MM Arena: " + arena.getID());
