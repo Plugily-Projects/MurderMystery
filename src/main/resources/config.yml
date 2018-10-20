@@ -13,6 +13,7 @@
 #    zh_hk - 中文(傳統)              kr - 한국어
 #    id - Bhasa Indonesia           hu - Magyar nyelv
 #    cs - Český jazyk               ro - Limba română
+#    vn - Tiếng Việt                it - Lingua italiana
 locale: default
 
 # Enable bossbar support?
