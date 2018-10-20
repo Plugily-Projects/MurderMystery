@@ -60,6 +60,7 @@ import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * @author Plajer
@@ -287,7 +288,7 @@ public class Events implements Listener {
     if (!ArenaRegistry.isInArena(event.getPlayer())) {
       return;
     }
-    if (event.getPlayer().getTargetBlock(null, 7).getType() == Material.WORKBENCH) {
+    if (event.getPlayer().getTargetBlock(null, 7).getType() == XMaterial.CRAFTING_TABLE.parseMaterial()) {
       event.setCancelled(true);
     }
   }

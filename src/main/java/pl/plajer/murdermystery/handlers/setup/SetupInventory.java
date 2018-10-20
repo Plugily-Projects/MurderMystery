@@ -102,7 +102,7 @@ public class SetupInventory {
         .lore(ChatColor.GRAY + "on the place you're standing at.")
         .lore(isOptionDoneList("instances." + arena.getID() + ".goldspawnpoints", 3))
         .build());
-    addItem(new ItemBuilder(new ItemStack(Material.FIREWORK))
+    addItem(new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseItem())
         .name(ChatColor.GOLD + "► " + ChatColor.GREEN + "Register arena")
         .lore(ChatColor.GRAY + "Click this when you're done with configuration.")
         .lore(ChatColor.GRAY + "It will validate and register arena.")

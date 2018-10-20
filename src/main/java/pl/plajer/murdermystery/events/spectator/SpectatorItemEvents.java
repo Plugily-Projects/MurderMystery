@@ -42,6 +42,7 @@ import pl.plajer.murdermystery.user.UserManager;
 import pl.plajerlair.core.minigame.spectator.SpectatorSettingsMenu;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * @author Plajer
@@ -92,7 +93,13 @@ public class SpectatorItemEvents implements Listener {
     for (Player player : world.getPlayers()) {
       Arena arena = ArenaRegistry.getArena(player);
       if (arena != null && ArenaRegistry.getArena(p).getPlayers().contains(player) && !UserManager.getUser(player.getUniqueId()).isSpectator()) {
-        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1);
+        ItemStack skull;
+        if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+          skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        } else {
+          //todo check
+          skull = XMaterial.PLAYER_HEAD.parseItem();
+        }
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
         meta.setOwner(player.getName());
         meta.setDisplayName(player.getName());
