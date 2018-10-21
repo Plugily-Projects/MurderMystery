@@ -2,9 +2,8 @@
 # Probably you will only translate displayname and lore so don't mess with it.
 
 Leave:
-  data: 0
   displayname: "&c&lReturn to Lobby &7(Right Click)"
   lore:
-  - &7Right-click to leave to the lobby
-  material: 355
+  - "&7Right-click to leave to the lobby"
+  material-name: BED
   slot: 8
