@@ -118,8 +118,8 @@ public class ArenaManager {
         p.setFlying(true);
         User user = UserManager.getUser(p.getUniqueId());
         user.setSpectator(true);
-        for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-          if(!stat.isPersistent()) {
+        for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+          if (!stat.isPersistent()) {
             user.setStat(stat, 0);
           }
         }
@@ -256,8 +256,8 @@ public class ArenaManager {
       if (!plugin.isBungeeActivated() && plugin.isInventoryManagerEnabled()) {
         InventoryUtils.loadInventory(plugin, p);
       }
-      for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        if(!stat.isPersistent()) {
+      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        if (!stat.isPersistent()) {
           user.setStat(stat, 0);
         }
       }

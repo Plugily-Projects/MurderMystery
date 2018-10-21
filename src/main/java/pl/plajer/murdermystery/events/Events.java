@@ -102,6 +102,9 @@ public class Events implements Listener {
       if (!Role.isRole(Role.MURDERER, e.getPlayer())) {
         return;
       }
+      if(e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
+        return;
+      }
       final Player attacker = e.getPlayer();
       final User attackerUser = UserManager.getUser(attacker.getUniqueId());
       //todo not hardcoded!

@@ -65,6 +65,7 @@ import pl.plajer.murdermystery.api.events.game.MMGameStateChangeEvent;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.ItemPosition;
@@ -106,10 +107,7 @@ public class Arena extends BukkitRunnable {
   //instead of 3 location fields we use map with GameLocation enum
   private Map<GameLocation, Location> gameLocations = new HashMap<>();
   private boolean ready = true;
-
-  //scoreboard cache
-  private ScoreboardCache scoreboardCache;
-  private ArenaState lastKnownBoardState;
+  private Map<String, List<String>> scoreboardContents = new HashMap<>();
 
   public Arena(String ID, Main plugin) {
     this.plugin = plugin;
@@ -118,7 +116,16 @@ public class Arena extends BukkitRunnable {
     if (plugin.isBossbarEnabled()) {
       gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Main-Title"), BarColor.BLUE, BarStyle.SOLID);
     }
-    scoreboardCache = new ScoreboardCache();
+    List<String> lines;
+    for (ArenaState state : ArenaState.values()) {
+      if (state == ArenaState.RESTARTING) {
+        continue;
+      }
+      lines = LanguageManager.getLanguageList("Scoreboard.Content." + state.getFormattedName());
+      scoreboardContents.put(state.getFormattedName(), lines);
+    }
+    lines = LanguageManager.getLanguageList("Scoreboard.Content.Playing-Murderer");
+    scoreboardContents.put(ArenaState.IN_GAME.getFormattedName() + "-Murderer", lines);
   }
 
   public boolean isReady() {
@@ -442,24 +449,24 @@ public class Arena extends BukkitRunnable {
     if (getPlayers().size() == 0 || getArenaState() == ArenaState.RESTARTING) {
       return;
     }
-    if (lastKnownBoardState == arenaState) {
-      for (Player p : getPlayers()) {
-        if (p == null) {
-          continue;
-        }
-        User user = UserManager.getUser(p.getUniqueId());
-        GameScoreboard scoreboard = scoreboardCache.getCachedScoreboard(getArenaState().getFormattedName());
-        GameScoreboard.Row[] rows = scoreboard.getRows();
-        if (Role.isRole(Role.MURDERER, p)) {
-          if (getArenaState() == ArenaState.IN_GAME) {
-            rows = scoreboardCache.getCachedScoreboard(getArenaState().getFormattedName() + "M").getRows();
-          }
-        }
-        for (GameScoreboard.Row row : rows) {
-          row.setMessage(formatScoreboardLine(row.getMessage(), user));
-        }
-        scoreboard.display(p);
+    GameScoreboard scoreboard;
+    for (Player p : getPlayers()) {
+      if (p == null) {
+        continue;
       }
+      User user = UserManager.getUser(p.getUniqueId());
+      scoreboard = new GameScoreboard("PL_MM", "MM_CR", ChatManager.colorMessage("Scoreboard.Title"));
+      List<String> lines = scoreboardContents.get(getArenaState().getFormattedName());
+      if (Role.isRole(Role.MURDERER, p)) {
+        if (getArenaState() == ArenaState.IN_GAME) {
+          lines = scoreboardContents.get(getArenaState().getFormattedName() + "-Murderer");
+        }
+      }
+      for (String line : lines) {
+        scoreboard.addRow(formatScoreboardLine(line, user));
+      }
+      scoreboard.finish();
+      scoreboard.display(p);
     }
   }
 
@@ -831,7 +838,7 @@ public class Arena extends BukkitRunnable {
         break;
       case PRAISE_DEVELOPER:
         holo = HologramsAPI.createHologram(plugin, Utils.getBlockCenter(block.getLocation().clone().add(0, 2.0, 0)));
-        for (String str : ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
+        for(String str : ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
           holo.appendTextLine(str);
         }
         break;
