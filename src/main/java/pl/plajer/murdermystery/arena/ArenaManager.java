@@ -183,11 +183,8 @@ public class ArenaManager {
       if (user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) > user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE)) {
         user.setStat(StatsStorage.StatisticType.HIGHEST_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE));
       }
-      if (arena.getArenaState() == ArenaState.IN_GAME) {
-        //-1 cause we didn't remove player yet
-        if (arena.getPlayersLeft().size() - 1 == 1) {
-          return;
-        }
+      //-1 cause we didn't remove player yet
+      if (arena.getArenaState() == ArenaState.IN_GAME && arena.getPlayersLeft().size() - 1 > 1) {
         if (Role.isRole(Role.MURDERER, p)) {
           List<UUID> players = new ArrayList<>();
           for (Player player : arena.getPlayersLeft()) {
