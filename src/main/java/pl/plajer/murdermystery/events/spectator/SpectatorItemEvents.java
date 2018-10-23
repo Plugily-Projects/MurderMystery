@@ -17,6 +17,7 @@ package pl.plajer.murdermystery.events.spectator;
 
 import java.util.Collections;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
@@ -35,10 +36,13 @@ import org.bukkit.inventory.meta.SkullMeta;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.UserManager;
+import pl.plajerlair.core.minigame.spectator.SpectatorSettingsMenu;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * @author Plajer
@@ -48,10 +52,13 @@ import pl.plajerlair.core.utils.MinigameUtils;
 public class SpectatorItemEvents implements Listener {
 
   private Main plugin;
+  private SpectatorSettingsMenu spectatorSettingsMenu;
 
   public SpectatorItemEvents(Main plugin) {
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    spectatorSettingsMenu = new SpectatorSettingsMenu(plugin, ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Inventory-Name"),
+        ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Speed-Name"));
   }
 
   @EventHandler
@@ -69,6 +76,9 @@ public class SpectatorItemEvents implements Listener {
           if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
             e.setCancelled(true);
             openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
+          } else if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator.Settings-Menu.Item-Name"))) {
+            e.setCancelled(true);
+            spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
           }
         }
       }
@@ -83,17 +93,23 @@ public class SpectatorItemEvents implements Listener {
     for (Player player : world.getPlayers()) {
       Arena arena = ArenaRegistry.getArena(player);
       if (arena != null && ArenaRegistry.getArena(p).getPlayers().contains(player) && !UserManager.getUser(player.getUniqueId()).isSpectator()) {
-        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1);
+        ItemStack skull;
+        if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+          skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        } else {
+          //todo check
+          skull = XMaterial.PLAYER_HEAD.parseItem();
+        }
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
         meta.setOwner(player.getName());
         meta.setDisplayName(player.getName());
         String role = ChatManager.colorMessage("In-Game.Spectator.Target-Player-Role");
-        if (arena.getMurderer() == player.getUniqueId()) {
-          role = role.replace("%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
-        } else if (arena.getDetective() == player.getUniqueId() || (arena.getFakeDetective() != null && arena.getFakeDetective() == player.getUniqueId())) {
-          role = role.replace("%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Detective"));
+        if (Role.isRole(Role.MURDERER, player)) {
+          role = StringUtils.replace(role, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
+        } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
+          role = StringUtils.replace(role, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Detective"));
         } else {
-          role = role.replace("%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Innocent"));
+          role = StringUtils.replace(role, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Innocent"));
         }
         meta.setLore(Collections.singletonList(role));
         skull.setDurability((short) SkullType.PLAYER.ordinal());
@@ -118,7 +134,7 @@ public class SpectatorItemEvents implements Listener {
       }
       if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
         e.setCancelled(true);
-        if ((e.isLeftClick() || e.isRightClick())) {
+        if (e.isLeftClick() || e.isRightClick()) {
           ItemMeta meta = e.getCurrentItem().getItemMeta();
           for (Player player : arena.getPlayers()) {
             if (player.getName().equalsIgnoreCase(meta.getDisplayName()) || ChatColor.stripColor(meta.getDisplayName()).contains(player.getName())) {

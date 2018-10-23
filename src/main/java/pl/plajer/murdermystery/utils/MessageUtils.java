@@ -31,55 +31,19 @@ public class MessageUtils {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
-  public static void sendCenteredMessage(Player player, String message) {
-    if (message == null || message.equals("")) {
-      player.sendMessage("");
-      return;
-    }
-    message = ChatColor.translateAlternateColorCodes('&', message);
-
-    int messagePxSize = 0;
-    boolean previousCode = false;
-    boolean isBold = false;
-
-    for (char c : message.toCharArray()) {
-      if (c == '§') {
-        previousCode = true;
-      } else if (previousCode) {
-        previousCode = false;
-        isBold = c == 'l' || c == 'L';
-      } else {
-        DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
-        messagePxSize += isBold ? dFI.getBoldLength() : dFI.getLength();
-        messagePxSize++;
-      }
-    }
-    int CENTER_PX = 154;
-    int halvedMessageSize = messagePxSize / 2;
-    int toCompensate = CENTER_PX - halvedMessageSize;
-    int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
-    int compensated = 0;
-    StringBuilder sb = new StringBuilder();
-    while (compensated < toCompensate) {
-      sb.append(" ");
-      compensated += spaceLength;
-    }
-    player.sendMessage(sb.toString() + message);
-  }
-
-  public static void sendTitle(Player player, String text, int fadeInTime, int showTime, int fadeOutTime) {
+  public static void sendTitle(Player player, String text) {
     if (plugin.is1_9_R1() || plugin.is1_10_R1()) {
       player.sendTitle(text, null);
     } else {
-      player.sendTitle(text, null, fadeInTime, showTime, fadeOutTime);
+      player.sendTitle(text, null, 5, 40, 5);
     }
   }
 
-  public static void sendSubTitle(Player player, String text, int fadeInTime, int showTime, int fadeOutTime) {
+  public static void sendSubTitle(Player player, String text) {
     if (plugin.is1_9_R1() || plugin.is1_10_R1()) {
       player.sendTitle(null, text);
     } else {
-      player.sendTitle(null, text, fadeInTime, showTime, fadeOutTime);
+      player.sendTitle(null, text, 5, 40, 5);
     }
   }
 
@@ -90,15 +54,6 @@ public class MessageUtils {
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " | |\\  | | (_) | | |_    \\__ \\ | |_| | | |_) | | |_) | | (_) | | |    | |_  |  __/ | (_| |");
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " |_| \\_|  \\___/   \\__|   |___/  \\__,_| | .__/  | .__/   \\___/  |_|     \\__|  \\___|  \\__,_|");
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "                                       |_|     |_|                                        ");
-  }
-
-  public static void weAreSadSadSad() {
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " __        __                                                     _          __         __");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " \\ \\      / /   ___      __ _   _ __    ___     ___    __ _    __| |    _   / /    _   / /");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "  \\ \\ /\\ / /   / _ \\    / _` | | '__|  / _ \\   / __|  / _` |  / _` |   (_) | |    (_) | | ");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "   \\ V  V /   |  __/   | (_| | | |    |  __/   \\__ \\ | (_| | | (_| |    _  | |     _  | | ");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "    \\_/\\_/     \\___|    \\__,_| |_|     \\___|   |___/  \\__,_|  \\__,_|   (_) | |    (_) | | ");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "                                                                            \\_\\        \\_\\");
   }
 
   public static void errorOccured() {
@@ -117,15 +72,6 @@ public class MessageUtils {
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + " | |_| | | |_) | | (_| | | (_| | | |_  |  __/");
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "  \\___/  | .__/   \\__,_|  \\__,_|  \\__|  \\___|");
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "         |_|                                 ");
-  }
-
-  public static void gonnaMigrate() {
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "  __  __   _                          _     _                    ");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + " |  \\/  | (_)   __ _   _ __    __ _  | |_  (_)  _ __     __ _             ");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + " | |\\/| | | |  / _` | | '__|  / _` | | __| | | | '_ \\   / _` |            ");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + " | |  | | | | | (_| | | |    | (_| | | |_  | | | | | | | (_| |  _   _   _ ");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + " |_|  |_| |_|  \\__, | |_|     \\__,_|  \\__| |_| |_| |_|  \\__, | (_) (_) (_)");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "               |___/                                    |___/             ");
   }
 
   public static void info() {

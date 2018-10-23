@@ -26,12 +26,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 
@@ -95,17 +95,17 @@ public class GameCommands extends MainCommand {
         try {
           UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
           sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
-                  .replace("%position%", String.valueOf(i + 1))
-                  .replace("%name%", Bukkit.getOfflinePlayer(current).getName())
-                  .replace("%value%", String.valueOf(stats.get(current)))
-                  .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " ")))); //Games_played > Games played etc
+              .replace("%position%", String.valueOf(i + 1))
+              .replace("%name%", Bukkit.getOfflinePlayer(current).getName())
+              .replace("%value%", String.valueOf(stats.get(current)))
+              .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " ")))); //Games_played > Games played etc
           stats.remove(current);
         } catch (IndexOutOfBoundsException ex) {
           sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
-                  .replace("%position%", String.valueOf(i + 1))
-                  .replace("%name%", "Empty")
-                  .replace("%value%", "0")
-                  .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
+              .replace("%position%", String.valueOf(i + 1))
+              .replace("%name%", "Empty")
+              .replace("%value%", "0")
+              .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
         } catch (NullPointerException ex) {
           UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
           if (plugin.isDatabaseActivated()) {
@@ -113,20 +113,20 @@ public class GameCommands extends MainCommand {
             try {
               if (set.next()) {
                 sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
-                        .replace("%position%", String.valueOf(i + 1))
-                        .replace("%name%", set.getString(1))
-                        .replace("%value%", String.valueOf(stats.get(current)))
-                        .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
+                    .replace("%position%", String.valueOf(i + 1))
+                    .replace("%name%", set.getString(1))
+                    .replace("%value%", String.valueOf(stats.get(current)))
+                    .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
                 return;
               }
             } catch (SQLException ignored) {
             }
           }
           sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
-                  .replace("%position%", String.valueOf(i + 1))
-                  .replace("%name%", "Unknown Player")
-                  .replace("%value%", String.valueOf(stats.get(current)))
-                  .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
+              .replace("%position%", String.valueOf(i + 1))
+              .replace("%name%", "Unknown Player")
+              .replace("%value%", String.valueOf(stats.get(current)))
+              .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
         }
       }
     } catch (IllegalArgumentException e) {
@@ -159,6 +159,10 @@ public class GameCommands extends MainCommand {
     if (!checkSenderPlayer(sender)) {
       return;
     }
+    if (ArenaRegistry.isInArena(((Player) sender))) {
+      sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
+      return;
+    }
     for (Arena arena : ArenaRegistry.getArenas()) {
       if (arenaString.equalsIgnoreCase(arena.getID())) {
         ArenaManager.joinAttempt((Player) sender, arena);
@@ -173,6 +177,10 @@ public class GameCommands extends MainCommand {
       return;
     }
     if (plugin.isBungeeActivated()) {
+      return;
+    }
+    if (ArenaRegistry.isInArena(((Player) sender))) {
+      sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
       return;
     }
     for (Arena arena : ArenaRegistry.getArenas()) {

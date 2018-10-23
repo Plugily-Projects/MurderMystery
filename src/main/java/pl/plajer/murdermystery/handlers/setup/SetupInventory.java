@@ -28,6 +28,7 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.ItemBuilder;
 import pl.plajerlair.core.utils.LocationUtils;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * @author Plajer
@@ -38,9 +39,10 @@ public class SetupInventory {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private Inventory inventory;
+  public static final String VIDEO_LINK = "https://bit.ly/2CuSR5E";
 
   public SetupInventory(Arena arena) {
-    this.inventory = Bukkit.createInventory(null, 9 * 2, "MM Arena: " + arena.getID());
+    this.inventory = Bukkit.createInventory(null, 9 * 4, "MM Arena: " + arena.getID());
 
     addItem(new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
         .name(ChatColor.GOLD + "► Set" + ChatColor.RED + " ending " + ChatColor.GOLD + "location")
@@ -63,7 +65,7 @@ public class SetupInventory {
         .lore(ChatColor.GRAY + "on the place where you are standing.")
         .lore(ChatColor.DARK_GRAY + "(locations where players will be teleported")
         .lore(ChatColor.DARK_GRAY + "when game starts)")
-        .lore(isOptionDoneList("instances." + arena.getID() + ".playerspawnpoints"))
+        .lore(isOptionDoneList("instances." + arena.getID() + ".playerspawnpoints", 3))
         .build());
     addItem(new ItemBuilder(new ItemStack(Material.COAL, ConfigUtils.getConfig(plugin, "arenas").getInt("instances." + arena.getID() + ".minimumplayers")))
         .name(ChatColor.GOLD + "► Set" + ChatColor.DARK_GREEN + " minimum players " + ChatColor.GOLD + "size")
@@ -98,12 +100,38 @@ public class SetupInventory {
         .name(ChatColor.GOLD + "► Add" + ChatColor.YELLOW + " gold " + ChatColor.GOLD + "spawn")
         .lore(ChatColor.GRAY + "Add new gold spawn")
         .lore(ChatColor.GRAY + "on the place you're standing at.")
-        .lore(isOptionDoneList("instances." + arena.getID() + ".goldspawnpoints"))
+        .lore(isOptionDoneList("instances." + arena.getID() + ".goldspawnpoints", 3))
         .build());
-    inventory.addItem(new ItemBuilder(new ItemStack(Material.FIREWORK))
+    addItem(new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseItem())
         .name(ChatColor.GOLD + "► " + ChatColor.GREEN + "Register arena")
         .lore(ChatColor.GRAY + "Click this when you're done with configuration.")
         .lore(ChatColor.GRAY + "It will validate and register arena.")
+        .build());
+    inventory.setItem(17, new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
+        .name(ChatColor.GOLD + "► View setup video")
+        .lore(ChatColor.GRAY + "Having problems with setup or wanna")
+        .lore(ChatColor.GRAY + "know some useful tips? Click to get video link!")
+        .build());
+
+    //special blocks
+    inventory.setItem(27, new ItemBuilder(XMaterial.PAPER.parseItem())
+        .name(ChatColor.GOLD + "Special blocks section")
+        .lore(ChatColor.GRAY + "Items on the right will allow")
+        .lore(ChatColor.GRAY + "you to add special game blocks!")
+        .build());
+    inventory.setItem(28, new ItemBuilder(XMaterial.ENDER_CHEST.parseItem())
+        .name(ChatColor.GOLD + "► Add mystery cauldron")
+        .lore(ChatColor.GRAY + "Target a cauldron and add it to the game")
+        .lore(ChatColor.GRAY + "it will cost 1 gold per potion!")
+        .lore(ChatColor.GRAY + "Configure cauldron potions in specialblocks.yml file!")
+        .build());
+    inventory.setItem(29, new ItemBuilder(XMaterial.ENCHANTING_TABLE.parseItem())
+        .name(ChatColor.GOLD + "► Add confessional")
+        .lore(ChatColor.GRAY + "Target enchanting table and add praise to the developer")
+        .lore(ChatColor.GRAY + "confessional, gift for the developer costs 1 gold!")
+        .lore(ChatColor.GOLD + "Add some levers in radius of 3 blocks near the enchant table")
+        .lore(ChatColor.GOLD + "to allow users to pray there!")
+        .lore(ChatColor.RED + "You can either get gifts or curses from prayer!")
         .build());
   }
 
@@ -114,12 +142,11 @@ public class SetupInventory {
     return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
   }
 
-  private String isOptionDoneList(String path) {
-    if (ConfigUtils.getConfig(plugin, "arenas").isSet(path)) {
-      if (path.contains(".doors")) {
-        return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(value: " + ConfigUtils.getConfig(plugin, "arenas")
-            .getStringList(path).size() + ")";
-      }
+  private String isOptionDoneList(String path, int minimum) {
+    if (ConfigUtils.getConfig(plugin, "arenas").isSet(path)) {if(ConfigUtils.getConfig(plugin, "arenas").getStringList(path).size() < minimum) {
+      return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No - add more spawns";
+    }
+
       return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(value: " + ConfigUtils.getConfig(plugin, "arenas")
           .getStringList(path).size() + ")";
     }

@@ -26,19 +26,19 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.setup.SetupInventory;
-import pl.plajer.murdermystery.utils.StringMatcher;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
+import pl.plajerlair.core.utils.StringMatcher;
 
 /**
  * @author Plajer
@@ -335,8 +335,7 @@ public class MainCommand implements CommandExecutor {
       player.sendMessage("");
       player.sendMessage(ChatColor.GREEN + "Edit this arena via " + ChatColor.GOLD + "/mm " + args[1] + " edit" + ChatColor.GREEN + "!");
       player.sendMessage(ChatColor.GOLD + "Don't know where to start? Check out tutorial video:");
-      //todo link with tutorial
-      player.sendMessage(ChatColor.GOLD + "link here");
+      player.sendMessage(ChatColor.GOLD + SetupInventory.VIDEO_LINK);
       player.sendMessage(ChatColor.BOLD + "------------------------------------------- ");
     }
   }
@@ -349,12 +348,14 @@ public class MainCommand implements CommandExecutor {
     LocationUtils.saveLoc(plugin, config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
     config.set(path + "playerspawnpoints", new ArrayList<>());
     config.set(path + "goldspawnpoints", new ArrayList<>());
-    config.set(path + "minimumplayers", 1);
+    config.set(path + "minimumplayers", 2);
     config.set(path + "maximumplayers", 10);
     config.set(path + "mapname", ID);
     config.set(path + "signs", new ArrayList<>());
     config.set(path + "isdone", false);
     config.set(path + "world", worldName);
+    config.set(path + "mystery-cauldrons",  new ArrayList<>());
+    config.set(path + "confessionals", new ArrayList<>());
     ConfigUtils.saveConfig(plugin, config, "arenas");
 
     Arena arena = new Arena(ID, plugin);
@@ -369,6 +370,16 @@ public class MainCommand implements CommandExecutor {
       goldSpawnPoints.add(LocationUtils.getLocation(loc));
     }
     arena.setGoldSpawnPoints(goldSpawnPoints);
+
+    List<SpecialBlock> specialBlocks = new ArrayList<>();
+    if(config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
+      for (String loc : config.getStringList("instances." + arena.getID() + ".mystery-cauldrons")) {
+        specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
+      }
+    }
+    for(SpecialBlock block : specialBlocks) {
+      arena.loadSpecialBlock(block);
+    }
     arena.setMinimumPlayers(ConfigUtils.getConfig(plugin, "arenas").getInt(path + "minimumplayers"));
     arena.setMaximumPlayers(ConfigUtils.getConfig(plugin, "arenas").getInt(path + "maximumplayers"));
     arena.setMapName(ConfigUtils.getConfig(plugin, "arenas").getString(path + "mapname"));

@@ -5,7 +5,7 @@
 #   You don't want to break anything, do you?
 #
 
-# Select locale of MM, default it's English.
+# Select locale of MurderMystery, default it's English.
 # Available locales:
 #    default - English language. Uses 'language.yml'.
 #    de - Deutsche sprache          pl - Język polski
@@ -13,6 +13,7 @@
 #    zh_hk - 中文(傳統)              kr - 한국어
 #    id - Bhasa Indonesia           hu - Magyar nyelv
 #    cs - Český jazyk               ro - Limba română
+#    vn - Tiếng Việt                it - Lingua italiana
 locale: default
 
 # Enable bossbar support?
@@ -27,7 +28,7 @@ Classic-Gameplay-Time: 270
 # Should we hook into bungee cord? (If you wanna use arena per server option)
 # You STILL need to use external addon for HUB server game signs
 # Murder Mystery doesn't offer that addon.
-# Check here for more info: todo
+# Check here for more info: https://wiki.plajer.xyz/minecraft/murdermystery/addons.php#bungee-signs-not-official
 BungeeActivated: false
 
 # Enable this option when you're using MySQL, otherwise it won't work.
@@ -40,7 +41,13 @@ DatabaseActivated: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
 InventoryManager: false
 
-# Basic permissions for game, permissions explained here: todo
+# Should we override corpses spawn from CorpsesReborn plugin?
+# When player will die outside game corpse won't be spawned!
+# Disable this if you don't want this!
+# WARNING: If disabled, two corpses will be spawned when player in-game dies
+Override-Corpses-Spawn: true
+
+# Basic permissions for game, permissions explained here: https://wiki.plajer.xyz/minecraft/murdermystery/cmds_and_perms.php#basic-permissions
 Basic-Permissions:
   Full-Games-Permission: "murdermystery.fullgames"
   # <arena> represents arena name (NOT MAP NAME!), for example: 'murdermystery.join.MM02'

@@ -22,8 +22,8 @@ import me.robin.leaderheads.objects.BoardType;
 
 import org.bukkit.entity.Player;
 
+import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
 
 /**
  * @author Plajer
@@ -34,8 +34,8 @@ public class MurderMysteryHighestScore extends OnlineDataCollector {
 
   public MurderMysteryHighestScore() {
     super("murdermystery-score", "MurderMystery", BoardType.DEFAULT, ChatManager.colorMessage("Leaderheads.Top-Command-Inv-Title"),
-            ChatManager.colorMessage("Leaderheads.Top-Command-Name").replace("%stat%", "kills"), Arrays.asList(null, null, ChatManager.colorMessage("Leaderheads.Leaderboard-Value.Highest-Score"),
-                    null));
+        ChatManager.colorMessage("Leaderheads.Top-Command-Name").replace("%stat%", "kills"), Arrays.asList(null, null, ChatManager.colorMessage("Leaderheads.Leaderboard-Value.Highest-Score"),
+            null));
   }
 
   @Override

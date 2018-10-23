@@ -49,10 +49,7 @@ import pl.plajer.murdermystery.user.UserManager;
  */
 public class SpectatorEvents implements Listener {
 
-  private Main plugin;
-
   public SpectatorEvents(Main plugin) {
-    this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
@@ -196,7 +193,7 @@ public class SpectatorEvents implements Listener {
       return;
     }
     if (arena.getArenaState() != ArenaState.IN_GAME
-            || UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) {
+        || UserManager.getUser(event.getPlayer().getUniqueId()).isSpectator()) {
       event.setCancelled(true);
     }
   }

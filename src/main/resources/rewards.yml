@@ -25,14 +25,14 @@
 rewards:
   # Commands performed when game is finished
   endgame:
-    - say %MAPNAME% has ended!
-    - say Ooh and there were playing %PLAYERAMOUNT% players
+  - say %MAPNAME% has ended!
+  - say Ooh and there were playing %PLAYERAMOUNT% players
   # Commands executed when detective is killed
   detectivekill:
-    - eco give %ATTACKER% 2
-    - chance(10):eco give %VICTIM% 8
+  - eco give %ATTACKER% 2
+  - chance(10):eco give %VICTIM% 8
   # Commands executed when murderer is killed
   murdererkill:
-    - eco give %ATTACKER% 2
-    - chance(10):eco give %VICTIM% 8
+  - eco give %ATTACKER% 2
+  - chance(10):eco give %VICTIM% 8
 

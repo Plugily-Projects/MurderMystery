@@ -22,10 +22,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
-import pl.plajer.murdermystery.database.FileStats;
-import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
@@ -65,7 +64,10 @@ public class QuitEvent implements Listener {
       final Player player = event.getPlayer();
       if (plugin.isDatabaseActivated()) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-          for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+          for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+            if (!stat.isPersistent()) {
+              return;
+            }
             int i;
             try {
               i = plugin.getMySQLManager().getStat(player, stat);
@@ -87,7 +89,7 @@ public class QuitEvent implements Listener {
           }
         });
       } else {
-        for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
           plugin.getFileStats().saveStat(player, stat);
         }
       }

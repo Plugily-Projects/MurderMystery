@@ -22,6 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
@@ -34,9 +35,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.arena.special.SpecialBlock;
+import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * @author Plajer
@@ -143,7 +148,50 @@ public class SetupInventoryEvents implements Listener {
         player.performCommand("mm " + arena.getID() + " add gold");
         player.closeInventory();
         return;
+      }
+      if (name.contains("View setup video")) {
+        event.setCancelled(true);
+        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
+        player.closeInventory();
+        return;
+      }
+      if (name.contains("Add mystery cauldron")) {
+        event.setCancelled(true);
+        Block block = event.getWhoClicked().getTargetBlock(null, 10);
+        if (block == null ||
+            block.getType() != XMaterial.CAULDRON.parseMaterial()) {
+          event.getWhoClicked().sendMessage(ChatColor.RED + "Please target cauldron to continue!");
+          return;
+        }
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+        String loc = LocationUtils.locationToString(Utils.fixLocation(block.getLocation()));
 
+        arena.loadSpecialBlock(new SpecialBlock(Utils.fixLocation(block.getLocation()), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
+        List<String> locs = new ArrayList<>(config.getStringList("instances." + arena.getID() + ".mystery-cauldrons"));
+        locs.add(loc);
+        config.set("instances." + arena.getID() + ".mystery-cauldrons", locs);
+        ConfigUtils.saveConfig(plugin, config, "arenas");
+        player.sendMessage("Murder Mystery: New mystery cauldron for arena/instance " + arena.getID() + " was added");
+        return;
+      }
+      if (name.contains("Add confessional")) {
+        event.setCancelled(true);
+        Block block = event.getWhoClicked().getTargetBlock(null, 10);
+        if (block == null ||
+            block.getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
+          event.getWhoClicked().sendMessage(ChatColor.RED + "Please target enchanting table to continue!");
+          return;
+        }
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+        String loc = LocationUtils.locationToString(Utils.fixLocation(block.getLocation()));
+
+        arena.loadSpecialBlock(new SpecialBlock(Utils.fixLocation(block.getLocation()), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
+        List<String> locs = new ArrayList<>(config.getStringList("instances." + arena.getID() + ".confessionals"));
+        locs.add(loc);
+        config.set("instances." + arena.getID() + ".confessionals", locs);
+        ConfigUtils.saveConfig(plugin, config, "arenas");
+        player.sendMessage("Murder Mystery: New confessional for arena/instance " + arena.getID() + " was added");
+        return;
       }
       if (name.contains("Register arena")) {
         event.setCancelled(true);
@@ -194,6 +242,23 @@ public class SetupInventoryEvents implements Listener {
         }
         arena.setGoldSpawnPoints(goldSpawnPoints);
 
+        List<SpecialBlock> specialBlocks = new ArrayList<>();
+        if (config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
+          for (String loc : config.getStringList("instances." + arena.getID() + ".mystery-cauldrons")) {
+            specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
+          }
+        }
+        if (config.isSet("instances." + arena.getID() + ".confessionals")) {
+          for (String loc : config.getStringList("instances." + arena.getID() + ".confessionals")) {
+            specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
+          }
+        }
+        for (SpecialBlock block : specialBlocks) {
+          if (arena.getSpecialBlocks().contains(block)) {
+            continue;
+          }
+          arena.loadSpecialBlock(block);
+        }
         arena.setMinimumPlayers(config.getInt("instances." + arena.getID() + ".minimumplayers"));
         arena.setMaximumPlayers(config.getInt("instances." + arena.getID() + ".maximumplayers"));
         arena.setMapName(config.getString("instances." + arena.getID() + ".mapname"));

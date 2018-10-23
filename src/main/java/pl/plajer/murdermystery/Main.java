@@ -15,10 +15,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaEvents;
 import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.arena.special.SpecialBlockEvents;
+import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
+import pl.plajer.murdermystery.arena.special.pray.PrayerRegistry;
 import pl.plajer.murdermystery.commands.MainCommand;
 import pl.plajer.murdermystery.database.FileStats;
 import pl.plajer.murdermystery.database.MySQLConnectionUtils;
@@ -30,8 +34,10 @@ import pl.plajer.murdermystery.events.LobbyEvent;
 import pl.plajer.murdermystery.events.QuitEvent;
 import pl.plajer.murdermystery.events.spectator.SpectatorEvents;
 import pl.plajer.murdermystery.events.spectator.SpectatorItemEvents;
+import pl.plajer.murdermystery.handlers.BowTrailsHandler;
 import pl.plajer.murdermystery.handlers.BungeeManager;
 import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajer.murdermystery.handlers.CorpseHandler;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.handlers.PlaceholderManager;
 import pl.plajer.murdermystery.handlers.RewardsHandler;
@@ -45,7 +51,6 @@ import pl.plajer.murdermystery.leaderheads.MurderMysteryHighestScore;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryKills;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryLoses;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryWins;
-import pl.plajer.murdermystery.murdermysteryapi.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
@@ -72,12 +77,13 @@ public class Main extends JavaPlugin {
   private RewardsHandler rewardsHandler;
   private boolean inventoryManagerEnabled = false;
   private boolean chatFormat = true;
-  private List<String> fileNames = Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql");
+  private List<String> fileNames = Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks");
   private MySQLDatabase database;
   private MySQLManager mySQLManager;
   private FileStats fileStats;
   private SignManager signManager;
   private MainCommand mainCommand;
+  private CorpseHandler corpseHandler;
   private boolean databaseActivated = false;
 
   public static void debug(LogLevel level, String thing) {
@@ -126,8 +132,8 @@ public class Main extends JavaPlugin {
       LanguageManager.init(this);
       bossbarEnabled = getConfig().getBoolean("Bossbar-Enabled", true);
       saveDefaultConfig();
-      if (!(version.equalsIgnoreCase("v1_9_R1") || version.equalsIgnoreCase("v1_10_R1") || version.equalsIgnoreCase("v1_11_R1")
-          || version.equalsIgnoreCase("v1_12_R1"))) {
+      if (!(version.equalsIgnoreCase("v1_11_R1") || version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1") ||
+          version.equalsIgnoreCase("v1_13_R2"))) {
         MessageUtils.thisVersionIsNotSupported();
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by Murder Mystery!");
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider changing your server version?");
@@ -194,15 +200,12 @@ public class Main extends JavaPlugin {
       return;
     }
     debug(LogLevel.INFO, "System disable");
-    for (Arena a : ArenaRegistry.getArenas()) {
-      for (Player p : a.getPlayers()) {
-        ArenaManager.leaveAttempt(p, a);
-        a.cleanUpArena();
-      }
-    }
     for (Player player : getServer().getOnlinePlayers()) {
       User user = UserManager.getUser(player.getUniqueId());
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        if (!stat.isPersistent()) {
+          continue;
+        }
         if (isDatabaseActivated()) {
           getMySQLManager().setStat(player, stat, user.getStat(stat));
         } else {
@@ -216,6 +219,12 @@ public class Main extends JavaPlugin {
     }
     if (isDatabaseActivated()) {
       getMySQLDatabase().getManager().shutdownConnPool();
+    }
+    for (Arena a : ArenaRegistry.getArenas()) {
+      for (Player p : a.getPlayers()) {
+        ArenaManager.leaveAttempt(p, a);
+        a.cleanUpArena();
+      }
     }
   }
 
@@ -286,23 +295,11 @@ public class Main extends JavaPlugin {
     new SpectatorItemEvents(this);
     rewardsHandler = new RewardsHandler(this);
     signManager = new SignManager(this);
-
-    new BukkitRunnable() {
-
-      @Override
-      public void run() {
-        // Find the holograms created by your plugin
-        for (Hologram hologram : HologramsAPI.getHolograms(Main.this)) {
-          long tenMinutesMillis = 60 * 1000;
-          long elapsedMillis = System.currentTimeMillis() - hologram.getCreationTimestamp();
-
-          if (elapsedMillis > tenMinutesMillis) {
-            hologram.delete();
-          }
-        }
-      }
-
-    }.runTaskTimer(this, 30 * 20L, 30 * 20L);
+    corpseHandler = new CorpseHandler(this);
+    new BowTrailsHandler(this);
+    MysteryPotionRegistry.init(this);
+    PrayerRegistry.init(this);
+    new SpecialBlockEvents(this);
   }
 
   private void setupFiles() {
@@ -368,6 +365,10 @@ public class Main extends JavaPlugin {
 
   public MainCommand getMainCommand() {
     return mainCommand;
+  }
+
+  public CorpseHandler getCorpseHandler() {
+    return corpseHandler;
   }
 
   public enum LogLevel {

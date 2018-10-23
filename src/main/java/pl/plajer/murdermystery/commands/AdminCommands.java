@@ -51,19 +51,19 @@ public class AdminCommands extends MainCommand {
     ChatColor gray = ChatColor.GRAY;
     ChatColor gold = ChatColor.GOLD;
     command.add(new CommandData("/mm create " + gold + "<arena>", "/mm create <arena>",
-            gray + "Create new arena\n" + gold + "Permission: " + gray + "murdermystery.admin.create"));
+        gray + "Create new arena\n" + gold + "Permission: " + gray + "murdermystery.admin.create"));
     command.add(new CommandData("/mm " + gold + "<arena>" + ChatColor.WHITE + " edit", "/mm <arena> edit",
-            gray + "Edit existing arena\n" + gold + "Permission: " + gray + "murdermystery.admin.edit"));
+        gray + "Edit existing arena\n" + gold + "Permission: " + gray + "murdermystery.admin.edit"));
     command.add(new CommandData("/mma list", "/mma list",
-            gray + "Shows list with all loaded arenas\n" + gold + "Permission: " + gray + "murdermystery.admin.list"));
+        gray + "Shows list with all loaded arenas\n" + gold + "Permission: " + gray + "murdermystery.admin.list"));
     command.add(new CommandData("/mma stop", "/mma stop",
-            gray + "Stops the arena you're in\n" + gray + "" + ChatColor.BOLD + "You must be in target arena!\n" + gold + "Permission: " + gray + "murdermystery.admin.stop"));
+        gray + "Stops the arena you're in\n" + gray + "" + ChatColor.BOLD + "You must be in target arena!\n" + gold + "Permission: " + gray + "murdermystery.admin.stop"));
     command.add(new CommandData("/mma forcestart", "/mma forcestart",
-            gray + "Force starts arena you're in\n" + gold + "Permission: " + gray + "murdermystery.admin.forcestart"));
+        gray + "Force starts arena you're in\n" + gold + "Permission: " + gray + "murdermystery.admin.forcestart"));
     command.add(new CommandData("/mma reload", "/mma reload", gray + "Reload all game arenas\n" + gray + "" + ChatColor.BOLD
-            + "They will be stopped!\n" + gold + "Permission: " + gray + "murdermystery.admin.reload"));
+        + "They will be stopped!\n" + gold + "Permission: " + gray + "murdermystery.admin.reload"));
     command.add(new CommandData("/mma delete " + gold + "<arena>", "/mma delete <arena>",
-            gray + "Deletes specified arena\n" + gold + "Permission: " + gray + "murdermystery.admin.delete"));
+        gray + "Deletes specified arena\n" + gold + "Permission: " + gray + "murdermystery.admin.delete"));
   }
 
   private Main plugin;
@@ -107,8 +107,8 @@ public class AdminCommands extends MainCommand {
     int i = 0;
     for (Arena arena : ArenaRegistry.getArenas()) {
       sender.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.List-Command.Format").replace("%arena%", arena.getID())
-              .replace("%status%", arena.getArenaState().getFormattedName()).replace("%players%", String.valueOf(arena.getPlayers().size()))
-              .replace("%maxplayers%", String.valueOf(arena.getMaximumPlayers())));
+          .replace("%status%", arena.getArenaState().getFormattedName()).replace("%players%", String.valueOf(arena.getPlayers().size()))
+          .replace("%maxplayers%", String.valueOf(arena.getMaximumPlayers())));
       i++;
     }
     if (i == 0) {

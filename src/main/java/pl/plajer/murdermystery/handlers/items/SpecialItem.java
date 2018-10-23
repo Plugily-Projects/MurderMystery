@@ -15,11 +15,10 @@
 
 package pl.plajer.murdermystery.handlers.items;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -28,8 +27,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.Main;
-import pl.plajer.murdermystery.utils.MessageUtils;
+import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.core.utils.XMaterial;
 
 /**
  * @author Plajer
@@ -38,25 +38,20 @@ import pl.plajerlair.core.utils.ConfigUtils;
  */
 public class SpecialItem {
 
-  private Material material;
-  private Byte data = null;
-  private String[] lore;
-  private String displayName;
+  private ItemStack itemStack;
   private int slot;
   private String name;
 
   public SpecialItem(String name) {
     this.name = name;
-
   }
 
   public static void loadAll() {
-    new SpecialItem("Leave").load(ChatColor.RED + "Leave", new String[]{
-            ChatColor.GRAY + "Click to teleport to hub"
-    }, Material.BED, 8);
+    new SpecialItem("Leave").load(ChatColor.RED + "Leave", new String[] {
+        ChatColor.GRAY + "Click to teleport to hub"
+    }, XMaterial.WHITE_BED.parseMaterial(), 8);
   }
 
-  //todo data id!
   public void load(String displayName, String[] lore, Material material, int slot) {
     FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "lobbyitems");
 
@@ -64,77 +59,32 @@ public class SpecialItem {
       config.set(name + ".data", 0);
       config.set(name + ".displayname", displayName);
       config.set(name + ".lore", Arrays.asList(lore));
-      config.set(name + ".material", material.getId());
+      config.set(name + ".material-name", material.toString());
       config.set(name + ".slot", slot);
     }
-    try {
-      config.save(ConfigUtils.getFile(JavaPlugin.getPlugin(Main.class), "lobbyitems"));
-    } catch (IOException e) {
-      e.printStackTrace();
-      MessageUtils.errorOccured();
-      Bukkit.getConsoleSender().sendMessage("Cannot save file lobbyitems.yml!");
-      Bukkit.getConsoleSender().sendMessage("Create blank file lobbyitems.yml or restart the server!");
+    ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "lobbyitems");
+    SpecialItem item = new SpecialItem(name);
+    ItemStack stack = XMaterial.fromString(config.getString(name + ".material-name").toUpperCase()).parseItem();
+    ItemMeta meta = stack.getItemMeta();
+    meta.setDisplayName(ChatManager.colorRawMessage(config.getString(name + ".displayname")));
+
+    List<String> colorizedLore = new ArrayList<>();
+    for (String str : config.getStringList(name + ".lore")) {
+      colorizedLore.add(ChatManager.colorRawMessage(str));
     }
-    SpecialItem particleItem = new SpecialItem(name);
-    particleItem.setData(config.getInt(name + ".data"));
-    particleItem.setMaterial(Material.getMaterial(config.getInt(name + ".material")));
-    particleItem.setLore(config.getStringList(name + ".lore"));
-    particleItem.setDisplayName(config.getString(name + ".displayname"));
-    particleItem.setSlot(config.getInt(name + ".slot"));
-    SpecialItemManager.addEntityItem(name, particleItem);
+    meta.setLore(colorizedLore);
+    stack.setItemMeta(meta);
 
-  }
-
-  public Material getMaterial() {
-    return material;
-  }
-
-  public void setMaterial(Material material) {
-    this.material = material;
-  }
-
-  public byte getData() {
-    return data;
-  }
-
-  public void setData(Integer data) {
-    this.data = data.byteValue();
-  }
-
-  public void setLore(List<String> lore) {
-    this.lore = lore.toArray(new String[0]);
-  }
-
-  public String getDisplayName() {
-    return ChatColor.translateAlternateColorCodes('&', displayName);
-  }
-
-  public void setDisplayName(String displayName) {
-    this.displayName = displayName;
+    item.itemStack = stack;
+    item.slot = config.getInt(name + ".slot");
+    SpecialItemManager.addItem(name, item);
   }
 
   public int getSlot() {
     return slot;
   }
 
-  public void setSlot(int slot) {
-    this.slot = slot;
-  }
-
   public ItemStack getItemStack() {
-    ItemStack itemStack;
-    if (data != null) {
-      itemStack = new ItemStack(getMaterial(), 1, getData());
-    } else {
-      itemStack = new ItemStack(getMaterial());
-
-    }
-    ItemMeta im = itemStack.getItemMeta();
-    im.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.getDisplayName()));
-    im.setLore(Arrays.asList(lore));
-    itemStack.setItemMeta(im);
     return itemStack;
   }
-
-
 }
