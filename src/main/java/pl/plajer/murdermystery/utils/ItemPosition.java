@@ -49,6 +49,9 @@ public enum ItemPosition {
    * @param itemStack itemstack to set at itemPosition
    */
   public static void setItem(Player player, ItemPosition itemPosition, ItemStack itemStack) {
+    if(player == null) {
+      return;
+    }
     Inventory inv = player.getInventory();
     if(Role.isRole(Role.MURDERER, player)) {
       if(inv.getItem(itemPosition.getMurdererItemPosition()) != null && inv.getItem(itemPosition.getMurdererItemPosition()).isSimilar(itemStack) && itemPosition.isIncrementable()) {

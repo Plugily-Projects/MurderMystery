@@ -234,6 +234,9 @@ public class ArenaEvents implements Listener {
       if (!(e.getDamager() instanceof Arrow && e.getEntity() instanceof Player)) {
         return;
       }
+      if(!(((Arrow) e.getDamager()).getShooter() instanceof Player)) {
+        return;
+      }
       Player attacker = (Player) ((Arrow) e.getDamager()).getShooter();
       Player victim = (Player) e.getEntity();
       if (!ArenaUtils.areInSameArena(attacker, victim)) {

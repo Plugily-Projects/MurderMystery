@@ -1,3 +1,7 @@
+### 1.0.0 Pre release 2 (28.10.2018)
+* Fixed wrong cast error when you were damaged by skeleton's arrow (https://plajer.xyz/errorservice/viewer.php?id=336)
+* Fixed NPE when murderer was null - I must use player objects instead of these terrible UUID's
+
 ### 1.0.0 Pre release (11/20.10.2018)
 * Minimum amount of players cannot be now less than 2 (game will automatically set it to 2 if so)
 * Block destroying item frames and paintings
