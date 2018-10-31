@@ -25,7 +25,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -57,218 +56,183 @@ public class SetupInventoryEvents implements Listener {
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
+  //todo test
   @EventHandler
-  public void onClick(InventoryClickEvent event) {
+  public void onClick(InventoryClickEvent e) {
     try {
-      if (event.getWhoClicked().getType() != EntityType.PLAYER) {
+      if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getCurrentItem() == null || e.getInventory().getHolder() == null ||
+          !e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getWhoClicked().hasPermission("murdermystery.admin.create") ||
+          !e.getInventory().getName().contains("MM Arena:")) {
         return;
       }
-      Player player = (Player) event.getWhoClicked();
-      if (!player.hasPermission("murdermystery.admin.create") || !event.getInventory().getName().contains("MM Arena:")
-          || event.getInventory().getHolder() != null || event.getCurrentItem() == null
-          || !event.getCurrentItem().hasItemMeta() || !event.getCurrentItem().getItemMeta().hasDisplayName()) {
-        return;
-      }
+      e.setCancelled(true);
+      Player player = (Player) e.getWhoClicked();
+      player.closeInventory();
+      Arena arena = ArenaRegistry.getArena(e.getInventory().getName().replace("MM Arena: ", ""));
+      String itemName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
 
-      String name = event.getCurrentItem().getItemMeta().getDisplayName();
-      name = ChatColor.stripColor(name);
-
-      Arena arena = ArenaRegistry.getArena(event.getInventory().getName().replace("MM Arena: ", ""));
-      if (event.getCurrentItem().getType() == Material.NAME_TAG && event.getCursor().getType() == Material.NAME_TAG) {
-        event.setCancelled(true);
-        if (!event.getCursor().hasItemMeta()) {
-          player.sendMessage(ChatColor.RED + "This item doesn't has a name!");
+      FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+      Block block = e.getWhoClicked().getTargetBlock(null, 10);
+      String targetBlock = LocationUtils.locationToString(Utils.fixLocation(block.getLocation()));
+      switch (itemName) {
+        case "► Set ending location":
+          player.performCommand("mm " + arena.getID() + " set ENDLOC");
           return;
-        }
-        if (!event.getCursor().getItemMeta().hasDisplayName()) {
-          player.sendMessage(ChatColor.RED + "This item doesn't has a name!");
+        case "► Set lobby location":
+          player.performCommand("mm " + arena.getID() + " set LOBBYLOC");
           return;
-        }
-
-        player.performCommand("mm " + arena.getID() + " set MAPNAME " + event.getCursor().getItemMeta().getDisplayName());
-        event.getCurrentItem().getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + event.getCursor().getItemMeta().getDisplayName());
-        return;
-      }
-      ClickType clickType = event.getClick();
-      if (name.contains("ending location")) {
-        event.setCancelled(true);
-        player.closeInventory();
-        player.performCommand("mm " + arena.getID() + " set ENDLOC");
-        return;
-      }
-      if (name.contains("starting location")) {
-        event.setCancelled(true);
-        player.closeInventory();
-        player.performCommand("mm " + arena.getID() + " add STARTLOC");
-        return;
-      }
-      if (name.contains("lobby location")) {
-        event.setCancelled(true);
-        player.closeInventory();
-        player.performCommand("mm " + arena.getID() + " set LOBBYLOC");
-        return;
-      }
-      if (name.contains("maximum players")) {
-        event.setCancelled(true);
-        if (clickType.isRightClick()) {
-          event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() + 1);
-          player.performCommand("mm " + arena.getID() + " set MAXPLAYERS " + event.getCurrentItem().getAmount());
-        }
-        if (clickType.isLeftClick()) {
-          event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() - 1);
-          player.performCommand("mm " + arena.getID() + " set MAXPLAYERS " + event.getCurrentItem().getAmount());
-        }
-        player.closeInventory();
-        player.openInventory(new SetupInventory(arena).getInventory());
-      }
-
-      if (name.contains("minimum players")) {
-        event.setCancelled(true);
-        if (clickType.isRightClick()) {
-          event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() + 1);
-          player.performCommand("mm " + arena.getID() + " set MINPLAYERS " + event.getCurrentItem().getAmount());
-        }
-        if (clickType.isLeftClick()) {
-          event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() - 1);
-          player.performCommand("mm " + arena.getID() + " set MINPLAYERS " + event.getCurrentItem().getAmount());
-        }
-        player.closeInventory();
-        player.openInventory(new SetupInventory(arena).getInventory());
-      }
-      if (name.contains("Add game sign")) {
-        event.setCancelled(true);
-        plugin.getMainCommand().getAdminCommands().addSign(player, arena.getID());
-        return;
-      }
-      if (event.getCurrentItem().getType() != Material.NAME_TAG) {
-        event.setCancelled(true);
-      }
-      if (name.contains("Add gold spawn")) {
-        event.setCancelled(true);
-        player.performCommand("mm " + arena.getID() + " add gold");
-        player.closeInventory();
-        return;
-      }
-      if (name.contains("View setup video")) {
-        event.setCancelled(true);
-        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
-        player.closeInventory();
-        return;
-      }
-      if (name.contains("Add mystery cauldron")) {
-        event.setCancelled(true);
-        Block block = event.getWhoClicked().getTargetBlock(null, 10);
-        if (block == null ||
-            block.getType() != XMaterial.CAULDRON.parseMaterial()) {
-          event.getWhoClicked().sendMessage(ChatColor.RED + "Please target cauldron to continue!");
+        case "► Add starting location":
+          player.performCommand("mm " + arena.getID() + " add STARTLOC");
           return;
-        }
-        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-        String loc = LocationUtils.locationToString(Utils.fixLocation(block.getLocation()));
-
-        arena.loadSpecialBlock(new SpecialBlock(Utils.fixLocation(block.getLocation()), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
-        List<String> locs = new ArrayList<>(config.getStringList("instances." + arena.getID() + ".mystery-cauldrons"));
-        locs.add(loc);
-        config.set("instances." + arena.getID() + ".mystery-cauldrons", locs);
-        ConfigUtils.saveConfig(plugin, config, "arenas");
-        player.sendMessage("Murder Mystery: New mystery cauldron for arena/instance " + arena.getID() + " was added");
-        return;
-      }
-      if (name.contains("Add confessional")) {
-        event.setCancelled(true);
-        Block block = event.getWhoClicked().getTargetBlock(null, 10);
-        if (block == null ||
-            block.getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
-          event.getWhoClicked().sendMessage(ChatColor.RED + "Please target enchanting table to continue!");
+        case "► Set minimum players size":
+          if (e.getClick().isRightClick()) {
+            e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
+            player.performCommand("mm " + arena.getID() + " set MINPLAYERS " + e.getCurrentItem().getAmount());
+          }
+          if (e.getClick().isLeftClick()) {
+            e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
+            player.performCommand("mm " + arena.getID() + " set MINPLAYERS " + e.getCurrentItem().getAmount());
+          }
+          player.openInventory(new SetupInventory(arena).getInventory());
+          break;
+        case "► Set maximum players size":
+          if (e.getClick().isRightClick()) {
+            e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
+            player.performCommand("mm " + arena.getID() + " set MAXPLAYERS " + e.getCurrentItem().getAmount());
+          }
+          if (e.getClick().isLeftClick()) {
+            e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
+            player.performCommand("mm " + arena.getID() + " set MAXPLAYERS " + e.getCurrentItem().getAmount());
+          }
+          player.openInventory(new SetupInventory(arena).getInventory());
           return;
-        }
-        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-        String loc = LocationUtils.locationToString(Utils.fixLocation(block.getLocation()));
-
-        arena.loadSpecialBlock(new SpecialBlock(Utils.fixLocation(block.getLocation()), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
-        List<String> locs = new ArrayList<>(config.getStringList("instances." + arena.getID() + ".confessionals"));
-        locs.add(loc);
-        config.set("instances." + arena.getID() + ".confessionals", locs);
-        ConfigUtils.saveConfig(plugin, config, "arenas");
-        player.sendMessage("Murder Mystery: New confessional for arena/instance " + arena.getID() + " was added");
-        return;
-      }
-      if (name.contains("Register arena")) {
-        event.setCancelled(true);
-        event.getWhoClicked().closeInventory();
-        if (ArenaRegistry.getArena(arena.getID()).isReady()) {
-          event.getWhoClicked().sendMessage(ChatColor.GREEN + "This arena was already validated and is ready to use!");
+        case "► Add game sign":
+          plugin.getMainCommand().getAdminCommands().addSign(player, arena.getID());
           return;
-        }
-        String[] locations = new String[] {"lobbylocation", "Endlocation"};
-        String[] spawns = new String[] {"goldspawnpoints", "playerspawnpoints"};
-        for (String s : locations) {
-          if (!ConfigUtils.getConfig(plugin, "arenas").isSet("instances." + arena.getID() + "." + s) || ConfigUtils.getConfig(plugin, "arenas")
-              .getString("instances." + arena.getID() + "." + s).equals(LocationUtils.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
-            event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)");
+        case "► Add gold spawn":
+          player.performCommand("mm " + arena.getID() + " add gold");
+          return;
+        case "► Register arena":
+          if (ArenaRegistry.getArena(arena.getID()).isReady()) {
+            e.getWhoClicked().sendMessage(ChatColor.GREEN + "This arena was already validated and is ready to use!");
             return;
           }
-        }
-        for (String s : spawns) {
-          if (!ConfigUtils.getConfig(plugin, "arenas").isSet("instances." + arena.getID() + "." + s) || ConfigUtils.getConfig(plugin, "arenas")
-              .getStringList("instances." + arena.getID() + "." + s).size() < 3) {
-            event.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawns properly: " + s + " (must be minimum 3 spawns)");
-            return;
-          }
-        }
-        event.getWhoClicked().sendMessage(ChatColor.GREEN + "Validation succeeded! Registering new arena instance: " + arena.getID());
-        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-        config.set("instances." + arena.getID() + ".isdone", true);
-        ConfigUtils.saveConfig(plugin, config, "arenas");
-        List<Sign> signsToUpdate = new ArrayList<>();
-        ArenaRegistry.unregisterArena(arena);
-        if (plugin.getSignManager().getLoadedSigns().containsValue(arena)) {
-          for (Sign s : plugin.getSignManager().getLoadedSigns().keySet()) {
-            if (plugin.getSignManager().getLoadedSigns().get(s).equals(arena)) {
-              signsToUpdate.add(s);
+          String[] locations = new String[] {"lobbylocation", "Endlocation"};
+          String[] spawns = new String[] {"goldspawnpoints", "playerspawnpoints"};
+          for (String s : locations) {
+            if (!ConfigUtils.getConfig(plugin, "arenas").isSet("instances." + arena.getID() + "." + s) || ConfigUtils.getConfig(plugin, "arenas")
+                .getString("instances." + arena.getID() + "." + s).equals(LocationUtils.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
+              e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)");
+              return;
             }
           }
-        }
-        arena = new Arena(arena.getID(), plugin);
-        arena.setReady(true);
-        List<Location> playerSpawnPoints = new ArrayList<>();
-        for (String loc : config.getStringList("instances." + arena.getID() + ".playerspawnpoints")) {
-          playerSpawnPoints.add(LocationUtils.getLocation(loc));
-        }
-        arena.setPlayerSpawnPoints(playerSpawnPoints);
-        List<Location> goldSpawnPoints = new ArrayList<>();
-        for (String loc : config.getStringList("instances." + arena.getID() + ".goldspawnpoints")) {
-          goldSpawnPoints.add(LocationUtils.getLocation(loc));
-        }
-        arena.setGoldSpawnPoints(goldSpawnPoints);
+          for (String s : spawns) {
+            if (!ConfigUtils.getConfig(plugin, "arenas").isSet("instances." + arena.getID() + "." + s) || ConfigUtils.getConfig(plugin, "arenas")
+                .getStringList("instances." + arena.getID() + "." + s).size() < 3) {
+              e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawns properly: " + s + " (must be minimum 3 spawns)");
+              return;
+            }
+          }
+          e.getWhoClicked().sendMessage(ChatColor.GREEN + "Validation succeeded! Registering new arena instance: " + arena.getID());
+          config.set("instances." + arena.getID() + ".isdone", true);
+          ConfigUtils.saveConfig(plugin, config, "arenas");
+          List<Sign> signsToUpdate = new ArrayList<>();
+          ArenaRegistry.unregisterArena(arena);
+          if (plugin.getSignManager().getLoadedSigns().containsValue(arena)) {
+            for (Sign s : plugin.getSignManager().getLoadedSigns().keySet()) {
+              if (plugin.getSignManager().getLoadedSigns().get(s).equals(arena)) {
+                signsToUpdate.add(s);
+              }
+            }
+          }
+          arena = new Arena(arena.getID(), plugin);
+          arena.setReady(true);
+          List<Location> playerSpawnPoints = new ArrayList<>();
+          for (String loc : config.getStringList("instances." + arena.getID() + ".playerspawnpoints")) {
+            playerSpawnPoints.add(LocationUtils.getLocation(loc));
+          }
+          arena.setPlayerSpawnPoints(playerSpawnPoints);
+          List<Location> goldSpawnPoints = new ArrayList<>();
+          for (String loc : config.getStringList("instances." + arena.getID() + ".goldspawnpoints")) {
+            goldSpawnPoints.add(LocationUtils.getLocation(loc));
+          }
+          arena.setGoldSpawnPoints(goldSpawnPoints);
 
-        List<SpecialBlock> specialBlocks = new ArrayList<>();
-        if (config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
-          for (String loc : config.getStringList("instances." + arena.getID() + ".mystery-cauldrons")) {
-            specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
+          List<SpecialBlock> specialBlocks = new ArrayList<>();
+          if (config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
+            for (String loc : config.getStringList("instances." + arena.getID() + ".mystery-cauldrons")) {
+              specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
+            }
           }
-        }
-        if (config.isSet("instances." + arena.getID() + ".confessionals")) {
-          for (String loc : config.getStringList("instances." + arena.getID() + ".confessionals")) {
-            specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
+          if (config.isSet("instances." + arena.getID() + ".confessionals")) {
+            for (String loc : config.getStringList("instances." + arena.getID() + ".confessionals")) {
+              specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
+            }
           }
-        }
-        for (SpecialBlock block : specialBlocks) {
-          if (arena.getSpecialBlocks().contains(block)) {
-            continue;
+          for (SpecialBlock specialBlock : specialBlocks) {
+            if (arena.getSpecialBlocks().contains(specialBlock)) {
+              continue;
+            }
+            arena.loadSpecialBlock(specialBlock);
           }
-          arena.loadSpecialBlock(block);
+          arena.setMinimumPlayers(config.getInt("instances." + arena.getID() + ".minimumplayers"));
+          arena.setMaximumPlayers(config.getInt("instances." + arena.getID() + ".maximumplayers"));
+          arena.setMapName(config.getString("instances." + arena.getID() + ".mapname"));
+          arena.setLobbyLocation(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".lobbylocation")));
+          arena.setEndLocation(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".Endlocation")));
+          ArenaRegistry.registerArena(arena);
+          arena.start();
+          for (Sign s : signsToUpdate) {
+            plugin.getSignManager().getLoadedSigns().put(s, arena);
+          }
+          return;
+        case "► View setup video":
+          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
+          return;
+
+        //special blocks
+        case "Special blocks section":
+          return;
+        case "► Add mystery cauldron":
+          if (block.getType() != XMaterial.CAULDRON.parseMaterial()) {
+            e.getWhoClicked().sendMessage(ChatColor.RED + "Please target cauldron to continue!");
+            return;
+          }
+
+          arena.loadSpecialBlock(new SpecialBlock(Utils.fixLocation(block.getLocation()), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
+          List<String> cauldrons = new ArrayList<>(config.getStringList("instances." + arena.getID() + ".mystery-cauldrons"));
+          cauldrons.add(targetBlock);
+          config.set("instances." + arena.getID() + ".mystery-cauldrons", cauldrons);
+          ConfigUtils.saveConfig(plugin, config, "arenas");
+          player.sendMessage("Murder Mystery: New mystery cauldron for arena/instance " + arena.getID() + " was added");
+          return;
+        case "► Add confessional":
+          if (block.getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
+            e.getWhoClicked().sendMessage(ChatColor.RED + "Please target enchanting table to continue!");
+            return;
+          }
+
+          arena.loadSpecialBlock(new SpecialBlock(Utils.fixLocation(block.getLocation()), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
+          List<String> confessionals = new ArrayList<>(config.getStringList("instances." + arena.getID() + ".confessionals"));
+          confessionals.add(targetBlock);
+          config.set("instances." + arena.getID() + ".confessionals", confessionals);
+          ConfigUtils.saveConfig(plugin, config, "arenas");
+          player.sendMessage("Murder Mystery: New confessional for arena/instance " + arena.getID() + " was added");
+          return;
+      }
+
+      if (e.getCurrentItem().getType() == Material.NAME_TAG && e.getCursor().getType() == Material.NAME_TAG) {
+        if (!e.getCursor().hasItemMeta()) {
+          player.sendMessage(ChatColor.RED + "This item doesn't has a name!");
+          return;
         }
-        arena.setMinimumPlayers(config.getInt("instances." + arena.getID() + ".minimumplayers"));
-        arena.setMaximumPlayers(config.getInt("instances." + arena.getID() + ".maximumplayers"));
-        arena.setMapName(config.getString("instances." + arena.getID() + ".mapname"));
-        arena.setLobbyLocation(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".lobbylocation")));
-        arena.setEndLocation(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".Endlocation")));
-        ArenaRegistry.registerArena(arena);
-        arena.start();
-        for (Sign s : signsToUpdate) {
-          plugin.getSignManager().getLoadedSigns().put(s, arena);
+        if (!e.getCursor().getItemMeta().hasDisplayName()) {
+          player.sendMessage(ChatColor.RED + "This item doesn't has a name!");
+          return;
         }
+
+        player.performCommand("mm " + arena.getID() + " set MAPNAME " + e.getCursor().getItemMeta().getDisplayName());
+        e.getCurrentItem().getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + e.getCursor().getItemMeta().getDisplayName());
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
