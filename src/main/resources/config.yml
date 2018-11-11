@@ -39,7 +39,7 @@ DatabaseActivated: false
 # Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
 # This saves inventory of players and restores it after player leaves arena.
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
-InventoryManager: true
+InventoryManager: true 
 
 # Should we override corpses spawn from CorpsesReborn plugin?
 # When player will die outside game corpse won't be spawned!
