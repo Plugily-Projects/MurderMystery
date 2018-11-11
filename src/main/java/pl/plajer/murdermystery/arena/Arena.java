@@ -289,7 +289,7 @@ public class Arena extends BukkitRunnable {
           if (getTimer() <= 0) {
             setArenaState(ArenaState.ENDING);
             ArenaManager.stopGame(false, this);
-            setTimer(5);
+            setTimer(10);
           }
           if (getTimer() <= (Main.CLASSIC_TIMER_TIME - 10) && getTimer() > (Main.CLASSIC_TIMER_TIME - 15)) {
             for (Player p : getPlayers()) {
@@ -327,7 +327,7 @@ public class Arena extends BukkitRunnable {
             case 0:
               setArenaState(ArenaState.ENDING);
               ArenaManager.stopGame(false, this);
-              setTimer(5);
+              setTimer(10);
               return;
 
             //winner check
@@ -343,7 +343,7 @@ public class Arena extends BukkitRunnable {
                 ArenaUtils.addScore(UserManager.getUser(murderer), ArenaUtils.ScoreAction.WIN_GAME, 0);
                 ArenaManager.stopGame(false, this);
                 setArenaState(ArenaState.ENDING);
-                setTimer(5);
+                setTimer(10);
                 return;
               }
 
@@ -410,6 +410,7 @@ public class Arena extends BukkitRunnable {
             }
             plugin.getRewardsHandler().performEndGameRewards(this);
             players.clear();
+            cleanUpArena();
             if (plugin.isBungeeActivated()) {
               if (ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
                 plugin.getServer().shutdown();
@@ -422,7 +423,6 @@ public class Arena extends BukkitRunnable {
         case RESTARTING:
           getPlayers().clear();
           setArenaState(ArenaState.WAITING_FOR_PLAYERS);
-          cleanUpArena();
 
           if (plugin.isBungeeActivated()) {
             for (Player player : plugin.getServer().getOnlinePlayers()) {

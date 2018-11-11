@@ -1,3 +1,8 @@
+### 1.0.0 Pre release 3 (30.10.2018)
+* Now arena is stopped 10 seconds after the game ends not 5 seconds after
+* Arena is now properly clean up after the game when using bungee mode
+* Fixed arrows weren't given to innocents when they got 10 gold ingots
+
 ### 1.0.0 Pre release 2 (28.10.2018)
 * Fixed wrong cast error when you were damaged by skeleton's arrow (https://plajer.xyz/errorservice/viewer.php?id=336)
 * Fixed NPE when murderer was null - I must use player objects instead of these terrible UUID's

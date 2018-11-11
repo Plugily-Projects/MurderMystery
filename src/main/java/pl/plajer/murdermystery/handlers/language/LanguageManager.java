@@ -82,6 +82,11 @@ public class LanguageManager {
 
   private static void loadProperties() {
     LocaleService service = ServiceRegistry.getLocaleService(plugin);
+    if(service == null) {
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Locales cannot be downloaded because API website is unreachable, locales will be disabled.");
+      pluginLocale = LocaleRegistry.getByName("English");
+      return;
+    }
     if (service.isValidVersion()) {
       LocaleService.DownloadStatus status = service.demandLocaleDownload(pluginLocale.getPrefix());
       if (status == LocaleService.DownloadStatus.FAIL) {

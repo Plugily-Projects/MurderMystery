@@ -152,7 +152,7 @@ public class ArenaEvents implements Listener {
       if (user.getStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY) == /* magic number */ 4) {
         stack.setAmount(3 * e.getItem().getItemStack().getAmount());
       }
-      ItemPosition.setItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, stack);
+      ItemPosition.addItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, stack);
       user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, e.getItem().getItemStack().getAmount());
       ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP, e.getItem().getItemStack().getAmount());
       e.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Picked-Up-Gold"));
@@ -166,7 +166,7 @@ public class ArenaEvents implements Listener {
         MessageUtils.sendTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold"));
         MessageUtils.sendSubTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle"));
         ItemPosition.setItem(e.getPlayer(), ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-        ItemPosition.setItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, 1));
+        ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, 1));
         e.getPlayer().getInventory().setItem(/* same for all roles */ ItemPosition.GOLD_INGOTS.getOtherRolesItemPosition(), new ItemStack(Material.GOLD_INGOT, 0));
       }
     } catch (Exception ex) {
