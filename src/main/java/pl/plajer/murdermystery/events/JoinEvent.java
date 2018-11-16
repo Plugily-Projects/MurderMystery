@@ -58,6 +58,7 @@ public class JoinEvent implements Listener {
   @EventHandler
   public void onJoin(PlayerJoinEvent event) {
     if (plugin.isBungeeActivated()) {
+      ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
       return;
     }
     for (Player player : plugin.getServer().getOnlinePlayers()) {
@@ -66,6 +67,15 @@ public class JoinEvent implements Listener {
       }
       player.hidePlayer(event.getPlayer());
       event.getPlayer().hidePlayer(player);
+    }
+    UserManager.registerUser(event.getPlayer().getUniqueId());
+    if (!plugin.isDatabaseActivated()) {
+      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        plugin.getFileStats().loadStat(event.getPlayer(), stat);
+      }
+    } else {
+      final Player player = event.getPlayer();
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> MySQLConnectionUtils.loadPlayerStats(player, plugin));
     }
   }
 
@@ -104,18 +114,6 @@ public class JoinEvent implements Listener {
         }
       }
       }, 25);*/
-      if (plugin.isBungeeActivated()) {
-        ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
-      }
-      UserManager.registerUser(event.getPlayer().getUniqueId());
-      if (!plugin.isDatabaseActivated()) {
-        for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-          plugin.getFileStats().loadStat(event.getPlayer(), stat);
-        }
-        return;
-      }
-      final Player player = event.getPlayer();
-      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> MySQLConnectionUtils.loadPlayerStats(player, plugin));
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
