@@ -19,9 +19,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>pl.plajer.murdermystery</groupId>
-    <artifactId>MurderMystery</artifactId>
+    <groupId>pl.plajer</groupId>
+    <artifactId>murdermystery</artifactId>
     <version>1.0.0</version>
+    <name>MurderMystery</name>
 
     <properties>
         <java.version>1.8</java.version>
