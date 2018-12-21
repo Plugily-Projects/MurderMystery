@@ -108,6 +108,7 @@ public class Arena extends BukkitRunnable {
   private Map<GameLocation, Location> gameLocations = new HashMap<>();
   private boolean ready = true;
   private Map<String, List<String>> scoreboardContents = new HashMap<>();
+  private boolean forceStart = false;
 
   public Arena(String ID, Main plugin) {
     this.plugin = plugin;
@@ -192,7 +193,7 @@ public class Arena extends BukkitRunnable {
             player.setExp((float) (getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 60)));
             player.setLevel(getTimer());
           }
-          if (getPlayers().size() < getMinimumPlayers()) {
+          if (getPlayers().size() < getMinimumPlayers() && !forceStart) {
             gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
             gameBar.setProgress(1.0);
             ChatManager.broadcast(this, ChatManager.formatMessage(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), getMinimumPlayers()));
@@ -202,6 +203,9 @@ public class Arena extends BukkitRunnable {
             for (Player player : getPlayers()) {
               player.setExp(1);
               player.setLevel(0);
+            }
+            if(forceStart) {
+              forceStart = false;
             }
             break;
           }
@@ -216,7 +220,7 @@ public class Arena extends BukkitRunnable {
             User user = UserManager.getUser(p.getUniqueId());
             p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
           }
-          if (getTimer() == 0) {
+          if (getTimer() == 0 || forceStart) {
             MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
             Bukkit.getPluginManager().callEvent(gameStartEvent);
             setArenaState(ArenaState.IN_GAME);
@@ -274,7 +278,9 @@ public class Arena extends BukkitRunnable {
             if (plugin.isBossbarEnabled()) {
               gameBar.setTitle(ChatManager.colorMessage("Bossbar.In-Game-Info"));
             }
-            return;
+          }
+          if(forceStart) {
+            forceStart = false;
           }
           setTimer(getTimer() - 1);
           break;
@@ -576,6 +582,10 @@ public class Arena extends BukkitRunnable {
 
   public void setMurdererLocatorReceived(boolean murdererLocatorReceived) {
     this.murdererLocatorReceived = murdererLocatorReceived;
+  }
+
+  public void setForceStart(boolean forceStart) {
+    this.forceStart = forceStart;
   }
 
   /**
