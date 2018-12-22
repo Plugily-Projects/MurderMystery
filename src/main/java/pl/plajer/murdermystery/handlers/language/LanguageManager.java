@@ -32,6 +32,8 @@ import org.bukkit.ChatColor;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.services.ServiceRegistry;
 import pl.plajerlair.core.services.locale.Locale;
 import pl.plajerlair.core.services.locale.LocaleRegistry;
@@ -162,7 +164,7 @@ public class LanguageManager {
         }
       }
     } catch (Exception e) {
-      Main.debug(Main.LogLevel.WARN, "[WARN] Plugin has occured a problem suggesting locale, probably API change.");
+      Debugger.debug(LogLevel.WARN, "[WARN] Plugin has occured a problem suggesting locale, probably API change.");
     }
     if (hasLocale) {
       MessageUtils.info();

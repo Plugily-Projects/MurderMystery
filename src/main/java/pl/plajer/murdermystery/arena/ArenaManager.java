@@ -49,6 +49,8 @@ import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.MessageUtils;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.InventoryUtils;
 import pl.plajerlair.core.utils.ItemBuilder;
@@ -74,7 +76,7 @@ public class ArenaManager {
    */
   public static void joinAttempt(Player p, Arena arena) {
     try {
-      Main.debug(Main.LogLevel.INFO, "Initial join attempt, " + p.getName());
+      Debugger.debug(LogLevel.INFO, "Initial join attempt, " + p.getName());
       MMGameJoinAttemptEvent gameJoinAttemptEvent = new MMGameJoinAttemptEvent(p, arena);
       Bukkit.getPluginManager().callEvent(gameJoinAttemptEvent);
       if (!arena.isReady()) {
@@ -91,7 +93,7 @@ public class ArenaManager {
           return;
         }
       }
-      Main.debug(Main.LogLevel.INFO, "Final join attempt, " + p.getName());
+      Debugger.debug(LogLevel.INFO, "Final join attempt, " + p.getName());
       if ((arena.getArenaState() == ArenaState.IN_GAME || (arena.getArenaState() == ArenaState.STARTING && arena.getTimer() <= 3) || arena.getArenaState() == ArenaState.ENDING)) {
         if (plugin.isInventoryManagerEnabled()) {
           p.setLevel(0);
@@ -176,7 +178,7 @@ public class ArenaManager {
    */
   public static void leaveAttempt(Player p, Arena arena) {
     try {
-      Main.debug(Main.LogLevel.INFO, "Initial leave attempt, " + p.getName());
+      Debugger.debug(LogLevel.INFO, "Initial leave attempt, " + p.getName());
       MMGameLeaveAttemptEvent gameLeaveAttemptEvent = new MMGameLeaveAttemptEvent(p, arena);
       Bukkit.getPluginManager().callEvent(gameLeaveAttemptEvent);
       User user = UserManager.getUser(p.getUniqueId());
@@ -271,9 +273,9 @@ public class ArenaManager {
    */
   public static void stopGame(boolean quickStop, Arena arena) {
     try {
-      Main.debug(Main.LogLevel.INFO, "Game stop event initiate, arena " + arena.getID());
+      Debugger.debug(LogLevel.INFO, "Game stop event initiate, arena " + arena.getID());
       if (arena.getArenaState() != ArenaState.IN_GAME) {
-        Main.debug(Main.LogLevel.INFO, "Game stop event finish, arena " + arena.getID());
+        Debugger.debug(LogLevel.INFO, "Game stop event finish, arena " + arena.getID());
         return;
       }
       MMGameStopEvent gameStopEvent = new MMGameStopEvent(arena);
@@ -308,7 +310,7 @@ public class ArenaManager {
           }
         }
       }
-      Main.debug(Main.LogLevel.INFO, "Game stop event finish, arena " + arena.getID());
+      Debugger.debug(LogLevel.INFO, "Game stop event finish, arena " + arena.getID());
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }

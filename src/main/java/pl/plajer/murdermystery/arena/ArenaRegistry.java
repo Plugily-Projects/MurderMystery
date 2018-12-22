@@ -30,6 +30,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
@@ -81,12 +83,12 @@ public class ArenaRegistry {
   }
 
   public static void registerArena(Arena arena) {
-    Main.debug(Main.LogLevel.INFO, "Registering new game instance, " + arena.getID());
+    Debugger.debug(LogLevel.INFO, "Registering new game instance, " + arena.getID());
     arenas.add(arena);
   }
 
   public static void unregisterArena(Arena arena) {
-    Main.debug(Main.LogLevel.INFO, "Unegistering game instance, " + arena.getID());
+    Debugger.debug(LogLevel.INFO, "Unegistering game instance, " + arena.getID());
     arenas.remove(arena);
   }
 
@@ -109,7 +111,7 @@ public class ArenaRegistry {
 
   public static void registerArenas() {
     try {
-      Main.debug(Main.LogLevel.INFO, "Initial arenas registration");
+      Debugger.debug(LogLevel.INFO, "Initial arenas registration");
       if (ArenaRegistry.getArenas() != null) {
         if (ArenaRegistry.getArenas().size() > 0) {
           for (Arena arena : ArenaRegistry.getArenas()) {
@@ -175,7 +177,7 @@ public class ArenaRegistry {
         arena.start();
         Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Instance-Started").replace("%arena%", ID));
       }
-      Main.debug(Main.LogLevel.INFO, "Arenas registration completed");
+      Debugger.debug(LogLevel.INFO, "Arenas registration completed");
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }

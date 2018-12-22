@@ -55,6 +55,8 @@ import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.core.database.MySQLDatabase;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.services.ServiceRegistry;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
@@ -68,7 +70,6 @@ public class Main extends JavaPlugin {
 
   public static int STARTING_TIMER_TIME = 60;
   public static int CLASSIC_TIMER_TIME = 270;
-  private static boolean debug;
   private boolean bossbarEnabled;
   private String version;
   private boolean forceDisable = false;
@@ -85,28 +86,6 @@ public class Main extends JavaPlugin {
   private MainCommand mainCommand;
   private CorpseHandler corpseHandler;
   private boolean databaseActivated = false;
-
-  public static void debug(LogLevel level, String thing) {
-    if (debug) {
-      switch (level) {
-        case INFO:
-          Bukkit.getConsoleSender().sendMessage("[Murder Debugger] " + thing);
-          break;
-        case WARN:
-          Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Murder Debugger] " + thing);
-          break;
-        case ERROR:
-          Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Debugger] " + thing);
-          break;
-        case WTF:
-          Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Murder Debugger] [SEVERE]" + thing);
-          break;
-        case TASK:
-          Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Murder Debugger] Running task '" + thing + "'");
-          break;
-      }
-    }
-  }
 
   public boolean is1_11_R1() {
     return version.equalsIgnoreCase("v1_11_R1");
@@ -151,8 +130,9 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().disablePlugin(this);
         return;
       }
-      debug = getConfig().getBoolean("Debug", false);
-      debug(LogLevel.INFO, "Main setup start");
+      Debugger.setEnabled(getConfig().getBoolean("Debug", false));
+      Debugger.setPrefix("[MurderMystery Debugger]");
+      Debugger.debug(LogLevel.INFO, "Main setup start");
       setupFiles();
       initializeClasses();
 
@@ -199,7 +179,7 @@ public class Main extends JavaPlugin {
     if (forceDisable) {
       return;
     }
-    debug(LogLevel.INFO, "System disable");
+    Debugger.debug(LogLevel.INFO, "System disable");
     for (Player player : getServer().getOnlinePlayers()) {
       User user = UserManager.getUser(player.getUniqueId());
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
@@ -276,11 +256,11 @@ public class Main extends JavaPlugin {
       }
     }));
     if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      Main.debug(LogLevel.INFO, "Hooking into PlaceholderAPI");
+      Debugger.debug(LogLevel.INFO, "Hooking into PlaceholderAPI");
       new PlaceholderManager().register();
     }
     if (Bukkit.getPluginManager().isPluginEnabled("LeaderHeads")) {
-      Main.debug(LogLevel.INFO, "Hooking into LeaderHeads");
+      Debugger.debug(LogLevel.INFO, "Hooking into LeaderHeads");
       new MurderMysteryDeaths();
       new MurderMysteryGamesPlayed();
       new MurderMysteryHighestScore();
@@ -371,7 +351,4 @@ public class Main extends JavaPlugin {
     return corpseHandler;
   }
 
-  public enum LogLevel {
-    INFO, WARN, ERROR, WTF /*what a terrible failure*/, TASK
-  }
 }

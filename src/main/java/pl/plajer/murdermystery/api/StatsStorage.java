@@ -43,6 +43,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.user.UserManager;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
@@ -73,7 +75,7 @@ public class StatsStorage {
    * @return Map of UUID keys and Integer values sorted in ascending order of requested statistic type
    */
   public static Map<UUID, Integer> getStats(StatisticType stat) {
-    Main.debug(Main.LogLevel.INFO, "MurderMystery API getStats(" + stat.getName() + ") run");
+    Debugger.debug(LogLevel.INFO, "MurderMystery API getStats(" + stat.getName() + ") run");
     if (plugin.isDatabaseActivated()) {
       return plugin.getMySQLManager().getColumn(stat.getName());
     } else {
@@ -95,7 +97,7 @@ public class StatsStorage {
    * @see StatisticType
    */
   public static int getUserStats(Player player, StatisticType statisticType) {
-    Main.debug(Main.LogLevel.INFO, "Village API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
+    Debugger.debug(LogLevel.INFO, "Village API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
     return UserManager.getUser(player.getUniqueId()).getStat(statisticType);
   }
 

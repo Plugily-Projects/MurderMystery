@@ -24,6 +24,8 @@ import org.bukkit.entity.Player;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 
 /**
  * @author Plajer
@@ -35,7 +37,7 @@ public class UserManager {
   private static HashMap<UUID, User> users = new HashMap<>();
 
   public static void registerUser(UUID uuid) {
-    Main.debug(Main.LogLevel.INFO, "Registering new user with UUID: " + uuid);
+    Debugger.debug(LogLevel.INFO, "Registering new user with UUID: " + uuid);
     users.put(uuid, new User(uuid));
   }
 

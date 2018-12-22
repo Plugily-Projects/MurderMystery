@@ -71,6 +71,8 @@ import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Utils;
+import pl.plajerlair.core.debug.Debugger;
+import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.GameScoreboard;
@@ -221,7 +223,7 @@ public class Arena extends BukkitRunnable {
             try {
               p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
             } catch (NumberFormatException ignored) {
-              Main.debug(Main.LogLevel.WARN, "Infinite or NaN for player " + p.getName() + " values: " +
+              Debugger.debug(LogLevel.WARN, "Infinite or NaN for player " + p.getName() + " values: " +
                   totalMurderer + "murderer, " + totalDetective + "detective; user: " + user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) + " murderer" +
                   user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) + " detective");
             }
@@ -638,7 +640,7 @@ public class Arena extends BukkitRunnable {
    */
   public void setMinimumPlayers(int minimumPlayers) {
     if (minimumPlayers < 2) {
-      Main.debug(Main.LogLevel.WARN, "Minimum players amount for arena cannot be less than 2! Setting amount to 2!");
+      Debugger.debug(LogLevel.WARN, "Minimum players amount for arena cannot be less than 2! Setting amount to 2!");
       this.minimumPlayers = 2;
       return;
     }
@@ -734,7 +736,7 @@ public class Arena extends BukkitRunnable {
       UUID uuid = iterator.next();
       if (Bukkit.getPlayer(uuid) == null) {
         iterator.remove();
-        Main.debug(Main.LogLevel.WARN, "Removed invalid player from arena " + getID() + " (not online?)");
+        Debugger.debug(LogLevel.WARN, "Removed invalid player from arena " + getID() + " (not online?)");
       }
       list.add(Bukkit.getPlayer(uuid));
     }
@@ -871,7 +873,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void start() {
-    Main.debug(Main.LogLevel.INFO, "Game instance started, arena " + this.getID());
+    Debugger.debug(LogLevel.INFO, "Game instance started, arena " + this.getID());
     this.runTaskTimer(plugin, 20L, 20L);
     this.setArenaState(ArenaState.RESTARTING);
   }
