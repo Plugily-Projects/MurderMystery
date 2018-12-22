@@ -182,7 +182,7 @@ public class Arena extends BukkitRunnable {
             }
             ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
             setArenaState(ArenaState.STARTING);
-            setTimer(Main.STARTING_TIMER_TIME);
+            setTimer(plugin.getConfig().getInt("Starting-Waiting-Time", 60));
             this.showPlayers();
           }
           setTimer(getTimer() - 1);
@@ -247,7 +247,7 @@ public class Arena extends BukkitRunnable {
               ArenaUtils.hidePlayersOutsideTheGame(player, this);
               player.updateInventory();
               addStat(player, StatsStorage.StatisticType.GAMES_PLAYED);
-              setTimer(Main.CLASSIC_TIMER_TIME);
+              setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
               player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
             }
 
@@ -309,12 +309,14 @@ public class Arena extends BukkitRunnable {
             ArenaManager.stopGame(false, this);
             setTimer(10);
           }
-          if (getTimer() <= (Main.CLASSIC_TIMER_TIME - 10) && getTimer() > (Main.CLASSIC_TIMER_TIME - 15)) {
+          if (getTimer() <= (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 10) &&
+              getTimer() > (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15)) {
             for (Player p : getPlayers()) {
-              p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword").replace("%time%", String.valueOf(getTimer() - (Main.CLASSIC_TIMER_TIME - 15))));
+              p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword")
+                  .replace("%time%",String.valueOf(getTimer() - (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15))));
               p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
             }
-            if (getTimer() == (Main.CLASSIC_TIMER_TIME - 14)) {
+            if (getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
               ItemPosition.setItem(Bukkit.getPlayer(murderer), ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
               Bukkit.getPlayer(murderer).getInventory().setHeldItemSlot(0);
             }

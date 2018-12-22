@@ -66,8 +66,6 @@ import pl.plajerlair.core.utils.ConfigUtils;
  */
 public class Main extends JavaPlugin {
 
-  public static int STARTING_TIMER_TIME = 60;
-  public static int CLASSIC_TIMER_TIME = 270;
   private String version;
   private boolean forceDisable = false;
   private BungeeManager bungeeManager;
@@ -75,7 +73,6 @@ public class Main extends JavaPlugin {
   private List<String> fileNames = Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks");
   private MySQLDatabase database;
   private MySQLManager mySQLManager;
-  private FileStats fileStats;
   private SignManager signManager;
   private MainCommand mainCommand;
   private CorpseHandler corpseHandler;
@@ -197,8 +194,6 @@ public class Main extends JavaPlugin {
       database = new MySQLDatabase(this, config.getString("address"), config.getString("user"), config.getString("password"),
           config.getInt("min-connections"), config.getInt("max-connections"));
       mySQLManager = new MySQLManager(this);
-    } else {
-      fileStats = new FileStats(this);
     }
     userManager = new UserManager(this);
     SpecialItem.loadAll();
@@ -211,8 +206,6 @@ public class Main extends JavaPlugin {
     new SetupInventoryEvents(this);
     new JoinEvent(this);
     new ChatEvents(this);
-    STARTING_TIMER_TIME = getConfig().getInt("Starting-Waiting-Time", 60);
-    CLASSIC_TIMER_TIME = getConfig().getInt("Classic-Gameplay-Time", 270);
     Metrics metrics = new Metrics(this);
     metrics.addCustomChart(new Metrics.SimplePie("database_enabled", () -> getConfig().getString("DatabaseActivated", "false")));
     metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> getConfig().getString("BungeeActivated", "false")));
@@ -283,10 +276,6 @@ public class Main extends JavaPlugin {
 
   public BungeeManager getBungeeManager() {
     return bungeeManager;
-  }
-
-  public FileStats getFileStats() {
-    return fileStats;
   }
 
   public ConfigPreferences getConfigPreferences() {
