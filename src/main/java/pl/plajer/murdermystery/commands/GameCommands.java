@@ -25,6 +25,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
@@ -108,7 +109,7 @@ public class GameCommands extends MainCommand {
               .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
         } catch (NullPointerException ex) {
           UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
-          if (plugin.isDatabaseActivated()) {
+          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
             ResultSet set = plugin.getMySQLDatabase().executeQuery("SELECT name FROM playerstats WHERE UUID='" + current.toString() + "'");
             try {
               if (set.next()) {
@@ -144,7 +145,7 @@ public class GameCommands extends MainCommand {
         return;
       }
       p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
-      if (plugin.isBungeeActivated()) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         plugin.getBungeeManager().connectToHub(p);
         System.out.print(p.getName() + " is teleported to the Hub Server");
       } else {
@@ -176,7 +177,7 @@ public class GameCommands extends MainCommand {
     if (!checkSenderPlayer(sender)) {
       return;
     }
-    if (plugin.isBungeeActivated()) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       return;
     }
     if (ArenaRegistry.isInArena(((Player) sender))) {

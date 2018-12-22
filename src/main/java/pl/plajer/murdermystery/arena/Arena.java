@@ -58,6 +58,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 
+import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.api.events.game.MMGameStartEvent;
@@ -116,7 +117,7 @@ public class Arena extends BukkitRunnable {
     this.plugin = plugin;
     arenaState = ArenaState.WAITING_FOR_PLAYERS;
     this.ID = ID;
-    if (plugin.isBossbarEnabled()) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Main-Title"), BarColor.BLUE, BarStyle.SOLID);
     }
     List<String> lines;
@@ -166,7 +167,7 @@ public class Arena extends BukkitRunnable {
       updateScoreboard();
       switch (getArenaState()) {
         case WAITING_FOR_PLAYERS:
-          if (plugin.isBungeeActivated()) {
+          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             plugin.getServer().setWhitelist(false);
           }
           if (getPlayers().size() < getMinimumPlayers()) {
@@ -176,7 +177,7 @@ public class Arena extends BukkitRunnable {
               return;
             }
           } else {
-            if (plugin.isBossbarEnabled()) {
+            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
               gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
             }
             ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
@@ -187,7 +188,7 @@ public class Arena extends BukkitRunnable {
           setTimer(getTimer() - 1);
           break;
         case STARTING:
-          if (plugin.isBossbarEnabled()) {
+          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
             gameBar.setTitle(ChatManager.colorMessage("Bossbar.Starting-In").replace("%time%", String.valueOf(getTimer())));
             gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 60));
           }
@@ -232,7 +233,7 @@ public class Arena extends BukkitRunnable {
             MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
             Bukkit.getPluginManager().callEvent(gameStartEvent);
             setArenaState(ArenaState.IN_GAME);
-            if (plugin.isBossbarEnabled()) {
+            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
               gameBar.setProgress(1.0);
             }
             setTimer(5);
@@ -286,7 +287,7 @@ public class Arena extends BukkitRunnable {
               MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"));
               MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"));
             }
-            if (plugin.isBossbarEnabled()) {
+            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
               gameBar.setTitle(ChatManager.colorMessage("Bossbar.In-Game-Info"));
             }
           }
@@ -296,7 +297,7 @@ public class Arena extends BukkitRunnable {
           setTimer(getTimer() - 1);
           break;
         case IN_GAME:
-          if (plugin.isBungeeActivated()) {
+          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             if (getMaximumPlayers() <= getPlayers().size()) {
               plugin.getServer().setWhitelist(true);
             } else {
@@ -377,11 +378,11 @@ public class Arena extends BukkitRunnable {
           setTimer(getTimer() - 1);
           break;
         case ENDING:
-          if (plugin.isBungeeActivated()) {
+          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             plugin.getServer().setWhitelist(false);
           }
           if (getTimer() <= 0) {
-            if (plugin.isBossbarEnabled()) {
+            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
               gameBar.setTitle(ChatManager.colorMessage("Bossbar.Game-Ended"));
             }
 
@@ -400,7 +401,7 @@ public class Arena extends BukkitRunnable {
               player.getInventory().clear();
 
               player.getInventory().setArmorContents(null);
-              if (plugin.isBossbarEnabled()) {
+              if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
                 gameBar.removePlayer(player);
               }
               player.setFireTicks(0);
@@ -414,7 +415,7 @@ public class Arena extends BukkitRunnable {
             }
             teleportAllToEndLocation();
 
-            if (plugin.isInventoryManagerEnabled()) {
+            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
               for (Player player : getPlayers()) {
                 InventoryUtils.loadInventory(plugin, player);
               }
@@ -428,7 +429,7 @@ public class Arena extends BukkitRunnable {
             plugin.getRewardsHandler().performEndGameRewards(this);
             players.clear();
             cleanUpArena();
-            if (plugin.isBungeeActivated()) {
+            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
               if (ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
                 plugin.getServer().shutdown();
               }
@@ -441,7 +442,7 @@ public class Arena extends BukkitRunnable {
           getPlayers().clear();
           setArenaState(ArenaState.WAITING_FOR_PLAYERS);
 
-          if (plugin.isBungeeActivated()) {
+          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             for (Player player : plugin.getServer().getOnlinePlayers()) {
               this.addPlayer(player);
             }
@@ -786,7 +787,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void teleportAllToEndLocation() {
-    if (plugin.isBungeeActivated()) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       for (Player player : getPlayers()) {
         plugin.getBungeeManager().connectToHub(player);
       }
@@ -804,7 +805,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void teleportToEndLocation(Player player) {
-    if (plugin.isBungeeActivated()) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       plugin.getBungeeManager().connectToHub(player);
       return;
     }

@@ -41,6 +41,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajerlair.core.debug.Debugger;
@@ -76,7 +77,7 @@ public class StatsStorage {
    */
   public static Map<UUID, Integer> getStats(StatisticType stat) {
     Debugger.debug(LogLevel.INFO, "MurderMystery API getStats(" + stat.getName() + ") run");
-    if (plugin.isDatabaseActivated()) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       return plugin.getMySQLManager().getColumn(stat.getName());
     } else {
       FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");

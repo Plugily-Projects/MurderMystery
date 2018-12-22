@@ -23,6 +23,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajerlair.core.utils.ConfigUtils;
@@ -82,7 +83,7 @@ public class SetupInventory {
         .lore(ChatColor.DARK_GRAY + "(how many players arena can hold)")
         .lore(isOptionDone("instances." + arena.getID() + ".maximumplayers"))
         .build());
-    if (!plugin.isBungeeActivated()) {
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       addItem(new ItemBuilder(new ItemStack(Material.SIGN))
           .name(ChatColor.GOLD + "► Add game" + ChatColor.AQUA + " sign")
           .lore(ChatColor.GRAY + "Target a sign and click this.")

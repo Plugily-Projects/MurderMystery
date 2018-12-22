@@ -21,6 +21,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.ArenaManager;
@@ -49,7 +50,7 @@ public class QuitEvent implements Listener {
     if (ArenaRegistry.getArena(event.getPlayer()) == null) {
       return;
     }
-    if (!plugin.isBungeeActivated()) {
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArena(event.getPlayer()));
     }
   }
@@ -62,7 +63,7 @@ public class QuitEvent implements Listener {
       }
       final User user = UserManager.getUser(event.getPlayer().getUniqueId());
       final Player player = event.getPlayer();
-      if (plugin.isDatabaseActivated()) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
           for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
             if (!stat.isPersistent()) {

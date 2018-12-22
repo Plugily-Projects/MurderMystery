@@ -23,6 +23,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 
 /**
@@ -51,7 +52,7 @@ public class TabCompletion implements TabCompleter {
         return Arrays.asList("stop", "list", "forcestart", "reload", "delete");
       }
       if (args.length == 1) {
-        if (plugin.isBungeeActivated()) {
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           return Arrays.asList("join", "leave", "stats", "top", "admin", "create");
         } else {
           return Arrays.asList("join", "randomjoin", "leave", "stats", "top", "admin", "create");

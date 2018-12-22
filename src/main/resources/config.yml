@@ -41,6 +41,10 @@ DatabaseActivated: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
 InventoryManager: true
 
+# Should in-game chat format be enabled?
+# You can edit the formatting in language.yml
+ChatFormat-Enabled: true
+
 # Should we override corpses spawn from CorpsesReborn plugin?
 # When player will die outside game corpse won't be spawned!
 # Disable this if you don't want this!

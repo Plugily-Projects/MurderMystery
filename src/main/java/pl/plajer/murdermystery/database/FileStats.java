@@ -19,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
@@ -65,10 +66,10 @@ public class FileStats {
 
   public void loadStatsForPlayersOnline() {
     for (final Player player : plugin.getServer().getOnlinePlayers()) {
-      if (plugin.isBungeeActivated()) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         ArenaRegistry.getArenas().get(0).teleportToLobby(player);
       }
-      if (!plugin.isDatabaseActivated()) {
+      if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
         for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
           loadStat(player, stat);
         }

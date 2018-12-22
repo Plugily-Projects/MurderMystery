@@ -29,6 +29,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
@@ -60,7 +61,7 @@ public class ChatEvents implements Listener {
       if (arena == null) {
         return;
       }
-      if (plugin.isChatFormatEnabled()) {
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CHAT_FORMAT_ENABLED)) {
         event.setCancelled(true);
         Iterator<Player> iterator = event.getRecipients().iterator();
         List<Player> remove = new ArrayList<>();

@@ -22,6 +22,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
+import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
@@ -46,7 +47,7 @@ public class JoinEvent implements Listener {
 
   @EventHandler
   public void onLogin(PlayerLoginEvent e) {
-    if (!plugin.isBungeeActivated() && !plugin.getServer().hasWhitelist()
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && !plugin.getServer().hasWhitelist()
         || e.getResult() != PlayerLoginEvent.Result.KICK_WHITELIST) {
       return;
     }
@@ -57,7 +58,7 @@ public class JoinEvent implements Listener {
 
   @EventHandler
   public void onJoin(PlayerJoinEvent event) {
-    if (plugin.isBungeeActivated()) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
       return;
     }
@@ -69,7 +70,7 @@ public class JoinEvent implements Listener {
       event.getPlayer().hidePlayer(player);
     }
     UserManager.registerUser(event.getPlayer().getUniqueId());
-    if (!plugin.isDatabaseActivated()) {
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         plugin.getFileStats().loadStat(event.getPlayer(), stat);
       }

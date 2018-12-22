@@ -70,14 +70,10 @@ public class Main extends JavaPlugin {
 
   public static int STARTING_TIMER_TIME = 60;
   public static int CLASSIC_TIMER_TIME = 270;
-  private boolean bossbarEnabled;
   private String version;
   private boolean forceDisable = false;
-  private boolean bungeeEnabled;
   private BungeeManager bungeeManager;
   private RewardsHandler rewardsHandler;
-  private boolean inventoryManagerEnabled = false;
-  private boolean chatFormat = true;
   private List<String> fileNames = Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks");
   private MySQLDatabase database;
   private MySQLManager mySQLManager;
@@ -85,7 +81,7 @@ public class Main extends JavaPlugin {
   private SignManager signManager;
   private MainCommand mainCommand;
   private CorpseHandler corpseHandler;
-  private boolean databaseActivated = false;
+  private ConfigPreferences configPreferences;
 
   public boolean is1_11_R1() {
     return version.equalsIgnoreCase("v1_11_R1");
@@ -109,7 +105,6 @@ public class Main extends JavaPlugin {
     try {
       version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
       LanguageManager.init(this);
-      bossbarEnabled = getConfig().getBoolean("Bossbar-Enabled", true);
       saveDefaultConfig();
       if (!(version.equalsIgnoreCase("v1_11_R1") || version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1") ||
           version.equalsIgnoreCase("v1_13_R2"))) {
@@ -133,10 +128,11 @@ public class Main extends JavaPlugin {
       Debugger.setEnabled(getConfig().getBoolean("Debug", false));
       Debugger.setPrefix("[MurderMystery Debugger]");
       Debugger.debug(LogLevel.INFO, "Main setup start");
+      configPreferences = new ConfigPreferences(this);
       setupFiles();
       initializeClasses();
 
-      if (databaseActivated) {
+      if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
         for (Player p : Bukkit.getOnlinePlayers()) {
           Bukkit.getScheduler().runTaskAsynchronously(this, () -> MySQLConnectionUtils.loadPlayerStats(p, this));
         }
@@ -186,7 +182,7 @@ public class Main extends JavaPlugin {
         if (!stat.isPersistent()) {
           continue;
         }
-        if (isDatabaseActivated()) {
+        if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
           getMySQLManager().setStat(player, stat, user.getStat(stat));
         } else {
           getFileStats().saveStat(player, stat);
@@ -197,7 +193,7 @@ public class Main extends JavaPlugin {
     for (Hologram hologram : HologramsAPI.getHolograms(this)) {
       hologram.delete();
     }
-    if (isDatabaseActivated()) {
+    if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       getMySQLDatabase().getManager().shutdownConnPool();
     }
     for (Arena a : ArenaRegistry.getArenas()) {
@@ -209,12 +205,10 @@ public class Main extends JavaPlugin {
   }
 
   private void initializeClasses() {
-    bungeeEnabled = getConfig().getBoolean("BungeeActivated", false);
     if (getConfig().getBoolean("BungeeActivated", false)) {
       bungeeManager = new BungeeManager(this);
     }
-    databaseActivated = getConfig().getBoolean("DatabaseActivated", false);
-    if (databaseActivated) {
+    if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
       database = new MySQLDatabase(this, config.getString("address"), config.getString("user"), config.getString("password"),
           config.getInt("min-connections"), config.getInt("max-connections"));
@@ -223,8 +217,6 @@ public class Main extends JavaPlugin {
       fileStats = new FileStats(this);
     }
     SpecialItem.loadAll();
-    inventoryManagerEnabled = getConfig().getBoolean("InventoryManager", false);
-    chatFormat = getConfig().getBoolean("ChatFormat-Enabled", true);
     PermissionsManager.init();
     new ChatManager(ChatManager.colorMessage("In-Game.Plugin-Prefix"));
     mainCommand = new MainCommand(this, true);
@@ -291,10 +283,6 @@ public class Main extends JavaPlugin {
     }
   }
 
-  public boolean isBossbarEnabled() {
-    return bossbarEnabled;
-  }
-
   public boolean is1_9_R1() {
     return version.equalsIgnoreCase("v1_9_R1");
   }
@@ -303,20 +291,8 @@ public class Main extends JavaPlugin {
     return version.equalsIgnoreCase("v1_10_R1");
   }
 
-  public boolean isInventoryManagerEnabled() {
-    return inventoryManagerEnabled;
-  }
-
   public RewardsHandler getRewardsHandler() {
     return rewardsHandler;
-  }
-
-  public boolean isChatFormatEnabled() {
-    return chatFormat;
-  }
-
-  public boolean isBungeeActivated() {
-    return bungeeEnabled;
   }
 
   public BungeeManager getBungeeManager() {
@@ -327,8 +303,8 @@ public class Main extends JavaPlugin {
     return fileStats;
   }
 
-  public boolean isDatabaseActivated() {
-    return databaseActivated;
+  public ConfigPreferences getConfigPreferences() {
+    return configPreferences;
   }
 
   public MySQLDatabase getMySQLDatabase() {

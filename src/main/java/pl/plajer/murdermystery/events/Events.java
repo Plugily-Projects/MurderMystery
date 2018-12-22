@@ -44,6 +44,7 @@ import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 
+import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
@@ -232,7 +233,7 @@ public class Events implements Listener {
       }
       if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Leave")) {
         event.setCancelled(true);
-        if (plugin.isBungeeActivated()) {
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           plugin.getBungeeManager().connectToHub(event.getPlayer());
         } else {
           ArenaManager.leaveAttempt(event.getPlayer(), arena);
