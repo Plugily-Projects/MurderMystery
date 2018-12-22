@@ -403,9 +403,7 @@ public class Arena extends BukkitRunnable {
               player.getInventory().clear();
 
               player.getInventory().setArmorContents(null);
-              if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-                gameBar.removePlayer(player);
-              }
+              doBarAction(BarAction.REMOVE, player);
               player.setFireTicks(0);
               player.setFoodLevel(20);
               for (Player players : plugin.getServer().getOnlinePlayers()) {
@@ -761,6 +759,27 @@ public class Arena extends BukkitRunnable {
   }
 
   /**
+   * Executes boss bar action for arena
+   *
+   * @param action add or remove a player from boss bar
+   * @param p      player
+   */
+  public void doBarAction(BarAction action, Player p) {
+    updateScoreboard();
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+      return;
+    }
+    switch (action) {
+      case ADD:
+        gameBar.addPlayer(p);
+        break;
+      case REMOVE:
+        gameBar.removePlayer(p);
+        break;
+    }
+  }
+
+  /**
    * Get lobby location of arena.
    *
    * @return lobby location of arena
@@ -949,6 +968,10 @@ public class Arena extends BukkitRunnable {
       corpse.getCorpseData().destroyCorpseFromEveryone();
     }
     corpses.clear();
+  }
+
+  public enum BarAction {
+    ADD, REMOVE
   }
 
   public enum GameLocation {

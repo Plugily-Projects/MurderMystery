@@ -163,7 +163,7 @@ public class Main extends JavaPlugin {
     if (forceDisable) {
       return;
     }
-    Debugger.debug(LogLevel.INFO, "System disable");
+    Debugger.debug(LogLevel.INFO, "System disable init");
     for (Player player : getServer().getOnlinePlayers()) {
       User user = userManager.getUser(player.getUniqueId());
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
@@ -177,6 +177,8 @@ public class Main extends JavaPlugin {
     if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       getMySQLDatabase().getManager().shutdownConnPool();
     }
+
+    //todo seek for errors
     for (Arena a : ArenaRegistry.getArenas()) {
       for (Player p : a.getPlayers()) {
         ArenaManager.leaveAttempt(p, a);
