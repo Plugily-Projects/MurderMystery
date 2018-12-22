@@ -119,7 +119,7 @@ public class ArenaManager {
         p.setGameMode(GameMode.SURVIVAL);
         p.setAllowFlight(true);
         p.setFlying(true);
-        User user = UserManager.getUser(p.getUniqueId());
+        User user = plugin.getUserManager().getUser(p.getUniqueId());
         user.setSpectator(true);
         for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
           if (!stat.isPersistent()) {
@@ -130,7 +130,7 @@ public class ArenaManager {
         ArenaUtils.hidePlayer(p, arena);
 
         for (Player spectator : arena.getPlayers()) {
-          if (UserManager.getUser(spectator.getUniqueId()).isSpectator()) {
+          if (plugin.getUserManager().getUser(spectator.getUniqueId()).isSpectator()) {
             p.hidePlayer(spectator);
           } else {
             p.showPlayer(spectator);
@@ -154,7 +154,7 @@ public class ArenaManager {
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
         arena.getGameBar().addPlayer(p);
       }
-      if (!UserManager.getUser(p.getUniqueId()).isSpectator()) {
+      if (!plugin.getUserManager().getUser(p.getUniqueId()).isSpectator()) {
         ChatManager.broadcastAction(arena, p, ChatManager.ActionType.JOIN);
       }
       if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
@@ -182,7 +182,7 @@ public class ArenaManager {
       Debugger.debug(LogLevel.INFO, "Initial leave attempt, " + p.getName());
       MMGameLeaveAttemptEvent gameLeaveAttemptEvent = new MMGameLeaveAttemptEvent(p, arena);
       Bukkit.getPluginManager().callEvent(gameLeaveAttemptEvent);
-      User user = UserManager.getUser(p.getUniqueId());
+      User user = plugin.getUserManager().getUser(p.getUniqueId());
       if (user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) > user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE)) {
         user.setStat(StatsStorage.StatisticType.HIGHEST_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE));
       }
@@ -285,7 +285,7 @@ public class ArenaManager {
       List<String> summaryMessages = LanguageManager.getLanguageList("In-Game.Messages.Game-End-Messages.Summary-Message");
       Random rand = new Random();
       for (final Player p : arena.getPlayers()) {
-        User user = UserManager.getUser(p.getUniqueId());
+        User user = plugin.getUserManager().getUser(p.getUniqueId());
         if (Role.isRole(Role.FAKE_DETECTIVE, p) || Role.isRole(Role.INNOCENT, p)) {
           user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, rand.nextInt(4) + 1);
           user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, rand.nextInt(4) + 1);
@@ -335,7 +335,7 @@ public class ArenaManager {
     } else {
       formatted = StringUtils.replace(formatted, "%murderer%", Bukkit.getOfflinePlayer(a.getMurderer()).getName());
     }
-    formatted = StringUtils.replace(formatted, "%murderer_kills%", String.valueOf(UserManager.getUser(a.getMurderer()).getStat(StatsStorage.StatisticType.LOCAL_KILLS)));
+    formatted = StringUtils.replace(formatted, "%murderer_kills%", String.valueOf(plugin.getUserManager().getUser(a.getMurderer()).getStat(StatsStorage.StatisticType.LOCAL_KILLS)));
     formatted = StringUtils.replace(formatted, "%hero%", a.getHero() == null ? ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody") : Bukkit.getOfflinePlayer(a.getHero()).getName());
     return formatted;
   }

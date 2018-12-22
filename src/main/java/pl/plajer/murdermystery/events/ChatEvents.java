@@ -81,7 +81,7 @@ public class ChatEvents implements Listener {
             eventMessage = eventMessage.replaceAll(Pattern.quote(regexChar), "");
           }
         }
-        message = formatChatPlaceholders(LanguageManager.getLanguageMessage("In-Game.Game-Chat-Format"), UserManager.getUser(event.getPlayer().getUniqueId()), eventMessage);
+        message = formatChatPlaceholders(LanguageManager.getLanguageMessage("In-Game.Game-Chat-Format"), plugin.getUserManager().getUser(event.getPlayer().getUniqueId()), eventMessage);
         if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
           message = PlaceholderAPI.setPlaceholders(event.getPlayer(), message);
         }

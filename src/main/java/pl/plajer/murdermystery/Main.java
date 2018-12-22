@@ -13,7 +13,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
@@ -24,9 +23,6 @@ import pl.plajer.murdermystery.arena.special.SpecialBlockEvents;
 import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
 import pl.plajer.murdermystery.arena.special.pray.PrayerRegistry;
 import pl.plajer.murdermystery.commands.MainCommand;
-import pl.plajer.murdermystery.database.FileStats;
-import pl.plajer.murdermystery.database.MySQLConnectionUtils;
-import pl.plajer.murdermystery.database.MySQLManager;
 import pl.plajer.murdermystery.events.ChatEvents;
 import pl.plajer.murdermystery.events.Events;
 import pl.plajer.murdermystery.events.JoinEvent;
@@ -53,6 +49,8 @@ import pl.plajer.murdermystery.leaderheads.MurderMysteryLoses;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryWins;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
+import pl.plajer.murdermystery.user.data.FileStats;
+import pl.plajer.murdermystery.user.data.MySQLManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.core.database.MySQLDatabase;
 import pl.plajerlair.core.debug.Debugger;
@@ -82,6 +80,7 @@ public class Main extends JavaPlugin {
   private MainCommand mainCommand;
   private CorpseHandler corpseHandler;
   private ConfigPreferences configPreferences;
+  private UserManager userManager;
 
   public boolean is1_11_R1() {
     return version.equalsIgnoreCase("v1_11_R1");
@@ -132,14 +131,6 @@ public class Main extends JavaPlugin {
       setupFiles();
       initializeClasses();
 
-      if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-        for (Player p : Bukkit.getOnlinePlayers()) {
-          Bukkit.getScheduler().runTaskAsynchronously(this, () -> MySQLConnectionUtils.loadPlayerStats(p, this));
-        }
-      } else {
-        fileStats.loadStatsForPlayersOnline();
-      }
-
       String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("MurderMystery").getDescription().getVersion();
       //todo
     /*if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
@@ -177,18 +168,11 @@ public class Main extends JavaPlugin {
     }
     Debugger.debug(LogLevel.INFO, "System disable");
     for (Player player : getServer().getOnlinePlayers()) {
-      User user = UserManager.getUser(player.getUniqueId());
+      User user = userManager.getUser(player.getUniqueId());
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        if (!stat.isPersistent()) {
-          continue;
-        }
-        if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-          getMySQLManager().setStat(player, stat, user.getStat(stat));
-        } else {
-          getFileStats().saveStat(player, stat);
-        }
+        userManager.saveStatistic(user, stat);
       }
-      UserManager.removeUser(player.getUniqueId());
+      userManager.removeUser(player.getUniqueId());
     }
     for (Hologram hologram : HologramsAPI.getHolograms(this)) {
       hologram.delete();
@@ -216,6 +200,7 @@ public class Main extends JavaPlugin {
     } else {
       fileStats = new FileStats(this);
     }
+    userManager = new UserManager(this);
     SpecialItem.loadAll();
     PermissionsManager.init();
     new ChatManager(ChatManager.colorMessage("In-Game.Plugin-Prefix"));
@@ -272,6 +257,7 @@ public class Main extends JavaPlugin {
     MysteryPotionRegistry.init(this);
     PrayerRegistry.init(this);
     new SpecialBlockEvents(this);
+    loadStatsForPlayersOnline();
   }
 
   private void setupFiles() {
@@ -325,6 +311,22 @@ public class Main extends JavaPlugin {
 
   public CorpseHandler getCorpseHandler() {
     return corpseHandler;
+  }
+
+  public UserManager getUserManager() {
+    return userManager;
+  }
+
+  private void loadStatsForPlayersOnline() {
+    for (final Player player : getServer().getOnlinePlayers()) {
+      if (configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+        ArenaRegistry.getArenas().get(0).teleportToLobby(player);
+      }
+      User user = userManager.getUser(player.getUniqueId());
+      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        userManager.loadStatistic(user, stat);
+      }
+    }
   }
 
 }

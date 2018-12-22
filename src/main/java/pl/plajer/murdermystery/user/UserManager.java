@@ -20,10 +20,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
+import pl.plajer.murdermystery.user.data.FileStats;
+import pl.plajer.murdermystery.user.data.MySQLManager;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
 
@@ -34,14 +39,26 @@ import pl.plajerlair.core.debug.LogLevel;
  */
 public class UserManager {
 
-  private static HashMap<UUID, User> users = new HashMap<>();
+  private MySQLManager mySQLManager;
+  private FileStats fileStats;
+  private HashMap<UUID, User> users = new HashMap<>();
+  private Main plugin;
 
-  public static void registerUser(UUID uuid) {
+  public UserManager(Main plugin) {
+    this.plugin = plugin;
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+      mySQLManager = new MySQLManager(plugin);
+    } else {
+      fileStats = new FileStats(plugin);
+    }
+  }
+
+  public void registerUser(UUID uuid) {
     Debugger.debug(LogLevel.INFO, "Registering new user with UUID: " + uuid);
     users.put(uuid, new User(uuid));
   }
 
-  public static User getUser(UUID uuid) {
+  public User getUser(UUID uuid) {
     if (users.containsKey(uuid)) {
       return users.get(uuid);
     } else {
@@ -50,7 +67,7 @@ public class UserManager {
     }
   }
 
-  public static List<User> getUsers(Arena arena) {
+  public List<User> getUsers(Arena arena) {
     List<User> users = new ArrayList<>();
     for (Player player : arena.getPlayers()) {
       users.add(getUser(player.getUniqueId()));
@@ -58,7 +75,41 @@ public class UserManager {
     return users;
   }
 
-  public static void removeUser(UUID uuid) {
+  /**
+   * Saves player statistic into yaml or MySQL storage based on user choice
+   *
+   * @param user user to retrieve statistic from
+   * @param stat stat to save to storage
+   */
+  public void saveStatistic(User user, StatsStorage.StatisticType stat) {
+    if (!stat.isPersistent()) {
+      return;
+    }
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> mySQLManager.saveStat(user, stat));
+      return;
+    }
+    fileStats.saveStat(user, stat);
+  }
+
+  /**
+   * Loads player statistic from yaml or MySQL storage based on user choice
+   *
+   * @param user user to load statistic for
+   * @param stat type of stat to load from storage
+   */
+  public void loadStatistic(User user, StatsStorage.StatisticType stat) {
+    if (!stat.isPersistent()) {
+      return;
+    }
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> user.setStat(stat, mySQLManager.getStat(user, stat)));
+      return;
+    }
+    fileStats.loadStat(user, stat);
+  }
+
+  public void removeUser(UUID uuid) {
     users.remove(uuid);
   }
 

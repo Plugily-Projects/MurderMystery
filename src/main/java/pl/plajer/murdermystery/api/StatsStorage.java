@@ -99,7 +99,7 @@ public class StatsStorage {
    */
   public static int getUserStats(Player player, StatisticType statisticType) {
     Debugger.debug(LogLevel.INFO, "Village API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
-    return UserManager.getUser(player.getUniqueId()).getStat(statisticType);
+    return plugin.getUserManager().getUser(player.getUniqueId()).getStat(statisticType);
   }
 
   /**

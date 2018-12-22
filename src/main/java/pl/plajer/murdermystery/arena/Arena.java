@@ -215,12 +215,12 @@ public class Arena extends BukkitRunnable {
           int totalMurderer = 0;
           int totalDetective = 0;
           for (Player p : getPlayers()) {
-            User user = UserManager.getUser(p.getUniqueId());
+            User user = plugin.getUserManager().getUser(p.getUniqueId());
             totalMurderer += user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER);
             totalDetective += user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE);
           }
           for (Player p : getPlayers()) {
-            User user = UserManager.getUser(p.getUniqueId());
+            User user = plugin.getUserManager().getUser(p.getUniqueId());
             try {
               p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
             } catch (NumberFormatException ignored) {
@@ -254,7 +254,7 @@ public class Arena extends BukkitRunnable {
             Map<User, Double> murdererChances = new HashMap<>();
             Map<User, Double> detectiveChances = new HashMap<>();
             for (Player p : getPlayers()) {
-              User user = UserManager.getUser(p.getUniqueId());
+              User user = plugin.getUserManager().getUser(p.getUniqueId());
               murdererChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) totalMurderer) * 100.0);
               detectiveChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) totalDetective) * 100.0);
             }
@@ -264,7 +264,7 @@ public class Arena extends BukkitRunnable {
             Set<Player> playersToSet = getPlayers();
             Player murderer = ((User) sortedMurderer.keySet().toArray()[0]).toPlayer();
             this.murderer = murderer.getUniqueId();
-            UserManager.getUser(this.murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
+            plugin.getUserManager().getUser(this.murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
             playersToSet.remove(murderer);
             MessageUtils.sendTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"));
             MessageUtils.sendSubTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"));
@@ -275,7 +275,7 @@ public class Arena extends BukkitRunnable {
 
             Player detective = ((User) sortedDetective.keySet().toArray()[0]).toPlayer();
             this.detective = detective.getUniqueId();
-            UserManager.getUser(this.detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
+            plugin.getUserManager().getUser(this.detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
             MessageUtils.sendTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"));
             MessageUtils.sendSubTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"));
             playersToSet.remove(detective);
@@ -324,7 +324,7 @@ public class Arena extends BukkitRunnable {
           if (getTimer() % 30 == 0) {
             for (Player p : getPlayersLeft()) {
               if (Role.isRole(Role.INNOCENT, p)) {
-                ArenaUtils.addScore(UserManager.getUser(p.getUniqueId()), ArenaUtils.ScoreAction.SURVIVE_TIME, 0);
+                ArenaUtils.addScore(plugin.getUserManager().getUser(p.getUniqueId()), ArenaUtils.ScoreAction.SURVIVE_TIME, 0);
               }
             }
           }
@@ -358,7 +358,7 @@ public class Arena extends BukkitRunnable {
                     MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"));
                   }
                 }
-                ArenaUtils.addScore(UserManager.getUser(murderer), ArenaUtils.ScoreAction.WIN_GAME, 0);
+                ArenaUtils.addScore(plugin.getUserManager().getUser(murderer), ArenaUtils.ScoreAction.WIN_GAME, 0);
                 ArenaManager.stopGame(false, this);
                 setArenaState(ArenaState.ENDING);
                 setTimer(10);
@@ -387,7 +387,7 @@ public class Arena extends BukkitRunnable {
             }
 
             for (Player player : getPlayers()) {
-              UserManager.getUser(player.getUniqueId()).removeScoreboard();
+              plugin.getUserManager().getUser(player.getUniqueId()).removeScoreboard();
               player.setGameMode(GameMode.SURVIVAL);
               for (Player players : Bukkit.getOnlinePlayers()) {
                 player.showPlayer(players);
@@ -423,7 +423,7 @@ public class Arena extends BukkitRunnable {
 
             ChatManager.broadcast(this, ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
 
-            for (User user : UserManager.getUsers(this)) {
+            for (User user : plugin.getUserManager().getUsers(this)) {
               user.setSpectator(false);
             }
             plugin.getRewardsHandler().performEndGameRewards(this);
@@ -472,7 +472,7 @@ public class Arena extends BukkitRunnable {
       if (p == null) {
         continue;
       }
-      User user = UserManager.getUser(p.getUniqueId());
+      User user = plugin.getUserManager().getUser(p.getUniqueId());
       scoreboard = new GameScoreboard("PL_MM", "MM_CR", ChatManager.colorMessage("Scoreboard.Title"));
       List<String> lines = scoreboardContents.get(getArenaState().getFormattedName());
       if (Role.isRole(Role.MURDERER, p)) {
@@ -891,13 +891,13 @@ public class Arena extends BukkitRunnable {
   }
 
   void addStat(Player player, StatsStorage.StatisticType stat) {
-    User user = UserManager.getUser(player.getUniqueId());
+    User user = plugin.getUserManager().getUser(player.getUniqueId());
     user.addStat(stat, 1);
   }
 
   public List<Player> getPlayersLeft() {
     List<Player> players = new ArrayList<>();
-    for (User user : UserManager.getUsers(this)) {
+    for (User user : plugin.getUserManager().getUsers(this)) {
       if (!user.isSpectator()) {
         players.add(user.toPlayer());
       }

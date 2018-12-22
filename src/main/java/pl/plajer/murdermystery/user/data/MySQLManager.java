@@ -13,7 +13,7 @@
  * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.murdermystery.database;
+package pl.plajer.murdermystery.user.data;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
+import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.core.database.MySQLDatabase;
 
@@ -68,16 +69,22 @@ public class MySQLManager {
     database.executeUpdate("INSERT INTO playerstats (UUID,name) VALUES ('" + player.getUniqueId().toString() + "','" + player.getName() + "')");
   }
 
-  public void addStat(Player player, StatsStorage.StatisticType stat, int amount) {
-    database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + stat.getName() + "+" + amount + " WHERE UUID='" + player.getUniqueId().toString() + "'");
+  public void saveStat(User user, StatsStorage.StatisticType stat) {
+    database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.toPlayer().getUniqueId().toString() + "';");
   }
 
-  public void setStat(Player player, StatsStorage.StatisticType stat, int number) {
-    database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + number + " WHERE UUID='" + player.getUniqueId().toString() + "';");
-  }
+  public int getStat(User user, StatsStorage.StatisticType stat) {
+    ResultSet resultSet = database.executeQuery("SELECT UUID from playerstats WHERE UUID='" + user.toPlayer().getUniqueId().toString() + "'");
+    //insert into the database
+    try {
+      if (!resultSet.next()) {
+        insertPlayer(user.toPlayer());
+      }
+    } catch (SQLException e1) {
+      System.out.print("CONNECTION FAILED FOR PLAYER " + user.toPlayer().getName());
+    }
 
-  public int getStat(Player player, StatsStorage.StatisticType stat) {
-    ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM playerstats WHERE UUID='" + player.getUniqueId().toString() + "'");
+    ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM playerstats WHERE UUID='" + user.toPlayer().getUniqueId().toString() + "'");
     try {
       if (!set.next()) {
         return 0;

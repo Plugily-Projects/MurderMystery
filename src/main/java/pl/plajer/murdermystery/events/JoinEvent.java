@@ -15,7 +15,6 @@
 
 package pl.plajer.murdermystery.events;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,9 +25,8 @@ import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
-import pl.plajer.murdermystery.database.MySQLConnectionUtils;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
-import pl.plajer.murdermystery.user.UserManager;
+import pl.plajer.murdermystery.user.User;
 import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
@@ -69,14 +67,10 @@ public class JoinEvent implements Listener {
       player.hidePlayer(event.getPlayer());
       event.getPlayer().hidePlayer(player);
     }
-    UserManager.registerUser(event.getPlayer().getUniqueId());
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        plugin.getFileStats().loadStat(event.getPlayer(), stat);
-      }
-    } else {
-      final Player player = event.getPlayer();
-      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> MySQLConnectionUtils.loadPlayerStats(player, plugin));
+    plugin.getUserManager().registerUser(event.getPlayer().getUniqueId());
+    User user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
+    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+      plugin.getUserManager().loadStatistic(user, stat);
     }
   }
 

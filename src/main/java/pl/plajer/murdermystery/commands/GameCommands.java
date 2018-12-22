@@ -54,7 +54,7 @@ public class GameCommands extends MainCommand {
     if (!checkSenderPlayer(sender)) {
       return;
     }
-    User user = UserManager.getUser(((Player) sender).getUniqueId());
+    User user = plugin.getUserManager().getUser(((Player) sender).getUniqueId());
     sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header"));
     sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Kills") + user.getStat(StatsStorage.StatisticType.KILLS));
     sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Deaths") + user.getStat(StatsStorage.StatisticType.DEATHS));
@@ -67,11 +67,11 @@ public class GameCommands extends MainCommand {
 
   public void sendStatsOther(CommandSender sender, String p) {
     Player player = Bukkit.getPlayerExact(p);
-    if (player == null || UserManager.getUser(player.getUniqueId()) == null) {
+    if (player == null || plugin.getUserManager().getUser(player.getUniqueId()) == null) {
       sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
       return;
     }
-    User user = UserManager.getUser(player.getUniqueId());
+    User user = plugin.getUserManager().getUser(player.getUniqueId());
     sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header-Other").replace("%player%", player.getName()));
     sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Kills") + user.getStat(StatsStorage.StatisticType.KILLS));
     sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Deaths") + user.getStat(StatsStorage.StatisticType.DEATHS));

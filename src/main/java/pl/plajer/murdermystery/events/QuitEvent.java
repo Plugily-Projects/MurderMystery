@@ -61,38 +61,9 @@ public class QuitEvent implements Listener {
       if (ArenaRegistry.getArena(event.getPlayer()) != null) {
         ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArena(event.getPlayer()));
       }
-      final User user = UserManager.getUser(event.getPlayer().getUniqueId());
-      final Player player = event.getPlayer();
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-          for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-            if (!stat.isPersistent()) {
-              return;
-            }
-            int i;
-            try {
-              i = plugin.getMySQLManager().getStat(player, stat);
-            } catch (NullPointerException npe) {
-              i = 0;
-              System.out.print("COULDN'T GET STATS FROM PLAYER: " + player.getName());
-              npe.printStackTrace();
-              MessageUtils.errorOccured();
-              Bukkit.getConsoleSender().sendMessage("Cannot get stats from MySQL database!");
-              Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
-            }
-
-            if (i > user.getStat(stat)) {
-              plugin.getMySQLManager().setStat(player, stat, user.getStat(stat) + i);
-            } else {
-              plugin.getMySQLManager().setStat(player, stat, user.getStat(stat));
-            }
-            plugin.getMySQLDatabase().executeUpdate("UPDATE playerstats SET name='" + player.getName() + "' WHERE UUID='" + player.getUniqueId().toString() + "';");
-          }
-        });
-      } else {
-        for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-          plugin.getFileStats().saveStat(player, stat);
-        }
+      final User user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
+      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        plugin.getUserManager().saveStatistic(user, stat);
       }
     } catch (Exception ex) {
       new ReportedException(plugin, ex);

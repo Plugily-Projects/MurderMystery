@@ -92,7 +92,7 @@ public class SpectatorItemEvents implements Listener {
         ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
     for (Player player : world.getPlayers()) {
       Arena arena = ArenaRegistry.getArena(player);
-      if (arena != null && ArenaRegistry.getArena(p).getPlayers().contains(player) && !UserManager.getUser(player.getUniqueId()).isSpectator()) {
+      if (arena != null && ArenaRegistry.getArena(p).getPlayers().contains(player) && !plugin.getUserManager().getUser(player.getUniqueId()).isSpectator()) {
         ItemStack skull;
         if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
           skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);

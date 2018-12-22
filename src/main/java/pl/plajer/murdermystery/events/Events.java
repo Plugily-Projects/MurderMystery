@@ -107,7 +107,7 @@ public class Events implements Listener {
         return;
       }
       final Player attacker = e.getPlayer();
-      final User attackerUser = UserManager.getUser(attacker.getUniqueId());
+      final User attackerUser = plugin.getUserManager().getUser(attacker.getUniqueId());
       //todo not hardcoded!
       if (attacker.getInventory().getItemInMainHand().getType() == Material.IRON_SWORD) {
         if (attackerUser.getCooldown("sword_shoot") > 0) {
@@ -140,7 +140,7 @@ public class Events implements Listener {
                 continue;
               }
               Player victim = (Player) en;
-              if (ArenaRegistry.isInArena(victim) && UserManager.getUser(victim.getUniqueId()).isSpectator()) {
+              if (ArenaRegistry.isInArena(victim) && plugin.getUserManager().getUser(victim.getUniqueId()).isSpectator()) {
                 continue;
               }
               if (victim.getLocation().distance(loc) < 1.0) {

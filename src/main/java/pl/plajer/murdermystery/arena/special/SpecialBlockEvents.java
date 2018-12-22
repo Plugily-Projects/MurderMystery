@@ -97,7 +97,7 @@ public class SpecialBlockEvents implements Listener {
     if (e.getClickedBlock().getType() != XMaterial.CAULDRON.parseMaterial()) {
       return;
     }
-    User user = UserManager.getUser(e.getPlayer().getUniqueId());
+    User user = plugin.getUserManager().getUser(e.getPlayer().getUniqueId());
     if (e.getPlayer().getInventory().getItem(/* same for all roles */ ItemPosition.POTION.getOtherRolesItemPosition()) != null) {
       e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Drink-Potion"));
       return;
@@ -120,7 +120,7 @@ public class SpecialBlockEvents implements Listener {
       return;
     }
     e.setCancelled(true);
-    User user = UserManager.getUser(e.getPlayer().getUniqueId());
+    User user = plugin.getUserManager().getUser(e.getPlayer().getUniqueId());
     if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < 1) {
       e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold").replace("%amount%", String.valueOf(1)));
       return;
@@ -133,7 +133,7 @@ public class SpecialBlockEvents implements Listener {
   }
 
   private void onPrayLeverClick(PlayerInteractEvent e) {
-    User user = UserManager.getUser(e.getPlayer().getUniqueId());
+    User user = plugin.getUserManager().getUser(e.getPlayer().getUniqueId());
     if (user.getStat(StatsStorage.StatisticType.LOCAL_PRAISES) < 1) {
       e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.No-Money-No-Pray"));
       return;
