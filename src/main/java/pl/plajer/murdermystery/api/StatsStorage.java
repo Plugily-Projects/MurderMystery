@@ -39,6 +39,7 @@ import java.util.UUID;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.user.UserManager;
@@ -52,7 +53,7 @@ import pl.plajerlair.core.utils.ConfigUtils;
  */
 public class StatsStorage {
 
-  public static Main plugin;
+  private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
   private static Map sortByValue(Map unsortMap) {
     List list = new LinkedList(unsortMap.entrySet());
@@ -72,7 +73,7 @@ public class StatsStorage {
    * @return Map of UUID keys and Integer values sorted in ascending order of requested statistic type
    */
   public static Map<UUID, Integer> getStats(StatisticType stat) {
-    Main.debug(Main.LogLevel.INFO, "Village API getStats(" + stat.getName() + ") run");
+    Main.debug(Main.LogLevel.INFO, "MurderMystery API getStats(" + stat.getName() + ") run");
     if (plugin.isDatabaseActivated()) {
       return plugin.getMySQLManager().getColumn(stat.getName());
     } else {

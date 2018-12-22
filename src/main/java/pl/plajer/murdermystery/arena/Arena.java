@@ -218,7 +218,13 @@ public class Arena extends BukkitRunnable {
           }
           for (Player p : getPlayers()) {
             User user = UserManager.getUser(p.getUniqueId());
-            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
+            try {
+              p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
+            } catch (NumberFormatException ignored) {
+              Main.debug(Main.LogLevel.WARN, "Infinite or NaN for player " + p.getName() + " values: " +
+                  totalMurderer + "murderer, " + totalDetective + "detective; user: " + user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) + " murderer" +
+                  user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) + " detective");
+            }
           }
           if (getTimer() == 0 || forceStart) {
             MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
@@ -228,6 +234,9 @@ public class Arena extends BukkitRunnable {
               gameBar.setProgress(1.0);
             }
             setTimer(5);
+            if(players.size() == 0) {
+              break;
+            }
             teleportAllToStartLocation();
             for (Player player : getPlayers()) {
               player.getInventory().clear();
@@ -444,10 +453,10 @@ public class Arena extends BukkitRunnable {
     }
   }
 
-  private String formatRoleChance(User user, int murdererPts, int detectivePts) {
+  private String formatRoleChance(User user, int murdererPts, int detectivePts) throws NumberFormatException {
     String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Role-Chances-Action-Bar");
-    message = StringUtils.replace(message, "%murderer_chance%", String.valueOf(MinigameUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) murdererPts) * 100.0, 2)) + "%");
-    message = StringUtils.replace(message, "%detective_chance%", String.valueOf(MinigameUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) detectivePts) * 100.0, 2)) + "%");
+    message = StringUtils.replace(message, "%murderer_chance%", MinigameUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) murdererPts) * 100.0, 2) + "%");
+    message = StringUtils.replace(message, "%detective_chance%", MinigameUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) detectivePts) * 100.0, 2) + "%");
     return message;
   }
 
