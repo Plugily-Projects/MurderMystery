@@ -63,12 +63,12 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.api.events.game.MMGameStartEvent;
 import pl.plajer.murdermystery.api.events.game.MMGameStateChangeEvent;
+import pl.plajer.murdermystery.arena.corpse.Corpse;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Utils;
@@ -90,7 +90,7 @@ public class Arena extends BukkitRunnable {
   private List<Location> goldSpawnPoints = new ArrayList<>();
   private List<Item> goldSpawned = new ArrayList<>();
   private List<Location> playerSpawnPoints = new ArrayList<>();
-  private List<ArenaCorpse> corpses = new ArrayList<>();
+  private List<Corpse> corpses = new ArrayList<>();
   private List<SpecialBlock> specialBlocks = new ArrayList<>();
   private Hologram bowHologram;
   private UUID murderer;
@@ -140,7 +140,7 @@ public class Arena extends BukkitRunnable {
     this.ready = ready;
   }
 
-  public void addCorpse(ArenaCorpse corpse) {
+  public void addCorpse(Corpse corpse) {
     corpses.add(corpse);
   }
 
@@ -960,7 +960,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void clearCorpses() {
-    for (ArenaCorpse corpse : corpses) {
+    for (Corpse corpse : corpses) {
       if (!corpse.getHologram().isDeleted()) {
         corpse.getHologram().delete();
       }

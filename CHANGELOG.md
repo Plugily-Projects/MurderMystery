@@ -1,8 +1,9 @@
-### 1.0.0 Pre release 3 (30.10.2018/21.12.2018)
+### 1.0.0 Pre release 3 (30.10.2018/24.12.2018)
 * Now arena is stopped 10 seconds after the game ends not 5 seconds after
 * Arena is now properly clean up after the game when using bungee mode
 * Fixed arrows weren't given to innocents when they got 10 gold ingots
 * Fixed /mma forcestart wasn't working properly if there were not enough players to start
+* In case of server crash players' inventories will be loaded on join from backup from Murder Mystery minigame if exists
 
 ### 1.0.0 Pre release 2 (28.10.2018)
 * Fixed wrong cast error when you were damaged by skeleton's arrow (https://plajer.xyz/errorservice/viewer.php?id=336)

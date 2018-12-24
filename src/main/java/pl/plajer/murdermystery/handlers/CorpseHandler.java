@@ -31,7 +31,7 @@ import org.golde.bukkit.corpsereborn.nms.Corpses;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
-import pl.plajer.murdermystery.arena.ArenaCorpse;
+import pl.plajer.murdermystery.arena.corpse.Corpse;
 import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
@@ -78,7 +78,7 @@ public class CorpseHandler implements Listener {
         hologram.appendTextLine(registeredLastWords.get("default"));
       }
       lastSpawnedCorpse = corpse;
-      arena.addCorpse(new ArenaCorpse(hologram, corpse));
+      arena.addCorpse(new Corpse(hologram, corpse));
       Bukkit.getScheduler().runTaskLater(plugin, () -> {
         hologram.delete();
         Bukkit.getScheduler().runTaskLater(plugin, corpse::destroyCorpseFromEveryone, 20);
