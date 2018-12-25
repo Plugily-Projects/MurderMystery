@@ -38,7 +38,6 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.user.UserManager;
 import pl.plajerlair.core.minigame.spectator.SpectatorSettingsMenu;
 import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.MinigameUtils;

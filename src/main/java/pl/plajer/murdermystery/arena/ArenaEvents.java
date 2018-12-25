@@ -47,7 +47,6 @@ import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Utils;
@@ -79,14 +78,14 @@ public class ArenaEvents implements Listener {
       return;
     }
     if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
-      if(e.getDamage() >= 20.0) {
+      if (e.getDamage() >= 20.0) {
         //kill the player for suicidal death, else do not
         ((Player) e.getEntity()).damage(1000.0);
       }
       e.setCancelled(true);
     }
     //kill the player and move to the spawn point
-    if(e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
+    if (e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
       ((Player) e.getEntity()).damage(1000.0);
       e.getEntity().teleport(arena.getPlayerSpawnPoints().get(0));
     }
@@ -234,7 +233,7 @@ public class ArenaEvents implements Listener {
       if (!(e.getDamager() instanceof Arrow && e.getEntity() instanceof Player)) {
         return;
       }
-      if(!(((Arrow) e.getDamager()).getShooter() instanceof Player)) {
+      if (!(((Arrow) e.getDamager()).getShooter() instanceof Player)) {
         return;
       }
       Player attacker = (Player) ((Arrow) e.getDamager()).getShooter();

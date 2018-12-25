@@ -49,7 +49,6 @@ import pl.plajer.murdermystery.leaderheads.MurderMysteryLoses;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryWins;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
-import pl.plajer.murdermystery.user.data.FileStats;
 import pl.plajer.murdermystery.user.data.MySQLManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.core.database.MySQLDatabase;

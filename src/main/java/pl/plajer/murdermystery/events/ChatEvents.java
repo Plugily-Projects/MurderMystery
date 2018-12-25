@@ -36,7 +36,6 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.user.UserManager;
 import pl.plajerlair.core.services.exception.ReportedException;
 
 /**

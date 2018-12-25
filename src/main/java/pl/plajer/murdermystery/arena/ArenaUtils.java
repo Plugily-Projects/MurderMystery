@@ -53,7 +53,7 @@ public class ArenaUtils {
   public static void addScore(User user, ScoreAction action, int amount) {
     String msg = ChatManager.colorMessage("In-Game.Messages.Bonus-Score");
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
-    if(action == ScoreAction.GOLD_PICKUP && amount > 1) {
+    if (action == ScoreAction.GOLD_PICKUP && amount > 1) {
       msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints() * amount));
       msg = StringUtils.replace(msg, "%action%", action.getAction());
       user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + (action.getPoints() * amount));
@@ -90,7 +90,7 @@ public class ArenaUtils {
         arena.setMurdererLocatorReceived(true);
 
         for (Player p : arena.getPlayersLeft()) {
-          if(Role.isRole(Role.MURDERER, p)) {
+          if (Role.isRole(Role.MURDERER, p)) {
             continue;
           }
           MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Watch-Out-Title"));
@@ -98,7 +98,7 @@ public class ArenaUtils {
         }
       }
       for (Player p : arena.getPlayersLeft()) {
-        if(Role.isRole(Role.MURDERER, p)) {
+        if (Role.isRole(Role.MURDERER, p)) {
           continue;
         }
         Bukkit.getPlayer(arena.getMurderer()).setCompassTarget(p.getLocation());

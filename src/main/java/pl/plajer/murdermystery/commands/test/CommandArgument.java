@@ -46,7 +46,8 @@ public class CommandArgument {
     return validExecutors;
   }
 
-  public void execute(CommandSender sender, String[] args) {}
+  public void execute(CommandSender sender, String[] args) {
+  }
 
   public enum ExecutorType {
     BOTH, CONSOLE, PLAYER

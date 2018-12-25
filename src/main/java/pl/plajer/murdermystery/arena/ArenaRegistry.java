@@ -151,17 +151,17 @@ public class ArenaRegistry {
         arena.setGoldSpawnPoints(goldSpawnPoints);
 
         List<SpecialBlock> specialBlocks = new ArrayList<>();
-        if(config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
+        if (config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
           for (String loc : config.getStringList("instances." + arena.getID() + ".mystery-cauldrons")) {
             specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
           }
         }
-        if(config.isSet("instances." + arena.getID() + ".confessionals")) {
+        if (config.isSet("instances." + arena.getID() + ".confessionals")) {
           for (String loc : config.getStringList("instances." + arena.getID() + ".confessionals")) {
             specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
           }
         }
-        for(SpecialBlock block : specialBlocks) {
+        for (SpecialBlock block : specialBlocks) {
           arena.loadSpecialBlock(block);
         }
         arena.setLobbyLocation(LocationUtils.getLocation(config.getString(s + "lobbylocation", "world,364.0,63.0,-72.0,0.0,0.0")));

@@ -46,7 +46,7 @@ public class UserManager {
 
   public UserManager(Main plugin) {
     this.plugin = plugin;
-    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       mySQLManager = new MySQLManager(plugin);
     } else {
       fileStats = new FileStats(plugin);

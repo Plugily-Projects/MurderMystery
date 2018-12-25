@@ -31,7 +31,6 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajerlair.core.utils.LocationUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
 
 /**
@@ -65,9 +64,9 @@ public class Utils {
 
   public static List<Block> getNearbyBlocks(Location location, int radius) {
     List<Block> blocks = new ArrayList<>();
-    for(int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
-      for(int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
-        for(int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
+    for (int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
+      for (int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
+        for (int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
           blocks.add(location.getWorld().getBlockAt(x, y, z));
         }
       }
@@ -90,15 +89,16 @@ public class Utils {
 
   /**
    * Due to spigot bug if coordinate is negative getTargetBlock will display negative coord -1
+   *
    * @param loc location to fix coordinates for
    * @return fixed location value
    */
   public static Location fixLocation(Location loc) {
     Location fixedLocation = loc.clone();
-    if(loc.getZ() < 0) {
+    if (loc.getZ() < 0) {
       fixedLocation.add(0, 0, 1);
     }
-    if(loc.getX() < 0) {
+    if (loc.getX() < 0) {
       fixedLocation.add(1, 0, 0);
     }
     return fixedLocation;

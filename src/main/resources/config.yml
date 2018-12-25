@@ -63,8 +63,8 @@ Disable-Leave-Command: false
 
 # Commands which can be used in game, remove all of them to disable
 Whitelisted-Commands:
-- me
-- help
+  - me
+  - help
 
 # Enable in game rewards? See rewards.yml for more...
 Rewards-Enabled: false

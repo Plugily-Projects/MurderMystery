@@ -67,14 +67,14 @@ public class CorpseHandler implements Listener {
       hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Corpse-Last-Words").replace("%player%", p.getName()));
       boolean found = false;
       //todo priority note to wiki
-      for(String perm : registeredLastWords.keySet()) {
-        if(p.hasPermission(perm)) {
+      for (String perm : registeredLastWords.keySet()) {
+        if (p.hasPermission(perm)) {
           hologram.appendTextLine(registeredLastWords.get(perm));
           found = true;
           break;
         }
       }
-      if(!found) {
+      if (!found) {
         hologram.appendTextLine(registeredLastWords.get("default"));
       }
       lastSpawnedCorpse = corpse;

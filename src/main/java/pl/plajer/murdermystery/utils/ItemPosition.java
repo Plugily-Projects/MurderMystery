@@ -42,22 +42,23 @@ public enum ItemPosition {
   /**
    * Adds target item to specified hotbar position sorta different for each role.
    * Item will be added if there is already set or will be set when no item is set in the position.
-   * @param player player to add item to
+   *
+   * @param player       player to add item to
    * @param itemPosition position of item to set/add
-   * @param itemStack itemstack to be added at itemPostion or set at itemPosition
+   * @param itemStack    itemstack to be added at itemPostion or set at itemPosition
    */
   public static void addItem(Player player, ItemPosition itemPosition, ItemStack itemStack) {
-    if(player == null) {
+    if (player == null) {
       return;
     }
     Inventory inv = player.getInventory();
-    if(Role.isRole(Role.MURDERER, player)) {
-      if(inv.getItem(itemPosition.getMurdererItemPosition()) != null) {
+    if (Role.isRole(Role.MURDERER, player)) {
+      if (inv.getItem(itemPosition.getMurdererItemPosition()) != null) {
         inv.getItem(itemPosition.getMurdererItemPosition()).setAmount(inv.getItem(itemPosition.getMurdererItemPosition()).getAmount() + itemStack.getAmount());
       }
       inv.setItem(itemPosition.getMurdererItemPosition(), itemStack);
     } else {
-      if(inv.getItem(itemPosition.getOtherRolesItemPosition()) != null) {
+      if (inv.getItem(itemPosition.getOtherRolesItemPosition()) != null) {
         inv.getItem(itemPosition.getOtherRolesItemPosition()).setAmount(inv.getItem(itemPosition.getOtherRolesItemPosition()).getAmount() + itemStack.getAmount());
         return;
       }
@@ -68,16 +69,17 @@ public enum ItemPosition {
   /**
    * Sets target item in specified hotbar position sorta different for each role.
    * If item there is already set it will be incremented by itemStack amount if possible.
-   * @param player player to set item to
+   *
+   * @param player       player to set item to
    * @param itemPosition position of item to set
-   * @param itemStack itemstack to set at itemPosition
+   * @param itemStack    itemstack to set at itemPosition
    */
   public static void setItem(Player player, ItemPosition itemPosition, ItemStack itemStack) {
-    if(player == null) {
+    if (player == null) {
       return;
     }
     Inventory inv = player.getInventory();
-    if(Role.isRole(Role.MURDERER, player)) {
+    if (Role.isRole(Role.MURDERER, player)) {
       inv.setItem(itemPosition.getMurdererItemPosition(), itemStack);
     } else {
       inv.setItem(itemPosition.getOtherRolesItemPosition(), itemStack);

@@ -15,8 +15,6 @@
 
 package pl.plajer.murdermystery.events;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -27,8 +25,6 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.user.UserManager;
-import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.core.services.exception.ReportedException;
 
 /**

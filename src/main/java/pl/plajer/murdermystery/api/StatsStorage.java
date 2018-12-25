@@ -43,7 +43,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
-import pl.plajer.murdermystery.user.UserManager;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.utils.ConfigUtils;

@@ -354,7 +354,7 @@ public class MainCommand implements CommandExecutor {
     config.set(path + "signs", new ArrayList<>());
     config.set(path + "isdone", false);
     config.set(path + "world", worldName);
-    config.set(path + "mystery-cauldrons",  new ArrayList<>());
+    config.set(path + "mystery-cauldrons", new ArrayList<>());
     config.set(path + "confessionals", new ArrayList<>());
     ConfigUtils.saveConfig(plugin, config, "arenas");
 
@@ -372,12 +372,12 @@ public class MainCommand implements CommandExecutor {
     arena.setGoldSpawnPoints(goldSpawnPoints);
 
     List<SpecialBlock> specialBlocks = new ArrayList<>();
-    if(config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
+    if (config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
       for (String loc : config.getStringList("instances." + arena.getID() + ".mystery-cauldrons")) {
         specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
       }
     }
-    for(SpecialBlock block : specialBlocks) {
+    for (SpecialBlock block : specialBlocks) {
       arena.loadSpecialBlock(block);
     }
     arena.setMinimumPlayers(ConfigUtils.getConfig(plugin, "arenas").getInt(path + "minimumplayers"));

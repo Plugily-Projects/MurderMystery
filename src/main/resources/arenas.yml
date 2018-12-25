@@ -9,8 +9,8 @@ instances:
     signs: []
     isdone: false
     playerspawnpoints:
-    - world,364.0,63.0,-72.0,0.0,0.0
+      - world,364.0,63.0,-72.0,0.0,0.0
     goldspawnpoints:
-    - world,364.0,63.0,-72.0,0.0,0.0
+      - world,364.0,63.0,-72.0,0.0,0.0
     mystery-cauldrons:
-    - world,364.0,63.0,-72.0,0.0,0.0
+      - world,364.0,63.0,-72.0,0.0,0.0

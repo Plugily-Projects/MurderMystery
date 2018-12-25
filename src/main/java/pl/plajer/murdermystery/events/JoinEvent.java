@@ -75,7 +75,7 @@ public class JoinEvent implements Listener {
     }
     //load player inventory in case of server crash, file is deleted once loaded so if file was already
     //deleted player won't receive his backup, in case of crash he will get it back
-    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventoryUtils.loadInventory(plugin, event.getPlayer());
     }
   }

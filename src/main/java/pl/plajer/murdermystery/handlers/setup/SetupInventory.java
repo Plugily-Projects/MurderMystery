@@ -38,9 +38,9 @@ import pl.plajerlair.core.utils.XMaterial;
  */
 public class SetupInventory {
 
+  public static final String VIDEO_LINK = "https://bit.ly/2CuSR5E";
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private Inventory inventory;
-  public static final String VIDEO_LINK = "https://bit.ly/2CuSR5E";
 
   public SetupInventory(Arena arena) {
     this.inventory = Bukkit.createInventory(null, 9 * 4, "MM Arena: " + arena.getID());
@@ -144,9 +144,10 @@ public class SetupInventory {
   }
 
   private String isOptionDoneList(String path, int minimum) {
-    if (ConfigUtils.getConfig(plugin, "arenas").isSet(path)) {if(ConfigUtils.getConfig(plugin, "arenas").getStringList(path).size() < minimum) {
-      return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No - add more spawns";
-    }
+    if (ConfigUtils.getConfig(plugin, "arenas").isSet(path)) {
+      if (ConfigUtils.getConfig(plugin, "arenas").getStringList(path).size() < minimum) {
+        return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No - add more spawns";
+      }
 
       return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(value: " + ConfigUtils.getConfig(plugin, "arenas")
           .getStringList(path).size() + ")";

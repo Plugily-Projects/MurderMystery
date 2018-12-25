@@ -207,7 +207,7 @@ public class Arena extends BukkitRunnable {
               player.setExp(1);
               player.setLevel(0);
             }
-            if(forceStart) {
+            if (forceStart) {
               forceStart = false;
             }
             break;
@@ -237,7 +237,7 @@ public class Arena extends BukkitRunnable {
               gameBar.setProgress(1.0);
             }
             setTimer(5);
-            if(players.size() == 0) {
+            if (players.size() == 0) {
               break;
             }
             teleportAllToStartLocation();
@@ -291,7 +291,7 @@ public class Arena extends BukkitRunnable {
               gameBar.setTitle(ChatManager.colorMessage("Bossbar.In-Game-Info"));
             }
           }
-          if(forceStart) {
+          if (forceStart) {
             forceStart = false;
           }
           setTimer(getTimer() - 1);
@@ -313,7 +313,7 @@ public class Arena extends BukkitRunnable {
               getTimer() > (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15)) {
             for (Player p : getPlayers()) {
               p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword")
-                  .replace("%time%",String.valueOf(getTimer() - (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15))));
+                  .replace("%time%", String.valueOf(getTimer() - (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15))));
               p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
             }
             if (getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
@@ -881,7 +881,7 @@ public class Arena extends BukkitRunnable {
         break;
       case PRAISE_DEVELOPER:
         holo = HologramsAPI.createHologram(plugin, Utils.getBlockCenter(block.getLocation().clone().add(0, 2.0, 0)));
-        for(String str : ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
+        for (String str : ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
           holo.appendTextLine(str);
         }
         break;

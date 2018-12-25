@@ -34,7 +34,6 @@ import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry
 import pl.plajer.murdermystery.arena.special.pray.PrayerRegistry;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.core.services.exception.ReportedException;
@@ -162,7 +161,7 @@ public class SpecialBlockEvents implements Listener {
           return;
         }
       }
-    } catch (Exception ex){
+    } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }
   }

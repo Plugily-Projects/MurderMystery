@@ -15,16 +15,11 @@
 
 package pl.plajer.murdermystery.user.data;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
-import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
-import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.user.UserManager;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
