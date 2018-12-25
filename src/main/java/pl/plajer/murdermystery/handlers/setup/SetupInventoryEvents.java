@@ -13,6 +13,21 @@
  * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * Murder Mystery is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Murder Mystery is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.plajer.murdermystery.handlers.setup;
 
 import java.util.ArrayList;
@@ -59,9 +74,9 @@ public class SetupInventoryEvents implements Listener {
   @EventHandler
   public void onClick(InventoryClickEvent e) {
     try {
-      if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getCurrentItem() == null || e.getInventory().getHolder() == null ||
-          !e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getWhoClicked().hasPermission("murdermystery.admin.create") ||
-          !e.getInventory().getName().contains("MM Arena:")) {
+      if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getCurrentItem() == null || e.getInventory().getHolder() == null
+          || !e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getWhoClicked().hasPermission("murdermystery.admin.create")
+          || !e.getInventory().getName().contains("MM Arena:")) {
         return;
       }
       e.setCancelled(true);
@@ -218,6 +233,8 @@ public class SetupInventoryEvents implements Listener {
           ConfigUtils.saveConfig(plugin, config, "arenas");
           player.sendMessage("Murder Mystery: New confessional for arena/instance " + arena.getID() + " was added");
           return;
+        default:
+          break;
       }
 
       if (e.getCurrentItem().getType() == Material.NAME_TAG && e.getCursor().getType() == Material.NAME_TAG) {

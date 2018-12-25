@@ -1,19 +1,16 @@
 /*
- * Village Defense 3 - Protect villagers from hordes of zombies
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer
- *
- * This program is free software: you can redistribute it and/or modify
+ * Murder Mystery is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * Murder Mystery is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package pl.plajer.murdermystery.arena;
@@ -82,6 +79,23 @@ public class ArenaRegistry {
     return arena;
   }
 
+  /**
+   * Returns arena based by ID
+   *
+   * @param id name of arena
+   * @return Arena or null if not found
+   */
+  public static Arena getArena(String id) {
+    Arena arena = null;
+    for (Arena loopArena : arenas) {
+      if (loopArena.getID().equalsIgnoreCase(id)) {
+        arena = loopArena;
+        break;
+      }
+    }
+    return arena;
+  }
+
   public static void registerArena(Arena arena) {
     Debugger.debug(LogLevel.INFO, "Registering new game instance, " + arena.getID());
     arenas.add(arena);
@@ -90,23 +104,6 @@ public class ArenaRegistry {
   public static void unregisterArena(Arena arena) {
     Debugger.debug(LogLevel.INFO, "Unegistering game instance, " + arena.getID());
     arenas.remove(arena);
-  }
-
-  /**
-   * Returns arena based by ID
-   *
-   * @param ID name of arena
-   * @return Arena or null if not found
-   */
-  public static Arena getArena(String ID) {
-    Arena arena = null;
-    for (Arena loopArena : arenas) {
-      if (loopArena.getID().equalsIgnoreCase(ID)) {
-        arena = loopArena;
-        break;
-      }
-    }
-    return arena;
   }
 
   public static void registerArenas() {
@@ -129,13 +126,13 @@ public class ArenaRegistry {
         return;
       }
 
-      for (String ID : config.getConfigurationSection("instances").getKeys(false)) {
+      for (String id : config.getConfigurationSection("instances").getKeys(false)) {
         Arena arena;
-        String s = "instances." + ID + ".";
+        String s = "instances." + id + ".";
         if (s.contains("default")) {
           continue;
         }
-        arena = new Arena(ID, plugin);
+        arena = new Arena(id, plugin);
         arena.setMinimumPlayers(config.getInt(s + "minimumplayers", 2));
         arena.setMaximumPlayers(config.getInt(s + "maximumplayers", 4));
         arena.setMapName(config.getString(s + "mapname", "none"));
@@ -168,14 +165,14 @@ public class ArenaRegistry {
         arena.setEndLocation(LocationUtils.getLocation(config.getString(s + "Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
 
         if (!config.getBoolean(s + "isdone", false)) {
-          Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", ID).replace("%error%", "NOT VALIDATED"));
+          Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
           arena.setReady(false);
           ArenaRegistry.registerArena(arena);
           continue;
         }
         ArenaRegistry.registerArena(arena);
         arena.start();
-        Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Instance-Started").replace("%arena%", ID));
+        Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Instance-Started").replace("%arena%", id));
       }
       Debugger.debug(LogLevel.INFO, "Arenas registration completed");
     } catch (Exception ex) {

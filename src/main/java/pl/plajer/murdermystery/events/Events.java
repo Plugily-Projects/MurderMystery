@@ -13,6 +13,21 @@
  * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * Murder Mystery is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Murder Mystery is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.plajer.murdermystery.events;
 
 import org.bukkit.Bukkit;
@@ -122,16 +137,16 @@ public class Events implements Listener {
         stand.setCollidable(false);
         stand.setSilent(true);
         new BukkitRunnable() {
-          double t = 0;
+          double posModifier = 0;
           Location loc = attacker.getLocation();
           Vector direction = loc.getDirection().normalize();
 
           @Override
           public void run() {
-            t += 0.5;
-            double x = direction.getX() * t;
-            double y = direction.getY() * t + 0.5;
-            double z = direction.getZ() * t;
+            posModifier += 0.5;
+            double x = direction.getX() * posModifier;
+            double y = direction.getY() * posModifier + 0.5;
+            double z = direction.getZ() * posModifier;
             loc.add(x, y, z);
             stand.teleport(loc);
             for (Entity en : loc.getChunk().getEntities()) {
@@ -161,7 +176,7 @@ public class Events implements Listener {
               }
             }
             loc.subtract(x, y, z);
-            if (t > 20) {
+            if (posModifier > 20) {
               this.cancel();
               stand.remove();
             }

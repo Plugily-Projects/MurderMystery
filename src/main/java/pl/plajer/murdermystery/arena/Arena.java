@@ -1,19 +1,16 @@
 /*
- * Village Defense 3 - Protect villagers from hordes of zombies
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer
- *
- * This program is free software: you can redistribute it and/or modify
+ * Murder Mystery is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * Murder Mystery is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package pl.plajer.murdermystery.arena;
@@ -106,17 +103,17 @@ public class Arena extends BukkitRunnable {
   private int maximumPlayers = 10;
   private String mapName = "";
   private int timer;
-  private String ID;
+  private String id;
   //instead of 3 location fields we use map with GameLocation enum
   private Map<GameLocation, Location> gameLocations = new HashMap<>();
   private boolean ready = true;
   private Map<String, List<String>> scoreboardContents = new HashMap<>();
   private boolean forceStart = false;
 
-  public Arena(String ID, Main plugin) {
+  public Arena(String id, Main plugin) {
     this.plugin = plugin;
     arenaState = ArenaState.WAITING_FOR_PLAYERS;
-    this.ID = ID;
+    this.id = id;
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Main-Title"), BarColor.BLUE, BarStyle.SOLID);
     }
@@ -224,9 +221,9 @@ public class Arena extends BukkitRunnable {
             try {
               p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
             } catch (NumberFormatException ignored) {
-              Debugger.debug(LogLevel.WARN, "Infinite or NaN for player " + p.getName() + " values: " +
-                  totalMurderer + "murderer, " + totalDetective + "detective; user: " + user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) + " murderer" +
-                  user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) + " detective");
+              Debugger.debug(LogLevel.WARN, "Infinite or NaN for player " + p.getName() + " values: "
+                  + totalMurderer + "murderer, " + totalDetective + "detective; user: " + user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) + " murderer"
+                  + user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) + " detective");
             }
           }
           if (getTimer() == 0 || forceStart) {
@@ -309,8 +306,8 @@ public class Arena extends BukkitRunnable {
             ArenaManager.stopGame(false, this);
             setTimer(10);
           }
-          if (getTimer() <= (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 10) &&
-              getTimer() > (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15)) {
+          if (getTimer() <= (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 10)
+              && getTimer() > (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15)) {
             for (Player p : getPlayers()) {
               p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword")
                   .replace("%time%", String.valueOf(getTimer() - (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15))));
@@ -366,10 +363,12 @@ public class Arena extends BukkitRunnable {
                 setTimer(10);
                 return;
               }
-
-              //murderer speed add
+              break;
+            //murderer speed add
             case 2:
               Bukkit.getPlayer(murderer).addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0));
+              break;
+            default:
               break;
           }
 
@@ -622,7 +621,7 @@ public class Arena extends BukkitRunnable {
    * @see ArenaRegistry#getArena(String)
    */
   public String getID() {
-    return ID;
+    return id;
   }
 
   /**
@@ -651,7 +650,7 @@ public class Arena extends BukkitRunnable {
   /**
    * Get arena map name.
    *
-   * @return arena map name, [b]it's not arena ID[/b]
+   * @return arena map name, [b]it's not arena id[/b]
    * @see #getID()
    */
   public String getMapName() {
@@ -661,7 +660,7 @@ public class Arena extends BukkitRunnable {
   /**
    * Set arena map name.
    *
-   * @param mapname new map name, [b]it's not arena ID[/b]
+   * @param mapname new map name, [b]it's not arena id[/b]
    */
   public void setMapName(String mapname) {
     this.mapName = mapname;
@@ -745,13 +744,13 @@ public class Arena extends BukkitRunnable {
   }
 
   public void teleportToLobby(Player player) {
-    Location location = getLobbyLocation();
     player.setFoodLevel(20);
     player.setFlying(false);
     player.setAllowFlight(false);
     for (PotionEffect effect : player.getActivePotionEffects()) {
       player.removePotionEffect(effect.getType());
     }
+    Location location = getLobbyLocation();
     if (location == null) {
       System.out.print("LobbyLocation isn't intialized for arena " + getID());
     }
@@ -775,6 +774,8 @@ public class Arena extends BukkitRunnable {
         break;
       case REMOVE:
         gameBar.removePlayer(p);
+        break;
+      default:
         break;
     }
   }
@@ -886,6 +887,8 @@ public class Arena extends BukkitRunnable {
         }
         break;
       case RAPID_TELEPORTATION:
+        break;
+      default:
         break;
     }
   }

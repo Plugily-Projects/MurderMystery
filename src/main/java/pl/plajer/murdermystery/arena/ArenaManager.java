@@ -1,19 +1,16 @@
 /*
- * Village Defense 3 - Protect villagers from hordes of zombies
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer
- *
- * This program is free software: you can redistribute it and/or modify
+ * Murder Mystery is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * Murder Mystery is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package pl.plajer.murdermystery.arena;
@@ -248,8 +245,8 @@ public class ArenaManager {
         p.showPlayer(players);
       }
       arena.teleportToEndLocation(p);
-      if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) &&
-          plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+      if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
+          && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
         InventoryUtils.loadInventory(plugin, p);
       }
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {

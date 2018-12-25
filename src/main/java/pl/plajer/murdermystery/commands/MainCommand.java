@@ -13,6 +13,21 @@
  * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * Murder Mystery is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Murder Mystery is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.plajer.murdermystery.commands;
 
 import java.util.ArrayList;
@@ -340,8 +355,8 @@ public class MainCommand implements CommandExecutor {
     }
   }
 
-  private void createInstanceInConfig(String ID, String worldName) {
-    String path = "instances." + ID + ".";
+  private void createInstanceInConfig(String id, String worldName) {
+    String path = "instances." + id + ".";
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     LocationUtils.saveLoc(plugin, config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
     LocationUtils.saveLoc(plugin, config, "arenas", path + "Startlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
@@ -350,7 +365,7 @@ public class MainCommand implements CommandExecutor {
     config.set(path + "goldspawnpoints", new ArrayList<>());
     config.set(path + "minimumplayers", 2);
     config.set(path + "maximumplayers", 10);
-    config.set(path + "mapname", ID);
+    config.set(path + "mapname", id);
     config.set(path + "signs", new ArrayList<>());
     config.set(path + "isdone", false);
     config.set(path + "world", worldName);
@@ -358,7 +373,7 @@ public class MainCommand implements CommandExecutor {
     config.set(path + "confessionals", new ArrayList<>());
     ConfigUtils.saveConfig(plugin, config, "arenas");
 
-    Arena arena = new Arena(ID, plugin);
+    Arena arena = new Arena(id, plugin);
 
     List<Location> playerSpawnPoints = new ArrayList<>();
     for (String loc : config.getStringList(path + "playerspawnpoints")) {

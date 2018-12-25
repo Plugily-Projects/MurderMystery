@@ -13,6 +13,21 @@
  * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * Murder Mystery is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Murder Mystery is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.plajer.murdermystery.handlers.language;
 
 import com.earth2me.essentials.Essentials;
@@ -126,8 +141,8 @@ public class LanguageManager {
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Plugin locale is invalid! Using default one...");
       pluginLocale = LocaleRegistry.getByName("English");
     }
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Murder Mystery] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: " +
-        pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
+    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Murder Mystery] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: "
+        + pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
     loadProperties();
   }
 
@@ -147,6 +162,8 @@ public class LanguageManager {
           case "ro-RO":
             hasLocale = true;
             localeName = locale.getLocaleName();
+          default:
+            break;
         }
       }
       if (plugin.getServer().getPluginManager().isPluginEnabled("Essentials")) {
@@ -161,6 +178,8 @@ public class LanguageManager {
           case "RO":
             hasLocale = true;
             localeName = locale.getDisplayName();
+          default:
+            break;
         }
       }
     } catch (Exception e) {

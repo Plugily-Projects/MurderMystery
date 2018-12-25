@@ -28,6 +28,21 @@
  * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * Murder Mystery is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Murder Mystery is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.plajer.murdermystery.api;
 
 import java.util.LinkedHashMap;
@@ -61,8 +76,8 @@ public class StatsStorage {
     List list = new LinkedList(unsortMap.entrySet());
     list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
     Map sortedMap = new LinkedHashMap();
-    for (Object aList : list) {
-      Map.Entry entry = (Map.Entry) aList;
+    for (Object sort : list) {
+      Map.Entry entry = (Map.Entry) sort;
       sortedMap.put(entry.getKey(), entry.getValue());
     }
     return sortedMap;

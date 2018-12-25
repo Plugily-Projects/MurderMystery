@@ -13,6 +13,21 @@
  * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * Murder Mystery is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Murder Mystery is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.plajer.murdermystery.commands;
 
 import java.sql.ResultSet;
@@ -91,6 +106,7 @@ public class GameCommands extends MainCommand {
 
       LinkedHashMap<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
       sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Header"));
+      String statistic = StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "));
       for (int i = 0; i < 10; i++) {
         try {
           UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
@@ -98,14 +114,14 @@ public class GameCommands extends MainCommand {
               .replace("%position%", String.valueOf(i + 1))
               .replace("%name%", Bukkit.getOfflinePlayer(current).getName())
               .replace("%value%", String.valueOf(stats.get(current)))
-              .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " ")))); //Games_played > Games played etc
+              .replace("%statistic%", statistic)); //Games_played > Games played etc
           stats.remove(current);
         } catch (IndexOutOfBoundsException ex) {
           sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
               .replace("%position%", String.valueOf(i + 1))
               .replace("%name%", "Empty")
               .replace("%value%", "0")
-              .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
+              .replace("%statistic%", statistic));
         } catch (NullPointerException ex) {
           UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
@@ -116,7 +132,7 @@ public class GameCommands extends MainCommand {
                     .replace("%position%", String.valueOf(i + 1))
                     .replace("%name%", set.getString(1))
                     .replace("%value%", String.valueOf(stats.get(current)))
-                    .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
+                    .replace("%statistic%", statistic));
                 return;
               }
             } catch (SQLException ignored) {
@@ -126,7 +142,7 @@ public class GameCommands extends MainCommand {
               .replace("%position%", String.valueOf(i + 1))
               .replace("%name%", "Unknown Player")
               .replace("%value%", String.valueOf(stats.get(current)))
-              .replace("%statistic%", StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "))));
+              .replace("%statistic%", statistic));
         }
       }
     } catch (IllegalArgumentException e) {

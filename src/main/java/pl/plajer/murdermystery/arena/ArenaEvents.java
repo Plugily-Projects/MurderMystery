@@ -1,19 +1,16 @@
 /*
- * Village Defense 3 - Protect villagers from hordes of zombies
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer
- *
- * This program is free software: you can redistribute it and/or modify
+ * Murder Mystery is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * Murder Mystery is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package pl.plajer.murdermystery.arena;
@@ -192,14 +189,12 @@ public class ArenaEvents implements Listener {
         return;
       }
 
-      Arena arena = ArenaRegistry.getArena(attacker);
       //todo support for skins later
       //just don't kill user if item isn't murderer sword
       if (attacker.getInventory().getItemInMainHand().getType() != Material.IRON_SWORD) {
         return;
       }
 
-      User user = plugin.getUserManager().getUser(attacker.getUniqueId());
       if (Role.isRole(Role.MURDERER, victim)) {
         plugin.getRewardsHandler().performMurdererKillRewards(attacker, victim);
       } else if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
@@ -209,9 +204,11 @@ public class ArenaEvents implements Listener {
       //todo god damage override add
       victim.damage(100.0);
       victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
+      User user = plugin.getUserManager().getUser(attacker.getUniqueId());
       user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
       ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
 
+      Arena arena = ArenaRegistry.getArena(attacker);
       arena.getPlayersLeft().remove(victim);
       if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
         //if already true, no effect is done :)
@@ -241,7 +238,6 @@ public class ArenaEvents implements Listener {
       if (!ArenaUtils.areInSameArena(attacker, victim)) {
         return;
       }
-      Arena arena = ArenaRegistry.getArena(attacker);
       //we won't allow to suicide
       if (attacker.equals(victim)) {
         e.setCancelled(true);
@@ -258,6 +254,7 @@ public class ArenaEvents implements Listener {
         ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
       }
 
+      Arena arena = ArenaRegistry.getArena(attacker);
       plugin.getCorpseHandler().spawnCorpse(victim, arena);
       MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
 
