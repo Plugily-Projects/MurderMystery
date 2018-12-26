@@ -103,7 +103,8 @@ public class ArenaManager {
         return;
       }
       if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-        if (!(p.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*")) || p.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getID())))) {
+        if (!p.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
+            || !p.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getID()))) {
           p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-No-Permission"));
           return;
         }

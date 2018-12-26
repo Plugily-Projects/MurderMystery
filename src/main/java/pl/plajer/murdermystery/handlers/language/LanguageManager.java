@@ -78,6 +78,7 @@ import pl.plajerlair.core.utils.ConfigUtils;
  * <p>
  * Created at 03.08.2018
  */
+//todo check for changes
 public class LanguageManager {
 
   private static Main plugin;
@@ -123,7 +124,7 @@ public class LanguageManager {
       return;
     }
     if (service.isValidVersion()) {
-      LocaleService.DownloadStatus status = service.demandLocaleDownload(pluginLocale.getPrefix());
+      LocaleService.DownloadStatus status = service.demandLocaleDownload(pluginLocale);
       if (status == LocaleService.DownloadStatus.FAIL) {
         pluginLocale = LocaleRegistry.getByName("English");
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Locale service couldn't download latest locale for plugin! English locale will be used instead!");
