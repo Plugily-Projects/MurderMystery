@@ -1,6 +1,6 @@
 ![](https://i.imgur.com/mDZCCJ3.png)
 
-# Village Defense [![](https://img.shields.io/badge/javadocs-latest-green.svg)](https://jd.plajer.xyz/minecraft/murdermystery) [![](https://img.shields.io/badge/wiki-click-blue.svg)](https://wiki.plajer.xyz/minecraft/murdermystery/index.php)
+# Murder Mystery [![](https://img.shields.io/badge/javadocs-latest-green.svg)](https://jd.plajer.xyz/minecraft/murdermystery) [![](https://img.shields.io/badge/wiki-click-blue.svg)](https://wiki.plajer.xyz/minecraft/murdermystery/index.php)
 Murder Mystery is a Minecraft minigame designed for small and big servers. This minigame is unique and very configurable, 100% free and open source! 
 
 Be the murderer and kill everyone in the game! Beware of the detective and armored innocents! As a detective you must kill the murderer and protect as much innocents as you can!
