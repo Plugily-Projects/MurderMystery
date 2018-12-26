@@ -13,6 +13,21 @@
  * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * Murder Mystery is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Murder Mystery is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.plajer.murdermystery.arena;
 
 import org.bukkit.GameMode;
@@ -43,6 +58,7 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
+import pl.plajer.murdermystery.handlers.rewards.GameReward;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.MessageUtils;
@@ -196,9 +212,9 @@ public class ArenaEvents implements Listener {
       }
 
       if (Role.isRole(Role.MURDERER, victim)) {
-        plugin.getRewardsHandler().performMurdererKillRewards(attacker, victim);
+        plugin.getRewardsHandler().performReward(attacker, GameReward.RewardType.MURDERER_KILL);
       } else if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
-        plugin.getRewardsHandler().performDetectiveKillRewards(attacker, victim);
+        plugin.getRewardsHandler().performReward(attacker, GameReward.RewardType.DETECTIVE_KILL);
       }
 
       //todo god damage override add
@@ -295,7 +311,7 @@ public class ArenaEvents implements Listener {
           attacker.damage(100.0);
           ArenaUtils.addScore(plugin.getUserManager().getUser(attacker.getUniqueId()), ArenaUtils.ScoreAction.INNOCENT_KILL, 0);
           plugin.getCorpseHandler().spawnCorpse(attacker, arena);
-          plugin.getRewardsHandler().performDetectiveKillRewards(attacker, victim);
+          plugin.getRewardsHandler().performReward(attacker, GameReward.RewardType.DETECTIVE_KILL);
 
           if (Role.isRole(Role.ANY_DETECTIVE, attacker)) {
             arena.setDetectiveDead(true);

@@ -28,6 +28,21 @@
  * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * Murder Mystery is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Murder Mystery is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.plajer.murdermystery;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
@@ -66,10 +81,10 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.CorpseHandler;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.handlers.PlaceholderManager;
-import pl.plajer.murdermystery.handlers.RewardsHandler;
 import pl.plajer.murdermystery.handlers.SignManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItem;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
+import pl.plajer.murdermystery.handlers.rewards.RewardsFactory;
 import pl.plajer.murdermystery.handlers.setup.SetupInventoryEvents;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryDeaths;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryGamesPlayed;
@@ -98,7 +113,7 @@ public class Main extends JavaPlugin {
   private String version;
   private boolean forceDisable = false;
   private BungeeManager bungeeManager;
-  private RewardsHandler rewardsHandler;
+  private RewardsFactory rewardsHandler;
   private List<String> fileNames = Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks");
   private MySQLDatabase database;
   private MySQLManager mySQLManager;
@@ -266,7 +281,7 @@ public class Main extends JavaPlugin {
     new Events(this);
     new LobbyEvent(this);
     new SpectatorItemEvents(this);
-    rewardsHandler = new RewardsHandler(this);
+    rewardsHandler = new RewardsFactory(this);
     signManager = new SignManager(this);
     corpseHandler = new CorpseHandler(this);
     new BowTrailsHandler(this);
@@ -293,7 +308,7 @@ public class Main extends JavaPlugin {
     return version.equalsIgnoreCase("v1_10_R1");
   }
 
-  public RewardsHandler getRewardsHandler() {
+  public RewardsFactory getRewardsHandler() {
     return rewardsHandler;
   }
 

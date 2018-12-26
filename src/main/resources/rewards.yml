@@ -3,8 +3,6 @@
 #
 #                    Placeholders list:
 #             %PLAYER% - Current player name
-#             %ATTACKER% - Attacker name (for murder/detective kill rewards) (usually same as %PLAYER%)
-#             %VICTIM% - Victim name (for murder/detective kill rewards)
 #             %MAPNAME% - Name of map
 #             %ARENA-ID% - Arena Identifier
 #             %PLAYERAMOUNT% - Number of players in game
@@ -29,10 +27,10 @@ rewards:
     - say Ooh and there were playing %PLAYERAMOUNT% players
   # Commands executed when detective is killed
   detectivekill:
-    - eco give %ATTACKER% 2
-    - chance(10):eco give %VICTIM% 8
+    - eco give %PLAYER% 2
+    - chance(10):eco give %PLAYER% 8
   # Commands executed when murderer is killed
   murdererkill:
-    - eco give %ATTACKER% 2
-    - chance(10):eco give %VICTIM% 8
+    - eco give %PLAYER% 2
+    - chance(10):eco give %PLAYER% 8
 
