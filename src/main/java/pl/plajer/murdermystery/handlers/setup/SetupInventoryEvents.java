@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -88,11 +88,10 @@ public class SetupInventoryEvents implements Listener {
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
-  //todo test
   @EventHandler
   public void onClick(InventoryClickEvent e) {
     try {
-      if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getCurrentItem() == null || e.getInventory().getHolder() == null
+      if (!(e.getWhoClicked() instanceof Player) || e.getInventory() == null || e.getCurrentItem() == null
           || !e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getWhoClicked().hasPermission("murdermystery.admin.create")
           || !e.getInventory().getName().contains("MM Arena:")) {
         return;

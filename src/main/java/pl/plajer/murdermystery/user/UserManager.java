@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,6 +68,16 @@ public class UserManager {
       mySQLManager = new MySQLManager(plugin);
     } else {
       fileStats = new FileStats(plugin);
+    }
+    loadStatsForPlayersOnline();
+  }
+
+  private void loadStatsForPlayersOnline() {
+    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+      User user = getUser(player.getUniqueId());
+      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        loadStatistic(user, stat);
+      }
     }
   }
 

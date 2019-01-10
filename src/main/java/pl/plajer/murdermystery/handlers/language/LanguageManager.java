@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -116,6 +116,7 @@ public class LanguageManager {
     LocaleRegistry.registerLocale(new Locale("Vietnamese", "Việt", "vn_VN", "POEditor contributors (HStreamGamer)", Arrays.asList("vietnamese", "viet", "việt", "vn")));
   }
 
+  @Deprecated //shouldn't use system encoding here but utf
   private static void loadProperties() {
     LocaleService service = ServiceRegistry.getLocaleService(plugin);
     if (service == null) {
@@ -181,6 +182,7 @@ public class LanguageManager {
           case "ro-RO":
             hasLocale = true;
             localeName = locale.getLocaleName();
+            break;
           default:
             break;
         }
