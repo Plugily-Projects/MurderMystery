@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,6 +42,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -59,6 +60,19 @@ import pl.plajerlair.core.utils.MinigameUtils;
 public class Utils {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
+
+  /**
+   * Checks whether itemstack is named (not null, has meta and display name)
+   *
+   * @param stack item stack to check
+   * @return true if named, false otherwise
+   */
+  public static boolean isNamed(ItemStack stack) {
+    if (stack == null) {
+      return false;
+    }
+    return stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
+  }
 
   public static void applyActionBarCooldown(Player p, int seconds) {
     new BukkitRunnable() {
