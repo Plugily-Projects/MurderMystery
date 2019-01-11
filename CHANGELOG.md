@@ -1,3 +1,6 @@
+### 1.0.0 Pre release 4 (11.01.2019)
+* Added useSSL=false argument in mysql.yml address to avoid mysql warnings in console (not harmful)
+
 ### 1.0.0 Pre release 3 (30.10.2018/26.12.2018)
 * Now arena is stopped 10 seconds after the game ends not 5 seconds after
 * Arena is now properly clean up after the game when using bungee mode

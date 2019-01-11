@@ -2,7 +2,7 @@
 # To enable MySQL support go to > config.yml and set 'DatabaseEnabled' to true
 
 # Replace <databasename> with your database
-address: jdbc:mysql://localhost:3306/<databasename>
+address: jdbc:mysql://localhost:3306/<databasename>?useSSL=false
 
 # MySQL user name
 user: <user>
