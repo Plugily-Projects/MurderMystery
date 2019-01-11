@@ -61,6 +61,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import pl.plajer.murdermystery.Main;
@@ -110,44 +111,59 @@ public class SetupInventoryEvents implements Listener {
       }
 
       Arena arena = ArenaRegistry.getArena(e.getInventory().getName().replace("MM Arena: ", ""));
-      //ClickType clickType = e.getClick();
-      //String locationString = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + ","
-      //+ player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
-      //todo after recode
+      ClickType clickType = e.getClick();
+      String locationString = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + ","
+          + player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
       FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
       String targetBlock = LocationUtils.locationToString(Utils.fixLocation(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
       switch (slot) {
         case SET_ENDING:
-          player.performCommand("mm " + arena.getID() + " set ENDLOC");
+          config.set("instances." + arena.getID() + ".Endlocation", locationString);
+          player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aEnding location for arena " + arena.getID() + " set at your location!"));
           break;
         case SET_LOBBY:
-          player.performCommand("mm " + arena.getID() + " set LOBBYLOC");
+          config.set("instances." + arena.getID() + ".lobbylocation", locationString);
+          player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aLobby location for arena " + arena.getID() + " set at your location!"));
           break;
         case ADD_STARTING:
-          player.performCommand("mm " + arena.getID() + " add STARTLOC");
+          int playerSpawns = (config.isSet("instances." + arena.getID() + ".playerspawnpoints")
+              ? config.getConfigurationSection("instances." + arena.getID() + ".playerspawnpoints").getKeys(false).size() : 0) + 1;
+          LocationUtils.saveLoc(plugin, config, "arenas", "instances." + arena.getID() + ".playerspawnpoints." + playerSpawns, player.getLocation());
+          String villagerProgress = playerSpawns >= 2 ? "&e✔ Completed | " : "&c✘ Not completed | ";
+          player.sendMessage(ChatManager.colorRawMessage(villagerProgress + "&aPlayer spawn added! &8(&7" + playerSpawns + "/1&8)"));
           break;
         case SET_MINIMUM_PLAYERS:
-          if (e.getClick().isRightClick()) {
+          if (clickType.isRightClick()) {
             e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
           }
-          if (e.getClick().isLeftClick()) {
+          if (clickType.isLeftClick()) {
             e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
           }
-          player.performCommand("mm " + arena.getID() + " set MINPLAYERS " + e.getCurrentItem().getAmount());
+          config.set("instances." + arena.getID() + ".minimumplayers", e.getCurrentItem().getAmount());
           player.updateInventory();
           break;
         case SET_MAXIMUM_PLAYERS:
-          if (e.getClick().isRightClick()) {
+          if (clickType.isRightClick()) {
             e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
           }
-          if (e.getClick().isLeftClick()) {
+          if (clickType.isLeftClick()) {
             e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
           }
-          player.performCommand("mm " + arena.getID() + " set MAXPLAYERS " + e.getCurrentItem().getAmount());
+          config.set("instances." + arena.getID() + ".maximumplayers", e.getCurrentItem().getAmount());
           player.updateInventory();
           break;
         case ADD_SIGN:
-          plugin.getMainCommand().getAdminCommands().addSign(player, arena.getID());
+          Location location = player.getTargetBlock(null, 10).getLocation();
+          if (!(location.getBlock().getState() instanceof Sign)) {
+            player.sendMessage(ChatManager.colorMessage("Commands.Look-Sign"));
+            break;
+          }
+          plugin.getSignManager().getLoadedSigns().put((Sign) location.getBlock().getState(), arena);
+          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
+          String signLoc = location.getBlock().getWorld().getName() + "," + location.getBlock().getX() + "," + location.getBlock().getY() + "," + location.getBlock().getZ() + ",0.0,0.0";
+          List<String> locs = config.getStringList("instances." + arena.getID() + ".signs");
+          locs.add(signLoc);
+          config.set("instances." + arena.getID() + ".signs", locs);
           break;
         case SET_MAP_NAME:
           if (e.getCurrentItem().getType() == Material.NAME_TAG && e.getCursor().getType() == Material.NAME_TAG) {
@@ -155,12 +171,18 @@ public class SetupInventoryEvents implements Listener {
               player.sendMessage(ChatColor.RED + "This item doesn't has a name!");
               return;
             }
-            player.performCommand("mm " + arena.getID() + " set MAPNAME " + e.getCursor().getItemMeta().getDisplayName());
-            e.getCurrentItem().getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + e.getCursor().getItemMeta().getDisplayName());
+            String newName = e.getCursor().getItemMeta().getDisplayName();
+            config.set("instances." + arena.getID() + ".mapname", newName);
+            player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aName of arena " + arena.getID() + " set to " + newName));
+            e.getCurrentItem().getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + newName);
           }
           break;
         case ADD_GOLD_SPAWN:
-          player.performCommand("mm " + arena.getID() + " add gold");
+          int gold = (config.isSet("instances." + arena.getID() + ".goldspawnpoints")
+              ? config.getConfigurationSection("instances." + arena.getID() + ".goldspawnpoints").getKeys(false).size() : 0) + 1;
+          LocationUtils.saveLoc(plugin, config, "arenas", "instances." + arena.getID() + ".goldspawnpoints." + gold, player.getLocation());
+          String goldProgress = gold >= 2 ? "&e✔ Completed | " : "&c✘ Not completed | ";
+          player.sendMessage(ChatManager.colorRawMessage(goldProgress + "&aVillager spawn added! &8(&7" + gold + "/4&8)"));
           break;
         case REGISTER_ARENA:
           if (ArenaRegistry.getArena(arena.getID()).isReady()) {
@@ -271,7 +293,7 @@ public class SetupInventoryEvents implements Listener {
           player.sendMessage("Murder Mystery: New confessional for arena/instance " + arena.getID() + " was added");
           break;
       }
-      //todo after recode ConfigUtils.saveConfig(plugin, config, "arenas");
+      ConfigUtils.saveConfig(plugin, config, "arenas");
     } catch (Exception ex) {
       new ReportedException(plugin, ex);
     }

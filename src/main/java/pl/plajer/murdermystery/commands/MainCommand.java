@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,7 +55,6 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -170,14 +169,17 @@ public class MainCommand implements CommandExecutor {
           sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Footer"));
           return true;
         }
-        if (args.length > 1) {
-          if (args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("edit")) {
-            if (!checkSenderPlayer(sender) || !hasPermission(sender, "murdermystery.admin.create")) {
-              return true;
-            }
-            adminCommands.performSetup(sender, args);
+        if (args.length > 1 && args[1].equalsIgnoreCase("edit")) {
+          if (!checkSenderPlayer(sender) || !hasPermission(sender, "murdermystery.admin.create")) {
             return true;
           }
+          Arena arena = ArenaRegistry.getArena(args[0]);
+          if (arena == null) {
+            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+            return true;
+          }
+          new SetupInventory(arena).openInventory((Player) sender);
+          return true;
         }
         if (args[0].equalsIgnoreCase("join")) {
           if (args.length == 2) {
@@ -207,7 +209,10 @@ public class MainCommand implements CommandExecutor {
           return true;
         } else if (args[0].equalsIgnoreCase("create")) {
           if (args.length == 2) {
-            adminCommands.createArena(sender, args);
+            if (!checkSenderPlayer(sender) || !hasPermission(sender, "murdermystery.admin.create")) {
+              return true;
+            }
+            createArenaCommand((Player) sender, args);
             return true;
           }
           sender.sendMessage(ChatManager.colorMessage("Commands.Type-Arena-Name"));
@@ -256,99 +261,6 @@ public class MainCommand implements CommandExecutor {
       new ReportedException(plugin, ex);
       return false;
     }
-  }
-
-  void performSetup(Player player, String[] args) {
-    if (args[1].equalsIgnoreCase("setup") || args[1].equals("edit")) {
-      if (ArenaRegistry.getArena(args[0]) == null) {
-        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
-        return;
-      }
-      new SetupInventory(ArenaRegistry.getArena(args[0])).openInventory(player);
-      return;
-    }
-    if (!(args.length > 2)) {
-      return;
-    }
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-
-    if (!config.contains("instances." + args[0])) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
-      player.sendMessage(ChatColor.RED + "Usage: /mm <arena> set <minplayers/maxplayers/mapname/lobbylocation/endlocation> <value>");
-      return;
-    }
-
-
-    if (args[1].equalsIgnoreCase("add")) {
-      if (args.length == 3) {
-        if (args[2].equalsIgnoreCase("startloc")) {
-          String location = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + "," + player.getLocation().getZ()
-              + "," + player.getLocation().getYaw() + "," + player.getLocation().getPitch();
-          List<String> locs = new ArrayList<>(config.getStringList("instances." + args[0] + ".playerspawnpoints"));
-          locs.add(location);
-          config.set("instances." + args[0] + ".playerspawnpoints", locs);
-          player.sendMessage("Murder Mystery: New player spawn location for arena/instance " + args[0] + " was added");
-        }
-        if (args[2].equalsIgnoreCase("gold")) {
-          String location = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + "," + player.getLocation().getZ()
-              + "," + player.getLocation().getYaw() + "," + player.getLocation().getPitch();
-          List<String> locs = new ArrayList<>(config.getStringList("instances." + args[0] + ".goldspawnpoints"));
-          locs.add(location);
-          config.set("instances." + args[0] + ".goldspawnpoints", locs);
-          player.sendMessage("Murder Mystery: New gold spawn location for arena/instance " + args[0] + " was added");
-        }
-      }
-      ConfigUtils.saveConfig(plugin, config, "arenas");
-      return;
-    }
-    if (!(args[1].equalsIgnoreCase("set"))) {
-      return;
-    }
-    if (args.length == 3) {
-      if (args[2].equalsIgnoreCase("lobbylocation") || args[2].equalsIgnoreCase("lobbyloc")) {
-        String location = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + "," + player.getLocation().getZ()
-            + "," + player.getLocation().getYaw() + "," + player.getLocation().getPitch();
-        config.set("instances." + args[0] + ".lobbylocation", location);
-        player.sendMessage("Murder Mystery: Lobby location for arena/instance " + args[0] + " set to " + LocationUtils.locationToString(player.getLocation()));
-      } else if (args[2].equalsIgnoreCase("Endlocation") || args[2].equalsIgnoreCase("Endloc")) {
-        String location = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + "," + player.getLocation().getZ()
-            + "," + player.getLocation().getYaw() + "," + player.getLocation().getPitch();
-        config.set("instances." + args[0] + ".Endlocation", location);
-        player.sendMessage("Murder Mystery: End location for arena/instance " + args[0] + " set to " + LocationUtils.locationToString(player.getLocation()));
-      } else {
-        player.sendMessage(ChatColor.RED + "Invalid Command!");
-        player.sendMessage(ChatColor.RED + "Usage: /mm <arena> set <lobbylocation/endlocation>");
-      }
-    } else if (args.length == 4) {
-      if (args[2].equalsIgnoreCase("MAXPLAYERS") || args[2].equalsIgnoreCase("maximumplayers")) {
-        config.set("instances." + args[0] + ".maximumplayers", Integer.parseInt(args[3]));
-        player.sendMessage("Murder Mystery: Maximum players for arena/instance " + args[0] + " set to " + Integer.parseInt(args[3]));
-
-      } else if (args[2].equalsIgnoreCase("MINPLAYERS") || args[2].equalsIgnoreCase("minimumplayers")) {
-        config.set("instances." + args[0] + ".minimumplayers", Integer.parseInt(args[3]));
-        player.sendMessage("Murder Mystery: Minimum players for arena/instance " + args[0] + " set to " + Integer.parseInt(args[3]));
-      } else if (args[2].equalsIgnoreCase("MAPNAME") || args[2].equalsIgnoreCase("NAME")) {
-        config.set("instances." + args[0] + ".mapname", args[3]);
-        player.sendMessage("Murder Mystery: Map name for arena/instance " + args[0] + " set to " + args[3]);
-      } else if (args[2].equalsIgnoreCase("WORLD") || args[2].equalsIgnoreCase("MAP")) {
-        boolean exists = false;
-        for (World world : Bukkit.getWorlds()) {
-          if (world.getName().equalsIgnoreCase(args[3])) {
-            exists = true;
-          }
-        }
-        if (!exists) {
-          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.RED + "That world doesn't exists!");
-          return;
-        }
-        config.set("instances." + args[0] + ".world", args[3]);
-        player.sendMessage("Murder Mystery: World for arena/instance " + args[0] + " set to " + args[3]);
-      } else {
-        player.sendMessage(ChatColor.RED + "Invalid Command!");
-        player.sendMessage(ChatColor.RED + "Usage: /mm set <minplayers/maxplayers> <value>");
-      }
-    }
-    ConfigUtils.saveConfig(plugin, config, "arenas");
   }
 
   void createArenaCommand(Player player, String[] args) {

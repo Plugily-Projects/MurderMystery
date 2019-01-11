@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,8 +42,6 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -170,33 +168,6 @@ public class AdminCommands extends MainCommand {
     sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Admin-Commands.Success-Reload"));
   }
 
-  public void addSign(CommandSender sender, String arena) {
-    if (!checkSenderPlayer(sender)) {
-      return;
-    }
-    Player player = (Player) sender;
-    if (!hasPermission(sender, "murdermystery.admin.addsign")) {
-      return;
-    }
-    if (ArenaRegistry.getArena(arena) == null) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
-    } else {
-      Location location = player.getTargetBlock(null, 10).getLocation();
-      if (location.getBlock().getState() instanceof Sign) {
-        plugin.getSignManager().getLoadedSigns().put((Sign) location.getBlock().getState(), ArenaRegistry.getArena(arena));
-        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
-        String loc = location.getBlock().getWorld().getName() + "," + location.getBlock().getX() + "," + location.getBlock().getY() + "," + location.getBlock().getZ() + ",0.0,0.0";
-        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-        List<String> locs = config.getStringList("instances." + arena + ".signs");
-        locs.add(loc);
-        config.set("instances." + arena + ".signs", locs);
-        ConfigUtils.saveConfig(plugin, config, "arenas");
-      } else {
-        player.sendMessage(ChatManager.colorMessage("Commands.Look-Sign"));
-      }
-    }
-  }
-
   public void deleteArena(CommandSender sender, String arenaString) {
     if (!checkSenderPlayer(sender) || !hasPermission(sender, "murdermystery.admin.delete")) {
       return;
@@ -212,20 +183,6 @@ public class AdminCommands extends MainCommand {
     ConfigUtils.saveConfig(plugin, config, "arenas");
     ArenaRegistry.unregisterArena(arena);
     sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Removed-Game-Instance"));
-  }
-
-  public void createArena(CommandSender sender, String[] args) {
-    if (!checkSenderPlayer(sender) || !hasPermission(sender, "murdermystery.admin.create")) {
-      return;
-    }
-    createArenaCommand((Player) sender, args);
-  }
-
-  public void performSetup(CommandSender sender, String[] args) {
-    if (!checkSenderPlayer(sender) || !hasPermission(sender, "murdermystery.admin.setup")) {
-      return;
-    }
-    performSetup((Player) sender, args);
   }
 
 }
