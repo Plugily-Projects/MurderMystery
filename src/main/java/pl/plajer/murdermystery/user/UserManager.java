@@ -35,7 +35,6 @@ package pl.plajer.murdermystery.user;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -46,6 +45,7 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.user.data.FileStats;
 import pl.plajer.murdermystery.user.data.MySQLManager;
+import pl.plajer.murdermystery.user.data.UserDatabase;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
 
@@ -54,7 +54,7 @@ import pl.plajerlair.core.debug.LogLevel;
  * <p>
  * Created at 03.08.2018
  */
-public class UserManager {
+public class UserManager implements UserDatabase {
 
   private MySQLManager mySQLManager;
   private FileStats fileStats;
@@ -100,42 +100,32 @@ public class UserManager {
     return users;
   }
 
-  /**
-   * Saves player statistic into yaml or MySQL storage based on user choice
-   *
-   * @param user user to retrieve statistic from
-   * @param stat stat to save to storage
-   */
+  @Override
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
     if (!stat.isPersistent()) {
       return;
     }
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> mySQLManager.saveStat(user, stat));
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> mySQLManager.saveStatistic(user, stat));
       return;
     }
-    fileStats.saveStat(user, stat);
+    fileStats.saveStatistic(user, stat);
   }
 
-  /**
-   * Loads player statistic from yaml or MySQL storage based on user choice
-   *
-   * @param user user to load statistic for
-   * @param stat type of stat to load from storage
-   */
+  @Override
   public void loadStatistic(User user, StatsStorage.StatisticType stat) {
     if (!stat.isPersistent()) {
       return;
     }
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> user.setStat(stat, mySQLManager.getStat(user, stat)));
+      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> mySQLManager.loadStatistic(user, stat));
       return;
     }
-    fileStats.loadStat(user, stat);
+    fileStats.loadStatistic(user, stat);
   }
 
-  public void removeUser(UUID uuid) {
-    users.remove(uuid);
+  public void removeUser(User user) {
+    users.remove(user);
   }
 
 }

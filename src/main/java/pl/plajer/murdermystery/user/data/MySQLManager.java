@@ -54,7 +54,7 @@ import pl.plajerlair.core.database.MySQLDatabase;
  * <p>
  * Created at 03.10.2018
  */
-public class MySQLManager {
+public class MySQLManager implements UserDatabase {
 
   private MySQLDatabase database;
 
@@ -87,11 +87,13 @@ public class MySQLManager {
     database.executeUpdate("INSERT INTO playerstats (UUID,name) VALUES ('" + player.getUniqueId().toString() + "','" + player.getName() + "')");
   }
 
-  public void saveStat(User user, StatsStorage.StatisticType stat) {
+  @Override
+  public void saveStatistic(User user, StatsStorage.StatisticType stat) {
     database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
   }
 
-  public int getStat(User user, StatsStorage.StatisticType stat) {
+  @Override
+  public void loadStatistic(User user, StatsStorage.StatisticType stat) {
     ResultSet resultSet = database.executeQuery("SELECT UUID from playerstats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
     //insert into the database
     try {
@@ -105,12 +107,13 @@ public class MySQLManager {
     ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM playerstats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
     try {
       if (!set.next()) {
-        return 0;
+        user.setStat(stat, 0);
+        return;
       }
-      return (set.getInt(1));
+      user.setStat(stat, set.getInt(1));
     } catch (SQLException e) {
       e.printStackTrace();
-      return 0;
+      user.setStat(stat, 0);
     }
   }
 

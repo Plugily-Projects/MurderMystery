@@ -45,7 +45,7 @@ import pl.plajerlair.core.utils.ConfigUtils;
  * <p>
  * Created at 03.08.2018
  */
-public class FileStats {
+public class FileStats implements UserDatabase {
 
   private Main plugin;
   private FileConfiguration config;
@@ -55,12 +55,14 @@ public class FileStats {
     config = ConfigUtils.getConfig(plugin, "stats");
   }
 
-  public void saveStat(User user, StatsStorage.StatisticType stat) {
+  @Override
+  public void saveStatistic(User user, StatsStorage.StatisticType stat) {
     config.set(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
     ConfigUtils.saveConfig(plugin, config, "stats");
   }
 
-  public void loadStat(User user, StatsStorage.StatisticType stat) {
+  @Override
+  public void loadStatistic(User user, StatsStorage.StatisticType stat) {
     user.setStat(stat, config.getInt(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), 0));
   }
 

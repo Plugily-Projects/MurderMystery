@@ -225,7 +225,7 @@ public class Main extends JavaPlugin {
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         userManager.saveStatistic(user, stat);
       }
-      userManager.removeUser(player.getUniqueId());
+      userManager.removeUser(user);
     }
     for (Hologram hologram : HologramsAPI.getHolograms(this)) {
       hologram.delete();
