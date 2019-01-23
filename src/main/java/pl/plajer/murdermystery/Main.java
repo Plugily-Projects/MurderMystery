@@ -112,7 +112,6 @@ import pl.plajer.murdermystery.leaderheads.MurderMysteryLoses;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryWins;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
-import pl.plajer.murdermystery.user.data.MySQLManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.core.database.MySQLDatabase;
 import pl.plajerlair.core.debug.Debugger;
@@ -135,7 +134,6 @@ public class Main extends JavaPlugin {
   private RewardsFactory rewardsHandler;
   private List<String> fileNames = Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks");
   private MySQLDatabase database;
-  private MySQLManager mySQLManager;
   private SignManager signManager;
   private MainCommand mainCommand;
   private CorpseHandler corpseHandler;
@@ -251,7 +249,6 @@ public class Main extends JavaPlugin {
       FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
       database = new MySQLDatabase(this, config.getString("address"), config.getString("user"), config.getString("password"),
           config.getInt("min-connections"), config.getInt("max-connections"));
-      mySQLManager = new MySQLManager(this);
     }
     userManager = new UserManager(this);
     SpecialItem.loadAll();
@@ -341,10 +338,6 @@ public class Main extends JavaPlugin {
 
   public MySQLDatabase getMySQLDatabase() {
     return database;
-  }
-
-  public MySQLManager getMySQLManager() {
-    return mySQLManager;
   }
 
   public SignManager getSignManager() {

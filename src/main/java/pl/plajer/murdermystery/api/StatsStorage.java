@@ -63,6 +63,8 @@
 
 package pl.plajer.murdermystery.api;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -70,12 +72,14 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.utils.ConfigUtils;
@@ -110,7 +114,19 @@ public class StatsStorage {
   public static Map<UUID, Integer> getStats(StatisticType stat) {
     Debugger.debug(LogLevel.INFO, "MurderMystery API getStats(" + stat.getName() + ") run");
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      return plugin.getMySQLManager().getColumn(stat.getName());
+      ResultSet set = plugin.getMySQLDatabase().executeQuery("SELECT UUID, " + stat.getName() + " FROM playerstats ORDER BY " + stat.getName() + " ASC;");
+      Map<java.util.UUID, java.lang.Integer> column = new LinkedHashMap<>();
+      try {
+        while (set.next()) {
+          column.put(java.util.UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+        MessageUtils.errorOccurred();
+        Bukkit.getConsoleSender().sendMessage("Cannot get contents from MySQL database!");
+        Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
+      }
+      return column;
     } else {
       FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
       Map<UUID, Integer> stats = new TreeMap<>();
