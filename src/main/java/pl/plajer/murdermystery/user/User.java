@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,6 @@ package pl.plajer.murdermystery.user;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -58,13 +57,13 @@ public class User {
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private static long cooldownCounter = 0;
   private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
-  private UUID uuid;
+  private Player player;
   private boolean spectator = false;
   private Map<StatsStorage.StatisticType, Integer> stats = new HashMap<>();
   private Map<String, Double> cooldowns = new HashMap<>();
 
-  public User(UUID uuid) {
-    this.uuid = uuid;
+  public User(Player player) {
+    this.player = player;
   }
 
   public static void cooldownHandlerTask() {
@@ -72,11 +71,11 @@ public class User {
   }
 
   public Arena getArena() {
-    return ArenaRegistry.getArena(Bukkit.getPlayer(uuid));
+    return ArenaRegistry.getArena(player);
   }
 
-  public Player toPlayer() {
-    return Bukkit.getServer().getPlayer(uuid);
+  public Player getPlayer() {
+    return player;
   }
 
   public boolean isSpectator() {
@@ -98,25 +97,25 @@ public class User {
   }
 
   public void removeScoreboard() {
-    this.toPlayer().setScoreboard(scoreboardManager.getNewScoreboard());
+    player.setScoreboard(scoreboardManager.getNewScoreboard());
   }
 
-  public void setStat(StatsStorage.StatisticType s, int i) {
-    stats.put(s, i);
+  public void setStat(StatsStorage.StatisticType stat, int i) {
+    stats.put(stat, i);
 
     //statistics manipulation events are called async when using mysql
     Bukkit.getScheduler().runTask(plugin, () -> {
-      MMPlayerStatisticChangeEvent playerStatisticChangeEvent = new MMPlayerStatisticChangeEvent(getArena(), toPlayer(), s, i);
+      MMPlayerStatisticChangeEvent playerStatisticChangeEvent = new MMPlayerStatisticChangeEvent(getArena(), player, stat, i);
       Bukkit.getPluginManager().callEvent(playerStatisticChangeEvent);
     });
   }
 
-  public void addStat(StatsStorage.StatisticType s, int i) {
-    stats.put(s, getStat(s) + i);
+  public void addStat(StatsStorage.StatisticType stat, int i) {
+    stats.put(stat, getStat(stat) + i);
 
     //statistics manipulation events are called async when using mysql
     Bukkit.getScheduler().runTask(plugin, () -> {
-      MMPlayerStatisticChangeEvent playerStatisticChangeEvent = new MMPlayerStatisticChangeEvent(getArena(), toPlayer(), s, getStat(s));
+      MMPlayerStatisticChangeEvent playerStatisticChangeEvent = new MMPlayerStatisticChangeEvent(getArena(), player, stat, getStat(stat));
       Bukkit.getPluginManager().callEvent(playerStatisticChangeEvent);
     });
   }

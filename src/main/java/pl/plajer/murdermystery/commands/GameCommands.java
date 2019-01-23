@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -86,7 +86,7 @@ public class GameCommands extends MainCommand {
     if (!checkSenderPlayer(sender)) {
       return;
     }
-    User user = plugin.getUserManager().getUser(((Player) sender).getUniqueId());
+    User user = plugin.getUserManager().getUser((Player) sender);
     sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header"));
     sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Kills") + user.getStat(StatsStorage.StatisticType.KILLS));
     sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Deaths") + user.getStat(StatsStorage.StatisticType.DEATHS));
@@ -99,11 +99,11 @@ public class GameCommands extends MainCommand {
 
   public void sendStatsOther(CommandSender sender, String p) {
     Player player = Bukkit.getPlayerExact(p);
-    if (player == null || plugin.getUserManager().getUser(player.getUniqueId()) == null) {
+    if (player == null || plugin.getUserManager().getUser(player) == null) {
       sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
       return;
     }
-    User user = plugin.getUserManager().getUser(player.getUniqueId());
+    User user = plugin.getUserManager().getUser(player);
     sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header-Other").replace("%player%", player.getName()));
     sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Kills") + user.getStat(StatsStorage.StatisticType.KILLS));
     sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Deaths") + user.getStat(StatsStorage.StatisticType.DEATHS));

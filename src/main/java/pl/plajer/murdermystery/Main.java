@@ -126,6 +126,7 @@ import pl.plajerlair.core.utils.ConfigUtils;
  * <p>
  * Created at 03.08.2018
  */
+//todo compatmaterialconstants
 public class Main extends JavaPlugin {
 
   private String version;
@@ -212,6 +213,7 @@ public class Main extends JavaPlugin {
     }
   }
 
+  @Deprecated //unsafe mysql database saving, cannot start new tasks in onDisable
   @Override
   public void onDisable() {
     if (forceDisable) {
@@ -219,7 +221,7 @@ public class Main extends JavaPlugin {
     }
     Debugger.debug(LogLevel.INFO, "System disable init");
     for (Player player : getServer().getOnlinePlayers()) {
-      User user = userManager.getUser(player.getUniqueId());
+      User user = userManager.getUser(player);
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         userManager.saveStatistic(user, stat);
       }

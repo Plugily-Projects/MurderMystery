@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -104,12 +104,13 @@ public class SpectatorItemEvents implements Listener {
     }
   }
 
+  @Deprecated //not multi arena per world safe
   private void openSpectatorMenu(World world, Player p) {
     Inventory inventory = plugin.getServer().createInventory(null, MinigameUtils.serializeInt(ArenaRegistry.getArena(p).getPlayers().size()),
         ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
     for (Player player : world.getPlayers()) {
       Arena arena = ArenaRegistry.getArena(player);
-      if (arena != null && ArenaRegistry.getArena(p).getPlayers().contains(player) && !plugin.getUserManager().getUser(player.getUniqueId()).isSpectator()) {
+      if (arena != null && ArenaRegistry.getArena(p).getPlayers().contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
         ItemStack skull;
         if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
           skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);

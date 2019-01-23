@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,12 +56,12 @@ public class FileStats {
   }
 
   public void saveStat(User user, StatsStorage.StatisticType stat) {
-    config.set(user.toPlayer().getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
+    config.set(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
     ConfigUtils.saveConfig(plugin, config, "stats");
   }
 
   public void loadStat(User user, StatsStorage.StatisticType stat) {
-    user.setStat(stat, config.getInt(user.toPlayer().getUniqueId().toString() + "." + stat.getName(), 0));
+    user.setStat(stat, config.getInt(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), 0));
   }
 
 }

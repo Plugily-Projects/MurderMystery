@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -133,8 +133,8 @@ public class StatsStorage {
    * @see StatisticType
    */
   public static int getUserStats(Player player, StatisticType statisticType) {
-    Debugger.debug(LogLevel.INFO, "Village API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
-    return plugin.getUserManager().getUser(player.getUniqueId()).getStat(statisticType);
+    Debugger.debug(LogLevel.INFO, "Murder API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
+    return plugin.getUserManager().getUser(player).getStat(statisticType);
   }
 
   /**

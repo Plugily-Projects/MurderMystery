@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -98,7 +98,7 @@ public class ChatEvents implements Listener {
             eventMessage = eventMessage.replaceAll(Pattern.quote(regexChar), "");
           }
         }
-        message = formatChatPlaceholders(LanguageManager.getLanguageMessage("In-Game.Game-Chat-Format"), plugin.getUserManager().getUser(event.getPlayer().getUniqueId()), eventMessage);
+        message = formatChatPlaceholders(LanguageManager.getLanguageMessage("In-Game.Game-Chat-Format"), plugin.getUserManager().getUser(event.getPlayer()), eventMessage);
         if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
           message = PlaceholderAPI.setPlaceholders(event.getPlayer(), message);
         }
@@ -121,7 +121,7 @@ public class ChatEvents implements Listener {
   private String formatChatPlaceholders(String message, User user, String saidMessage) {
     String formatted = message;
     formatted = ChatManager.colorRawMessage(formatted);
-    formatted = StringUtils.replace(formatted, "%player%", user.toPlayer().getName());
+    formatted = StringUtils.replace(formatted, "%player%", user.getPlayer().getName());
     formatted = StringUtils.replace(formatted, "%message%", saidMessage);
     return formatted;
   }

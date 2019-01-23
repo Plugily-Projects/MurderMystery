@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -86,8 +86,7 @@ public class JoinEvent implements Listener {
       player.hidePlayer(event.getPlayer());
       event.getPlayer().hidePlayer(player);
     }
-    plugin.getUserManager().registerUser(event.getPlayer().getUniqueId());
-    User user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
+    User user = plugin.getUserManager().getUser(event.getPlayer());
     for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
       plugin.getUserManager().loadStatistic(user, stat);
     }

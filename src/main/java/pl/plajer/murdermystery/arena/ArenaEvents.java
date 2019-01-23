@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -131,7 +131,7 @@ public class ArenaEvents implements Listener {
       if (!Role.isRole(Role.ANY_DETECTIVE, (Player) e.getEntity())) {
         return;
       }
-      User user = plugin.getUserManager().getUser(e.getEntity().getUniqueId());
+      User user = plugin.getUserManager().getUser((Player) e.getEntity());
       if (user.getCooldown("bow_shot") == 0) {
         user.setCooldown("bow_shot", 5);
         Player player = (Player) e.getEntity();
@@ -167,7 +167,7 @@ public class ArenaEvents implements Listener {
         return;
       }
       e.setCancelled(true);
-      User user = plugin.getUserManager().getUser(e.getPlayer().getUniqueId());
+      User user = plugin.getUserManager().getUser(e.getPlayer());
       if (user.isSpectator() || arena.getArenaState() != ArenaState.IN_GAME) {
         return;
       }
@@ -238,7 +238,7 @@ public class ArenaEvents implements Listener {
       //todo god damage override add
       victim.damage(100.0);
       victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
-      User user = plugin.getUserManager().getUser(attacker.getUniqueId());
+      User user = plugin.getUserManager().getUser(attacker);
       user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
       ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
 
@@ -281,7 +281,7 @@ public class ArenaEvents implements Listener {
       //todo god override
       victim.damage(100.0);
       victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
-      User user = plugin.getUserManager().getUser(attacker.getUniqueId());
+      User user = plugin.getUserManager().getUser(attacker);
 
       if (Role.isRole(Role.MURDERER, attacker)) {
         user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
@@ -293,20 +293,21 @@ public class ArenaEvents implements Listener {
       MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
 
       if (Role.isRole(Role.MURDERER, victim)) {
-        for (Player p : arena.getPlayers()) {
-          MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"));
-          MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"));
-          if (Role.isRole(Role.MURDERER, p)) {
-            MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"));
+        for (Player player : arena.getPlayers()) {
+          MessageUtils.sendTitle(player, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"));
+          MessageUtils.sendSubTitle(player, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"));
+          if (Role.isRole(Role.MURDERER, player)) {
+            MessageUtils.sendTitle(player, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"));
           }
-          if (Role.isRole(Role.INNOCENT, p)) {
-            ArenaUtils.addScore(plugin.getUserManager().getUser(p.getUniqueId()), ArenaUtils.ScoreAction.SURVIVE_GAME, 0);
-          } else if (Role.isRole(Role.ANY_DETECTIVE, p)) {
-            ArenaUtils.addScore(plugin.getUserManager().getUser(p.getUniqueId()), ArenaUtils.ScoreAction.WIN_GAME, 0);
-            ArenaUtils.addScore(plugin.getUserManager().getUser(p.getUniqueId()), ArenaUtils.ScoreAction.DETECTIVE_WIN_GAME, 0);
+          User loopUser = plugin.getUserManager().getUser(player);
+          if (Role.isRole(Role.INNOCENT, player)) {
+            ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.SURVIVE_GAME, 0);
+          } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
+            ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.WIN_GAME, 0);
+            ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.DETECTIVE_WIN_GAME, 0);
           }
         }
-        ArenaUtils.addScore(plugin.getUserManager().getUser(attacker.getUniqueId()), ArenaUtils.ScoreAction.KILL_MURDERER, 0);
+        ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.KILL_MURDERER, 0);
         arena.setHero(attacker.getUniqueId());
         ArenaManager.stopGame(false, arena);
         arena.setArenaState(ArenaState.ENDING);
@@ -327,7 +328,7 @@ public class ArenaEvents implements Listener {
           MessageUtils.sendTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
           MessageUtils.sendSubTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Killed-Innocent"));
           attacker.damage(100.0);
-          ArenaUtils.addScore(plugin.getUserManager().getUser(attacker.getUniqueId()), ArenaUtils.ScoreAction.INNOCENT_KILL, 0);
+          ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.INNOCENT_KILL, 0);
           plugin.getCorpseHandler().spawnCorpse(attacker, arena);
           plugin.getRewardsHandler().performReward(attacker, GameReward.RewardType.DETECTIVE_KILL);
 
@@ -370,12 +371,12 @@ public class ArenaEvents implements Listener {
         player.getInventory().clear();
         player.setFlying(false);
         player.setAllowFlight(false);
-        User user = plugin.getUserManager().getUser(player.getUniqueId());
+        User user = plugin.getUserManager().getUser(player);
         user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
         player.teleport(arena.getEndLocation());
         return;
       }
-      User user = plugin.getUserManager().getUser(player.getUniqueId());
+      User user = plugin.getUserManager().getUser(player);
       arena.addStat(player, StatsStorage.StatisticType.DEATHS);
       player.teleport(loc);
       user.setSpectator(true);
@@ -405,7 +406,7 @@ public class ArenaEvents implements Listener {
       }
       if (arena.getPlayers().contains(e.getPlayer())) {
         Player player = e.getPlayer();
-        User user = plugin.getUserManager().getUser(player.getUniqueId());
+        User user = plugin.getUserManager().getUser(player);
         player.setAllowFlight(true);
         player.setFlying(true);
         user.setSpectator(true);

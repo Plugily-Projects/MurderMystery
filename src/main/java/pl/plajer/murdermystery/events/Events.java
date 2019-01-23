@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,7 +57,6 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -139,7 +138,7 @@ public class Events implements Listener {
         return;
       }
       final Player attacker = e.getPlayer();
-      final User attackerUser = plugin.getUserManager().getUser(attacker.getUniqueId());
+      final User attackerUser = plugin.getUserManager().getUser(attacker);
       //todo not hardcoded!
       if (attacker.getInventory().getItemInMainHand().getType() == Material.IRON_SWORD) {
         if (attackerUser.getCooldown("sword_shoot") > 0) {
@@ -168,11 +167,11 @@ public class Events implements Listener {
             loc.add(x, y, z);
             stand.teleport(loc);
             for (Entity en : loc.getChunk().getEntities()) {
-              if (!(en instanceof LivingEntity && en instanceof Player)) {
+              if (!(en instanceof Player)) {
                 continue;
               }
               Player victim = (Player) en;
-              if (ArenaRegistry.isInArena(victim) && plugin.getUserManager().getUser(victim.getUniqueId()).isSpectator()) {
+              if (ArenaRegistry.isInArena(victim) && plugin.getUserManager().getUser(victim).isSpectator()) {
                 continue;
               }
               if (victim.getLocation().distance(loc) < 1.0) {

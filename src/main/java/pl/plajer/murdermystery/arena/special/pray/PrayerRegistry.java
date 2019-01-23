@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -110,8 +110,8 @@ public class PrayerRegistry {
   public static void applyRandomPrayer(User user) {
     Prayer prayer = getRandomPray();
     user.setStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY, prayer.getPrayerType().ordinal());
-    Player player = user.toPlayer();
-    final Arena arena = ArenaRegistry.getArena(user.toPlayer());
+    Player player = user.getPlayer();
+    Arena arena = ArenaRegistry.getArena(user.getPlayer());
     List<String> prayMessage = LanguageManager.getLanguageList("In-Game.Messages.Special-Blocks.Praises.Message");
     if (prayer.isGoodPray()) {
       prayMessage = prayMessage.stream().map(msg -> msg.replace("%feeling%", ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings.Blessed"))).collect(Collectors.toList());

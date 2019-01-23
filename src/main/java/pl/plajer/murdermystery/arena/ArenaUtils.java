@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ public class ArenaUtils {
       msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints() * amount));
       msg = StringUtils.replace(msg, "%action%", action.getAction());
       user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + (action.getPoints() * amount));
-      user.toPlayer().sendMessage(msg);
+      user.getPlayer().sendMessage(msg);
       return;
     }
     if (action == ScoreAction.DETECTIVE_WIN_GAME) {
@@ -70,13 +70,13 @@ public class ArenaUtils {
       user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + (100 * innocents));
       msg = StringUtils.replace(msg, "%score%", String.valueOf(100 * innocents));
       msg = StringUtils.replace(msg, "%action%", action.getAction().replace("%amount%", String.valueOf(innocents)));
-      user.toPlayer().sendMessage(msg);
+      user.getPlayer().sendMessage(msg);
       return;
     }
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
     msg = StringUtils.replace(msg, "%action%", action.getAction());
     user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + action.getPoints());
-    user.toPlayer().sendMessage(msg);
+    user.getPlayer().sendMessage(msg);
   }
 
   public static void updateInnocentLocator(Arena arena) {

@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -88,21 +88,21 @@ public class MySQLManager {
   }
 
   public void saveStat(User user, StatsStorage.StatisticType stat) {
-    database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.toPlayer().getUniqueId().toString() + "';");
+    database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
   }
 
   public int getStat(User user, StatsStorage.StatisticType stat) {
-    ResultSet resultSet = database.executeQuery("SELECT UUID from playerstats WHERE UUID='" + user.toPlayer().getUniqueId().toString() + "'");
+    ResultSet resultSet = database.executeQuery("SELECT UUID from playerstats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
     //insert into the database
     try {
       if (!resultSet.next()) {
-        insertPlayer(user.toPlayer());
+        insertPlayer(user.getPlayer());
       }
     } catch (SQLException e1) {
-      System.out.print("CONNECTION FAILED FOR PLAYER " + user.toPlayer().getName());
+      System.out.print("CONNECTION FAILED FOR PLAYER " + user.getPlayer().getName());
     }
 
-    ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM playerstats WHERE UUID='" + user.toPlayer().getUniqueId().toString() + "'");
+    ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM playerstats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
     try {
       if (!set.next()) {
         return 0;

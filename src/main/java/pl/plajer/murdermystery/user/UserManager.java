@@ -34,7 +34,6 @@
 package pl.plajer.murdermystery.user;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,7 +58,7 @@ public class UserManager {
 
   private MySQLManager mySQLManager;
   private FileStats fileStats;
-  private HashMap<UUID, User> users = new HashMap<>();
+  private List<User> users = new ArrayList<>();
   private Main plugin;
 
   public UserManager(Main plugin) {
@@ -74,31 +73,29 @@ public class UserManager {
 
   private void loadStatsForPlayersOnline() {
     for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-      User user = getUser(player.getUniqueId());
+      User user = getUser(player);
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         loadStatistic(user, stat);
       }
     }
   }
 
-  public void registerUser(UUID uuid) {
-    Debugger.debug(LogLevel.INFO, "Registering new user with UUID: " + uuid);
-    users.put(uuid, new User(uuid));
-  }
-
-  public User getUser(UUID uuid) {
-    if (users.containsKey(uuid)) {
-      return users.get(uuid);
-    } else {
-      users.put(uuid, new User(uuid));
-      return users.get(uuid);
+  public User getUser(Player player) {
+    for (User user : users) {
+      if (user.getPlayer().equals(player)) {
+        return user;
+      }
     }
+    Debugger.debug(LogLevel.INFO, "Registering new user with UUID: " + player.getUniqueId() + " (" + player.getName() + ")");
+    User user = new User(player);
+    users.add(user);
+    return user;
   }
 
   public List<User> getUsers(Arena arena) {
     List<User> users = new ArrayList<>();
     for (Player player : arena.getPlayers()) {
-      users.add(getUser(player.getUniqueId()));
+      users.add(getUser(player));
     }
     return users;
   }

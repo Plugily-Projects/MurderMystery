@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -246,12 +246,12 @@ public class Arena extends BukkitRunnable {
           int totalMurderer = 0;
           int totalDetective = 0;
           for (Player p : getPlayers()) {
-            User user = plugin.getUserManager().getUser(p.getUniqueId());
+            User user = plugin.getUserManager().getUser(p);
             totalMurderer += user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER);
             totalDetective += user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE);
           }
           for (Player p : getPlayers()) {
-            User user = plugin.getUserManager().getUser(p.getUniqueId());
+            User user = plugin.getUserManager().getUser(p);
             try {
               p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
             } catch (NumberFormatException ignored) {
@@ -285,7 +285,7 @@ public class Arena extends BukkitRunnable {
             Map<User, Double> murdererChances = new HashMap<>();
             Map<User, Double> detectiveChances = new HashMap<>();
             for (Player p : getPlayers()) {
-              User user = plugin.getUserManager().getUser(p.getUniqueId());
+              User user = plugin.getUserManager().getUser(p);
               murdererChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) totalMurderer) * 100.0);
               detectiveChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) totalDetective) * 100.0);
             }
@@ -293,7 +293,7 @@ public class Arena extends BukkitRunnable {
                 Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
             Set<Player> playersToSet = getPlayers();
-            Player murderer = ((User) sortedMurderer.keySet().toArray()[0]).toPlayer();
+            Player murderer = ((User) sortedMurderer.keySet().toArray()[0]).getPlayer();
             this.murderer = murderer.getUniqueId();
             plugin.getUserManager().getUser(this.murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
             playersToSet.remove(murderer);
@@ -304,7 +304,7 @@ public class Arena extends BukkitRunnable {
             Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
                 Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
-            Player detective = ((User) sortedDetective.keySet().toArray()[0]).toPlayer();
+            Player detective = ((User) sortedDetective.keySet().toArray()[0]).getPlayer();
             this.detective = detective.getUniqueId();
             plugin.getUserManager().getUser(this.detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
             MessageUtils.sendTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"));
@@ -357,7 +357,7 @@ public class Arena extends BukkitRunnable {
           if (getTimer() % 30 == 0) {
             for (Player p : getPlayersLeft()) {
               if (Role.isRole(Role.INNOCENT, p)) {
-                ArenaUtils.addScore(plugin.getUserManager().getUser(p.getUniqueId()), ArenaUtils.ScoreAction.SURVIVE_TIME, 0);
+                ArenaUtils.addScore(plugin.getUserManager().getUser(p), ArenaUtils.ScoreAction.SURVIVE_TIME, 0);
               }
             }
           }
@@ -422,7 +422,7 @@ public class Arena extends BukkitRunnable {
             }
 
             for (Player player : getPlayers()) {
-              plugin.getUserManager().getUser(player.getUniqueId()).removeScoreboard();
+              plugin.getUserManager().getUser(player).removeScoreboard();
               player.setGameMode(GameMode.SURVIVAL);
               for (Player players : Bukkit.getOnlinePlayers()) {
                 player.showPlayer(players);
@@ -505,7 +505,7 @@ public class Arena extends BukkitRunnable {
       if (p == null) {
         continue;
       }
-      User user = plugin.getUserManager().getUser(p.getUniqueId());
+      User user = plugin.getUserManager().getUser(p);
       scoreboard = new GameScoreboard("PL_MM", "MM_CR", ChatManager.colorMessage("Scoreboard.Title"));
       List<String> lines = scoreboardContents.get(getArenaState().getFormattedName());
       if (Role.isRole(Role.MURDERER, p)) {
@@ -533,12 +533,12 @@ public class Arena extends BukkitRunnable {
       }
       innocents++;
     }
-    if (!getPlayersLeft().contains(user.toPlayer())) {
+    if (!getPlayersLeft().contains(user.getPlayer())) {
       formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Dead"));
     } else {
-      if (Role.isRole(Role.MURDERER, user.toPlayer())) {
+      if (Role.isRole(Role.MURDERER, user.getPlayer())) {
         formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
-      } else if (Role.isRole(Role.ANY_DETECTIVE, user.toPlayer())) {
+      } else if (Role.isRole(Role.ANY_DETECTIVE, user.getPlayer())) {
         formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Detective"));
       } else {
         formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Innocent"));
@@ -561,7 +561,7 @@ public class Arena extends BukkitRunnable {
     formattedLine = StringUtils.replace(formattedLine, "%SCORE%", String.valueOf(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE)));
     formattedLine = ChatManager.colorRawMessage(formattedLine);
     if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      PlaceholderAPI.setPlaceholders(user.toPlayer(), formattedLine);
+      PlaceholderAPI.setPlaceholders(user.getPlayer(), formattedLine);
     }
     return formattedLine;
   }
@@ -949,7 +949,7 @@ public class Arena extends BukkitRunnable {
   }
 
   void addStat(Player player, StatsStorage.StatisticType stat) {
-    User user = plugin.getUserManager().getUser(player.getUniqueId());
+    User user = plugin.getUserManager().getUser(player);
     user.addStat(stat, 1);
   }
 
@@ -957,7 +957,7 @@ public class Arena extends BukkitRunnable {
     List<Player> players = new ArrayList<>();
     for (User user : plugin.getUserManager().getUsers(this)) {
       if (!user.isSpectator()) {
-        players.add(user.toPlayer());
+        players.add(user.getPlayer());
       }
     }
     return players;
