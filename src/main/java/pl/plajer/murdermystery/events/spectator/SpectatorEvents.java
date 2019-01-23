@@ -78,7 +78,7 @@ public class SpectatorEvents implements Listener {
     if (!(e.getTarget() instanceof Player)) {
       return;
     }
-    if (plugin.getUserManager().getUser(e.getTarget()).isSpectator()) {
+    if (plugin.getUserManager().getUser((Player) e.getTarget()).isSpectator()) {
       e.setCancelled(true);
       e.setTarget(null);
     }
@@ -89,7 +89,7 @@ public class SpectatorEvents implements Listener {
     if (!(e.getTarget() instanceof Player)) {
       return;
     }
-    if (plugin.getUserManager().getUser(e.getTarget()).isSpectator()) {
+    if (plugin.getUserManager().getUser((Player) e.getTarget()).isSpectator()) {
       e.setCancelled(true);
       e.setTarget(null);
     }

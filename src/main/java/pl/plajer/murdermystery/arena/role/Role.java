@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -74,26 +74,26 @@ public enum Role {
    * Checks whether player is playing specified role or not
    *
    * @param role role to check
-   * @param p    player to check
+   * @param player    player to check
    * @return true if is playing it, false otherwise
    */
-  public static boolean isRole(Role role, Player p) {
+  public static boolean isRole(Role role, Player player) {
     try {
-      Arena arena = ArenaRegistry.getArena(p);
+      Arena arena = ArenaRegistry.getArena(player);
       if (arena == null) {
         return false;
       }
       switch (role) {
         case DETECTIVE:
-          return arena.getDetective() == p.getUniqueId();
+          return arena.getDetective().equals(player);
         case FAKE_DETECTIVE:
-          return arena.getFakeDetective() != null && arena.getFakeDetective() == p.getUniqueId();
+          return arena.getFakeDetective() != null && arena.getFakeDetective().equals(player);
         case MURDERER:
-          return arena.getMurderer() == p.getUniqueId();
+          return arena.getMurderer().equals(player);
         case ANY_DETECTIVE:
-          return arena.getDetective() == p.getUniqueId() || (arena.getFakeDetective() != null && arena.getFakeDetective() == p.getUniqueId());
+          return arena.getDetective().equals(player) || (arena.getFakeDetective() != null && arena.getFakeDetective().equals(player));
         case INNOCENT:
-          return arena.getDetective() != p.getUniqueId() && (arena.getFakeDetective() != null && arena.getFakeDetective() != p.getUniqueId()) && arena.getMurderer() != p.getUniqueId();
+          return !arena.getDetective().equals(player) && (arena.getFakeDetective() != null && !arena.getFakeDetective().equals(player)) && !arena.getMurderer().equals(player);
         default:
           return false;
       }

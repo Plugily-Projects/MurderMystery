@@ -55,13 +55,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -117,17 +115,23 @@ import pl.plajerlair.core.utils.MinigameUtils;
 public class Arena extends BukkitRunnable {
 
   private final Main plugin;
-  private final Set<UUID> players = new HashSet<>();
+  private final Set<Player> players = new HashSet<>();
   private List<Location> goldSpawnPoints = new ArrayList<>();
   private List<Item> goldSpawned = new ArrayList<>();
   private List<Location> playerSpawnPoints = new ArrayList<>();
   private List<Corpse> corpses = new ArrayList<>();
   private List<SpecialBlock> specialBlocks = new ArrayList<>();
   private Hologram bowHologram;
-  private UUID murderer;
-  private UUID detective;
-  private UUID fakeDetective;
-  private UUID hero;
+  @Deprecated //use merged characters map
+  private Player murderer;
+  @Deprecated
+  @Nullable
+  private Player detective;
+  @Deprecated
+  @Nullable
+  private Player fakeDetective;
+  @Deprecated
+  private Player hero;
   private boolean murdererDead;
   private boolean detectiveDead;
   private boolean murdererLocatorReceived;
@@ -294,8 +298,8 @@ public class Arena extends BukkitRunnable {
 
             Set<Player> playersToSet = getPlayers();
             Player murderer = ((User) sortedMurderer.keySet().toArray()[0]).getPlayer();
-            this.murderer = murderer.getUniqueId();
-            plugin.getUserManager().getUser(this.murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
+            this.murderer = murderer;
+            plugin.getUserManager().getUser(murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
             playersToSet.remove(murderer);
             MessageUtils.sendTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"));
             MessageUtils.sendSubTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"));
@@ -305,8 +309,8 @@ public class Arena extends BukkitRunnable {
                 Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
             Player detective = ((User) sortedDetective.keySet().toArray()[0]).getPlayer();
-            this.detective = detective.getUniqueId();
-            plugin.getUserManager().getUser(this.detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
+            this.detective = detective;
+            plugin.getUserManager().getUser(detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
             MessageUtils.sendTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"));
             MessageUtils.sendSubTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"));
             playersToSet.remove(detective);
@@ -348,8 +352,8 @@ public class Arena extends BukkitRunnable {
               p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
             }
             if (getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
-              ItemPosition.setItem(Bukkit.getPlayer(murderer), ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
-              Bukkit.getPlayer(murderer).getInventory().setHeldItemSlot(0);
+              ItemPosition.setItem(murderer, ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
+              murderer.getInventory().setHeldItemSlot(0);
             }
           }
 
@@ -383,11 +387,11 @@ public class Arena extends BukkitRunnable {
 
             //winner check
             case 1:
-              if (getPlayersLeft().get(0).getUniqueId() == murderer) {
+              if (getPlayersLeft().get(0).equals(murderer)) {
                 for (Player p : getPlayers()) {
                   MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"));
                   MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone"));
-                  if (p.getUniqueId() == murderer) {
+                  if (p.equals(murderer)) {
                     MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"));
                   }
                 }
@@ -400,7 +404,7 @@ public class Arena extends BukkitRunnable {
               break;
             //murderer speed add
             case 2:
-              Bukkit.getPlayer(murderer).addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0));
+              murderer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0));
               break;
             default:
               break;
@@ -579,29 +583,29 @@ public class Arena extends BukkitRunnable {
   /**
    * @return murderer - he must kill everyone to win
    */
-  public UUID getMurderer() {
+  public Player getMurderer() {
     return murderer;
   }
 
-  public void setMurderer(UUID murderer) {
+  public void setMurderer(Player murderer) {
     this.murderer = murderer;
   }
 
   /**
    * @return detective - he must protect innocents and kill murderer
    */
-  public UUID getDetective() {
+  public Player getDetective() {
     return detective;
   }
 
   /**
    * @return fake detective - innocent that became detective
    */
-  public UUID getFakeDetective() {
+  public Player getFakeDetective() {
     return fakeDetective;
   }
 
-  public void setFakeDetective(UUID fakeDetective) {
+  public void setFakeDetective(Player fakeDetective) {
     this.fakeDetective = fakeDetective;
   }
 
@@ -636,11 +640,11 @@ public class Arena extends BukkitRunnable {
   /**
    * @return murderer killer
    */
-  public UUID getHero() {
+  public Player getHero() {
     return hero;
   }
 
-  public void setHero(UUID hero) {
+  public void setHero(Player hero) {
     this.hero = hero;
   }
 
@@ -763,18 +767,8 @@ public class Arena extends BukkitRunnable {
    *
    * @return set of players in arena
    */
-  public HashSet<Player> getPlayers() {
-    HashSet<Player> list = new HashSet<>();
-    Iterator<UUID> iterator = players.iterator();
-    while (iterator.hasNext()) {
-      UUID uuid = iterator.next();
-      if (Bukkit.getPlayer(uuid) == null) {
-        iterator.remove();
-        Debugger.debug(LogLevel.WARN, "Removed invalid player from arena " + getID() + " (not online?)");
-      }
-      list.add(Bukkit.getPlayer(uuid));
-    }
-    return list;
+  public Set<Player> getPlayers() {
+    return players;
   }
 
   public void teleportToLobby(Player player) {
@@ -938,14 +932,14 @@ public class Arena extends BukkitRunnable {
   }
 
   void addPlayer(Player player) {
-    players.add(player.getUniqueId());
+    players.add(player);
   }
 
   void removePlayer(Player player) {
-    if (player == null || player.getUniqueId() == null) {
+    if (player == null) {
       return;
     }
-    players.remove(player.getUniqueId());
+    players.remove(player);
   }
 
   void addStat(Player player, StatsStorage.StatisticType stat) {

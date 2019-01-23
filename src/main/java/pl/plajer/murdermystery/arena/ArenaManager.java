@@ -36,7 +36,6 @@ package pl.plajer.murdermystery.arena;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -202,14 +201,14 @@ public class ArenaManager {
       //-1 cause we didn't remove player yet
       if (arena.getArenaState() == ArenaState.IN_GAME && arena.getPlayersLeft().size() - 1 > 1) {
         if (Role.isRole(Role.MURDERER, player)) {
-          List<UUID> players = new ArrayList<>();
+          List<Player> players = new ArrayList<>();
           for (Player gamePlayer : arena.getPlayersLeft()) {
             if (Role.isRole(Role.ANY_DETECTIVE, gamePlayer)) {
               continue;
             }
-            players.add(gamePlayer.getUniqueId());
+            players.add(gamePlayer);
           }
-          UUID newMurderer = players.get(new Random().nextInt(players.size() - 1));
+          Player newMurderer = players.get(new Random().nextInt(players.size() - 1));
           arena.setMurderer(newMurderer);
           for (Player gamePlayer : arena.getPlayers()) {
             MessageUtils.sendTitle(gamePlayer, ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title").replace("%role%",
@@ -217,9 +216,9 @@ public class ArenaManager {
             MessageUtils.sendSubTitle(gamePlayer, ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle").replace("%role%",
                 ChatManager.colorMessage("Scoreboard.Roles.Murderer")));
           }
-          MessageUtils.sendTitle(Bukkit.getPlayer(newMurderer), ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"));
-          MessageUtils.sendSubTitle(Bukkit.getPlayer(newMurderer), ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"));
-          ItemPosition.setItem(Bukkit.getPlayer(newMurderer), ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
+          MessageUtils.sendTitle(newMurderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"));
+          MessageUtils.sendSubTitle(newMurderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"));
+          ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
           user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
         } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
           arena.setDetectiveDead(true);
@@ -327,25 +326,25 @@ public class ArenaManager {
     }
   }
 
-  private static String formatSummaryPlaceholders(String msg, Arena a) {
+  private static String formatSummaryPlaceholders(String msg, Arena arena) {
     String formatted = msg;
-    if (a.getPlayersLeft().size() == 1 && a.getPlayersLeft().get(0).getUniqueId() == a.getMurderer()) {
+    if (arena.getPlayersLeft().size() == 1 && arena.getPlayersLeft().get(0).equals(arena.getMurderer())) {
       formatted = StringUtils.replace(formatted, "%winner%", ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Murderer"));
     } else {
       formatted = StringUtils.replace(formatted, "%winner%", ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Players"));
     }
-    if (a.isDetectiveDead()) {
-      formatted = StringUtils.replace(formatted, "%detective%", ChatColor.STRIKETHROUGH + Bukkit.getOfflinePlayer(a.getDetective()).getName());
+    if (arena.isDetectiveDead()) {
+      formatted = StringUtils.replace(formatted, "%detective%", ChatColor.STRIKETHROUGH + arena.getDetective().getName());
     } else {
-      formatted = StringUtils.replace(formatted, "%detective%", Bukkit.getOfflinePlayer(a.getDetective()).getName());
+      formatted = StringUtils.replace(formatted, "%detective%", arena.getDetective().getName());
     }
-    if (a.isMurdererDead()) {
-      formatted = StringUtils.replace(formatted, "%murderer%", ChatColor.STRIKETHROUGH + Bukkit.getOfflinePlayer(a.getMurderer()).getName());
+    if (arena.isMurdererDead()) {
+      formatted = StringUtils.replace(formatted, "%murderer%", ChatColor.STRIKETHROUGH + arena.getMurderer().getName());
     } else {
-      formatted = StringUtils.replace(formatted, "%murderer%", Bukkit.getOfflinePlayer(a.getMurderer()).getName());
+      formatted = StringUtils.replace(formatted, "%murderer%", arena.getMurderer().getName());
     }
-    formatted = StringUtils.replace(formatted, "%murderer_kills%", String.valueOf(plugin.getUserManager().getUser(a.getMurderer()).getStat(StatsStorage.StatisticType.LOCAL_KILLS)));
-    formatted = StringUtils.replace(formatted, "%hero%", a.getHero() == null ? ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody") : Bukkit.getOfflinePlayer(a.getHero()).getName());
+    formatted = StringUtils.replace(formatted, "%murderer_kills%", String.valueOf(plugin.getUserManager().getUser(arena.getMurderer()).getStat(StatsStorage.StatisticType.LOCAL_KILLS)));
+    formatted = StringUtils.replace(formatted, "%hero%", arena.getHero() == null ? ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody") : arena.getHero().getName());
     return formatted;
   }
 

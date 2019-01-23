@@ -132,9 +132,9 @@ public class PrayerRegistry {
       case DETECTIVE_REVELATION:
         String detectiveName;
         if (arena.getDetective() != null) {
-          detectiveName = Bukkit.getOfflinePlayer(arena.getDetective()).getName();
+          detectiveName = arena.getDetective().getName();
         } else if (arena.getFakeDetective() != null) {
-          detectiveName = Bukkit.getOfflinePlayer(arena.getFakeDetective()).getName();
+          detectiveName = arena.getFakeDetective().getName();
         } else {
           detectiveName = "????";
         }

@@ -308,7 +308,7 @@ public class ArenaEvents implements Listener {
           }
         }
         ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.KILL_MURDERER, 0);
-        arena.setHero(attacker.getUniqueId());
+        arena.setHero(attacker);
         ArenaManager.stopGame(false, arena);
         arena.setArenaState(ArenaState.ENDING);
         arena.setTimer(5);
