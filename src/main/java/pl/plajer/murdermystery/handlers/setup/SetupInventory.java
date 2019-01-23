@@ -186,10 +186,6 @@ public class SetupInventory {
     return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
   }
 
-  public void addItem(ItemStack itemStack) {
-    inventory.addItem(itemStack);
-  }
-
   public Inventory getInventory() {
     return inventory;
   }
