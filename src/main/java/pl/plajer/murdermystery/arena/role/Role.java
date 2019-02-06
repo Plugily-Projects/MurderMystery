@@ -85,15 +85,17 @@ public enum Role {
       }
       switch (role) {
         case DETECTIVE:
-          return arena.getDetective().equals(player);
+          return arena.isDetectiveSet() && arena.getDetective().equals(player);
         case FAKE_DETECTIVE:
-          return arena.getFakeDetective() != null && arena.getFakeDetective().equals(player);
+          return arena.isFakeDetectiveSet() && arena.getFakeDetective().equals(player);
         case MURDERER:
-          return arena.getMurderer().equals(player);
+          return arena.isMurdererSet() && arena.getMurderer().equals(player);
         case ANY_DETECTIVE:
-          return arena.getDetective().equals(player) || (arena.getFakeDetective() != null && arena.getFakeDetective().equals(player));
+          return arena.isDetectiveSet() && arena.getDetective().equals(player) || (arena.isFakeDetectiveSet() && arena.getFakeDetective().equals(player));
         case INNOCENT:
-          return !arena.getDetective().equals(player) && (arena.getFakeDetective() != null && !arena.getFakeDetective().equals(player)) && !arena.getMurderer().equals(player);
+          return (arena.isDetectiveSet() && !arena.getDetective().equals(player)) &&
+              (arena.isFakeDetectiveSet() && !arena.getFakeDetective().equals(player)) &&
+              (arena.isMurdererSet() && !arena.getMurderer().equals(player));
         default:
           return false;
       }

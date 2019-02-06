@@ -296,7 +296,7 @@ public class Arena extends BukkitRunnable {
             Map<User, Double> sortedMurderer = murdererChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
                 Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
-            Set<Player> playersToSet = getPlayers();
+            Set<Player> playersToSet = new HashSet<>(getPlayers());
             Player murderer = ((User) sortedMurderer.keySet().toArray()[0]).getPlayer();
             this.murderer = murderer;
             plugin.getUserManager().getUser(murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
@@ -550,6 +550,7 @@ public class Arena extends BukkitRunnable {
     }
     formattedLine = StringUtils.replace(formattedLine, "%INNOCENTS%", String.valueOf(innocents));
     formattedLine = StringUtils.replace(formattedLine, "%PLAYERS%", String.valueOf(getPlayers().size()));
+    formattedLine = StringUtils.replace(formattedLine, "%MAX_PLAYERS%", String.valueOf(getMaximumPlayers()));
     formattedLine = StringUtils.replace(formattedLine, "%MIN_PLAYERS%", String.valueOf(getMinimumPlayers()));
     if (detectiveDead && fakeDetective == null) {
       formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", ChatManager.colorMessage("Scoreboard.Detective-Died-No-Bow"));
@@ -587,8 +588,16 @@ public class Arena extends BukkitRunnable {
     return murderer;
   }
 
+  public boolean isMurdererSet() {
+    return getMurderer() != null;
+  }
+
   public void setMurderer(Player murderer) {
     this.murderer = murderer;
+  }
+
+  public boolean isDetectiveSet() {
+    return getDetective() != null;
   }
 
   /**
@@ -596,6 +605,10 @@ public class Arena extends BukkitRunnable {
    */
   public Player getDetective() {
     return detective;
+  }
+
+  public boolean isFakeDetectiveSet() {
+    return fakeDetective != null;
   }
 
   /**

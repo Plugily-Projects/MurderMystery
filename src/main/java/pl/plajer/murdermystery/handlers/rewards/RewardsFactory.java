@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,7 +79,7 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.rewards.RewardsScriptEngine;
+import pl.plajerlair.core.script.ScriptEngine;
 import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
@@ -113,7 +113,7 @@ public class RewardsFactory {
       return;
     }
     Arena arena = ArenaRegistry.getArena(player);
-    RewardsScriptEngine engine = new RewardsScriptEngine();
+    ScriptEngine engine = new ScriptEngine();
     engine.setValue("player", player);
     engine.setValue("server", Bukkit.getServer());
     engine.setValue("arena", arena);
