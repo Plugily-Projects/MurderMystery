@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,6 +61,7 @@ import java.util.Properties;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
@@ -71,7 +72,6 @@ import pl.plajerlair.core.services.ServiceRegistry;
 import pl.plajerlair.core.services.locale.Locale;
 import pl.plajerlair.core.services.locale.LocaleRegistry;
 import pl.plajerlair.core.services.locale.LocaleService;
-import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * @author Plajer
@@ -84,16 +84,18 @@ public class LanguageManager {
   private static Main plugin;
   private static Locale pluginLocale;
   private static Properties properties = new Properties();
+  private static FileConfiguration languageConfig;
 
-  public static void init(Main pl) {
-    plugin = pl;
-    if (!new File(plugin.getDataFolder() + File.separator + "language.yml").exists()) {
-      plugin.saveResource("language.yml", false);
+  public static void init(Main plugin) {
+    LanguageManager.plugin = plugin;
+    if (!new File(LanguageManager.plugin.getDataFolder() + File.separator + "language.yml").exists()) {
+      LanguageManager.plugin.saveResource("language.yml", false);
     }
+    languageConfig = languageConfig;
     registerLocales();
     setupLocale();
     //we will wait until server is loaded, we won't soft depend those plugins
-    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+    Bukkit.getScheduler().runTaskLater(LanguageManager.plugin, () -> {
       if (isDefaultLanguageUsed()) {
         suggestLocale();
       }
@@ -218,20 +220,9 @@ public class LanguageManager {
     return pluginLocale.getName().equals("English");
   }
 
-  public static String getDefaultLanguageMessage(String message) {
-    if (ConfigUtils.getConfig(plugin, "language").isSet(message)) {
-      return ConfigUtils.getConfig(plugin, "language").getString(message);
-    }
-    MessageUtils.errorOccurred();
-    Bukkit.getConsoleSender().sendMessage("Game message not found!");
-    Bukkit.getConsoleSender().sendMessage("Please regenerate your language.yml file! If error still occurs report it to the developer!");
-    Bukkit.getConsoleSender().sendMessage("Access string: " + message);
-    return "ERR_MESSAGE_NOT_FOUND";
-  }
-
   public static List<String> getLanguageList(String path) {
     if (isDefaultLanguageUsed()) {
-      return ConfigUtils.getConfig(plugin, "language").getStringList(path);
+      return languageConfig.getStringList(path);
     } else {
       return Arrays.asList(ChatManager.colorMessage(path).split(";"));
     }
@@ -239,7 +230,7 @@ public class LanguageManager {
 
   public static String getLanguageMessage(String message) {
     if (isDefaultLanguageUsed()) {
-      return ConfigUtils.getConfig(plugin, "language").getString(message, "ERR_MESSAGE_NOT_FOUND");
+      return languageConfig.getString(message, "ERR_MESSAGE_NOT_FOUND");
     }
     try {
       return properties.getProperty(ChatColor.translateAlternateColorCodes('&', message));
