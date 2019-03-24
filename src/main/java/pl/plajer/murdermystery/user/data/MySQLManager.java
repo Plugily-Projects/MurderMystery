@@ -36,9 +36,6 @@ package pl.plajer.murdermystery.user.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -56,9 +53,11 @@ import pl.plajerlair.core.database.MySQLDatabase;
  */
 public class MySQLManager implements UserDatabase {
 
+  private Main plugin;
   private MySQLDatabase database;
 
   public MySQLManager(Main plugin) {
+    this.plugin = plugin;
     database = plugin.getMySQLDatabase();
     try (Statement stmt = database.getManager().getConnection().createStatement()) {
       stmt.executeUpdate("CREATE TABLE IF NOT EXISTS `playerstats` (\n"
@@ -87,45 +86,38 @@ public class MySQLManager implements UserDatabase {
 
   @Override
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
-    database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
   }
 
   @Override
   public void loadStatistic(User user, StatsStorage.StatisticType stat) {
-    ResultSet resultSet = database.executeQuery("SELECT UUID from playerstats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
-    //insert into the database
-    try {
-      if (!resultSet.next()) {
-        insertPlayer(user.getPlayer());
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+      ResultSet resultSet = database.executeQuery("SELECT UUID from playerstats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
+      //insert into the database
+      try {
+        if (!resultSet.next()) {
+          insertPlayer(user.getPlayer());
+        }
+      } catch (SQLException e1) {
+        System.out.print("CONNECTION FAILED FOR PLAYER " + user.getPlayer().getName());
       }
-    } catch (SQLException e1) {
-      System.out.print("CONNECTION FAILED FOR PLAYER " + user.getPlayer().getName());
-    }
 
-    ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM playerstats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
-    try {
-      if (!set.next()) {
+      ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM playerstats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
+      try {
+        if (!set.next()) {
+          user.setStat(stat, 0);
+          return;
+        }
+        user.setStat(stat, set.getInt(1));
+      } catch (SQLException e) {
+        e.printStackTrace();
         user.setStat(stat, 0);
-        return;
       }
-      user.setStat(stat, set.getInt(1));
-    } catch (SQLException e) {
-      e.printStackTrace();
-      user.setStat(stat, 0);
-    }
+    });
   }
 
-  public Map<UUID, Integer> getColumn(String player) {
-    ResultSet set = database.executeQuery("SELECT UUID, " + player + " FROM playerstats ORDER BY " + player + " ASC;");
-    Map<UUID, Integer> column = new LinkedHashMap<>();
-    try {
-      while (set.next()) {
-        column.put(java.util.UUID.fromString(set.getString("UUID")), set.getInt(player));
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return column;
+  public MySQLDatabase getDatabase() {
+    return database;
   }
 
 }

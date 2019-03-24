@@ -76,11 +76,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
 
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaEvents;
-import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.special.SpecialBlockEvents;
 import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
@@ -112,6 +112,7 @@ import pl.plajer.murdermystery.leaderheads.MurderMysteryLoses;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryWins;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
+import pl.plajer.murdermystery.user.data.MySQLManager;
 import pl.plajer.murdermystery.utils.ExceptionLogHandler;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.core.database.MySQLDatabase;
@@ -119,6 +120,7 @@ import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.services.ServiceRegistry;
 import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.core.utils.InventoryUtils;
 
 /**
  * @author Plajer
@@ -217,13 +219,7 @@ public class Main extends JavaPlugin {
     }
     Debugger.debug(LogLevel.INFO, "System disable init");
     Bukkit.getLogger().removeHandler(exceptionLogHandler);
-    for (Player player : getServer().getOnlinePlayers()) {
-      User user = userManager.getUser(player);
-      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        userManager.saveStatistic(user, stat);
-      }
-      userManager.removeUser(user);
-    }
+    saveAllUserStatistics();
     for (Hologram hologram : HologramsAPI.getHolograms(this)) {
       hologram.delete();
     }
@@ -231,12 +227,25 @@ public class Main extends JavaPlugin {
       getMySQLDatabase().getManager().shutdownConnPool();
     }
 
-    //todo seek for errors
-    for (Arena a : ArenaRegistry.getArenas()) {
-      for (Player p : a.getPlayers()) {
-        ArenaManager.leaveAttempt(p, a);
-        a.cleanUpArena();
+    for (Arena arena : ArenaRegistry.getArenas()) {
+      //arena.getScoreboardManager().stopAllScoreboards();
+      for (Player player : arena.getPlayers()) {
+        User user = userManager.getUser(player); //temp
+        user.removeScoreboard();
+        arena.doBarAction(Arena.BarAction.REMOVE, player);
+        arena.teleportToEndLocation(player);
+        if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+          InventoryUtils.loadInventory(this, player);
+        } else {
+          player.getInventory().clear();
+          player.getInventory().setArmorContents(null);
+          for (PotionEffect pe : player.getActivePotionEffects()) {
+            player.removePotionEffect(pe.getType());
+          }
+        }
       }
+      arena.teleportAllToEndLocation();
+      arena.cleanUpArena();
     }
   }
 
@@ -354,5 +363,24 @@ public class Main extends JavaPlugin {
   public UserManager getUserManager() {
     return userManager;
   }
+
+  private void saveAllUserStatistics() {
+    for (Player player : getServer().getOnlinePlayers()) {
+      User user = userManager.getUser(player);
+
+      //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
+      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        if (!stat.isPersistent()) {
+          continue;
+        }
+        if (userManager.getDatabase() instanceof MySQLManager) {
+          ((MySQLManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+          continue;
+        }
+        userManager.getDatabase().saveStatistic(user, stat);
+      }
+    }
+  }
+
 
 }

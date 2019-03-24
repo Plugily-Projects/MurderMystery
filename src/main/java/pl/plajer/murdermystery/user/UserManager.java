@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,19 +54,16 @@ import pl.plajerlair.core.debug.LogLevel;
  * <p>
  * Created at 03.08.2018
  */
-public class UserManager implements UserDatabase {
+public class UserManager {
 
-  private MySQLManager mySQLManager;
-  private FileStats fileStats;
+  private UserDatabase database;
   private List<User> users = new ArrayList<>();
-  private Main plugin;
 
   public UserManager(Main plugin) {
-    this.plugin = plugin;
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      mySQLManager = new MySQLManager(plugin);
+      database = new MySQLManager(plugin);
     } else {
-      fileStats = new FileStats(plugin);
+      database = new FileStats(plugin);
     }
     loadStatsForPlayersOnline();
   }
@@ -100,32 +97,25 @@ public class UserManager implements UserDatabase {
     return users;
   }
 
-  @Override
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
     if (!stat.isPersistent()) {
       return;
     }
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> mySQLManager.saveStatistic(user, stat));
-      return;
-    }
-    fileStats.saveStatistic(user, stat);
+    database.saveStatistic(user, stat);
   }
 
-  @Override
   public void loadStatistic(User user, StatsStorage.StatisticType stat) {
     if (!stat.isPersistent()) {
       return;
     }
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> mySQLManager.loadStatistic(user, stat));
-      return;
-    }
-    fileStats.loadStatistic(user, stat);
+    database.loadStatistic(user, stat);
   }
 
   public void removeUser(User user) {
     users.remove(user);
   }
 
+  public UserDatabase getDatabase() {
+    return database;
+  }
 }
