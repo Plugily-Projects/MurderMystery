@@ -228,10 +228,8 @@ public class Main extends JavaPlugin {
     }
 
     for (Arena arena : ArenaRegistry.getArenas()) {
-      //arena.getScoreboardManager().stopAllScoreboards();
+      arena.getScoreboardManager().stopAllScoreboards();
       for (Player player : arena.getPlayers()) {
-        User user = userManager.getUser(player); //temp
-        user.removeScoreboard();
         arena.doBarAction(Arena.BarAction.REMOVE, player);
         arena.teleportToEndLocation(player);
         if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {

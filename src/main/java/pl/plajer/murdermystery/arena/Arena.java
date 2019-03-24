@@ -64,8 +64,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -92,10 +90,10 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.api.events.game.MMGameStartEvent;
 import pl.plajer.murdermystery.api.events.game.MMGameStateChangeEvent;
 import pl.plajer.murdermystery.arena.corpse.Corpse;
+import pl.plajer.murdermystery.arena.managers.ScoreboardManager;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.handlers.rewards.GameReward;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.ItemPosition;
@@ -104,7 +102,6 @@ import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.GameScoreboard;
 import pl.plajerlair.core.utils.InventoryUtils;
 import pl.plajerlair.core.utils.MinigameUtils;
 
@@ -136,6 +133,7 @@ public class Arena extends BukkitRunnable {
   private boolean murdererLocatorReceived;
   private BossBar gameBar;
   private ArenaState arenaState;
+  private ScoreboardManager scoreboardManager;
   private int minimumPlayers = 2;
   private int maximumPlayers = 10;
   private String mapName = "";
@@ -144,7 +142,6 @@ public class Arena extends BukkitRunnable {
   //instead of 3 location fields we use map with GameLocation enum
   private Map<GameLocation, Location> gameLocations = new HashMap<>();
   private boolean ready = true;
-  private Map<String, List<String>> scoreboardContents = new HashMap<>();
   private boolean forceStart = false;
 
   public Arena(String id, Main plugin) {
@@ -154,16 +151,7 @@ public class Arena extends BukkitRunnable {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Main-Title"), BarColor.BLUE, BarStyle.SOLID);
     }
-    List<String> lines;
-    for (ArenaState state : ArenaState.values()) {
-      if (state == ArenaState.RESTARTING) {
-        continue;
-      }
-      lines = LanguageManager.getLanguageList("Scoreboard.Content." + state.getFormattedName());
-      scoreboardContents.put(state.getFormattedName(), lines);
-    }
-    lines = LanguageManager.getLanguageList("Scoreboard.Content.Playing-Murderer");
-    scoreboardContents.put(ArenaState.IN_GAME.getFormattedName() + "-Murderer", lines);
+    scoreboardManager = new ScoreboardManager(this);
   }
 
   public boolean isReady() {
@@ -197,7 +185,6 @@ public class Arena extends BukkitRunnable {
     if (getPlayers().size() == 0 && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       return;
     }
-    updateScoreboard();
     switch (getArenaState()) {
       case WAITING_FOR_PLAYERS:
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
@@ -415,6 +402,7 @@ public class Arena extends BukkitRunnable {
         setTimer(getTimer() - 1);
         break;
       case ENDING:
+        scoreboardManager.stopAllScoreboards();
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           plugin.getServer().setWhitelist(false);
         }
@@ -495,77 +483,6 @@ public class Arena extends BukkitRunnable {
     return message;
   }
 
-  private void updateScoreboard() {
-    if (getPlayers().size() == 0 || getArenaState() == ArenaState.RESTARTING) {
-      return;
-    }
-    GameScoreboard scoreboard;
-    for (Player p : getPlayers()) {
-      if (p == null) {
-        continue;
-      }
-      User user = plugin.getUserManager().getUser(p);
-      scoreboard = new GameScoreboard("PL_MM", "MM_CR", ChatManager.colorMessage("Scoreboard.Title"));
-      List<String> lines = scoreboardContents.get(getArenaState().getFormattedName());
-      if (Role.isRole(Role.MURDERER, p)) {
-        if (getArenaState() == ArenaState.IN_GAME) {
-          lines = scoreboardContents.get(getArenaState().getFormattedName() + "-Murderer");
-        }
-      }
-      for (String line : lines) {
-        scoreboard.addRow(formatScoreboardLine(line, user));
-      }
-      scoreboard.finish();
-      scoreboard.display(p);
-    }
-  }
-
-  private String formatScoreboardLine(String line, User user) {
-    String formattedLine = line;
-    formattedLine = StringUtils.replace(formattedLine, "%TIME%", String.valueOf(getTimer()));
-    formattedLine = StringUtils.replace(formattedLine, "%FORMATTED_TIME%", MinigameUtils.formatIntoMMSS(getTimer()));
-    formattedLine = StringUtils.replace(formattedLine, "%MAPNAME%", mapName);
-    int innocents = 0;
-    for (Player p : getPlayersLeft()) {
-      if (Role.isRole(Role.ANY_DETECTIVE, p)) {
-        continue;
-      }
-      innocents++;
-    }
-    if (!getPlayersLeft().contains(user.getPlayer())) {
-      formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Dead"));
-    } else {
-      if (Role.isRole(Role.MURDERER, user.getPlayer())) {
-        formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
-      } else if (Role.isRole(Role.ANY_DETECTIVE, user.getPlayer())) {
-        formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Detective"));
-      } else {
-        formattedLine = StringUtils.replace(formattedLine, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Innocent"));
-      }
-    }
-    formattedLine = StringUtils.replace(formattedLine, "%INNOCENTS%", String.valueOf(innocents));
-    formattedLine = StringUtils.replace(formattedLine, "%PLAYERS%", String.valueOf(getPlayers().size()));
-    formattedLine = StringUtils.replace(formattedLine, "%MAX_PLAYERS%", String.valueOf(getMaximumPlayers()));
-    formattedLine = StringUtils.replace(formattedLine, "%MIN_PLAYERS%", String.valueOf(getMinimumPlayers()));
-    if (detectiveDead && fakeDetective == null) {
-      formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", ChatManager.colorMessage("Scoreboard.Detective-Died-No-Bow"));
-    }
-    if (detectiveDead && fakeDetective != null) {
-      formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", ChatManager.colorMessage("Scoreboard.Detective-Died-Bow"));
-    }
-    if (!detectiveDead) {
-      formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", ChatManager.colorMessage("Scoreboard.Detective-Status-Normal"));
-    }
-    //should be for murderer only
-    formattedLine = StringUtils.replace(formattedLine, "%KILLS%", String.valueOf(user.getStat(StatsStorage.StatisticType.LOCAL_KILLS)));
-    formattedLine = StringUtils.replace(formattedLine, "%SCORE%", String.valueOf(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE)));
-    formattedLine = ChatManager.colorRawMessage(formattedLine);
-    if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      PlaceholderAPI.setPlaceholders(user.getPlayer(), formattedLine);
-    }
-    return formattedLine;
-  }
-
   private void spawnSomeGold() {
     //do not exceed amount of gold per spawn
     if (goldSpawned.size() >= goldSpawnPoints.size()) {
@@ -643,6 +560,10 @@ public class Arena extends BukkitRunnable {
 
   public void setForceStart(boolean forceStart) {
     this.forceStart = forceStart;
+  }
+
+  public ScoreboardManager getScoreboardManager() {
+    return scoreboardManager;
   }
 
   /**
@@ -800,7 +721,6 @@ public class Arena extends BukkitRunnable {
    * @param p      player
    */
   public void doBarAction(BarAction action, Player p) {
-    updateScoreboard();
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       return;
     }
