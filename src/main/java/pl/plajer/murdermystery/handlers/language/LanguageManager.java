@@ -72,6 +72,7 @@ import pl.plajerlair.core.services.ServiceRegistry;
 import pl.plajerlair.core.services.locale.Locale;
 import pl.plajerlair.core.services.locale.LocaleRegistry;
 import pl.plajerlair.core.services.locale.LocaleService;
+import pl.plajerlair.core.utils.ConfigUtils;
 
 /**
  * @author Plajer
@@ -91,7 +92,7 @@ public class LanguageManager {
     if (!new File(LanguageManager.plugin.getDataFolder() + File.separator + "language.yml").exists()) {
       LanguageManager.plugin.saveResource("language.yml", false);
     }
-    languageConfig = languageConfig;
+    languageConfig = ConfigUtils.getConfig(plugin, "language");
     registerLocales();
     setupLocale();
     //we will wait until server is loaded, we won't soft depend those plugins
