@@ -91,6 +91,7 @@ import pl.plajer.murdermystery.api.events.game.MMGameStartEvent;
 import pl.plajer.murdermystery.api.events.game.MMGameStateChangeEvent;
 import pl.plajer.murdermystery.arena.corpse.Corpse;
 import pl.plajer.murdermystery.arena.managers.ScoreboardManager;
+import pl.plajer.murdermystery.arena.options.ArenaOption;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
@@ -110,8 +111,8 @@ import pl.plajerlair.core.utils.MinigameUtils;
  */
 public class Arena extends BukkitRunnable {
 
-  private final Main plugin;
-  private final Set<Player> players = new HashSet<>();
+  private Main plugin;
+  private Set<Player> players = new HashSet<>();
   private List<Location> goldSpawnPoints = new ArrayList<>();
   private List<Item> goldSpawned = new ArrayList<>();
   private List<Location> playerSpawnPoints = new ArrayList<>();
@@ -134,11 +135,10 @@ public class Arena extends BukkitRunnable {
   private BossBar gameBar;
   private ArenaState arenaState;
   private ScoreboardManager scoreboardManager;
-  private int minimumPlayers = 2;
-  private int maximumPlayers = 10;
   private String mapName = "";
-  private int timer;
   private String id;
+  //all arena values that are integers, contains constant and floating values
+  private Map<ArenaOption, Integer> arenaOptions = new HashMap<>();
   //instead of 3 location fields we use map with GameLocation enum
   private Map<GameLocation, Location> gameLocations = new HashMap<>();
   private boolean ready = true;
@@ -597,7 +597,7 @@ public class Arena extends BukkitRunnable {
    * @return minimum players needed to start arena
    */
   public int getMinimumPlayers() {
-    return minimumPlayers;
+    return getOption(ArenaOption.MINIMUM_PLAYERS);
   }
 
   /**
@@ -608,16 +608,16 @@ public class Arena extends BukkitRunnable {
   public void setMinimumPlayers(int minimumPlayers) {
     if (minimumPlayers < 2) {
       Debugger.debug(LogLevel.WARN, "Minimum players amount for arena cannot be less than 2! Setting amount to 2!");
-      this.minimumPlayers = 2;
+      setOptionValue(ArenaOption.MINIMUM_PLAYERS, 2);
       return;
     }
-    this.minimumPlayers = minimumPlayers;
+    setOptionValue(ArenaOption.MINIMUM_PLAYERS, minimumPlayers);
   }
 
   /**
    * Get arena map name.
    *
-   * @return arena map name, [b]it's not arena id[/b]
+   * @return arena map name, it's not arena id
    * @see #getID()
    */
   public String getMapName() {
@@ -627,7 +627,7 @@ public class Arena extends BukkitRunnable {
   /**
    * Set arena map name.
    *
-   * @param mapname new map name, [b]it's not arena id[/b]
+   * @param mapname new map name, it's not arena id
    */
   public void setMapName(String mapname) {
     this.mapName = mapname;
@@ -639,7 +639,7 @@ public class Arena extends BukkitRunnable {
    * @return timer of lobby time / time to next wave
    */
   public int getTimer() {
-    return timer;
+    return getOption(ArenaOption.TIMER);
   }
 
   /**
@@ -648,7 +648,7 @@ public class Arena extends BukkitRunnable {
    * @param timer timer of lobby / time to next wave
    */
   public void setTimer(int timer) {
-    this.timer = timer;
+    setOptionValue(ArenaOption.TIMER, timer);
   }
 
   /**
@@ -657,7 +657,7 @@ public class Arena extends BukkitRunnable {
    * @return maximum players arena can handle
    */
   public int getMaximumPlayers() {
-    return maximumPlayers;
+    return getOption(ArenaOption.MAXIMUM_PLAYERS);
   }
 
   /**
@@ -666,7 +666,7 @@ public class Arena extends BukkitRunnable {
    * @param maximumPlayers how many players arena can handle
    */
   public void setMaximumPlayers(int maximumPlayers) {
-    this.maximumPlayers = maximumPlayers;
+    setOptionValue(ArenaOption.MAXIMUM_PLAYERS, maximumPlayers);
   }
 
   /**
@@ -927,6 +927,18 @@ public class Arena extends BukkitRunnable {
       corpse.getCorpseData().destroyCorpseFromEveryone();
     }
     corpses.clear();
+  }
+
+  public int getOption(ArenaOption option) {
+    return arenaOptions.get(option);
+  }
+
+  public void setOptionValue(ArenaOption option, int value) {
+    arenaOptions.put(option, value);
+  }
+
+  public void addOptionValue(ArenaOption option, int value) {
+    arenaOptions.put(option, arenaOptions.get(option) + value);
   }
 
   public enum BarAction {
