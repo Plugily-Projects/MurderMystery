@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,9 +33,9 @@
 
 package pl.plajer.murdermystery.user.data;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -60,9 +60,8 @@ public class MySQLManager implements UserDatabase {
 
   public MySQLManager(Main plugin) {
     database = plugin.getMySQLDatabase();
-    try {
-      Connection conn = database.getManager().getConnection();
-      conn.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS `playerstats` (\n"
+    try (Statement stmt = database.getManager().getConnection().createStatement()) {
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS `playerstats` (\n"
           + "  `UUID` text NOT NULL,\n"
           + "  `name` text NOT NULL,\n"
           + "  `kills` int(11) NOT NULL DEFAULT '0',\n"
@@ -74,7 +73,6 @@ public class MySQLManager implements UserDatabase {
           + "  `contribmurderer` int(11) NOT NULL DEFAULT '1'\n"
           + "  `contribdetective` int(11) NOT NULL DEFAULT '1'\n"
           + ");");
-      database.getManager().closeConnection(conn);
     } catch (SQLException e) {
       e.printStackTrace();
       MessageUtils.errorOccurred();
