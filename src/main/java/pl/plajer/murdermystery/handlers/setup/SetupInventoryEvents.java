@@ -99,7 +99,7 @@ public class SetupInventoryEvents implements Listener {
       return;
     }
 
-    SetupInventory.ClickPosition slot = SetupInventory.ClickPosition.getByPosition(e.getRawSlot());
+    SetupInventory.ClickPosition slot = SetupInventory.ClickPosition.getByPosition(e.getSlot());
     //do not close inventory nor cancel event when setting arena name via name tag
     if (e.getCurrentItem().getType() != Material.NAME_TAG) {
       if (!(slot == SetupInventory.ClickPosition.SET_MINIMUM_PLAYERS || slot == SetupInventory.ClickPosition.SET_MAXIMUM_PLAYERS)) {

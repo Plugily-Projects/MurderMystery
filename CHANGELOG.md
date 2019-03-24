@@ -2,6 +2,7 @@
    > Pre 5 (24.03.2019)
    * Abandoned the direct try-catch exception handling in most of methods and event listeners in favour of logger
    listening, code looks better now
+   * Fixed setup inventory didn't work
    > Pre 4 (11.01.2019-06.02.2019)
    * Added useSSL=false argument in mysql.yml address to avoid mysql warnings in console (not harmful)
    * Added %MAX_PLAYERS% placeholder in scoreboard
