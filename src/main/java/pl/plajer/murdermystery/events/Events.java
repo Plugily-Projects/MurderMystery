@@ -183,7 +183,7 @@ public class Events implements Listener {
                 ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
                 if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
                   if (Role.isRole(Role.FAKE_DETECTIVE, victim)) {
-                    arena.setFakeDetective(null);
+                    arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
                   }
                   ArenaUtils.dropBowAndAnnounce(arena, victim);
                 }

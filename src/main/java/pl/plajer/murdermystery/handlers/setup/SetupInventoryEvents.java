@@ -116,17 +116,17 @@ public class SetupInventoryEvents implements Listener {
     String targetBlock = LocationUtils.locationToString(Utils.fixLocation(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
     switch (slot) {
       case SET_ENDING:
-        config.set("instances." + arena.getID() + ".Endlocation", locationString);
-        player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aEnding location for arena " + arena.getID() + " set at your location!"));
+        config.set("instances." + arena.getId() + ".Endlocation", locationString);
+        player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aEnding location for arena " + arena.getId() + " set at your location!"));
         break;
       case SET_LOBBY:
-        config.set("instances." + arena.getID() + ".lobbylocation", locationString);
-        player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aLobby location for arena " + arena.getID() + " set at your location!"));
+        config.set("instances." + arena.getId() + ".lobbylocation", locationString);
+        player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aLobby location for arena " + arena.getId() + " set at your location!"));
         break;
       case ADD_STARTING:
-        int playerSpawns = (config.isSet("instances." + arena.getID() + ".playerspawnpoints")
-            ? config.getConfigurationSection("instances." + arena.getID() + ".playerspawnpoints").getKeys(false).size() : 0) + 1;
-        LocationUtils.saveLoc(plugin, config, "arenas", "instances." + arena.getID() + ".playerspawnpoints." + playerSpawns, player.getLocation());
+        int playerSpawns = (config.isSet("instances." + arena.getId() + ".playerspawnpoints")
+            ? config.getConfigurationSection("instances." + arena.getId() + ".playerspawnpoints").getKeys(false).size() : 0) + 1;
+        LocationUtils.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".playerspawnpoints." + playerSpawns, player.getLocation());
         String villagerProgress = playerSpawns >= 2 ? "&e✔ Completed | " : "&c✘ Not completed | ";
         player.sendMessage(ChatManager.colorRawMessage(villagerProgress + "&aPlayer spawn added! &8(&7" + playerSpawns + "/1&8)"));
         break;
@@ -137,7 +137,7 @@ public class SetupInventoryEvents implements Listener {
         if (clickType.isLeftClick()) {
           e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
         }
-        config.set("instances." + arena.getID() + ".minimumplayers", e.getCurrentItem().getAmount());
+        config.set("instances." + arena.getId() + ".minimumplayers", e.getCurrentItem().getAmount());
         player.updateInventory();
         break;
       case SET_MAXIMUM_PLAYERS:
@@ -147,7 +147,7 @@ public class SetupInventoryEvents implements Listener {
         if (clickType.isLeftClick()) {
           e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
         }
-        config.set("instances." + arena.getID() + ".maximumplayers", e.getCurrentItem().getAmount());
+        config.set("instances." + arena.getId() + ".maximumplayers", e.getCurrentItem().getAmount());
         player.updateInventory();
         break;
       case ADD_SIGN:
@@ -159,9 +159,9 @@ public class SetupInventoryEvents implements Listener {
         plugin.getSignManager().getLoadedSigns().put((Sign) location.getBlock().getState(), arena);
         player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
         String signLoc = location.getBlock().getWorld().getName() + "," + location.getBlock().getX() + "," + location.getBlock().getY() + "," + location.getBlock().getZ() + ",0.0,0.0";
-        List<String> locs = config.getStringList("instances." + arena.getID() + ".signs");
+        List<String> locs = config.getStringList("instances." + arena.getId() + ".signs");
         locs.add(signLoc);
-        config.set("instances." + arena.getID() + ".signs", locs);
+        config.set("instances." + arena.getId() + ".signs", locs);
         break;
       case SET_MAP_NAME:
         if (e.getCurrentItem().getType() == Material.NAME_TAG && e.getCursor().getType() == Material.NAME_TAG) {
@@ -170,41 +170,41 @@ public class SetupInventoryEvents implements Listener {
             return;
           }
           String newName = e.getCursor().getItemMeta().getDisplayName();
-          config.set("instances." + arena.getID() + ".mapname", newName);
-          player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aName of arena " + arena.getID() + " set to " + newName));
+          config.set("instances." + arena.getId() + ".mapname", newName);
+          player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aName of arena " + arena.getId() + " set to " + newName));
           e.getCurrentItem().getItemMeta().setDisplayName(ChatColor.GOLD + "Set a mapname (currently: " + newName);
         }
         break;
       case ADD_GOLD_SPAWN:
-        int gold = (config.isSet("instances." + arena.getID() + ".goldspawnpoints")
-            ? config.getConfigurationSection("instances." + arena.getID() + ".goldspawnpoints").getKeys(false).size() : 0) + 1;
-        LocationUtils.saveLoc(plugin, config, "arenas", "instances." + arena.getID() + ".goldspawnpoints." + gold, player.getLocation());
+        int gold = (config.isSet("instances." + arena.getId() + ".goldspawnpoints")
+            ? config.getConfigurationSection("instances." + arena.getId() + ".goldspawnpoints").getKeys(false).size() : 0) + 1;
+        LocationUtils.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".goldspawnpoints." + gold, player.getLocation());
         String goldProgress = gold >= 2 ? "&e✔ Completed | " : "&c✘ Not completed | ";
         player.sendMessage(ChatManager.colorRawMessage(goldProgress + "&aVillager spawn added! &8(&7" + gold + "/4&8)"));
         break;
       case REGISTER_ARENA:
-        if (ArenaRegistry.getArena(arena.getID()).isReady()) {
+        if (ArenaRegistry.getArena(arena.getId()).isReady()) {
           e.getWhoClicked().sendMessage(ChatColor.GREEN + "This arena was already validated and is ready to use!");
           return;
         }
         String[] locations = new String[] {"lobbylocation", "Endlocation"};
         String[] spawns = new String[] {"goldspawnpoints", "playerspawnpoints"};
         for (String s : locations) {
-          if (!ConfigUtils.getConfig(plugin, "arenas").isSet("instances." + arena.getID() + "." + s) || ConfigUtils.getConfig(plugin, "arenas")
-              .getString("instances." + arena.getID() + "." + s).equals(LocationUtils.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
+          if (!ConfigUtils.getConfig(plugin, "arenas").isSet("instances." + arena.getId() + "." + s) || ConfigUtils.getConfig(plugin, "arenas")
+              .getString("instances." + arena.getId() + "." + s).equals(LocationUtils.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
             e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)");
             return;
           }
         }
         for (String s : spawns) {
-          if (!ConfigUtils.getConfig(plugin, "arenas").isSet("instances." + arena.getID() + "." + s) || ConfigUtils.getConfig(plugin, "arenas")
-              .getStringList("instances." + arena.getID() + "." + s).size() < 3) {
+          if (!ConfigUtils.getConfig(plugin, "arenas").isSet("instances." + arena.getId() + "." + s) || ConfigUtils.getConfig(plugin, "arenas")
+              .getStringList("instances." + arena.getId() + "." + s).size() < 3) {
             e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawns properly: " + s + " (must be minimum 3 spawns)");
             return;
           }
         }
-        e.getWhoClicked().sendMessage(ChatColor.GREEN + "Validation succeeded! Registering new arena instance: " + arena.getID());
-        config.set("instances." + arena.getID() + ".isdone", true);
+        e.getWhoClicked().sendMessage(ChatColor.GREEN + "Validation succeeded! Registering new arena instance: " + arena.getId());
+        config.set("instances." + arena.getId() + ".isdone", true);
         ConfigUtils.saveConfig(plugin, config, "arenas");
         List<Sign> signsToUpdate = new ArrayList<>();
         ArenaRegistry.unregisterArena(arena);
@@ -215,27 +215,27 @@ public class SetupInventoryEvents implements Listener {
             }
           }
         }
-        arena = new Arena(arena.getID(), plugin);
+        arena = new Arena(arena.getId(), plugin);
         arena.setReady(true);
         List<Location> playerSpawnPoints = new ArrayList<>();
-        for (String loc : config.getStringList("instances." + arena.getID() + ".playerspawnpoints")) {
+        for (String loc : config.getStringList("instances." + arena.getId() + ".playerspawnpoints")) {
           playerSpawnPoints.add(LocationUtils.getLocation(loc));
         }
         arena.setPlayerSpawnPoints(playerSpawnPoints);
         List<Location> goldSpawnPoints = new ArrayList<>();
-        for (String loc : config.getStringList("instances." + arena.getID() + ".goldspawnpoints")) {
+        for (String loc : config.getStringList("instances." + arena.getId() + ".goldspawnpoints")) {
           goldSpawnPoints.add(LocationUtils.getLocation(loc));
         }
         arena.setGoldSpawnPoints(goldSpawnPoints);
 
         List<SpecialBlock> specialBlocks = new ArrayList<>();
-        if (config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
-          for (String loc : config.getStringList("instances." + arena.getID() + ".mystery-cauldrons")) {
+        if (config.isSet("instances." + arena.getId() + ".mystery-cauldrons")) {
+          for (String loc : config.getStringList("instances." + arena.getId() + ".mystery-cauldrons")) {
             specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
           }
         }
-        if (config.isSet("instances." + arena.getID() + ".confessionals")) {
-          for (String loc : config.getStringList("instances." + arena.getID() + ".confessionals")) {
+        if (config.isSet("instances." + arena.getId() + ".confessionals")) {
+          for (String loc : config.getStringList("instances." + arena.getId() + ".confessionals")) {
             specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
           }
         }
@@ -245,11 +245,11 @@ public class SetupInventoryEvents implements Listener {
           }
           arena.loadSpecialBlock(specialBlock);
         }
-        arena.setMinimumPlayers(config.getInt("instances." + arena.getID() + ".minimumplayers"));
-        arena.setMaximumPlayers(config.getInt("instances." + arena.getID() + ".maximumplayers"));
-        arena.setMapName(config.getString("instances." + arena.getID() + ".mapname"));
-        arena.setLobbyLocation(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".lobbylocation")));
-        arena.setEndLocation(LocationUtils.getLocation(config.getString("instances." + arena.getID() + ".Endlocation")));
+        arena.setMinimumPlayers(config.getInt("instances." + arena.getId() + ".minimumplayers"));
+        arena.setMaximumPlayers(config.getInt("instances." + arena.getId() + ".maximumplayers"));
+        arena.setMapName(config.getString("instances." + arena.getId() + ".mapname"));
+        arena.setLobbyLocation(LocationUtils.getLocation(config.getString("instances." + arena.getId() + ".lobbylocation")));
+        arena.setEndLocation(LocationUtils.getLocation(config.getString("instances." + arena.getId() + ".Endlocation")));
         ArenaRegistry.registerArena(arena);
         arena.start();
         for (Sign s : signsToUpdate) {
@@ -270,11 +270,11 @@ public class SetupInventoryEvents implements Listener {
 
         arena.loadSpecialBlock(new SpecialBlock(Utils.fixLocation(e.getWhoClicked().getTargetBlock(null, 10).getLocation()),
             SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
-        List<String> cauldrons = new ArrayList<>(config.getStringList("instances." + arena.getID() + ".mystery-cauldrons"));
+        List<String> cauldrons = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".mystery-cauldrons"));
         cauldrons.add(targetBlock);
-        config.set("instances." + arena.getID() + ".mystery-cauldrons", cauldrons);
+        config.set("instances." + arena.getId() + ".mystery-cauldrons", cauldrons);
         ConfigUtils.saveConfig(plugin, config, "arenas");
-        player.sendMessage("Murder Mystery: New mystery cauldron for arena/instance " + arena.getID() + " was added");
+        player.sendMessage("Murder Mystery: New mystery cauldron for arena/instance " + arena.getId() + " was added");
         break;
       case ADD_CONFESSIONAL:
         if (e.getWhoClicked().getTargetBlock(null, 10).getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
@@ -284,11 +284,11 @@ public class SetupInventoryEvents implements Listener {
 
         arena.loadSpecialBlock(new SpecialBlock(Utils.fixLocation(e.getWhoClicked().getTargetBlock(null, 10).getLocation()),
             SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
-        List<String> confessionals = new ArrayList<>(config.getStringList("instances." + arena.getID() + ".confessionals"));
+        List<String> confessionals = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".confessionals"));
         confessionals.add(targetBlock);
-        config.set("instances." + arena.getID() + ".confessionals", confessionals);
+        config.set("instances." + arena.getId() + ".confessionals", confessionals);
         ConfigUtils.saveConfig(plugin, config, "arenas");
-        player.sendMessage("Murder Mystery: New confessional for arena/instance " + arena.getID() + " was added");
+        player.sendMessage("Murder Mystery: New confessional for arena/instance " + arena.getId() + " was added");
         break;
     }
     ConfigUtils.saveConfig(plugin, config, "arenas");

@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -131,10 +131,10 @@ public class PrayerRegistry {
         break;
       case DETECTIVE_REVELATION:
         String detectiveName;
-        if (arena.getDetective() != null) {
-          detectiveName = arena.getDetective().getName();
-        } else if (arena.getFakeDetective() != null) {
-          detectiveName = arena.getFakeDetective().getName();
+        if (arena.isCharacterSet(Arena.CharacterType.DETECTIVE)) {
+          detectiveName = arena.getCharacter(Arena.CharacterType.DETECTIVE).getName();
+        } else if (arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
+          detectiveName = arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE).getName();
         } else {
           detectiveName = "????";
         }

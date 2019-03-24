@@ -83,7 +83,7 @@ public class ArenaUtils {
       ItemMeta innocentMeta = innocentLocator.getItemMeta();
       innocentMeta.setDisplayName(ChatManager.colorMessage("In-Game.Innocent-Locator-Item-Name"));
       innocentLocator.setItemMeta(innocentMeta);
-      ItemPosition.setItem(arena.getMurderer(), ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
+      ItemPosition.setItem(arena.getCharacter(Arena.CharacterType.MURDERER), ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
       arena.setMurdererLocatorReceived(true);
 
       for (Player p : arena.getPlayersLeft()) {
@@ -98,7 +98,7 @@ public class ArenaUtils {
       if (Role.isRole(Role.MURDERER, p)) {
         continue;
       }
-      arena.getMurderer().setCompassTarget(p.getLocation());
+      arena.getCharacter(Arena.CharacterType.MURDERER).setCompassTarget(p.getLocation());
       break;
     }
   }
@@ -138,7 +138,7 @@ public class ArenaUtils {
           }
         }
 
-        arena.setFakeDetective(victim);
+        arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, victim);
         ItemPosition.setItem(victim, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
         ItemPosition.setItem(victim, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, 64));
         ChatManager.broadcast(arena, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message"));

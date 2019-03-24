@@ -234,7 +234,7 @@ public class ArenaEvents implements Listener {
       //if already true, no effect is done :)
       arena.setDetectiveDead(true);
       if (Role.isRole(Role.FAKE_DETECTIVE, victim)) {
-        arena.setFakeDetective(null);
+        arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
       }
       ArenaUtils.dropBowAndAnnounce(arena, victim);
       plugin.getCorpseHandler().spawnCorpse(victim, arena);
@@ -290,7 +290,7 @@ public class ArenaEvents implements Listener {
         }
       }
       ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.KILL_MURDERER, 0);
-      arena.setHero(attacker);
+      arena.setCharacter(Arena.CharacterType.HERO, attacker);
       ArenaManager.stopGame(false, arena);
       arena.setArenaState(ArenaState.ENDING);
       arena.setTimer(5);
@@ -317,7 +317,7 @@ public class ArenaEvents implements Listener {
         if (Role.isRole(Role.ANY_DETECTIVE, attacker)) {
           arena.setDetectiveDead(true);
           if (Role.isRole(Role.FAKE_DETECTIVE, attacker)) {
-            arena.setFakeDetective(null);
+            arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
           }
           ArenaUtils.dropBowAndAnnounce(arena, victim);
         }

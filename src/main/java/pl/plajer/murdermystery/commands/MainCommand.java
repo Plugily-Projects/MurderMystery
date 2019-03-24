@@ -259,7 +259,7 @@ public class MainCommand implements CommandExecutor {
 
   void createArenaCommand(Player player, String[] args) {
     for (Arena arena : ArenaRegistry.getArenas()) {
-      if (arena.getID().equalsIgnoreCase(args[1])) {
+      if (arena.getId().equalsIgnoreCase(args[1])) {
         player.sendMessage(ChatColor.DARK_RED + "Arena with that ID already exists!");
         player.sendMessage(ChatColor.DARK_RED + "Usage: /mm create <ID>");
         return;
@@ -311,8 +311,8 @@ public class MainCommand implements CommandExecutor {
     arena.setGoldSpawnPoints(goldSpawnPoints);
 
     List<SpecialBlock> specialBlocks = new ArrayList<>();
-    if (config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
-      for (String loc : config.getStringList("instances." + arena.getID() + ".mystery-cauldrons")) {
+    if (config.isSet("instances." + arena.getId() + ".mystery-cauldrons")) {
+      for (String loc : config.getStringList("instances." + arena.getId() + ".mystery-cauldrons")) {
         specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
       }
     }

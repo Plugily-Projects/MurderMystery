@@ -105,7 +105,7 @@ public class ArenaRegistry {
   public static Arena getArena(String id) {
     Arena arena = null;
     for (Arena loopArena : arenas) {
-      if (loopArena.getID().equalsIgnoreCase(id)) {
+      if (loopArena.getId().equalsIgnoreCase(id)) {
         arena = loopArena;
         break;
       }
@@ -114,12 +114,12 @@ public class ArenaRegistry {
   }
 
   public static void registerArena(Arena arena) {
-    Debugger.debug(LogLevel.INFO, "Registering new game instance, " + arena.getID());
+    Debugger.debug(LogLevel.INFO, "Registering new game instance, " + arena.getId());
     arenas.add(arena);
   }
 
   public static void unregisterArena(Arena arena) {
-    Debugger.debug(LogLevel.INFO, "Unegistering game instance, " + arena.getID());
+    Debugger.debug(LogLevel.INFO, "Unegistering game instance, " + arena.getId());
     arenas.remove(arena);
   }
 
@@ -164,13 +164,13 @@ public class ArenaRegistry {
       arena.setGoldSpawnPoints(goldSpawnPoints);
 
       List<SpecialBlock> specialBlocks = new ArrayList<>();
-      if (config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
-        for (String loc : config.getStringList("instances." + arena.getID() + ".mystery-cauldrons")) {
+      if (config.isSet("instances." + arena.getId() + ".mystery-cauldrons")) {
+        for (String loc : config.getStringList("instances." + arena.getId() + ".mystery-cauldrons")) {
           specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
         }
       }
-      if (config.isSet("instances." + arena.getID() + ".confessionals")) {
-        for (String loc : config.getStringList("instances." + arena.getID() + ".confessionals")) {
+      if (config.isSet("instances." + arena.getId() + ".confessionals")) {
+        for (String loc : config.getStringList("instances." + arena.getId() + ".confessionals")) {
           specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
         }
       }

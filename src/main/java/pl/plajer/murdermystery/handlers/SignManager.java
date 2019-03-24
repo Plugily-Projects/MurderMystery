@@ -116,17 +116,17 @@ public class SignManager implements Listener {
       return;
     }
     for (Arena arena : ArenaRegistry.getArenas()) {
-      if (arena.getID().equalsIgnoreCase(e.getLine(1))) {
+      if (arena.getId().equalsIgnoreCase(e.getLine(1))) {
         for (int i = 0; i < signLines.size(); i++) {
           e.setLine(i, formatSign(signLines.get(i), arena));
         }
         loadedSigns.put((Sign) e.getBlock().getState(), arena);
         e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
         String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + ",0.0,0.0";
-        List<String> locs = ConfigUtils.getConfig(plugin, "arenas").getStringList("instances." + arena.getID() + ".signs");
+        List<String> locs = ConfigUtils.getConfig(plugin, "arenas").getStringList("instances." + arena.getId() + ".signs");
         locs.add(location);
         FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-        config.set("instances." + arena.getID() + ".signs", locs);
+        config.set("instances." + arena.getId() + ".signs", locs);
         ConfigUtils.saveConfig(plugin, config, "arenas");
         return;
       }

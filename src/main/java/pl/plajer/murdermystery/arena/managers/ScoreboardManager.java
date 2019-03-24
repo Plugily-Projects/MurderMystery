@@ -158,10 +158,10 @@ public class ScoreboardManager {
     formattedLine = StringUtils.replace(formattedLine, "%PLAYERS%", String.valueOf(arena.getPlayers().size()));
     formattedLine = StringUtils.replace(formattedLine, "%MAX_PLAYERS%", String.valueOf(arena.getMaximumPlayers()));
     formattedLine = StringUtils.replace(formattedLine, "%MIN_PLAYERS%", String.valueOf(arena.getMinimumPlayers()));
-    if (arena.isDetectiveDead() && !arena.isFakeDetectiveSet()) {
+    if (arena.isDetectiveDead() && !arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
       formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", ChatManager.colorMessage("Scoreboard.Detective-Died-No-Bow"));
     }
-    if (arena.isDetectiveDead() && arena.isFakeDetectiveSet()) {
+    if (arena.isDetectiveDead() && arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
       formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", ChatManager.colorMessage("Scoreboard.Detective-Died-Bow"));
     }
     if (!arena.isDetectiveDead()) {

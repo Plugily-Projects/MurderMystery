@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -145,7 +145,7 @@ public class RewardsFactory {
 
   private String formatCommandPlaceholders(String command, Arena arena) {
     String formatted = command;
-    formatted = StringUtils.replace(formatted, "%ARENA-ID%", arena.getID());
+    formatted = StringUtils.replace(formatted, "%ARENA-ID%", arena.getId());
     formatted = StringUtils.replace(formatted, "%MAPNAME%", arena.getMapName());
     formatted = StringUtils.replace(formatted, "%PLAYERAMOUNT%", String.valueOf(arena.getPlayers().size()));
     return formatted;
