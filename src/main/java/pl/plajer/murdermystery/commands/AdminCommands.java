@@ -59,6 +59,7 @@ import pl.plajerlair.core.utils.ConfigUtils;
  * <p>
  * Created at 05.08.2018
  */
+@Deprecated
 public class AdminCommands extends MainCommand {
 
   private static List<CommandData> command = new LinkedList<>();

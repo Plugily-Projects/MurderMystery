@@ -73,6 +73,7 @@ import pl.plajer.murdermystery.user.User;
  * <p>
  * Created at 05.08.2018
  */
+@Deprecated
 public class GameCommands extends MainCommand {
 
   private Main plugin;

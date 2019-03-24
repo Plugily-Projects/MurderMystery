@@ -70,6 +70,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import me.tigerhix.lib.scoreboard.ScoreboardLib;
+
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -248,6 +250,7 @@ public class Main extends JavaPlugin {
   }
 
   private void initializeClasses() {
+    ScoreboardLib.setPluginInstance(this);
     if (getConfig().getBoolean("BungeeActivated", false)) {
       bungeeManager = new BungeeManager(this);
     }

@@ -143,6 +143,9 @@ public class Arena extends BukkitRunnable {
     this.plugin = plugin;
     arenaState = ArenaState.WAITING_FOR_PLAYERS;
     this.id = id;
+    for (ArenaOption option : ArenaOption.values()) {
+      arenaOptions.put(option, option.getDefaultValue());
+    }
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Main-Title"), BarColor.BLUE, BarStyle.SOLID);
     }

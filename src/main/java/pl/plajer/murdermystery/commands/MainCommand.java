@@ -76,6 +76,7 @@ import pl.plajerlair.core.utils.StringMatcher;
  * <p>
  * Created at 05.08.2018
  */
+@Deprecated
 public class MainCommand implements CommandExecutor {
 
   private Main plugin;
