@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
-import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -73,30 +72,26 @@ public class BowTrailsHandler implements Listener {
 
   @EventHandler
   public void onArrowShoot(EntityShootBowEvent e) {
-    try {
-      if (!(e.getEntity() instanceof Player && e.getProjectile() instanceof Arrow)) {
-        return;
-      }
-      if (!ArenaRegistry.isInArena((Player) e.getEntity()) || e.getProjectile() == null || e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
-        return;
-      }
-      //todo priority note to wiki
-      for (String perm : registeredTrails.keySet()) {
-        if (e.getEntity().hasPermission(perm)) {
-          new BukkitRunnable() {
-            @Override
-            public void run() {
-              if (e.getProjectile() == null || e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
-                this.cancel();
-              }
-              e.getProjectile().getWorld().spawnParticle(registeredTrails.get(perm), e.getProjectile().getLocation(), 3, 0, 0, 0, 0);
+    if (!(e.getEntity() instanceof Player && e.getProjectile() instanceof Arrow)) {
+      return;
+    }
+    if (!ArenaRegistry.isInArena((Player) e.getEntity()) || e.getProjectile() == null || e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
+      return;
+    }
+    //todo priority note to wiki
+    for (String perm : registeredTrails.keySet()) {
+      if (e.getEntity().hasPermission(perm)) {
+        new BukkitRunnable() {
+          @Override
+          public void run() {
+            if (e.getProjectile() == null || e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
+              this.cancel();
             }
-          }.runTaskTimer(plugin, 0, 0);
-          break;
-        }
+            e.getProjectile().getWorld().spawnParticle(registeredTrails.get(perm), e.getProjectile().getLocation(), 3, 0, 0, 0, 0);
+          }
+        }.runTaskTimer(plugin, 0, 0);
+        break;
       }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
     }
   }
 

@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,6 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -73,7 +72,6 @@ public class ChatEvents implements Listener {
 
   @EventHandler
   public void onChatIngame(AsyncPlayerChatEvent event) {
-    try {
       Arena arena = ArenaRegistry.getArena(event.getPlayer());
       if (arena == null) {
         return;
@@ -113,9 +111,6 @@ public class ChatEvents implements Listener {
         event.getRecipients().clear();
         event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
       }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 
   private String formatChatPlaceholders(String message, User user, String saidMessage) {

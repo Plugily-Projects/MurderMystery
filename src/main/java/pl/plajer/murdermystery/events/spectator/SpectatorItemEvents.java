@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +56,6 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.spectator.SpectatorSettingsMenu;
 import pl.plajerlair.core.utils.MinigameUtils;
 import pl.plajerlair.core.utils.XMaterial;
@@ -80,7 +79,6 @@ public class SpectatorItemEvents implements Listener {
 
   @EventHandler
   public void onSpectatorItemClick(PlayerInteractEvent e) {
-    try {
       if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
         if (ArenaRegistry.getArena(e.getPlayer()) == null) {
           return;
@@ -99,9 +97,6 @@ public class SpectatorItemEvents implements Listener {
           }
         }
       }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 
   @Deprecated //not multi arena per world safe
@@ -140,7 +135,6 @@ public class SpectatorItemEvents implements Listener {
 
   @EventHandler
   public void onSpectatorInventoryClick(InventoryClickEvent e) {
-    try {
       Player p = (Player) e.getWhoClicked();
       if (ArenaRegistry.getArena(p) == null) {
         return;
@@ -168,9 +162,6 @@ public class SpectatorItemEvents implements Listener {
         }
         e.setCancelled(true);
       }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 
 }

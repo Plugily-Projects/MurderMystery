@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -127,6 +127,10 @@ public class Utils {
    */
   public static Location fixLocation(Location loc) {
     Location fixedLocation = loc.clone();
+    //bug only 1.13+
+    if (plugin.is1_12_R1() || plugin.is1_11_R1()) {
+      return fixedLocation;
+    }
     if (loc.getZ() < 0) {
       fixedLocation.add(0, 0, 1);
     }

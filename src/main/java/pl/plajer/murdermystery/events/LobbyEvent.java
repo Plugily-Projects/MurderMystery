@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,13 +39,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
-import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -60,7 +58,6 @@ public class LobbyEvent implements Listener {
 
   @EventHandler
   public void onLobbyDamage(EntityDamageEvent event) {
-    try {
       if (event.getEntity().getType() != EntityType.PLAYER) {
         return;
       }
@@ -71,9 +68,6 @@ public class LobbyEvent implements Listener {
       }
       event.setCancelled(true);
       player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
-    } catch (Exception ex) {
-      new ReportedException(JavaPlugin.getPlugin(Main.class), ex);
-    }
   }
 
 }

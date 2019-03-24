@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,7 +67,6 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.setup.SetupInventory;
-import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
 import pl.plajerlair.core.utils.StringMatcher;
@@ -126,141 +125,136 @@ public class MainCommand implements CommandExecutor {
 
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-    try {
-      if (cmd.getName().equalsIgnoreCase("murdermysteryadmin")) {
-        if (args.length == 0) {
+    if (cmd.getName().equalsIgnoreCase("murdermysteryadmin")) {
+      if (args.length == 0) {
+        adminCommands.sendHelp(sender);
+        return true;
+      }
+      if (args[0].equalsIgnoreCase("stop")) {
+        adminCommands.stopGame(sender);
+        return true;
+      } else if (args[0].equalsIgnoreCase("list")) {
+        adminCommands.printList(sender);
+        return true;
+      } else if (args[0].equalsIgnoreCase("forcestart")) {
+        adminCommands.forceStartGame(sender);
+        return true;
+      } else if (args[0].equalsIgnoreCase("reload")) {
+        adminCommands.reloadInstances(sender);
+        return true;
+      } else if (args[0].equalsIgnoreCase("delete")) {
+        if (args.length != 1) {
+          adminCommands.deleteArena(sender, args[1]);
+        } else {
+          sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Type-Arena-Name"));
+        }
+        return true;
+      }
+      adminCommands.sendHelp(sender);
+      List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("stop", "list", "forcestart", "reload", "setshopchest", "delete"));
+      if (!matches.isEmpty()) {
+        sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replace("%command%", "mma " + matches.get(0).getMatch()));
+      }
+      return true;
+    }
+    if (cmd.getName().equalsIgnoreCase("murdermystery")) {
+      if (args.length == 0) {
+        sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Header"));
+        sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Description"));
+        if (sender.hasPermission("murdermystery.admin")) {
+          sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Admin-Bonus-Description"));
+        }
+        sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Footer"));
+        return true;
+      }
+      if (args.length > 1 && args[1].equalsIgnoreCase("edit")) {
+        if (!checkSenderPlayer(sender) || !hasPermission(sender, "murdermystery.admin.create")) {
+          return true;
+        }
+        Arena arena = ArenaRegistry.getArena(args[0]);
+        if (arena == null) {
+          sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+          return true;
+        }
+        new SetupInventory(arena).openInventory((Player) sender);
+        return true;
+      }
+      if (args[0].equalsIgnoreCase("join")) {
+        if (args.length == 2) {
+          gameCommands.joinGame(sender, args[1]);
+          return true;
+        }
+        sender.sendMessage(ChatManager.colorMessage("Commands.Type-Arena-Name"));
+        return true;
+      } else if (args[0].equalsIgnoreCase("randomjoin")) {
+        gameCommands.joinRandomGame(sender);
+        return true;
+      } else if (args[0].equalsIgnoreCase("stats")) {
+        if (args.length == 2) {
+          gameCommands.sendStatsOther(sender, args[1]);
+        }
+        gameCommands.sendStats(sender);
+        return true;
+      } else if (args[0].equalsIgnoreCase("top")) {
+        if (args.length == 2) {
+          gameCommands.sendTopStatistics(sender, args[1]);
+        } else {
+          sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Type-Name"));
+        }
+        return true;
+      } else if (args[0].equalsIgnoreCase("leave")) {
+        gameCommands.leaveGame(sender);
+        return true;
+      } else if (args[0].equalsIgnoreCase("create")) {
+        if (args.length == 2) {
+          if (!checkSenderPlayer(sender) || !hasPermission(sender, "murdermystery.admin.create")) {
+            return true;
+          }
+          createArenaCommand((Player) sender, args);
+          return true;
+        }
+        sender.sendMessage(ChatManager.colorMessage("Commands.Type-Arena-Name"));
+        return true;
+      } else if (args[0].equalsIgnoreCase("admin")) {
+        if (args.length == 1) {
           adminCommands.sendHelp(sender);
           return true;
         }
-        if (args[0].equalsIgnoreCase("stop")) {
+        if (args[1].equalsIgnoreCase("stop")) {
           adminCommands.stopGame(sender);
           return true;
-        } else if (args[0].equalsIgnoreCase("list")) {
+        } else if (args[1].equalsIgnoreCase("list")) {
           adminCommands.printList(sender);
           return true;
-        } else if (args[0].equalsIgnoreCase("forcestart")) {
+        } else if (args[1].equalsIgnoreCase("forcestart")) {
           adminCommands.forceStartGame(sender);
           return true;
-        } else if (args[0].equalsIgnoreCase("reload")) {
+        } else if (args[1].equalsIgnoreCase("reload")) {
           adminCommands.reloadInstances(sender);
           return true;
-        } else if (args[0].equalsIgnoreCase("delete")) {
-          if (args.length != 1) {
-            adminCommands.deleteArena(sender, args[1]);
+        } else if (args[1].equalsIgnoreCase("delete")) {
+          if (args.length != 2) {
+            adminCommands.deleteArena(sender, args[2]);
           } else {
             sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Type-Arena-Name"));
           }
           return true;
         }
         adminCommands.sendHelp(sender);
-        List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("stop", "list", "forcestart", "reload", "setshopchest", "delete"));
+        List<StringMatcher.Match> matches = StringMatcher.match(args[1], Arrays.asList("stop", "list", "forcestart", "reload", "delete"));
         if (!matches.isEmpty()) {
-          sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replace("%command%", "mma " + matches.get(0).getMatch()));
+          sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replace("%command%", "mm admin " + matches.get(0).getMatch()));
+        }
+        return true;
+      } else {
+        List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("join", "leave", "stats", "top", "admin", "create"));
+        if (!matches.isEmpty()) {
+          sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replace("%command%", "mm " + matches.get(0).getMatch()));
         }
         return true;
       }
-      if (cmd.getName().equalsIgnoreCase("murdermystery")) {
-        if (args.length == 0) {
-          sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Header"));
-          sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Description"));
-          if (sender.hasPermission("murdermystery.admin")) {
-            sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Admin-Bonus-Description"));
-          }
-          sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Footer"));
-          return true;
-        }
-        if (args.length > 1 && args[1].equalsIgnoreCase("edit")) {
-          if (!checkSenderPlayer(sender) || !hasPermission(sender, "murdermystery.admin.create")) {
-            return true;
-          }
-          Arena arena = ArenaRegistry.getArena(args[0]);
-          if (arena == null) {
-            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
-            return true;
-          }
-          new SetupInventory(arena).openInventory((Player) sender);
-          return true;
-        }
-        if (args[0].equalsIgnoreCase("join")) {
-          if (args.length == 2) {
-            gameCommands.joinGame(sender, args[1]);
-            return true;
-          }
-          sender.sendMessage(ChatManager.colorMessage("Commands.Type-Arena-Name"));
-          return true;
-        } else if (args[0].equalsIgnoreCase("randomjoin")) {
-          gameCommands.joinRandomGame(sender);
-          return true;
-        } else if (args[0].equalsIgnoreCase("stats")) {
-          if (args.length == 2) {
-            gameCommands.sendStatsOther(sender, args[1]);
-          }
-          gameCommands.sendStats(sender);
-          return true;
-        } else if (args[0].equalsIgnoreCase("top")) {
-          if (args.length == 2) {
-            gameCommands.sendTopStatistics(sender, args[1]);
-          } else {
-            sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Type-Name"));
-          }
-          return true;
-        } else if (args[0].equalsIgnoreCase("leave")) {
-          gameCommands.leaveGame(sender);
-          return true;
-        } else if (args[0].equalsIgnoreCase("create")) {
-          if (args.length == 2) {
-            if (!checkSenderPlayer(sender) || !hasPermission(sender, "murdermystery.admin.create")) {
-              return true;
-            }
-            createArenaCommand((Player) sender, args);
-            return true;
-          }
-          sender.sendMessage(ChatManager.colorMessage("Commands.Type-Arena-Name"));
-          return true;
-        } else if (args[0].equalsIgnoreCase("admin")) {
-          if (args.length == 1) {
-            adminCommands.sendHelp(sender);
-            return true;
-          }
-          if (args[1].equalsIgnoreCase("stop")) {
-            adminCommands.stopGame(sender);
-            return true;
-          } else if (args[1].equalsIgnoreCase("list")) {
-            adminCommands.printList(sender);
-            return true;
-          } else if (args[1].equalsIgnoreCase("forcestart")) {
-            adminCommands.forceStartGame(sender);
-            return true;
-          } else if (args[1].equalsIgnoreCase("reload")) {
-            adminCommands.reloadInstances(sender);
-            return true;
-          } else if (args[1].equalsIgnoreCase("delete")) {
-            if (args.length != 2) {
-              adminCommands.deleteArena(sender, args[2]);
-            } else {
-              sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Type-Arena-Name"));
-            }
-            return true;
-          }
-          adminCommands.sendHelp(sender);
-          List<StringMatcher.Match> matches = StringMatcher.match(args[1], Arrays.asList("stop", "list", "forcestart", "reload", "delete"));
-          if (!matches.isEmpty()) {
-            sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replace("%command%", "mm admin " + matches.get(0).getMatch()));
-          }
-          return true;
-        } else {
-          List<StringMatcher.Match> matches = StringMatcher.match(args[0], Arrays.asList("join", "leave", "stats", "top", "admin", "create"));
-          if (!matches.isEmpty()) {
-            sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replace("%command%", "mm " + matches.get(0).getMatch()));
-          }
-          return true;
-        }
-      }
-      return false;
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-      return false;
     }
+    return false;
   }
 
   void createArenaCommand(Player player, String[] args) {

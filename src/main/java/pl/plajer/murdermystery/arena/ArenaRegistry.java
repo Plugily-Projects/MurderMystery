@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +47,6 @@ import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.LocationUtils;
 
@@ -125,77 +124,73 @@ public class ArenaRegistry {
   }
 
   public static void registerArenas() {
-    try {
-      Debugger.debug(LogLevel.INFO, "Initial arenas registration");
-      if (ArenaRegistry.getArenas() != null) {
-        if (ArenaRegistry.getArenas().size() > 0) {
-          for (Arena arena : ArenaRegistry.getArenas()) {
-            arena.cleanUpArena();
-          }
-          for (Arena arena : new ArrayList<>(ArenaRegistry.getArenas())) {
-            unregisterArena(arena);
-          }
+    Debugger.debug(LogLevel.INFO, "Initial arenas registration");
+    if (ArenaRegistry.getArenas() != null) {
+      if (ArenaRegistry.getArenas().size() > 0) {
+        for (Arena arena : ArenaRegistry.getArenas()) {
+          arena.cleanUpArena();
+        }
+        for (Arena arena : new ArrayList<>(ArenaRegistry.getArenas())) {
+          unregisterArena(arena);
         }
       }
-      FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-
-      if (!config.contains("instances")) {
-        Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.No-Instances-Created"));
-        return;
-      }
-
-      for (String id : config.getConfigurationSection("instances").getKeys(false)) {
-        Arena arena;
-        String s = "instances." + id + ".";
-        if (s.contains("default")) {
-          continue;
-        }
-        arena = new Arena(id, plugin);
-        arena.setMinimumPlayers(config.getInt(s + "minimumplayers", 2));
-        arena.setMaximumPlayers(config.getInt(s + "maximumplayers", 4));
-        arena.setMapName(config.getString(s + "mapname", "none"));
-        List<Location> playerSpawnPoints = new ArrayList<>();
-        for (String loc : config.getStringList(s + "playerspawnpoints")) {
-          playerSpawnPoints.add(LocationUtils.getLocation(loc));
-        }
-        arena.setPlayerSpawnPoints(playerSpawnPoints);
-        List<Location> goldSpawnPoints = new ArrayList<>();
-        for (String loc : config.getStringList(s + "goldspawnpoints")) {
-          goldSpawnPoints.add(LocationUtils.getLocation(loc));
-        }
-        arena.setGoldSpawnPoints(goldSpawnPoints);
-
-        List<SpecialBlock> specialBlocks = new ArrayList<>();
-        if (config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
-          for (String loc : config.getStringList("instances." + arena.getID() + ".mystery-cauldrons")) {
-            specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
-          }
-        }
-        if (config.isSet("instances." + arena.getID() + ".confessionals")) {
-          for (String loc : config.getStringList("instances." + arena.getID() + ".confessionals")) {
-            specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
-          }
-        }
-        for (SpecialBlock block : specialBlocks) {
-          arena.loadSpecialBlock(block);
-        }
-        arena.setLobbyLocation(LocationUtils.getLocation(config.getString(s + "lobbylocation", "world,364.0,63.0,-72.0,0.0,0.0")));
-        arena.setEndLocation(LocationUtils.getLocation(config.getString(s + "Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
-
-        if (!config.getBoolean(s + "isdone", false)) {
-          Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
-          arena.setReady(false);
-          ArenaRegistry.registerArena(arena);
-          continue;
-        }
-        ArenaRegistry.registerArena(arena);
-        arena.start();
-        Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Instance-Started").replace("%arena%", id));
-      }
-      Debugger.debug(LogLevel.INFO, "Arenas registration completed");
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
     }
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+
+    if (!config.contains("instances")) {
+      Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.No-Instances-Created"));
+      return;
+    }
+
+    for (String id : config.getConfigurationSection("instances").getKeys(false)) {
+      Arena arena;
+      String s = "instances." + id + ".";
+      if (s.contains("default")) {
+        continue;
+      }
+      arena = new Arena(id, plugin);
+      arena.setMinimumPlayers(config.getInt(s + "minimumplayers", 2));
+      arena.setMaximumPlayers(config.getInt(s + "maximumplayers", 4));
+      arena.setMapName(config.getString(s + "mapname", "none"));
+      List<Location> playerSpawnPoints = new ArrayList<>();
+      for (String loc : config.getStringList(s + "playerspawnpoints")) {
+        playerSpawnPoints.add(LocationUtils.getLocation(loc));
+      }
+      arena.setPlayerSpawnPoints(playerSpawnPoints);
+      List<Location> goldSpawnPoints = new ArrayList<>();
+      for (String loc : config.getStringList(s + "goldspawnpoints")) {
+        goldSpawnPoints.add(LocationUtils.getLocation(loc));
+      }
+      arena.setGoldSpawnPoints(goldSpawnPoints);
+
+      List<SpecialBlock> specialBlocks = new ArrayList<>();
+      if (config.isSet("instances." + arena.getID() + ".mystery-cauldrons")) {
+        for (String loc : config.getStringList("instances." + arena.getID() + ".mystery-cauldrons")) {
+          specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
+        }
+      }
+      if (config.isSet("instances." + arena.getID() + ".confessionals")) {
+        for (String loc : config.getStringList("instances." + arena.getID() + ".confessionals")) {
+          specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
+        }
+      }
+      for (SpecialBlock block : specialBlocks) {
+        arena.loadSpecialBlock(block);
+      }
+      arena.setLobbyLocation(LocationUtils.getLocation(config.getString(s + "lobbylocation", "world,364.0,63.0,-72.0,0.0,0.0")));
+      arena.setEndLocation(LocationUtils.getLocation(config.getString(s + "Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
+
+      if (!config.getBoolean(s + "isdone", false)) {
+        Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
+        arena.setReady(false);
+        ArenaRegistry.registerArena(arena);
+        continue;
+      }
+      ArenaRegistry.registerArena(arena);
+      arena.start();
+      Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Instance-Started").replace("%arena%", id));
+    }
+    Debugger.debug(LogLevel.INFO, "Arenas registration completed");
   }
 
   public static List<Arena> getArenas() {

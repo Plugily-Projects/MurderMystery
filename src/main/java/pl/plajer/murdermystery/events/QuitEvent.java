@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,6 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.user.User;
-import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -71,16 +70,12 @@ public class QuitEvent implements Listener {
 
   @EventHandler
   public void onQuitSaveStats(PlayerQuitEvent event) {
-    try {
-      if (ArenaRegistry.getArena(event.getPlayer()) != null) {
-        ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArena(event.getPlayer()));
-      }
-      final User user = plugin.getUserManager().getUser(event.getPlayer());
-      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        plugin.getUserManager().saveStatistic(user, stat);
-      }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
+    if (ArenaRegistry.getArena(event.getPlayer()) != null) {
+      ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArena(event.getPlayer()));
+    }
+    final User user = plugin.getUserManager().getUser(event.getPlayer());
+    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+      plugin.getUserManager().saveStatistic(user, stat);
     }
   }
 

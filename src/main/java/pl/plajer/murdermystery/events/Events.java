@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -91,7 +91,6 @@ import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Utils;
-import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.XMaterial;
 
 /**
@@ -126,152 +125,140 @@ public class Events implements Listener {
 
   @EventHandler
   public void onSwordThrow(PlayerInteractEvent e) {
-    try {
-      Arena arena = ArenaRegistry.getArena(e.getPlayer());
-      if (arena == null) {
+    Arena arena = ArenaRegistry.getArena(e.getPlayer());
+    if (arena == null) {
+      return;
+    }
+    if (!Role.isRole(Role.MURDERER, e.getPlayer())) {
+      return;
+    }
+    if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
+      return;
+    }
+    final Player attacker = e.getPlayer();
+    final User attackerUser = plugin.getUserManager().getUser(attacker);
+    //todo not hardcoded!
+    if (attacker.getInventory().getItemInMainHand().getType() == Material.IRON_SWORD) {
+      if (attackerUser.getCooldown("sword_shoot") > 0) {
         return;
       }
-      if (!Role.isRole(Role.MURDERER, e.getPlayer())) {
-        return;
-      }
-      if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
-        return;
-      }
-      final Player attacker = e.getPlayer();
-      final User attackerUser = plugin.getUserManager().getUser(attacker);
-      //todo not hardcoded!
-      if (attacker.getInventory().getItemInMainHand().getType() == Material.IRON_SWORD) {
-        if (attackerUser.getCooldown("sword_shoot") > 0) {
-          return;
-        }
-        attackerUser.setCooldown("sword_shoot", 5);
-        attacker.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-        final ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(attacker.getLocation(), EntityType.ARMOR_STAND);
-        stand.setVisible(false);
-        stand.setInvulnerable(true);
-        stand.setItemInHand(new ItemStack(Material.IRON_SWORD, 1));
-        stand.setRightArmPose(new EulerAngle(Math.toRadians(350.0), Math.toRadians(attacker.getLocation().getPitch() * -1.0), Math.toRadians(90.0)));
-        stand.setCollidable(false);
-        stand.setSilent(true);
-        new BukkitRunnable() {
-          double posModifier = 0;
-          Location loc = attacker.getLocation();
-          Vector direction = loc.getDirection().normalize();
+      attackerUser.setCooldown("sword_shoot", 5);
+      attacker.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+      final ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(attacker.getLocation(), EntityType.ARMOR_STAND);
+      stand.setVisible(false);
+      stand.setInvulnerable(true);
+      stand.setItemInHand(new ItemStack(Material.IRON_SWORD, 1));
+      stand.setRightArmPose(new EulerAngle(Math.toRadians(350.0), Math.toRadians(attacker.getLocation().getPitch() * -1.0), Math.toRadians(90.0)));
+      stand.setCollidable(false);
+      stand.setSilent(true);
+      new BukkitRunnable() {
+        double posModifier = 0;
+        Location loc = attacker.getLocation();
+        Vector direction = loc.getDirection().normalize();
 
-          @Override
-          public void run() {
-            posModifier += 0.5;
-            double x = direction.getX() * posModifier;
-            double y = direction.getY() * posModifier + 0.5;
-            double z = direction.getZ() * posModifier;
-            loc.add(x, y, z);
-            stand.teleport(loc);
-            for (Entity en : loc.getChunk().getEntities()) {
-              if (!(en instanceof Player)) {
-                continue;
-              }
-              Player victim = (Player) en;
-              if (ArenaRegistry.isInArena(victim) && plugin.getUserManager().getUser(victim).isSpectator()) {
-                continue;
-              }
-              if (victim.getLocation().distance(loc) < 1.0) {
-                if (!victim.equals(attacker)) {
-                  plugin.getCorpseHandler().spawnCorpse(victim, arena);
-                  victim.damage(100.0);
-                  victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
-                  MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
-                  MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"));
-                  attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
-                  ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
-                  if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
-                    if (Role.isRole(Role.FAKE_DETECTIVE, victim)) {
-                      arena.setFakeDetective(null);
-                    }
-                    ArenaUtils.dropBowAndAnnounce(arena, victim);
+        @Override
+        public void run() {
+          posModifier += 0.5;
+          double x = direction.getX() * posModifier;
+          double y = direction.getY() * posModifier + 0.5;
+          double z = direction.getZ() * posModifier;
+          loc.add(x, y, z);
+          stand.teleport(loc);
+          for (Entity en : loc.getChunk().getEntities()) {
+            if (!(en instanceof Player)) {
+              continue;
+            }
+            Player victim = (Player) en;
+            if (ArenaRegistry.isInArena(victim) && plugin.getUserManager().getUser(victim).isSpectator()) {
+              continue;
+            }
+            if (victim.getLocation().distance(loc) < 1.0) {
+              if (!victim.equals(attacker)) {
+                plugin.getCorpseHandler().spawnCorpse(victim, arena);
+                victim.damage(100.0);
+                victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
+                MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
+                MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"));
+                attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
+                ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
+                if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
+                  if (Role.isRole(Role.FAKE_DETECTIVE, victim)) {
+                    arena.setFakeDetective(null);
                   }
+                  ArenaUtils.dropBowAndAnnounce(arena, victim);
                 }
               }
             }
-            loc.subtract(x, y, z);
-            if (posModifier > 20) {
-              this.cancel();
-              stand.remove();
-            }
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
-              if (arena.getArenaState() == ArenaState.IN_GAME) {
-                ItemPosition.setItem(attacker, ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
-              }
-            }, 5 * 21);
           }
-        }.runTaskTimer(plugin, 0, 1);
-        Utils.applyActionBarCooldown(attacker, 5);
-      }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
+          loc.subtract(x, y, z);
+          if (posModifier > 20) {
+            this.cancel();
+            stand.remove();
+          }
+          Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (arena.getArenaState() == ArenaState.IN_GAME) {
+              ItemPosition.setItem(attacker, ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
+            }
+          }, 5 * 21);
+        }
+      }.runTaskTimer(plugin, 0, 1);
+      Utils.applyActionBarCooldown(attacker, 5);
     }
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onCommandExecute(PlayerCommandPreprocessEvent event) {
-    try {
-      Arena arena = ArenaRegistry.getArena(event.getPlayer());
-      if (arena == null) {
-        return;
-      }
-      if (!plugin.getConfig().getBoolean("Block-Commands-In-Game", true)) {
-        return;
-      }
-      for (String msg : plugin.getConfig().getStringList("Whitelisted-Commands")) {
-        if (event.getMessage().contains(msg)) {
-          return;
-        }
-      }
-      if (event.getPlayer().isOp() || event.getPlayer().hasPermission("murdermystery.admin") || event.getPlayer().hasPermission("murdermystery.command.bypass")) {
-        return;
-      }
-      if (event.getMessage().startsWith("/mm") || event.getMessage().contains("leave")
-          || event.getMessage().contains("stats") || event.getMessage().startsWith("/mma")) {
-        return;
-
-      }
-      if (event.getPlayer().isOp()) {
-        return;
-      }
-      event.setCancelled(true);
-      event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
+    Arena arena = ArenaRegistry.getArena(event.getPlayer());
+    if (arena == null) {
+      return;
     }
+    if (!plugin.getConfig().getBoolean("Block-Commands-In-Game", true)) {
+      return;
+    }
+    for (String msg : plugin.getConfig().getStringList("Whitelisted-Commands")) {
+      if (event.getMessage().contains(msg)) {
+        return;
+      }
+    }
+    if (event.getPlayer().isOp() || event.getPlayer().hasPermission("murdermystery.admin") || event.getPlayer().hasPermission("murdermystery.command.bypass")) {
+      return;
+    }
+    if (event.getMessage().startsWith("/mm") || event.getMessage().contains("leave")
+        || event.getMessage().contains("stats") || event.getMessage().startsWith("/mma")) {
+      return;
+
+    }
+    if (event.getPlayer().isOp()) {
+      return;
+    }
+    event.setCancelled(true);
+    event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
   }
 
   @EventHandler(priority = EventPriority.LOWEST)
   public void onLeave(PlayerInteractEvent event) {
-    try {
-      if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-        return;
+    if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+      return;
+    }
+    Arena arena = ArenaRegistry.getArena(event.getPlayer());
+    if (arena == null) {
+      return;
+    }
+    ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
+    if (itemStack == null || itemStack.getItemMeta() == null || itemStack.getItemMeta().getDisplayName() == null) {
+      return;
+    }
+    String key = SpecialItemManager.getRelatedSpecialItem(itemStack);
+    if (key == null) {
+      return;
+    }
+    if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Leave")) {
+      event.setCancelled(true);
+      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+        plugin.getBungeeManager().connectToHub(event.getPlayer());
+      } else {
+        ArenaManager.leaveAttempt(event.getPlayer(), arena);
       }
-      Arena arena = ArenaRegistry.getArena(event.getPlayer());
-      if (arena == null) {
-        return;
-      }
-      ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
-      if (itemStack == null || itemStack.getItemMeta() == null || itemStack.getItemMeta().getDisplayName() == null) {
-        return;
-      }
-      String key = SpecialItemManager.getRelatedSpecialItem(itemStack);
-      if (key == null) {
-        return;
-      }
-      if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Leave")) {
-        event.setCancelled(true);
-        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-          plugin.getBungeeManager().connectToHub(event.getPlayer());
-        } else {
-          ArenaManager.leaveAttempt(event.getPlayer(), arena);
-        }
-      }
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
     }
   }
 

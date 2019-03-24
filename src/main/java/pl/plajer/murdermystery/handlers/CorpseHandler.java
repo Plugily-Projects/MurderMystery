@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,7 +65,6 @@ import org.golde.bukkit.corpsereborn.nms.Corpses;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.corpse.Corpse;
-import pl.plajerlair.core.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -94,31 +93,27 @@ public class CorpseHandler implements Listener {
   }
 
   public void spawnCorpse(Player p, Arena arena) {
-    try {
-      Hologram hologram = HologramsAPI.createHologram(plugin, p.getLocation().clone().add(0, 1.5, 0));
-      hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Corpse-Last-Words").replace("%player%", p.getName()));
-      boolean found = false;
-      //todo priority note to wiki
-      for (String perm : registeredLastWords.keySet()) {
-        if (p.hasPermission(perm)) {
-          hologram.appendTextLine(registeredLastWords.get(perm));
-          found = true;
-          break;
-        }
+    Hologram hologram = HologramsAPI.createHologram(plugin, p.getLocation().clone().add(0, 1.5, 0));
+    hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Corpse-Last-Words").replace("%player%", p.getName()));
+    boolean found = false;
+    //todo priority note to wiki
+    for (String perm : registeredLastWords.keySet()) {
+      if (p.hasPermission(perm)) {
+        hologram.appendTextLine(registeredLastWords.get(perm));
+        found = true;
+        break;
       }
-      if (!found) {
-        hologram.appendTextLine(registeredLastWords.get("default"));
-      }
-      Corpses.CorpseData corpse = CorpseAPI.spawnCorpse(p, p.getLocation());
-      lastSpawnedCorpse = corpse;
-      arena.addCorpse(new Corpse(hologram, corpse));
-      Bukkit.getScheduler().runTaskLater(plugin, () -> {
-        hologram.delete();
-        Bukkit.getScheduler().runTaskLater(plugin, corpse::destroyCorpseFromEveryone, 20);
-      }, 15);
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
     }
+    if (!found) {
+      hologram.appendTextLine(registeredLastWords.get("default"));
+    }
+    Corpses.CorpseData corpse = CorpseAPI.spawnCorpse(p, p.getLocation());
+    lastSpawnedCorpse = corpse;
+    arena.addCorpse(new Corpse(hologram, corpse));
+    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+      hologram.delete();
+      Bukkit.getScheduler().runTaskLater(plugin, corpse::destroyCorpseFromEveryone, 20);
+    }, 15);
   }
 
   @EventHandler

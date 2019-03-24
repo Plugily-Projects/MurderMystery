@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,6 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajerlair.core.services.exception.ReportedException;
 import pl.plajerlair.core.utils.InventoryUtils;
 
 /**
@@ -99,8 +98,7 @@ public class JoinEvent implements Listener {
 
   @EventHandler
   public void onJoinCheckVersion(final PlayerJoinEvent event) {
-    try {
-      //we want to be the first :)
+    //we want to be the first :)
       /*
       Bukkit.getScheduler().runTaskLater(plugin, () -> {
       if (event.getPlayer().hasPermission("murdermystery.updatenotify")) {
@@ -132,8 +130,5 @@ public class JoinEvent implements Listener {
         }
       }
       }, 25);*/
-    } catch (Exception ex) {
-      new ReportedException(plugin, ex);
-    }
   }
 }
