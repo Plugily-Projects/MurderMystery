@@ -110,6 +110,7 @@ public class Events implements Listener {
   @EventHandler
   public void onCorpseClick(CorpseClickEvent e) {
     if (ArenaRegistry.isInArena(e.getClicker())) {
+      e.setCancelled(true);
       e.getClicker().closeInventory();
     }
   }
