@@ -62,8 +62,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
-
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -113,16 +111,21 @@ public class Arena extends BukkitRunnable {
 
   private Main plugin;
   private Set<Player> players = new HashSet<>();
+  @Deprecated //mergeable
   private List<Location> goldSpawnPoints = new ArrayList<>();
   private List<Item> goldSpawned = new ArrayList<>();
+  @Deprecated //mergeable
   private List<Location> playerSpawnPoints = new ArrayList<>();
   private List<Corpse> corpses = new ArrayList<>();
   private List<SpecialBlock> specialBlocks = new ArrayList<>();
   private Hologram bowHologram;
   //contains murderer, detective, fake detective and hero
   private Map<CharacterType, Player> gameCharacters = new HashMap<>();
+  @Deprecated //api subject to change
   private boolean murdererDead;
+  @Deprecated //^
   private boolean detectiveDead;
+  @Deprecated //^
   private boolean murdererLocatorReceived;
   private BossBar gameBar;
   private ArenaState arenaState;
@@ -165,11 +168,6 @@ public class Arena extends BukkitRunnable {
       }
     }
     this.bowHologram = bowHologram;
-  }
-
-  @Nullable
-  public BossBar getGameBar() {
-    return gameBar;
   }
 
   public void run() {
