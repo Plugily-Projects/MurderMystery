@@ -1,6 +1,7 @@
 ### 1.0.0 Beta pre releases 1-5 (28.10.2018-24.03.2019)
    > Pre 6 (24.03.2019)
    * Now clicking corpses in game won't open their inventories
+   * Improved sign manager
    > Pre 5 (24.03.2019)
    * Abandoned the direct try-catch exception handling in most of methods and event listeners in favour of logger
    listening, code looks better now
