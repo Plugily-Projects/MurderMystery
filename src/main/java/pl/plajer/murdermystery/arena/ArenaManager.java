@@ -42,6 +42,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -129,6 +130,7 @@ public class ArenaManager {
       arena.addPlayer(player);
       player.setLevel(0);
       player.setExp(1);
+      player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
       player.setFoodLevel(20);
       player.setGameMode(GameMode.SURVIVAL);
       player.setAllowFlight(true);
@@ -158,6 +160,7 @@ public class ArenaManager {
     }
     arena.teleportToLobby(player);
     arena.addPlayer(player);
+    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
     player.setFoodLevel(20);
     player.getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
     player.setFlying(false);
@@ -237,6 +240,7 @@ public class ArenaManager {
     user.setSpectator(false);
     user.removeScoreboard();
     arena.doBarAction(Arena.BarAction.REMOVE, player);
+    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
     player.setFoodLevel(20);
     player.setLevel(0);
     player.setExp(0);

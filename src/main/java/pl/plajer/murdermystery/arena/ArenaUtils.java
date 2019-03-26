@@ -117,11 +117,13 @@ public class ArenaUtils {
   }
 
   public static void dropBowAndAnnounce(Arena arena, Player victim) {
-    for (Player p : arena.getPlayers()) {
-      MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title"));
-    }
-    for (Player p : arena.getPlayersLeft()) {
-      MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle"));
+    if (arena.getPlayersLeft().size() > 1) {
+      for (Player p : arena.getPlayers()) {
+        MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title"));
+      }
+      for (Player p : arena.getPlayersLeft()) {
+        MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle"));
+      }
     }
 
     Hologram hologram = HologramsAPI.createHologram(plugin, victim.getLocation().clone().add(0, 0.5, 0));
