@@ -125,14 +125,12 @@ public class ArenaRegistry {
 
   public static void registerArenas() {
     Debugger.debug(LogLevel.INFO, "Initial arenas registration");
-    if (ArenaRegistry.getArenas() != null) {
-      if (ArenaRegistry.getArenas().size() > 0) {
-        for (Arena arena : ArenaRegistry.getArenas()) {
-          arena.cleanUpArena();
-        }
-        for (Arena arena : new ArrayList<>(ArenaRegistry.getArenas())) {
-          unregisterArena(arena);
-        }
+    if (ArenaRegistry.getArenas().size() > 0) {
+      for (Arena arena : ArenaRegistry.getArenas()) {
+        arena.cleanUpArena();
+      }
+      for (Arena arena : new ArrayList<>(ArenaRegistry.getArenas())) {
+        unregisterArena(arena);
       }
     }
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");

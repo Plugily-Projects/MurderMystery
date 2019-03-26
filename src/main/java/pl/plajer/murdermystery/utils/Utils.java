@@ -106,34 +106,8 @@ public class Utils {
     return blocks;
   }
 
-  public static Location getBlockCenter(Location loc) {
-    return new Location(loc.getWorld(),
-        getRelativeCoord(loc.getBlockX()),
-        getRelativeCoord(loc.getBlockY()),
-        getRelativeCoord(loc.getBlockZ()));
-  }
-
-  private static double getRelativeCoord(int i) {
-    double d = i;
-    d = d < 0 ? d - .5 : d + .5;
-    return d;
-  }
-
-  /**
-   * Due to spigot bug if coordinate is negative getTargetBlock will display negative coord -1
-   *
-   * @param loc location to fix coordinates for
-   * @return fixed location value
-   */
-  public static Location fixHologramDisplay(Location loc) {
-    Location fixedLocation = loc.clone();
-    if (loc.getZ() < 0) {
-      fixedLocation.add(0, 0, 1);
-    }
-    if (loc.getX() < 0) {
-      fixedLocation.add(1, 0, 0);
-    }
-    return fixedLocation;
+  public static Location getBlockCenter(Location location) {
+    return location.add(0.5, 0, 0.5);
   }
 
 }

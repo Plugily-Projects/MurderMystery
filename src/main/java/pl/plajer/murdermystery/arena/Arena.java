@@ -774,7 +774,7 @@ public class Arena extends BukkitRunnable {
       case HORSE_PURCHASE:
         break;
       case MYSTERY_CAULDRON:
-        holo = HologramsAPI.createHologram(plugin, Utils.getBlockCenter(block.getLocation()).clone().add(0, 1.2, 0));
+        holo = HologramsAPI.createHologram(plugin, Utils.getBlockCenter(block.getLocation()).clone().add(0, 1.8, 0));
         holo.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
         break;
       case PRAISE_DEVELOPER:

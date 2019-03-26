@@ -213,7 +213,6 @@ public class Main extends JavaPlugin {
     }*/
   }
 
-  @Deprecated //unsafe mysql database saving, cannot start new tasks in onDisable
   @Override
   public void onDisable() {
     if (forceDisable) {
