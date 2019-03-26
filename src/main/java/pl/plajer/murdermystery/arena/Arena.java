@@ -441,6 +441,12 @@ public class Arena extends BukkitRunnable {
 
           for (User user : plugin.getUserManager().getUsers(this)) {
             user.setSpectator(false);
+
+            for (StatsStorage.StatisticType statistic : StatsStorage.StatisticType.values()) {
+              if (!statistic.isPersistent()) {
+                user.setStat(statistic, 0);
+              }
+            }
           }
           plugin.getRewardsHandler().performReward(this, GameReward.RewardType.END_GAME);
           players.clear();

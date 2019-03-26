@@ -11,6 +11,7 @@
    * Bow Time prayer has been nerfed, only 1 arrow is given not whole stack now
    * Now player health will be set to full when joining the game
    * Bow drop announcement will no longer appear when only 1 player has left in the game
+   * When game ends users will get reset their non persistent user data (like gained gold amount)
 
 ### 1.0.0 Beta pre releases 1-5 (28.10.2018-24.03.2019)
    > Pre 5 (24.03.2019)
