@@ -65,7 +65,6 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
-import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
@@ -124,10 +123,8 @@ public class PrayerRegistry {
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
         break;
       case BOW_TIME:
-        if (Role.isRole(Role.INNOCENT, player)) {
-          ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-          ItemPosition.setItem(player, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, 64));
-        }
+        ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+        ItemPosition.setItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, 1));
         break;
       case DETECTIVE_REVELATION:
         String detectiveName;
@@ -153,6 +150,7 @@ public class PrayerRegistry {
         break;
       case SINGLE_COMPENSATION:
         ItemPosition.addItem(player, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, 5));
+        user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) + 5);
         break;
       case SLOWNESS_CURSE:
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0, false, false));

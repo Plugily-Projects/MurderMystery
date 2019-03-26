@@ -62,6 +62,7 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotion;
 import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
 import pl.plajer.murdermystery.arena.special.pray.PrayerRegistry;
@@ -90,6 +91,9 @@ public class SpecialBlockEvents implements Listener {
   public void onSpecialBlockClick(PlayerInteractEvent e) {
     Arena arena = ArenaRegistry.getArena(e.getPlayer());
     if (arena == null || e.getClickedBlock() == null || e.getClickedBlock().getType() == null) {
+      return;
+    }
+    if (arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
     boolean leverBlock = false;
