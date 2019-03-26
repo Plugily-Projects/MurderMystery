@@ -404,12 +404,15 @@ public class Arena extends BukkitRunnable {
             gameBar.setTitle(ChatManager.colorMessage("Bossbar.Game-Ended"));
           }
 
-          for (Player player : getPlayers()) {
+          List<Player> playersToQuit = new ArrayList<>(getPlayers());
+          for (Player player : playersToQuit) {
             plugin.getUserManager().getUser(player).removeScoreboard();
             player.setGameMode(GameMode.SURVIVAL);
             for (Player players : Bukkit.getOnlinePlayers()) {
               player.showPlayer(players);
-              players.hidePlayer(player);
+              if (ArenaRegistry.getArena(players) == null) {
+                players.showPlayer(player);
+              }
             }
             for (PotionEffect effect : player.getActivePotionEffects()) {
               player.removePotionEffect(effect.getType());
@@ -422,12 +425,6 @@ public class Arena extends BukkitRunnable {
             doBarAction(BarAction.REMOVE, player);
             player.setFireTicks(0);
             player.setFoodLevel(20);
-            for (Player players : plugin.getServer().getOnlinePlayers()) {
-              if (ArenaRegistry.getArena(players) != null) {
-                players.showPlayer(player);
-              }
-              player.showPlayer(players);
-            }
           }
           teleportAllToEndLocation();
 
@@ -450,6 +447,7 @@ public class Arena extends BukkitRunnable {
           }
           plugin.getRewardsHandler().performReward(this, GameReward.RewardType.END_GAME);
           players.clear();
+
           cleanUpArena();
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             if (ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
