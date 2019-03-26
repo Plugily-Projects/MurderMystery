@@ -23,7 +23,7 @@
     <groupId>pl.plajer</groupId>
     <artifactId>murdermystery</artifactId>
     <name>MurderMystery</name>
-    <version>1.0.0-pre-5</version>
+    <version>1.0.0-RC-1</version>
     <licenses>
         <license>
             <name>GNU General Public License v3</name>
@@ -71,9 +71,6 @@
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.1.0</version>
-                <configuration>
-                    <outputDirectory>${user.home}/Desktop/localhost/plugins</outputDirectory>
-                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-shade-plugin</artifactId>
