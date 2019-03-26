@@ -55,8 +55,8 @@ Override-Corpses-Spawn: true
 Basic-Permissions:
   Full-Games-Permission: "murdermystery.fullgames"
   # <arena> represents arena name (NOT MAP NAME!), for example: 'murdermystery.join.MM02'
-  # use ''murdermystery.join.*' to enable access to all arenas
-  Join-Permission: "'murdermystery.join.<arena>"
+  # use 'murdermystery.join.*' to enable access to all arenas
+  Join-Permission: "murdermystery.join.<arena>"
 
 # Should /mm leave command be blocked?
 Disable-Leave-Command: false
