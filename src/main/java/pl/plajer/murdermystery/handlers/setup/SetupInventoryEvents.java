@@ -113,7 +113,7 @@ public class SetupInventoryEvents implements Listener {
     String locationString = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + ","
         + player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    String targetBlock = LocationUtils.locationToString(Utils.fixLocation(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
+    String targetBlock = LocationUtils.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation());
     switch (slot) {
       case SET_ENDING:
         config.set("instances." + arena.getId() + ".Endlocation", locationString);
@@ -124,11 +124,11 @@ public class SetupInventoryEvents implements Listener {
         player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aLobby location for arena " + arena.getId() + " set at your location!"));
         break;
       case ADD_STARTING:
-        int playerSpawns = (config.isSet("instances." + arena.getId() + ".playerspawnpoints")
-            ? config.getConfigurationSection("instances." + arena.getId() + ".playerspawnpoints").getKeys(false).size() : 0) + 1;
-        LocationUtils.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".playerspawnpoints." + playerSpawns, player.getLocation());
-        String villagerProgress = playerSpawns >= 2 ? "&e✔ Completed | " : "&c✘ Not completed | ";
-        player.sendMessage(ChatManager.colorRawMessage(villagerProgress + "&aPlayer spawn added! &8(&7" + playerSpawns + "/1&8)"));
+        List<String> startingSpawns = config.getStringList("instances." + arena.getId() + ".playerspawnpoints");
+        startingSpawns.add(LocationUtils.locationToString(player.getLocation()));
+        config.set("instances." + arena.getId() + ".playerspawnpoints", startingSpawns);
+        String startingProgress = startingSpawns.size() >= 4 ? "&e✔ Completed | " : "&c✘ Not completed | ";
+        player.sendMessage(ChatManager.colorRawMessage(startingProgress + "&aPlayer spawn added! &8(&7" + startingSpawns.size() + "/4&8)"));
         break;
       case SET_MINIMUM_PLAYERS:
         if (clickType.isRightClick()) {
@@ -176,11 +176,11 @@ public class SetupInventoryEvents implements Listener {
         }
         break;
       case ADD_GOLD_SPAWN:
-        int gold = (config.isSet("instances." + arena.getId() + ".goldspawnpoints")
-            ? config.getConfigurationSection("instances." + arena.getId() + ".goldspawnpoints").getKeys(false).size() : 0) + 1;
-        LocationUtils.saveLoc(plugin, config, "arenas", "instances." + arena.getId() + ".goldspawnpoints." + gold, player.getLocation());
-        String goldProgress = gold >= 2 ? "&e✔ Completed | " : "&c✘ Not completed | ";
-        player.sendMessage(ChatManager.colorRawMessage(goldProgress + "&aVillager spawn added! &8(&7" + gold + "/4&8)"));
+        List<String> goldSpawns = config.getStringList("instances." + arena.getId() + ".goldspawnpoints");
+        goldSpawns.add(LocationUtils.locationToString(player.getLocation()));
+        config.set("instances." + arena.getId() + ".goldspawnpoints", goldSpawns);
+        String goldProgress = goldSpawns.size() >= 4 ? "&e✔ Completed | " : "&c✘ Not completed | ";
+        player.sendMessage(ChatManager.colorRawMessage(goldProgress + "&aGold spawn added! &8(&7" + goldSpawns.size() + "/4&8)"));
         break;
       case REGISTER_ARENA:
         if (ArenaRegistry.getArena(arena.getId()).isReady()) {
@@ -268,7 +268,7 @@ public class SetupInventoryEvents implements Listener {
           return;
         }
 
-        arena.loadSpecialBlock(new SpecialBlock(Utils.fixLocation(e.getWhoClicked().getTargetBlock(null, 10).getLocation()),
+        arena.loadSpecialBlock(new SpecialBlock(e.getWhoClicked().getTargetBlock(null, 10).getLocation(),
             SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
         List<String> cauldrons = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".mystery-cauldrons"));
         cauldrons.add(targetBlock);
@@ -282,7 +282,7 @@ public class SetupInventoryEvents implements Listener {
           return;
         }
 
-        arena.loadSpecialBlock(new SpecialBlock(Utils.fixLocation(e.getWhoClicked().getTargetBlock(null, 10).getLocation()),
+        arena.loadSpecialBlock(new SpecialBlock(e.getWhoClicked().getTargetBlock(null, 10).getLocation(),
             SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
         List<String> confessionals = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".confessionals"));
         confessionals.add(targetBlock);

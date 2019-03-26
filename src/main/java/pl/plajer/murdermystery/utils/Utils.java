@@ -125,12 +125,8 @@ public class Utils {
    * @param loc location to fix coordinates for
    * @return fixed location value
    */
-  public static Location fixLocation(Location loc) {
+  public static Location fixHologramDisplay(Location loc) {
     Location fixedLocation = loc.clone();
-    //bug only 1.13+
-    if (plugin.is1_12_R1() || plugin.is1_11_R1()) {
-      return fixedLocation;
-    }
     if (loc.getZ() < 0) {
       fixedLocation.add(0, 0, 1);
     }
@@ -139,4 +135,5 @@ public class Utils {
     }
     return fixedLocation;
   }
+
 }

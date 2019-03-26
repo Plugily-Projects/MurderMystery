@@ -36,6 +36,7 @@ package pl.plajer.murdermystery.handlers.setup;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -83,7 +84,7 @@ public class SetupInventory {
         .lore(ChatColor.GRAY + "on the place where you are standing.")
         .lore(ChatColor.DARK_GRAY + "(locations where players will be teleported")
         .lore(ChatColor.DARK_GRAY + "when game starts)")
-        .lore(isOptionDoneList("instances." + arena.getId() + ".playerspawnpoints", 3))
+        .lore(isOptionDoneList("instances." + arena.getId() + ".playerspawnpoints", 4))
         .build());
 
     inventory.setItem(ClickPosition.SET_MINIMUM_PLAYERS.getPosition(), new ItemBuilder(new ItemStack(Material.COAL,
@@ -122,7 +123,7 @@ public class SetupInventory {
         .name(ChatColor.GOLD + "► Add" + ChatColor.YELLOW + " gold " + ChatColor.GOLD + "spawn")
         .lore(ChatColor.GRAY + "Add new gold spawn")
         .lore(ChatColor.GRAY + "on the place you're standing at.")
-        .lore(isOptionDoneList("instances." + arena.getId() + ".goldspawnpoints", 3))
+        .lore(isOptionDoneList("instances." + arena.getId() + ".goldspawnpoints", 4))
         .build());
     inventory.setItem(ClickPosition.REGISTER_ARENA.getPosition(), new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseItem())
         .name(ChatColor.GOLD + "► " + ChatColor.GREEN + "Register arena")
@@ -158,27 +159,28 @@ public class SetupInventory {
   }
 
   private static String isOptionDone(String path) {
-    if (ConfigUtils.getConfig(plugin, "arenas").isSet(path)) {
-      return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(value: " + ConfigUtils.getConfig(plugin, "arenas").getString(path) + ")";
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+    if (config.isSet(path)) {
+      return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(value: " + config.getString(path) + ")";
     }
     return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
   }
 
   private String isOptionDoneList(String path, int minimum) {
-    if (ConfigUtils.getConfig(plugin, "arenas").isSet(path)) {
-      if (ConfigUtils.getConfig(plugin, "arenas").getStringList(path).size() < minimum) {
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+    if (config.isSet(path)) {
+      if (config.getStringList(path).size() < minimum) {
         return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No - add more spawns";
       }
-
-      return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(value: " + ConfigUtils.getConfig(plugin, "arenas")
-          .getStringList(path).size() + ")";
+      return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(value: " + config.getStringList(path).size() + ")";
     }
     return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
   }
 
   private String isOptionDoneBool(String path) {
-    if (ConfigUtils.getConfig(plugin, "arenas").isSet(path)) {
-      if (Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(LocationUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path)))) {
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+    if (config.isSet(path)) {
+      if (Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(LocationUtils.getLocation(config.getString(path)))) {
         return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
       }
       return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes";

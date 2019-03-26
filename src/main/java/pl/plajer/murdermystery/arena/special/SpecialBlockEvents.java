@@ -156,7 +156,7 @@ public class SpecialBlockEvents implements Listener {
     }
     e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Prayed-Message"));
     user.setStat(StatsStorage.StatisticType.LOCAL_PRAISES, user.getStat(StatsStorage.StatisticType.LOCAL_PRAISES) + 1);
-    e.getClickedBlock().getWorld().spawnParticle(Particle.FIREWORKS_SPARK, e.getClickedBlock().getLocation(), 10, 0.5, 0.5, 0.5);
+    e.getClickedBlock().getWorld().spawnParticle(Particle.FIREWORKS_SPARK, e.getClickedBlock().getLocation(), 10, 0.5, 0.5, 0.5, 1);
     user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) - 1);
     ItemPosition.addItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, -1));
   }
