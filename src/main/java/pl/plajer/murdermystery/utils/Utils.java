@@ -91,7 +91,7 @@ public class Utils {
             .replace("%progress%", progress).replace("%time%", String.valueOf((double) (100 - ticks) / 20))));
         ticks += 10;
       }
-    }.runTaskTimer(plugin, 10, 10);
+    }.runTaskTimer(plugin, 0, 10);
   }
 
   public static List<Block> getNearbyBlocks(Location location, int radius) {

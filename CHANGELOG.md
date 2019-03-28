@@ -1,6 +1,7 @@
 ### 1.0.0 Release Candidate 2 (28.03.2019)
 * Setup GUI will now display 0 minimum players option if accidentally set
 * Bow Time prayer will now add new arrow to the inventory not set and override current amount
+* Improvement for bow cooldown display action bar
 
 ### 1.0.0 Release Candidate 1 (24/26.03.2019)
 * Now clicking corpses in game won't open their inventories
