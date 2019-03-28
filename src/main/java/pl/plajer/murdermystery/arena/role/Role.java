@@ -81,18 +81,24 @@ public enum Role {
     }
     switch (role) {
       case DETECTIVE:
-        return arena.isCharacterSet(Arena.CharacterType.DETECTIVE) && arena.getCharacter(Arena.CharacterType.DETECTIVE).equals(player);
+        if (!arena.isCharacterSet(Arena.CharacterType.DETECTIVE)) {
+          return false;
+        }
+        return arena.getCharacter(Arena.CharacterType.DETECTIVE).equals(player);
       case FAKE_DETECTIVE:
-        return arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE) && arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE).equals(player);
+        if (!arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
+          return false;
+        }
+        return arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE).equals(player);
       case MURDERER:
-        return arena.isCharacterSet(Arena.CharacterType.MURDERER) && arena.getCharacter(Arena.CharacterType.MURDERER).equals(player);
+        if (!arena.isCharacterSet(Arena.CharacterType.MURDERER)) {
+          return false;
+        }
+        return arena.getCharacter(Arena.CharacterType.MURDERER).equals(player);
       case ANY_DETECTIVE:
-        return arena.isCharacterSet(Arena.CharacterType.DETECTIVE) && arena.getCharacter(Arena.CharacterType.DETECTIVE).equals(player)
-            || (arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE) && arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE).equals(player));
+        return isRole(Role.DETECTIVE, player) || isRole(Role.FAKE_DETECTIVE, player);
       case INNOCENT:
-        return (arena.isCharacterSet(Arena.CharacterType.DETECTIVE) && !arena.getCharacter(Arena.CharacterType.DETECTIVE).equals(player)) &&
-            (arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE) && !arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE).equals(player)) &&
-            (arena.isCharacterSet(Arena.CharacterType.MURDERER) && !arena.getCharacter(Arena.CharacterType.MURDERER).equals(player));
+        return !isRole(Role.MURDERER, player) && !isRole(Role.ANY_DETECTIVE, player);
       default:
         return false;
     }

@@ -121,7 +121,7 @@ public class CorpseHandler implements Listener {
     if (lastSpawnedCorpse == null) {
       return;
     }
-    if (e.getCorpse() != lastSpawnedCorpse) {
+    if (!e.getCorpse().equals(lastSpawnedCorpse)) {
       e.setCancelled(true);
     }
   }

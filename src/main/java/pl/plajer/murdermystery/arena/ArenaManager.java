@@ -233,6 +233,7 @@ public class ArenaManager {
     player.getInventory().clear();
     player.getInventory().setArmorContents(null);
     arena.removePlayer(player);
+    arena.teleportToEndLocation(player);
     if (!user.isSpectator()) {
       ChatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
     }

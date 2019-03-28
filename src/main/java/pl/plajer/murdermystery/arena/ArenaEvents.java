@@ -48,6 +48,7 @@
 
 package pl.plajer.murdermystery.arena;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -181,7 +182,7 @@ public class ArenaEvents implements Listener {
       return;
     }
 
-    if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) == 10) {
+    if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) >= 10) {
       user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
       MessageUtils.sendTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold"));
       MessageUtils.sendSubTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle"));
@@ -229,7 +230,6 @@ public class ArenaEvents implements Listener {
     ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
 
     Arena arena = ArenaRegistry.getArena(attacker);
-    arena.getPlayersLeft().remove(victim);
     if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
       //if already true, no effect is done :)
       arena.setDetectiveDead(true);
@@ -237,7 +237,6 @@ public class ArenaEvents implements Listener {
         arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
       }
       ArenaUtils.dropBowAndAnnounce(arena, victim);
-      plugin.getCorpseHandler().spawnCorpse(victim, arena);
     }
   }
 
@@ -271,7 +270,6 @@ public class ArenaEvents implements Listener {
     }
 
     Arena arena = ArenaRegistry.getArena(attacker);
-    plugin.getCorpseHandler().spawnCorpse(victim, arena);
     MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
 
     if (Role.isRole(Role.MURDERER, victim)) {
@@ -311,7 +309,6 @@ public class ArenaEvents implements Listener {
         MessageUtils.sendSubTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Killed-Innocent"));
         attacker.damage(100.0);
         ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.INNOCENT_KILL, 0);
-        plugin.getCorpseHandler().spawnCorpse(attacker, arena);
         plugin.getRewardsHandler().performReward(attacker, GameReward.RewardType.DETECTIVE_KILL);
 
         if (Role.isRole(Role.ANY_DETECTIVE, attacker)) {
@@ -340,6 +337,7 @@ public class ArenaEvents implements Listener {
     e.getDrops().clear();
     e.setDroppedExp(0);
     e.getEntity().spigot().respawn();
+    plugin.getCorpseHandler().spawnCorpse(e.getEntity(), arena);
     e.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
     Player player = e.getEntity();
     if (arena.getArenaState() == ArenaState.STARTING) {
@@ -364,12 +362,14 @@ public class ArenaEvents implements Listener {
     player.setAllowFlight(true);
     player.setFlying(true);
     player.getInventory().clear();
-    arena.getPlayersLeft().remove(player);
     ChatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
 
-    player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
-    player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
-    player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
+    //we must call it tick/two later due to instant respawn bug
+    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+      player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
+      player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
+      player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
+    }, 2);
   }
 
   @EventHandler

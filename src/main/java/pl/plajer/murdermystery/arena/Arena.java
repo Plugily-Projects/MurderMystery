@@ -866,8 +866,8 @@ public class Arena extends BukkitRunnable {
       if (!corpse.getHologram().isDeleted()) {
         corpse.getHologram().delete();
       }
-      CorpseAPI.removeCorpse(corpse.getCorpseData());
       corpse.getCorpseData().destroyCorpseFromEveryone();
+      CorpseAPI.removeCorpse(corpse.getCorpseData());
     }
     corpses.clear();
   }

@@ -23,7 +23,7 @@
     <groupId>pl.plajer</groupId>
     <artifactId>murdermystery</artifactId>
     <name>MurderMystery</name>
-    <version>1.0.0-RC-1</version>
+    <version>1.0.0-RC-2</version>
     <licenses>
         <license>
             <name>GNU General Public License v3</name>

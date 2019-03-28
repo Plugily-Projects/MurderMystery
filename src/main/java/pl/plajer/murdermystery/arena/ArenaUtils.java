@@ -126,7 +126,7 @@ public class ArenaUtils {
       }
     }
 
-    Hologram hologram = HologramsAPI.createHologram(plugin, victim.getLocation().clone().add(0, 0.5, 0));
+    Hologram hologram = HologramsAPI.createHologram(plugin, victim.getLocation().clone().add(0, 0.6, 0));
     ItemLine itemLine = hologram.appendItemLine(new ItemStack(Material.BOW, 1));
 
     itemLine.setPickupHandler(player -> {
@@ -140,9 +140,9 @@ public class ArenaUtils {
           }
         }
 
-        arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, victim);
-        ItemPosition.setItem(victim, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-        ItemPosition.setItem(victim, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, 64));
+        arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, player);
+        ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+        ItemPosition.setItem(player, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, 64));
         ChatManager.broadcast(arena, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message"));
       }
     });

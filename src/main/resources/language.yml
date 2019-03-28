@@ -148,7 +148,7 @@ In-Game:
       Start-In: "&7The game starts in &b%TIME%&7 seconds!"
       Waiting-For-Players: "&7Waiting for players... We need at least &b%MINPLAYERS%&7 players to start."
       Enough-Players-To-Start: "&7We now have enough players. The game is starting soon!"
-      Game-Started: "&7The game has started! Defend the village against waves of zombies!"
+      Game-Started: "&7The game has started! Survive till the end!"
       Kicked-For-Premium-Slot: "&c%PLAYER% got removed from the game to make a place for premium players!"
       You-Were-Kicked-For-Premium-Slot: "&cYou got kicked out of the game to make a place for a premium player!"
       Role-Chances-Action-Bar: "&cMurderer Chance: %murderer_chance% &a- &bDetective Chance: %detective_chance%"

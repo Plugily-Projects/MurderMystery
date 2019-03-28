@@ -81,19 +81,17 @@ public class ArenaRegistry {
    * @see #isInArena(Player) to check if player is playing
    */
   public static Arena getArena(Player p) {
-    Arena arena = null;
     if (p == null || !p.isOnline()) {
       return null;
     }
-    for (Arena loopArena : arenas) {
-      for (Player player : loopArena.getPlayers()) {
-        if (player.getUniqueId() == p.getUniqueId()) {
-          arena = loopArena;
-          break;
+    for (Arena arena : arenas) {
+      for (Player player : arena.getPlayers()) {
+        if (player.getUniqueId().equals(p.getUniqueId())) {
+          return arena;
         }
       }
     }
-    return arena;
+    return null;
   }
 
   /**

@@ -3,6 +3,16 @@
 * Bow Time prayer will now add new arrow to the inventory not set and override current amount
 * Improvement for bow cooldown display action bar
 * Fixed corpses were instantly removed on spawn, timer was set in ticks not seconds
+* Fixed spectator items didn't work on death (spigot bug)
+* Fixed corpse will no longer spawn on ending location when leaving game via /mm leave
+if you were fake detective or a detective
+* Fixed bow couldn't be picked up by innocents
+* Fixed more than one corpse was spawned on death
+* Fixed you couldn't receive bow when you had more than 10 gold taken
+(you have 9 gold and pickup 2 then you cannot get bow cause you have 11 not 10)
+* Fixed more corpses could spawn on death by arrow
+* Fixed last words didn't display on death other than by arrow
+* Fixed message Game-Started which was copied from Village Defense
 
 ### 1.0.0 Release Candidate 1 (24/26.03.2019)
 * Now clicking corpses in game won't open their inventories

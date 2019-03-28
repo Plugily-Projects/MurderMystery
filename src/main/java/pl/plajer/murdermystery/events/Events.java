@@ -175,7 +175,6 @@ public class Events implements Listener {
             }
             if (victim.getLocation().distance(loc) < 1.0) {
               if (!victim.equals(attacker)) {
-                plugin.getCorpseHandler().spawnCorpse(victim, arena);
                 victim.damage(100.0);
                 victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
                 MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
@@ -236,7 +235,7 @@ public class Events implements Listener {
     event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
   }
 
-  @EventHandler(priority = EventPriority.LOWEST)
+  @EventHandler
   public void onLeave(PlayerInteractEvent event) {
     if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
       return;

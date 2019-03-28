@@ -183,7 +183,6 @@ public class GameCommands extends MainCommand {
         plugin.getBungeeManager().connectToHub(p);
         System.out.print(p.getName() + " is teleported to the Hub Server");
       } else {
-        ArenaRegistry.getArena(p).teleportToEndLocation(p);
         ArenaManager.leaveAttempt(p, ArenaRegistry.getArena(p));
         System.out.print(p.getName() + " has left the arena! He is teleported to the end location.");
       }
