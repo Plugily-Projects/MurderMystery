@@ -87,8 +87,12 @@ public class SetupInventory {
         .lore(isOptionDoneList("instances." + arena.getId() + ".playerspawnpoints", 4))
         .build());
 
-    inventory.setItem(ClickPosition.SET_MINIMUM_PLAYERS.getPosition(), new ItemBuilder(new ItemStack(Material.COAL,
-        ConfigUtils.getConfig(plugin, "arenas").getInt("instances." + arena.getId() + ".minimumplayers")))
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+    int min = config.getInt("instances." + arena.getId() + ".minimumplayers");
+    if (min == 0) {
+      min = 1;
+    }
+    inventory.setItem(ClickPosition.SET_MINIMUM_PLAYERS.getPosition(), new ItemBuilder(new ItemStack(Material.COAL, min))
         .name(ChatColor.GOLD + "► Set" + ChatColor.DARK_GREEN + " minimum players " + ChatColor.GOLD + "size")
         .lore(ChatColor.GRAY + "LEFT click to decrease")
         .lore(ChatColor.GRAY + "RIGHT click to increase")
@@ -97,7 +101,7 @@ public class SetupInventory {
         .lore(isOptionDone("instances." + arena.getId() + ".minimumplayers"))
         .build());
     inventory.setItem(ClickPosition.SET_MAXIMUM_PLAYERS.getPosition(), new ItemBuilder(new ItemStack(Material.REDSTONE,
-        ConfigUtils.getConfig(plugin, "arenas").getInt("instances." + arena.getId() + ".maximumplayers")))
+        config.getInt("instances." + arena.getId() + ".maximumplayers")))
         .name(ChatColor.GOLD + "► Set" + ChatColor.GREEN + " maximum players " + ChatColor.GOLD + "size")
         .lore(ChatColor.GRAY + "LEFT click to decrease")
         .lore(ChatColor.GRAY + "RIGHT click to increase")

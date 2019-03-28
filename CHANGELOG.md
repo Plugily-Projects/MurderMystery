@@ -1,17 +1,20 @@
+### 1.0.0 Release Candidate 2 (28.03.2019)
+* Setup GUI will now display 0 minimum players option if accidentally set
+
 ### 1.0.0 Release Candidate 1 (24/26.03.2019)
-   * Now clicking corpses in game won't open their inventories
-   * Improved sign manager
-   * Removed ' character from default join permission node
-   * Crucial block center calculations fix - now holograms will display properly
-   * Fixed prayer particle display and arena setup
-   * Fixed single compensation prayer from Confessional did give gold but it was
-   useless as user gold statistics weren't increased
-   * Now using special blocks if game has ended/not started (in lobby) is blocked
-   * Bow Time prayer (receive bow + arrows) is applied to everyone
-   * Bow Time prayer has been nerfed, only 1 arrow is given not whole stack now
-   * Now player health will be set to full when joining the game
-   * Bow drop announcement will no longer appear when only 1 player has left in the game
-   * When game ends users will get reset their non persistent user data (like gained gold amount)
+* Now clicking corpses in game won't open their inventories
+* Improved sign manager
+* Removed ' character from default join permission node
+* Crucial block center calculations fix - now holograms will display properly
+* Fixed prayer particle display and arena setup
+* Fixed single compensation prayer from Confessional did give gold but it was
+useless as user gold statistics weren't increased
+* Now using special blocks if game has ended/not started (in lobby) is blocked
+* Bow Time prayer (receive bow + arrows) is applied to everyone
+* Bow Time prayer has been nerfed, only 1 arrow is given not whole stack now
+* Now player health will be set to full when joining the game
+* Bow drop announcement will no longer appear when only 1 player has left in the game
+* When game ends users will get reset their non persistent user data (like gained gold amount)
 
 ### 1.0.0 Beta pre releases 1-5 (28.10.2018-24.03.2019)
    > Pre 5 (24.03.2019)
