@@ -123,7 +123,7 @@ public class PrayerRegistry {
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
         break;
       case BOW_TIME:
-        ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+        ItemPosition.addItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
         ItemPosition.setItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, 1));
         break;
       case DETECTIVE_REVELATION:
