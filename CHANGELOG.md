@@ -1,4 +1,6 @@
-### 1.0.0 Release Candidate 2 (28.03.2019)
+### 1.0.0 Release (28.10.2018-29.03.2019)
+* Added Russian and Spanish locales support
+> Release Candidate 2 (28.03.2019)
 * Setup GUI will now display 0 minimum players option if accidentally set
 * Bow Time prayer will now add new arrow to the inventory not set and override current amount
 * Improvement for bow cooldown display action bar
@@ -13,8 +15,7 @@ if you were fake detective or a detective
 * Fixed more corpses could spawn on death by arrow
 * Fixed last words didn't display on death other than by arrow
 * Fixed message Game-Started which was copied from Village Defense
-
-### 1.0.0 Release Candidate 1 (24/26.03.2019)
+> Release Candidate 1 (24/26.03.2019)
 * Now clicking corpses in game won't open their inventories
 * Improved sign manager
 * Removed ' character from default join permission node
@@ -28,8 +29,6 @@ useless as user gold statistics weren't increased
 * Now player health will be set to full when joining the game
 * Bow drop announcement will no longer appear when only 1 player has left in the game
 * When game ends users will get reset their non persistent user data (like gained gold amount)
-
-### 1.0.0 Beta pre releases 1-5 (28.10.2018-24.03.2019)
 > Pre 5 (24.03.2019)
 * Abandoned the direct try-catch exception handling in most of methods and event listeners in favour of logger
 listening, code looks better now
