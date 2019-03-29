@@ -14,6 +14,7 @@
 #    id - Bhasa Indonesia           hu - Magyar nyelv
 #    cs - Český jazyk               ro - Limba română
 #    vn - Tiếng Việt                it - Lingua italiana
+#    ru - Русский язык              es - Idioma español
 locale: default
 
 # Enable bossbar support?
