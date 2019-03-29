@@ -78,7 +78,6 @@ public class BowTrailsHandler implements Listener {
     if (!ArenaRegistry.isInArena((Player) e.getEntity()) || e.getProjectile() == null || e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
       return;
     }
-    //todo priority note to wiki
     for (String perm : registeredTrails.keySet()) {
       if (e.getEntity().hasPermission(perm)) {
         new BukkitRunnable() {

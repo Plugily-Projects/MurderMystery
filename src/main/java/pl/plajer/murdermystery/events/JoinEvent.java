@@ -33,6 +33,8 @@
 
 package pl.plajer.murdermystery.events;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -45,6 +47,7 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.user.User;
+import pl.plajerlair.core.services.update.UpdateChecker;
 import pl.plajerlair.core.utils.InventoryUtils;
 
 /**
@@ -99,36 +102,24 @@ public class JoinEvent implements Listener {
   @EventHandler
   public void onJoinCheckVersion(final PlayerJoinEvent event) {
     //we want to be the first :)
-      /*
-      Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      if (event.getPlayer().hasPermission("murdermystery.updatenotify")) {
-        if (plugin.getConfig().getBoolean("Update-Notifier.Enabled", true)) {
-          String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("MurderMystery").getDescription().getVersion();
-          String latestVersion;
-          try {
-            UpdateChecker.checkUpdate(currentVersion);
-            latestVersion = UpdateChecker.getLatestVersion();
-            if (latestVersion != null) {
-              latestVersion = "v" + latestVersion;
-              if (latestVersion.contains("b")) {
-                event.getPlayer().sendMessage("");
-                event.getPlayer().sendMessage(ChatColor.BOLD + "MURDER MYSTERY UPDATE NOTIFY");
-                event.getPlayer().sendMessage(ChatColor.RED + "BETA version of software is ready for update! Proceed with caution.");
-                event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + currentVersion + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + latestVersion);
-              } else {
-                event.getPlayer().sendMessage("");
-                event.getPlayer().sendMessage(ChatColor.BOLD + "MURDER MYSTERY UPDATE NOTIFY");
-                event.getPlayer().sendMessage(ChatColor.GREEN + "Software is ready for update! Download it to keep with latest changes and fixes.");
-                event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + currentVersion + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + latestVersion);
-              }
-            }
-          } catch (Exception ex) {
-            event.getPlayer().sendMessage(ChatColor.RED + "[Murder Mystery] An error occured while checking for update!");
-            event.getPlayer().sendMessage(ChatColor.RED + "Please check internet connection or check for update via WWW site directly!");
-            event.getPlayer().sendMessage(ChatColor.RED + "WWW site todo");
-          }
-        }
+    if (!(plugin.getConfig().getBoolean("Update-Notifier.Enabled", true) || event.getPlayer().hasPermission("murdermystery.updatenotify"))) {
+      return;
+    }
+    Bukkit.getScheduler().runTaskLater(plugin, () -> UpdateChecker.init(plugin, 1 /* todo */).requestUpdateCheck().whenComplete((result, exception) -> {
+      if (!result.requiresUpdate()) {
+        return;
       }
-      }, 25);*/
+      if (result.getNewestVersion().contains("b")) {
+        event.getPlayer().sendMessage("");
+        event.getPlayer().sendMessage(ChatColor.BOLD + "MURDER MYSTERY UPDATE NOTIFY");
+        event.getPlayer().sendMessage(ChatColor.RED + "BETA version of software is ready for update! Proceed with caution.");
+        event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + plugin.getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
+      } else {
+        event.getPlayer().sendMessage("");
+        event.getPlayer().sendMessage(ChatColor.BOLD + "MURDER MYSTERY UPDATE NOTIFY");
+        event.getPlayer().sendMessage(ChatColor.GREEN + "Software is ready for update! Download it to keep with latest changes and fixes.");
+        event.getPlayer().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + plugin.getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
+      }
+    }), 25);
   }
 }

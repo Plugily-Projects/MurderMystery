@@ -53,8 +53,10 @@ import com.wasteofplastic.askyblock.ASLocale;
 import com.wasteofplastic.askyblock.ASkyBlock;
 
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -121,7 +123,6 @@ public class LanguageManager {
     LocaleRegistry.registerLocale(new Locale("Vietnamese", "Việt", "vn_VN", "POEditor contributors (HStreamGamer)", Arrays.asList("vietnamese", "viet", "việt", "vn")));
   }
 
-  @Deprecated //shouldn't use system encoding here but utf
   private static void loadProperties() {
     LocaleService service = ServiceRegistry.getLocaleService(plugin);
     if (service == null) {
@@ -145,8 +146,9 @@ public class LanguageManager {
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Your plugin version is too old to use latest locale! Please update plugin to access latest updates of locale!");
       return;
     }
-    try {
-      properties.load(new FileReader(new File(plugin.getDataFolder() + "/locales/" + pluginLocale.getPrefix() + ".properties")));
+    try (InputStreamReader reader = new InputStreamReader(new FileInputStream(plugin.getDataFolder() + "/locales/"
+        + pluginLocale.getPrefix() + ".properties"), StandardCharsets.UTF_8)) {
+      properties.load(reader);
     } catch (IOException e) {
       e.printStackTrace();
     }

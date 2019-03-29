@@ -121,6 +121,7 @@ import pl.plajerlair.core.database.MySQLDatabase;
 import pl.plajerlair.core.debug.Debugger;
 import pl.plajerlair.core.debug.LogLevel;
 import pl.plajerlair.core.services.ServiceRegistry;
+import pl.plajerlair.core.services.update.UpdateChecker;
 import pl.plajerlair.core.utils.ConfigUtils;
 import pl.plajerlair.core.utils.InventoryUtils;
 
@@ -185,32 +186,7 @@ public class Main extends JavaPlugin {
     configPreferences = new ConfigPreferences(this);
     setupFiles();
     initializeClasses();
-
-    String currentVersion = "v" + Bukkit.getPluginManager().getPlugin("MurderMystery").getDescription().getVersion();
-    //todo
-    /*if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
-      try {
-        UpdateChecker.checkUpdate(currentVersion);
-        String latestVersion = UpdateChecker.getLatestVersion();
-        if (latestVersion != null) {
-          latestVersion = "v" + latestVersion;
-          if (latestVersion.contains("b")) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[MurderMystery] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[MurderMystery] Current version %old%, latest version %new%".replace("%old%", currentVersion)
-                    .replace("%new%", latestVersion));
-          } else {
-            MessageUtils.updateIsHere();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Your Murder Mystery plugin is outdated! Download it to keep with latest changes and fixes.");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Disable this option in config.yml if you wish.");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + currentVersion + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + latestVersion);
-          }
-        }
-      } catch (Exception ex) {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[MurderMystery] An error occured while checking for update!");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Please check internet connection or check for update via WWW site directly!");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "WWW site todo");
-      }
-    }*/
+    checkUpdate();
   }
 
   @Override
@@ -269,25 +245,7 @@ public class Main extends JavaPlugin {
     new SetupInventoryEvents(this);
     new JoinEvent(this);
     new ChatEvents(this);
-    Metrics metrics = new Metrics(this);
-    metrics.addCustomChart(new Metrics.SimplePie("database_enabled", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED))));
-    metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
-    metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> LanguageManager.getPluginLocale().getPrefix()));
-    metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> {
-      if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
-        if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          return "Enabled with beta notifier";
-        } else {
-          return "Enabled";
-        }
-      } else {
-        if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          return "Beta notifier only";
-        } else {
-          return "Disabled";
-        }
-      }
-    }));
+    startPluginMetrics();
     if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       Debugger.debug(LogLevel.INFO, "Hooking into PlaceholderAPI");
       new PlaceholderManager().register();
@@ -313,6 +271,51 @@ public class Main extends JavaPlugin {
     MysteryPotionRegistry.init(this);
     PrayerRegistry.init(this);
     new SpecialBlockEvents(this);
+  }
+
+  private void startPluginMetrics() {
+    Metrics metrics = new Metrics(this);
+    metrics.addCustomChart(new Metrics.SimplePie("database_enabled", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED))));
+    metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
+    metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> LanguageManager.getPluginLocale().getPrefix()));
+    metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> {
+      if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+        if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
+          return "Enabled with beta notifier";
+        } else {
+          return "Enabled";
+        }
+      } else {
+        if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
+          return "Beta notifier only";
+        } else {
+          return "Disabled";
+        }
+      }
+    }));
+  }
+
+  private void checkUpdate() {
+    if (!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+      return;
+    }
+    UpdateChecker.init(this, 1 /* todo */).requestUpdateCheck().whenComplete((result, exception) -> {
+      if (!result.requiresUpdate()) {
+        return;
+      }
+      if (result.getNewestVersion().contains("b")) {
+        if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
+          Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[MurderMystery] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
+          Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[MurderMystery] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
+              result.getNewestVersion()));
+        }
+        return;
+      }
+      MessageUtils.updateIsHere();
+      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Your MurderMystery plugin is outdated! Download it to keep with latest changes and fixes.");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Disable this option in config.yml if you wish.");
+      Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
+    });
   }
 
   private void setupFiles() {
