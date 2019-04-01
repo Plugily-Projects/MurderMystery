@@ -37,7 +37,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.ArenaManager;
@@ -60,16 +59,6 @@ public class QuitEvent implements Listener {
 
   @EventHandler
   public void onQuit(PlayerQuitEvent event) {
-    if (ArenaRegistry.getArena(event.getPlayer()) == null) {
-      return;
-    }
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-      ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArena(event.getPlayer()));
-    }
-  }
-
-  @EventHandler
-  public void onQuitSaveStats(PlayerQuitEvent event) {
     if (ArenaRegistry.getArena(event.getPlayer()) != null) {
       ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArena(event.getPlayer()));
     }

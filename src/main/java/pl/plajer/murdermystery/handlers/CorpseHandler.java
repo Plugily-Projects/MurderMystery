@@ -93,7 +93,7 @@ public class CorpseHandler implements Listener {
   }
 
   public void spawnCorpse(Player p, Arena arena) {
-    Hologram hologram = HologramsAPI.createHologram(plugin, p.getLocation().clone().add(0, 1.5, 0));
+    Hologram hologram = HologramsAPI.createHologram(plugin, p.getLocation().clone().add(0, 1.7, 0));
     hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Corpse-Last-Words").replace("%player%", p.getName()));
     boolean found = false;
     for (String perm : registeredLastWords.keySet()) {
