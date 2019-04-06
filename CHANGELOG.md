@@ -1,6 +1,7 @@
 ### 1.0.0 Release (28.10.2018-29.03.2019)
 * Added Russian and Spanish locales support
 * Detective bow will now spawn bit higher to avoid touching the floor
+* Spectators can no longer pickup the bow
 > Release Candidate 2 (28.03.2019)
 * Setup GUI will now display 0 minimum players option if accidentally set
 * Bow Time prayer will now add new arrow to the inventory not set and override current amount

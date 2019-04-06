@@ -279,8 +279,8 @@ public class Arena extends BukkitRunnable {
           setCharacter(CharacterType.MURDERER, murderer);
           plugin.getUserManager().getUser(murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
           playersToSet.remove(murderer);
-          MessageUtils.sendTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"));
-          MessageUtils.sendSubTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"));
+          murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
+              ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
           detectiveChances.remove(sortedMurderer.keySet().toArray()[0]);
 
           Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
@@ -289,8 +289,8 @@ public class Arena extends BukkitRunnable {
           Player detective = ((User) sortedDetective.keySet().toArray()[0]).getPlayer();
           gameCharacters.put(CharacterType.DETECTIVE, detective);
           plugin.getUserManager().getUser(detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
-          MessageUtils.sendTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"));
-          MessageUtils.sendSubTitle(detective, ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"));
+          detective.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"),
+              ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
           playersToSet.remove(detective);
 
           ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));

@@ -130,6 +130,9 @@ public class ArenaUtils {
     ItemLine itemLine = hologram.appendItemLine(new ItemStack(Material.BOW, 1));
 
     itemLine.setPickupHandler(player -> {
+      if (plugin.getUserManager().getUser(player).isSpectator()) {
+        return;
+      }
       if (Role.isRole(Role.INNOCENT, player)) {
         player.playSound(player.getLocation(), Sound.BLOCK_LAVA_POP, 1F, 2F);
         hologram.delete();

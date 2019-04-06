@@ -34,6 +34,7 @@
 package pl.plajer.murdermystery.events.spectator;
 
 import java.util.Collections;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -98,14 +99,13 @@ public class SpectatorItemEvents implements Listener {
       }
     }
   }
-
-  @Deprecated //not multi arena per world safe
+  
   private void openSpectatorMenu(World world, Player p) {
     Inventory inventory = plugin.getServer().createInventory(null, MinigameUtils.serializeInt(ArenaRegistry.getArena(p).getPlayers().size()),
         ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
+    Set<Player> players = ArenaRegistry.getArena(p).getPlayers();
     for (Player player : world.getPlayers()) {
-      Arena arena = ArenaRegistry.getArena(player);
-      if (arena != null && ArenaRegistry.getArena(p).getPlayers().contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
+      if (players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
         ItemStack skull;
         if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
           skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
