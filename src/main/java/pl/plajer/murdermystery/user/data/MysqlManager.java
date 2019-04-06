@@ -44,22 +44,22 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajerlair.core.database.MySQLDatabase;
+import pl.plajerlair.commonsbox.database.MysqlDatabase;
 
 /**
  * @author Plajer
  * <p>
  * Created at 03.10.2018
  */
-public class MySQLManager implements UserDatabase {
+public class MysqlManager implements UserDatabase {
 
   private Main plugin;
-  private MySQLDatabase database;
+  private MysqlDatabase database;
 
-  public MySQLManager(Main plugin) {
+  public MysqlManager(Main plugin) {
     this.plugin = plugin;
     database = plugin.getMySQLDatabase();
-    try (Statement stmt = database.getManager().getConnection().createStatement()) {
+    try (Statement stmt = database.getConnection().createStatement()) {
       stmt.executeUpdate("CREATE TABLE IF NOT EXISTS `playerstats` (\n"
           + "  `UUID` text NOT NULL,\n"
           + "  `name` text NOT NULL,\n"
@@ -114,10 +114,6 @@ public class MySQLManager implements UserDatabase {
         user.setStat(stat, 0);
       }
     });
-  }
-
-  public MySQLDatabase getDatabase() {
-    return database;
   }
 
 }

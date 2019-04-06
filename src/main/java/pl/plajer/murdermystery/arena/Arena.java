@@ -95,14 +95,13 @@ import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.rewards.GameReward;
 import pl.plajer.murdermystery.user.User;
+import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Utils;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.InventoryUtils;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+import pl.plajerlair.commonsbox.number.NumberUtils;
 
 /**
  * Created by Tom on 12/08/2014.
@@ -237,7 +236,7 @@ public class Arena extends BukkitRunnable {
           try {
             p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
           } catch (NumberFormatException ignored) {
-            Debugger.debug(LogLevel.WARN, "Infinite or NaN for player " + p.getName() + " values: "
+            Debugger.debug(Debugger.Level.WARN, "Infinite or NaN for player " + p.getName() + " values: "
                 + totalMurderer + "murderer, " + totalDetective + "detective; user: " + user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) + " murderer"
                 + user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) + " detective");
           }
@@ -430,7 +429,7 @@ public class Arena extends BukkitRunnable {
 
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
             for (Player player : getPlayers()) {
-              InventoryUtils.loadInventory(plugin, player);
+              InventorySerializer.loadInventory(plugin, player);
             }
           }
 
@@ -475,8 +474,8 @@ public class Arena extends BukkitRunnable {
 
   private String formatRoleChance(User user, int murdererPts, int detectivePts) throws NumberFormatException {
     String message = ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Role-Chances-Action-Bar");
-    message = StringUtils.replace(message, "%murderer_chance%", MinigameUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) murdererPts) * 100.0, 2) + "%");
-    message = StringUtils.replace(message, "%detective_chance%", MinigameUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) detectivePts) * 100.0, 2) + "%");
+    message = StringUtils.replace(message, "%murderer_chance%", NumberUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) murdererPts) * 100.0, 2) + "%");
+    message = StringUtils.replace(message, "%detective_chance%", NumberUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) detectivePts) * 100.0, 2) + "%");
     return message;
   }
 
@@ -552,7 +551,7 @@ public class Arena extends BukkitRunnable {
    */
   public void setMinimumPlayers(int minimumPlayers) {
     if (minimumPlayers < 2) {
-      Debugger.debug(LogLevel.WARN, "Minimum players amount for arena cannot be less than 2! Setting amount to 2!");
+      Debugger.debug(Debugger.Level.WARN, "Minimum players amount for arena cannot be less than 2! Setting amount to 2!");
       setOptionValue(ArenaOption.MINIMUM_PLAYERS, 2);
       return;
     }
@@ -799,7 +798,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void start() {
-    Debugger.debug(LogLevel.INFO, "Game instance started, arena " + this.getId());
+    Debugger.debug(Debugger.Level.INFO, "Game instance started, arena " + this.getId());
     this.runTaskTimer(plugin, 20L, 20L);
     this.setArenaState(ArenaState.RESTARTING);
   }

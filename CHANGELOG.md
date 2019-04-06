@@ -1,4 +1,4 @@
-### 1.0.0 Release (28.10.2018-29.03.2019)
+### 1.0.0 Release (28.10.2018-06.04.2019)
 * Added Russian and Spanish locales support
 * Detective bow will now spawn bit higher to avoid touching the floor
 * Spectators can no longer pickup the bow

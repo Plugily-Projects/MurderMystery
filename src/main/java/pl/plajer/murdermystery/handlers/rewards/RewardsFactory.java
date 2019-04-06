@@ -77,10 +77,9 @@ import org.bukkit.entity.Player;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.script.ScriptEngine;
-import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajer.murdermystery.utils.Debugger;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.engine.ScriptEngine;
 
 /**
  * @author Plajer
@@ -163,7 +162,7 @@ public class RewardsFactory {
       }
     }
     for (GameReward.RewardType rewardType : registeredRewards.keySet()) {
-      Debugger.debug(LogLevel.INFO, "[RewardsFactory] Registered " + registeredRewards.get(rewardType) + " " + rewardType.name() + " rewards!");
+      Debugger.debug(Debugger.Level.INFO, "[RewardsFactory] Registered " + registeredRewards.get(rewardType) + " " + rewardType.name() + " rewards!");
     }
   }
 

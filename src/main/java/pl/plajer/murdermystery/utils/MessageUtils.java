@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,6 +49,7 @@ public class MessageUtils {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
+  @Deprecated
   public static void sendTitle(Player player, String text) {
     if (plugin.is1_9_R1() || plugin.is1_10_R1()) {
       player.sendTitle(text, null);
@@ -57,6 +58,7 @@ public class MessageUtils {
     }
   }
 
+  @Deprecated
   public static void sendSubTitle(Player player, String text) {
     if (plugin.is1_9_R1() || plugin.is1_10_R1()) {
       player.sendTitle(null, text);

@@ -47,8 +47,8 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajerlair.core.services.update.UpdateChecker;
-import pl.plajerlair.core.utils.InventoryUtils;
+import pl.plajer.murdermystery.utils.UpdateChecker;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
 /**
  * @author Plajer
@@ -95,7 +95,7 @@ public class JoinEvent implements Listener {
     //load player inventory in case of server crash, file is deleted once loaded so if file was already
     //deleted player won't receive his backup, in case of crash he will get it back
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-      InventoryUtils.loadInventory(plugin, event.getPlayer());
+      InventorySerializer.loadInventory(plugin, event.getPlayer());
     }
   }
 

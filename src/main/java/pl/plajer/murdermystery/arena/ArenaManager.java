@@ -62,14 +62,13 @@ import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
+import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.utils.InventoryUtils;
-import pl.plajerlair.core.utils.ItemBuilder;
-import pl.plajerlair.core.utils.MinigameUtils;
-import pl.plajerlair.core.utils.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
 /**
  * @author Plajer
@@ -89,7 +88,7 @@ public class ArenaManager {
    * @see MMGameJoinAttemptEvent
    */
   public static void joinAttempt(Player player, Arena arena) {
-    Debugger.debug(LogLevel.INFO, "Initial join attempt, " + player.getName());
+    Debugger.debug(Debugger.Level.INFO, "Initial join attempt, " + player.getName());
     MMGameJoinAttemptEvent gameJoinAttemptEvent = new MMGameJoinAttemptEvent(player, arena);
     Bukkit.getPluginManager().callEvent(gameJoinAttemptEvent);
     if (!arena.isReady()) {
@@ -107,13 +106,13 @@ public class ArenaManager {
         return;
       }
     }
-    Debugger.debug(LogLevel.INFO, "Final join attempt, " + player.getName());
+    Debugger.debug(Debugger.Level.INFO, "Final join attempt, " + player.getName());
     User user = plugin.getUserManager().getUser(player);
     arena.getScoreboardManager().createScoreboard(user);
     if ((arena.getArenaState() == ArenaState.IN_GAME || (arena.getArenaState() == ArenaState.STARTING && arena.getTimer() <= 3) || arena.getArenaState() == ArenaState.ENDING)) {
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
         player.setLevel(0);
-        InventoryUtils.saveInventoryToFile(plugin, player);
+        InventorySerializer.saveInventoryToFile(plugin, player);
       }
       arena.teleportToStartLocation(player);
       player.sendMessage(ChatManager.colorMessage("In-Game.You-Are-Spectator"));
@@ -156,7 +155,7 @@ public class ArenaManager {
     }
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       player.setLevel(0);
-      InventoryUtils.saveInventoryToFile(plugin, player);
+      InventorySerializer.saveInventoryToFile(plugin, player);
     }
     arena.teleportToLobby(player);
     arena.addPlayer(player);
@@ -189,7 +188,7 @@ public class ArenaManager {
    * @see MMGameLeaveAttemptEvent
    */
   public static void leaveAttempt(Player player, Arena arena) {
-    Debugger.debug(LogLevel.INFO, "Initial leave attempt, " + player.getName());
+    Debugger.debug(Debugger.Level.INFO, "Initial leave attempt, " + player.getName());
     MMGameLeaveAttemptEvent gameLeaveAttemptEvent = new MMGameLeaveAttemptEvent(player, arena);
     Bukkit.getPluginManager().callEvent(gameLeaveAttemptEvent);
     User user = plugin.getUserManager().getUser(player);
@@ -266,7 +265,7 @@ public class ArenaManager {
     arena.teleportToEndLocation(player);
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
         && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-      InventoryUtils.loadInventory(plugin, player);
+      InventorySerializer.loadInventory(plugin, player);
     }
     for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
       if (!stat.isPersistent()) {
@@ -282,9 +281,9 @@ public class ArenaManager {
    * @see MMGameStopEvent
    */
   public static void stopGame(boolean quickStop, Arena arena) {
-    Debugger.debug(LogLevel.INFO, "Game stop event initiate, arena " + arena.getId());
+    Debugger.debug(Debugger.Level.INFO, "Game stop event initiate, arena " + arena.getId());
     if (arena.getArenaState() != ArenaState.IN_GAME) {
-      Debugger.debug(LogLevel.INFO, "Game stop event finish, arena " + arena.getId());
+      Debugger.debug(Debugger.Level.INFO, "Game stop event finish, arena " + arena.getId());
       return;
     }
     MMGameStopEvent gameStopEvent = new MMGameStopEvent(arena);
@@ -301,7 +300,7 @@ public class ArenaManager {
       player.getInventory().clear();
       player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
       for (String msg : summaryMessages) {
-        MinigameUtils.sendCenteredMessage(player, formatSummaryPlaceholders(msg, arena));
+        MiscUtils.sendCenteredMessage(player, formatSummaryPlaceholders(msg, arena));
       }
       user.removeScoreboard();
       if (!quickStop && plugin.getConfig().getBoolean("Firework-When-Game-Ends", true)) {
@@ -312,13 +311,13 @@ public class ArenaManager {
             if (i == 4 || !arena.getPlayers().contains(player)) {
               this.cancel();
             }
-            MinigameUtils.spawnRandomFirework(player.getLocation());
+            MiscUtils.spawnRandomFirework(player.getLocation());
             i++;
           }
         }.runTaskTimer(plugin, 30, 30);
       }
     }
-    Debugger.debug(LogLevel.INFO, "Game stop event finish, arena " + arena.getId());
+    Debugger.debug(Debugger.Level.INFO, "Game stop event finish, arena " + arena.getId());
   }
 
   private static String formatSummaryPlaceholders(String msg, Arena arena) {

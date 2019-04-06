@@ -40,7 +40,7 @@ import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.commonsbox.string.StringFormatUtils;
 
 /**
  * @author Plajer
@@ -134,7 +134,7 @@ public class ScoreboardManager {
   private String formatScoreboardLine(String line, User user) {
     String formattedLine = line;
     formattedLine = StringUtils.replace(formattedLine, "%TIME%", String.valueOf(arena.getTimer()));
-    formattedLine = StringUtils.replace(formattedLine, "%FORMATTED_TIME%", MinigameUtils.formatIntoMMSS(arena.getTimer()));
+    formattedLine = StringUtils.replace(formattedLine, "%FORMATTED_TIME%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));
     formattedLine = StringUtils.replace(formattedLine, "%MAPNAME%", arena.getMapName());
     int innocents = 0;
     for (Player p : arena.getPlayersLeft()) {

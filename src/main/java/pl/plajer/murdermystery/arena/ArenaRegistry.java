@@ -45,10 +45,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.LocationUtils;
+import pl.plajer.murdermystery.utils.Debugger;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 
 /**
  * Created by Tom on 27/07/2014.
@@ -112,17 +111,17 @@ public class ArenaRegistry {
   }
 
   public static void registerArena(Arena arena) {
-    Debugger.debug(LogLevel.INFO, "Registering new game instance, " + arena.getId());
+    Debugger.debug(Debugger.Level.INFO, "Registering new game instance, " + arena.getId());
     arenas.add(arena);
   }
 
   public static void unregisterArena(Arena arena) {
-    Debugger.debug(LogLevel.INFO, "Unegistering game instance, " + arena.getId());
+    Debugger.debug(Debugger.Level.INFO, "Unegistering game instance, " + arena.getId());
     arenas.remove(arena);
   }
 
   public static void registerArenas() {
-    Debugger.debug(LogLevel.INFO, "Initial arenas registration");
+    Debugger.debug(Debugger.Level.INFO, "Initial arenas registration");
     if (ArenaRegistry.getArenas().size() > 0) {
       for (Arena arena : ArenaRegistry.getArenas()) {
         arena.cleanUpArena();
@@ -138,6 +137,7 @@ public class ArenaRegistry {
       return;
     }
 
+    //todo section null check
     for (String id : config.getConfigurationSection("instances").getKeys(false)) {
       Arena arena;
       String s = "instances." + id + ".";
@@ -150,31 +150,31 @@ public class ArenaRegistry {
       arena.setMapName(config.getString(s + "mapname", "none"));
       List<Location> playerSpawnPoints = new ArrayList<>();
       for (String loc : config.getStringList(s + "playerspawnpoints")) {
-        playerSpawnPoints.add(LocationUtils.getLocation(loc));
+        playerSpawnPoints.add(LocationSerializer.getLocation(loc));
       }
       arena.setPlayerSpawnPoints(playerSpawnPoints);
       List<Location> goldSpawnPoints = new ArrayList<>();
       for (String loc : config.getStringList(s + "goldspawnpoints")) {
-        goldSpawnPoints.add(LocationUtils.getLocation(loc));
+        goldSpawnPoints.add(LocationSerializer.getLocation(loc));
       }
       arena.setGoldSpawnPoints(goldSpawnPoints);
 
       List<SpecialBlock> specialBlocks = new ArrayList<>();
       if (config.isSet("instances." + arena.getId() + ".mystery-cauldrons")) {
         for (String loc : config.getStringList("instances." + arena.getId() + ".mystery-cauldrons")) {
-          specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
+          specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
         }
       }
       if (config.isSet("instances." + arena.getId() + ".confessionals")) {
         for (String loc : config.getStringList("instances." + arena.getId() + ".confessionals")) {
-          specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
+          specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
         }
       }
       for (SpecialBlock block : specialBlocks) {
         arena.loadSpecialBlock(block);
       }
-      arena.setLobbyLocation(LocationUtils.getLocation(config.getString(s + "lobbylocation", "world,364.0,63.0,-72.0,0.0,0.0")));
-      arena.setEndLocation(LocationUtils.getLocation(config.getString(s + "Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
+      arena.setLobbyLocation(LocationSerializer.getLocation(config.getString(s + "lobbylocation", "world,364.0,63.0,-72.0,0.0,0.0")));
+      arena.setEndLocation(LocationSerializer.getLocation(config.getString(s + "Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
 
       if (!config.getBoolean(s + "isdone", false)) {
         Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
@@ -186,7 +186,7 @@ public class ArenaRegistry {
       arena.start();
       Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Instance-Started").replace("%arena%", id));
     }
-    Debugger.debug(LogLevel.INFO, "Arenas registration completed");
+    Debugger.debug(Debugger.Level.INFO, "Arenas registration completed");
   }
 
   public static List<Arena> getArenas() {

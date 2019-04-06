@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,10 +79,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
+import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 
 /**
  * @author Plajer
@@ -112,7 +111,7 @@ public class StatsStorage {
    * @return Map of UUID keys and Integer values sorted in ascending order of requested statistic type
    */
   public static Map<UUID, Integer> getStats(StatisticType stat) {
-    Debugger.debug(LogLevel.INFO, "MurderMystery API getStats(" + stat.getName() + ") run");
+    Debugger.debug(Debugger.Level.INFO, "MurderMystery API getStats(" + stat.getName() + ") run");
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       ResultSet set = plugin.getMySQLDatabase().executeQuery("SELECT UUID, " + stat.getName() + " FROM playerstats ORDER BY " + stat.getName() + " ASC;");
       Map<java.util.UUID, java.lang.Integer> column = new LinkedHashMap<>();
@@ -149,7 +148,7 @@ public class StatsStorage {
    * @see StatisticType
    */
   public static int getUserStats(Player player, StatisticType statisticType) {
-    Debugger.debug(LogLevel.INFO, "Murder API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
+    Debugger.debug(Debugger.Level.INFO, "Murder API getUserStats(" + player.getName() + ", " + statisticType.getName() + ") run");
     return plugin.getUserManager().getUser(player).getStat(statisticType);
   }
 

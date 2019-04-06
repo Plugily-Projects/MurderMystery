@@ -27,7 +27,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.Main;
-import pl.plajerlair.core.services.exception.ReportedException;
+import pl.plajerlair.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -59,7 +59,7 @@ public class ExceptionLogHandler extends Handler {
       return;
     }
     if (throwable.getStackTrace().length == 0
-        || !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.villagedefense")) {
+        || !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")) {
       return;
     }
     if (containsBlacklistedClass(throwable)) {

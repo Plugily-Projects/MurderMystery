@@ -67,14 +67,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.services.ServiceRegistry;
-import pl.plajerlair.core.services.locale.Locale;
-import pl.plajerlair.core.services.locale.LocaleRegistry;
-import pl.plajerlair.core.services.locale.LocaleService;
-import pl.plajerlair.core.utils.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.services.ServiceRegistry;
+import pl.plajerlair.services.locale.Locale;
+import pl.plajerlair.services.locale.LocaleRegistry;
+import pl.plajerlair.services.locale.LocaleService;
 
 /**
  * @author Plajer
@@ -211,7 +210,7 @@ public class LanguageManager {
         }
       }
     } catch (Exception e) {
-      Debugger.debug(LogLevel.WARN, "[WARN] Plugin has occured a problem suggesting locale, probably API change.");
+      Debugger.debug(Debugger.Level.WARN, "[WARN] Plugin has occured a problem suggesting locale, probably API change.");
     }
     if (hasLocale) {
       MessageUtils.info();

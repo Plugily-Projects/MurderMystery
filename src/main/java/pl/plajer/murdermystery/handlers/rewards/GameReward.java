@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,13 +48,12 @@
 
 package pl.plajer.murdermystery.handlers.rewards;
 
-import pl.plajerlair.core.rewards.Reward;
-
 /**
  * @author Plajer
  * <p>
  * Created at 26.12.2018
  */
+@Deprecated //api subject to merge
 public class GameReward extends Reward {
 
   private RewardType type;

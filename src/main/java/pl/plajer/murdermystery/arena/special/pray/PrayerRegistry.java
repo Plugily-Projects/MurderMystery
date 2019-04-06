@@ -69,7 +69,7 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.ItemPosition;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 
 /**
  * @author Plajer
@@ -159,7 +159,7 @@ public class PrayerRegistry {
         break;
     }
     for (String msg : prayMessage) {
-      MinigameUtils.sendCenteredMessage(player, msg);
+      MiscUtils.sendCenteredMessage(player, msg);
     }
   }
 

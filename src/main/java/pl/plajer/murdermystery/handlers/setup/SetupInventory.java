@@ -39,16 +39,15 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.ItemBuilder;
-import pl.plajerlair.core.utils.LocationUtils;
-import pl.plajerlair.core.utils.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 
 /**
  * @author Plajer
@@ -64,7 +63,7 @@ public class SetupInventory {
   public SetupInventory(Arena arena) {
     this.inventory = Bukkit.createInventory(null, 9 * 4, "MM Arena: " + arena.getId());
 
-    inventory.setItem(ClickPosition.SET_ENDING.getPosition(), new ItemBuilder(new ItemStack(Material.REDSTONE_BLOCK))
+    inventory.setItem(ClickPosition.SET_ENDING.getPosition(), new ItemBuilder(Material.REDSTONE_BLOCK)
         .name(ChatColor.GOLD + "► Set" + ChatColor.RED + " ending " + ChatColor.GOLD + "location")
         .lore(ChatColor.GRAY + "Click to set the ending location")
         .lore(ChatColor.GRAY + "on the place where you are standing.")
@@ -72,13 +71,13 @@ public class SetupInventory {
         .lore(ChatColor.DARK_GRAY + "after the game)")
         .lore(isOptionDoneBool("instances." + arena.getId() + ".Endlocation"))
         .build());
-    inventory.setItem(ClickPosition.SET_LOBBY.getPosition(), new ItemBuilder(new ItemStack(Material.LAPIS_BLOCK))
+    inventory.setItem(ClickPosition.SET_LOBBY.getPosition(), new ItemBuilder(Material.LAPIS_BLOCK)
         .name(ChatColor.GOLD + "► Set" + ChatColor.WHITE + " lobby " + ChatColor.GOLD + "location")
         .lore(ChatColor.GRAY + "Click to set the lobby location")
         .lore(ChatColor.GRAY + "on the place where you are standing")
         .lore(isOptionDoneBool("instances." + arena.getId() + ".lobbylocation"))
         .build());
-    inventory.setItem(ClickPosition.ADD_STARTING.getPosition(), new ItemBuilder(new ItemStack(Material.EMERALD_BLOCK))
+    inventory.setItem(ClickPosition.ADD_STARTING.getPosition(), new ItemBuilder(Material.EMERALD_BLOCK)
         .name(ChatColor.GOLD + "► Add" + ChatColor.YELLOW + " starting " + ChatColor.GOLD + "location")
         .lore(ChatColor.GRAY + "Click to add the starting location")
         .lore(ChatColor.GRAY + "on the place where you are standing.")
@@ -92,7 +91,7 @@ public class SetupInventory {
     if (min == 0) {
       min = 1;
     }
-    inventory.setItem(ClickPosition.SET_MINIMUM_PLAYERS.getPosition(), new ItemBuilder(new ItemStack(Material.COAL, min))
+    inventory.setItem(ClickPosition.SET_MINIMUM_PLAYERS.getPosition(), new ItemBuilder(Material.COAL).amount(min)
         .name(ChatColor.GOLD + "► Set" + ChatColor.DARK_GREEN + " minimum players " + ChatColor.GOLD + "size")
         .lore(ChatColor.GRAY + "LEFT click to decrease")
         .lore(ChatColor.GRAY + "RIGHT click to increase")
@@ -100,8 +99,8 @@ public class SetupInventory {
         .lore(ChatColor.DARK_GRAY + "for game to start lobby countdown)")
         .lore(isOptionDone("instances." + arena.getId() + ".minimumplayers"))
         .build());
-    inventory.setItem(ClickPosition.SET_MAXIMUM_PLAYERS.getPosition(), new ItemBuilder(new ItemStack(Material.REDSTONE,
-        config.getInt("instances." + arena.getId() + ".maximumplayers")))
+    inventory.setItem(ClickPosition.SET_MAXIMUM_PLAYERS.getPosition(), new ItemBuilder(Material.REDSTONE)
+        .amount(config.getInt("instances." + arena.getId() + ".maximumplayers"))
         .name(ChatColor.GOLD + "► Set" + ChatColor.GREEN + " maximum players " + ChatColor.GOLD + "size")
         .lore(ChatColor.GRAY + "LEFT click to decrease")
         .lore(ChatColor.GRAY + "RIGHT click to increase")
@@ -110,20 +109,20 @@ public class SetupInventory {
         .build());
 
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-      inventory.setItem(ClickPosition.ADD_SIGN.getPosition(), new ItemBuilder(new ItemStack(Material.SIGN))
+      inventory.setItem(ClickPosition.ADD_SIGN.getPosition(), new ItemBuilder(Material.SIGN)
           .name(ChatColor.GOLD + "► Add game" + ChatColor.AQUA + " sign")
           .lore(ChatColor.GRAY + "Target a sign and click this.")
           .lore(ChatColor.DARK_GRAY + "(this will set target sign as game sign)")
           .build());
     }
-    inventory.setItem(ClickPosition.SET_MAP_NAME.getPosition(), new ItemBuilder(new ItemStack(Material.NAME_TAG))
+    inventory.setItem(ClickPosition.SET_MAP_NAME.getPosition(), new ItemBuilder(Material.NAME_TAG)
         .name(ChatColor.GOLD + "► Set" + ChatColor.RED + " map name " + ChatColor.GOLD + "(currently: " + arena.getMapName() + ")")
         .lore(ChatColor.GRAY + "Replace this name tag with named name tag.")
         .lore(ChatColor.GRAY + "It will be set as arena name.")
         .lore(ChatColor.RED + "" + ChatColor.BOLD + "Drop name tag here don't move")
         .lore(ChatColor.RED + "" + ChatColor.BOLD + "it and replace with new!!!")
         .build());
-    inventory.setItem(ClickPosition.ADD_GOLD_SPAWN.getPosition(), new ItemBuilder(new ItemStack(Material.GOLD_INGOT, 1))
+    inventory.setItem(ClickPosition.ADD_GOLD_SPAWN.getPosition(), new ItemBuilder(Material.GOLD_INGOT)
         .name(ChatColor.GOLD + "► Add" + ChatColor.YELLOW + " gold " + ChatColor.GOLD + "spawn")
         .lore(ChatColor.GRAY + "Add new gold spawn")
         .lore(ChatColor.GRAY + "on the place you're standing at.")
@@ -184,7 +183,7 @@ public class SetupInventory {
   private String isOptionDoneBool(String path) {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     if (config.isSet(path)) {
-      if (Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(LocationUtils.getLocation(config.getString(path)))) {
+      if (Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(LocationSerializer.getLocation(config.getString(path)))) {
         return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
       }
       return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes";
