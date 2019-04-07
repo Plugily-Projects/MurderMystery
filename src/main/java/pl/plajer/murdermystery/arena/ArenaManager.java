@@ -111,7 +111,6 @@ public class ArenaManager {
     arena.getScoreboardManager().createScoreboard(user);
     if ((arena.getArenaState() == ArenaState.IN_GAME || (arena.getArenaState() == ArenaState.STARTING && arena.getTimer() <= 3) || arena.getArenaState() == ArenaState.ENDING)) {
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-        player.setLevel(0);
         InventorySerializer.saveInventoryToFile(plugin, player);
       }
       arena.teleportToStartLocation(player);
@@ -154,11 +153,12 @@ public class ArenaManager {
       return;
     }
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-      player.setLevel(0);
       InventorySerializer.saveInventoryToFile(plugin, player);
     }
     arena.teleportToLobby(player);
     arena.addPlayer(player);
+    player.setLevel(0);
+    player.setExp(1);
     player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
     player.setFoodLevel(20);
     player.getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
