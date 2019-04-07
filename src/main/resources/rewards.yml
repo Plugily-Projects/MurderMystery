@@ -18,6 +18,20 @@
 #       ^ YOU CAN EVEN SWAP CHANCE WITH PLAYER!
 #    - chance(50):eco give %PLAYER% 10                # Console has 10% chance to give player 10$
 #
+#   You can unlock full potential of rewards using our script engine! (since 4.0.0)
+#    Just add example reward:
+#    - script:player.sendMessage("oh, hi %PLAYER%");      # It will send "oh, hi <player name>" to player! 100% plain java!
+#    - script:arena.setWave(1);                           # Sets the wave to 1!
+#    - script:server.broadcastMessage("hello everyone");  # Broadcasts "hello everyone" to whole server
+#    - script:player.getInventory().addItem(new org.bukkit.inventory.ItemStack(org.bukkit.Material.DIRT));
+#         ^ Gives player dirt item (you must always use direct package names for not provided objects)
+#
+#                               All script provided objects:
+#            player - Player object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Player.html)
+#    arena - Murder Mystery arena (API methods https://jd.plajer.xyz/minecraft/murdermystery/pl/plajer/murdermystery/arena/Arena.html)
+#            server - Bukkit server object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Server.html)
+#
+#                            Whole documentation of scripts soon!
 
 # Rewards must be enabled via config.yml first!
 rewards:

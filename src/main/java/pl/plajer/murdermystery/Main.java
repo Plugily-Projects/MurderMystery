@@ -128,7 +128,6 @@ import pl.plajerlair.services.ServiceRegistry;
  * <p>
  * Created at 03.08.2018
  */
-//todo compatmaterialconstants
 public class Main extends JavaPlugin {
 
   private ExceptionLogHandler exceptionLogHandler;
