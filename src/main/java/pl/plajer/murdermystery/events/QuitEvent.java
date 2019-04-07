@@ -66,6 +66,7 @@ public class QuitEvent implements Listener {
     for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
       plugin.getUserManager().saveStatistic(user, stat);
     }
+    plugin.getUserManager().removeUser(user);
   }
 
 }

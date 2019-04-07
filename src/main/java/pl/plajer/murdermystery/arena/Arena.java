@@ -93,11 +93,10 @@ import pl.plajer.murdermystery.arena.options.ArenaOption;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.handlers.rewards.GameReward;
+import pl.plajer.murdermystery.handlers.rewards.Reward;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.ItemPosition;
-import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
@@ -235,7 +234,7 @@ public class Arena extends BukkitRunnable {
           User user = plugin.getUserManager().getUser(p);
           try {
             p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
-          } catch (NumberFormatException ignored) {
+          } catch (NumberFormatException ex) {
             Debugger.debug(Debugger.Level.WARN, "Infinite or NaN for player " + p.getName() + " values: "
                 + totalMurderer + "murderer, " + totalDetective + "detective; user: " + user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) + " murderer"
                 + user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) + " detective");
@@ -296,8 +295,8 @@ public class Arena extends BukkitRunnable {
           ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, 64));
 
           for (Player p : playersToSet) {
-            MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"));
-            MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"));
+            p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"),
+                ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
           }
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
             gameBar.setTitle(ChatManager.colorMessage("Bossbar.In-Game-Info"));
@@ -344,9 +343,10 @@ public class Arena extends BukkitRunnable {
         }
 
         if (getTimer() == 30 || getTimer() == 60) {
+          String title = ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", String.valueOf(getTimer()));
+          String subtitle = ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle").replace("%time%", String.valueOf(getTimer()));
           for (Player p : getPlayers()) {
-            MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", String.valueOf(getTimer())));
-            MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle").replace("%time%", String.valueOf(getTimer())));
+            p.sendTitle(title, subtitle, 5, 40, 5);
           }
         }
 
@@ -366,10 +366,10 @@ public class Arena extends BukkitRunnable {
           case 1:
             if (getPlayersLeft().get(0).equals(gameCharacters.get(CharacterType.MURDERER))) {
               for (Player p : getPlayers()) {
-                MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"));
-                MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone"));
+                p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
+                    ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone"), 5, 40, 5);
                 if (p.equals(gameCharacters.get(CharacterType.MURDERER))) {
-                  MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"));
+                  p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
                 }
               }
               ArenaUtils.addScore(plugin.getUserManager().getUser(gameCharacters.get(CharacterType.MURDERER)), ArenaUtils.ScoreAction.WIN_GAME, 0);
@@ -444,7 +444,7 @@ public class Arena extends BukkitRunnable {
               }
             }
           }
-          plugin.getRewardsHandler().performReward(this, GameReward.RewardType.END_GAME);
+          plugin.getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
           players.clear();
 
           cleanUpArena();

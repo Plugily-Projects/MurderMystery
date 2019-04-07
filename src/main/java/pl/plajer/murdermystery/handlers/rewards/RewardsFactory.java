@@ -88,7 +88,7 @@ import pl.plajerlair.commonsbox.minecraft.engine.ScriptEngine;
  */
 public class RewardsFactory {
 
-  private Set<GameReward> rewards = new HashSet<>();
+  private Set<Reward> rewards = new HashSet<>();
   private FileConfiguration config;
   private boolean enabled;
 
@@ -98,7 +98,7 @@ public class RewardsFactory {
     registerRewards();
   }
 
-  public void performReward(Arena arena, GameReward.RewardType type) {
+  public void performReward(Arena arena, Reward.RewardType type) {
     if (!enabled) {
       return;
     }
@@ -107,7 +107,7 @@ public class RewardsFactory {
     }
   }
 
-  public void performReward(Player player, GameReward.RewardType type) {
+  public void performReward(Player player, Reward.RewardType type) {
     if (!enabled) {
       return;
     }
@@ -116,7 +116,7 @@ public class RewardsFactory {
     engine.setValue("player", player);
     engine.setValue("server", Bukkit.getServer());
     engine.setValue("arena", arena);
-    for (GameReward reward : rewards) {
+    for (Reward reward : rewards) {
       if (reward.getType() == type) {
         //cannot execute if chance wasn't met
         if (reward.getChance() != -1 && ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) {
@@ -154,14 +154,14 @@ public class RewardsFactory {
     if (!enabled) {
       return;
     }
-    Map<GameReward.RewardType, Integer> registeredRewards = new HashMap<>();
-    for (GameReward.RewardType rewardType : GameReward.RewardType.values()) {
+    Map<Reward.RewardType, Integer> registeredRewards = new HashMap<>();
+    for (Reward.RewardType rewardType : Reward.RewardType.values()) {
       for (String reward : config.getStringList("rewards." + rewardType.getPath())) {
-        rewards.add(new GameReward(rewardType, reward));
+        rewards.add(new Reward(rewardType, reward));
         registeredRewards.put(rewardType, registeredRewards.getOrDefault(rewardType, 0) + 1);
       }
     }
-    for (GameReward.RewardType rewardType : registeredRewards.keySet()) {
+    for (Reward.RewardType rewardType : registeredRewards.keySet()) {
       Debugger.debug(Debugger.Level.INFO, "[RewardsFactory] Registered " + registeredRewards.get(rewardType) + " " + rewardType.name() + " rewards!");
     }
   }

@@ -37,7 +37,6 @@ import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.ItemPosition;
-import pl.plajer.murdermystery.utils.MessageUtils;
 
 /**
  * @author Plajer
@@ -50,10 +49,10 @@ public class ArenaUtils {
 
   public static void onMurdererDeath(Arena arena) {
     for (Player player : arena.getPlayers()) {
-      MessageUtils.sendTitle(player, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"));
-      MessageUtils.sendSubTitle(player, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"));
+      player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"),
+          ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
       if (Role.isRole(Role.MURDERER, player)) {
-        MessageUtils.sendTitle(player, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"));
+        player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), null, 5, 40, 5);
       }
       User loopUser = plugin.getUserManager().getUser(player);
       if (Role.isRole(Role.INNOCENT, player)) {
@@ -67,8 +66,8 @@ public class ArenaUtils {
     arena.setArenaState(ArenaState.ENDING);
     arena.setTimer(5);
     Player murderer = arena.getCharacter(Arena.CharacterType.MURDERER);
-    MessageUtils.sendTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"));
-    MessageUtils.sendSubTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"));
+    murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
+        ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
   }
 
   public static void addScore(User user, ScoreAction action, int amount) {
@@ -113,8 +112,7 @@ public class ArenaUtils {
         if (Role.isRole(Role.MURDERER, p)) {
           continue;
         }
-        MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Watch-Out-Title"));
-        MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Watch-Out-Subtitle"));
+        p.sendTitle(ChatManager.colorMessage("In-Game.Watch-Out-Title"), ChatManager.colorMessage("In-Game.Watch-Out-Subtitle"), 5, 40, 5);
       }
     }
     for (Player p : arena.getPlayersLeft()) {
@@ -142,10 +140,10 @@ public class ArenaUtils {
   public static void dropBowAndAnnounce(Arena arena, Player victim) {
     if (arena.getPlayersLeft().size() > 1) {
       for (Player p : arena.getPlayers()) {
-        MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title"));
+        p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title"), null, 5, 40, 5);
       }
       for (Player p : arena.getPlayersLeft()) {
-        MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle"));
+        p.sendTitle(null, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle"), 5, 40, 5);
       }
     }
 

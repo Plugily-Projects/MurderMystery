@@ -28,11 +28,13 @@ import org.bukkit.Bukkit;
  */
 public class Reward {
 
+  private RewardType type;
   private RewardExecutor executor;
   private String executableCode;
   private double chance;
 
-  public Reward(String rawCode) {
+  public Reward(RewardType type, String rawCode) {
+    this.type = type;
     String processedCode = rawCode;
 
     //set reward executor based on provided code
@@ -79,6 +81,24 @@ public class Reward {
     return chance;
   }
 
+  public RewardType getType() {
+    return type;
+  }
+
+  public enum RewardType {
+    DETECTIVE_KILL("detectivekill"), MURDERER_KILL("murdererkill"), END_GAME("endgame");
+
+    private String path;
+
+    RewardType(String path) {
+      this.path = path;
+    }
+
+    public String getPath() {
+      return path;
+    }
+
+  }
 
   public enum RewardExecutor {
     CONSOLE, PLAYER, SCRIPT

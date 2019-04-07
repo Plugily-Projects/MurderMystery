@@ -68,7 +68,6 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.List;
 
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 
@@ -135,21 +134,12 @@ public class Main extends JavaPlugin {
   private boolean forceDisable = false;
   private BungeeManager bungeeManager;
   private RewardsFactory rewardsHandler;
-  private List<String> fileNames = Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks");
   private MysqlDatabase database;
   private SignManager signManager;
   private MainCommand mainCommand;
   private CorpseHandler corpseHandler;
   private ConfigPreferences configPreferences;
   private UserManager userManager;
-
-  public boolean is1_11_R1() {
-    return version.equalsIgnoreCase("v1_11_R1");
-  }
-
-  public boolean is1_12_R1() {
-    return version.equalsIgnoreCase("v1_12_R1");
-  }
 
   @Override
   public void onEnable() {
@@ -315,7 +305,7 @@ public class Main extends JavaPlugin {
   }
 
   private void setupFiles() {
-    for (String fileName : fileNames) {
+    for (String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks")) {
       File file = new File(getDataFolder() + File.separator + fileName + ".yml");
       if (!file.exists()) {
         saveResource(fileName + ".yml", false);
@@ -323,12 +313,12 @@ public class Main extends JavaPlugin {
     }
   }
 
-  public boolean is1_9_R1() {
-    return version.equalsIgnoreCase("v1_9_R1");
+  public boolean is1_11_R1() {
+    return version.equalsIgnoreCase("v1_11_R1");
   }
 
-  public boolean is1_10_R1() {
-    return version.equalsIgnoreCase("v1_10_R1");
+  public boolean is1_12_R1() {
+    return version.equalsIgnoreCase("v1_12_R1");
   }
 
   public RewardsFactory getRewardsHandler() {
@@ -349,10 +339,6 @@ public class Main extends JavaPlugin {
 
   public SignManager getSignManager() {
     return signManager;
-  }
-
-  public MainCommand getMainCommand() {
-    return mainCommand;
   }
 
   public CorpseHandler getCorpseHandler() {

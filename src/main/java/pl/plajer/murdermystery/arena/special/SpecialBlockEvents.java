@@ -177,7 +177,7 @@ public class SpecialBlockEvents implements Listener {
 
   @EventHandler
   public void onMysteryPotionDrink(PlayerItemConsumeEvent e) {
-    if (e.getItem().getType() != XMaterial.POTION.parseMaterial() || !e.getItem().hasItemMeta() || !e.getItem().getItemMeta().hasDisplayName()) {
+    if (e.getItem().getType() != XMaterial.POTION.parseMaterial() || !Utils.isNamed(e.getItem())) {
       return;
     }
     Arena arena = ArenaRegistry.getArena(e.getPlayer());

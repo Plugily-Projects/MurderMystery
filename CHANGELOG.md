@@ -4,6 +4,7 @@
 * Spectators can no longer pickup the bow
 * Added arenas.yml instances section check to avoid errors
 * Added death cases caused by fall, game won't break anymore when murderer or detective dies from fall
+* /murdermystery and /murdermysteryadmin commands will now work in game for non ops
 > Release Candidate 2 (28.03.2019)
 * Setup GUI will now display 0 minimum players option if accidentally set
 * Bow Time prayer will now add new arrow to the inventory not set and override current amount

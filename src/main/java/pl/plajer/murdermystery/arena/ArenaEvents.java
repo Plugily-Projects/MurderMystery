@@ -77,10 +77,9 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
-import pl.plajer.murdermystery.handlers.rewards.GameReward;
+import pl.plajer.murdermystery.handlers.rewards.Reward;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.ItemPosition;
-import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
@@ -199,8 +198,8 @@ public class ArenaEvents implements Listener {
 
     if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) >= 10) {
       user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
-      MessageUtils.sendTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold"));
-      MessageUtils.sendSubTitle(e.getPlayer(), ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle"));
+      e.getPlayer().sendTitle(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold"),
+          ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle"), 5, 40, 5);
       ItemPosition.setItem(e.getPlayer(), ItemPosition.BOW, new ItemStack(Material.BOW, 1));
       ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, 1));
       e.getPlayer().getInventory().setItem(/* same for all roles */ ItemPosition.GOLD_INGOTS.getOtherRolesItemPosition(), new ItemStack(Material.GOLD_INGOT, 0));
@@ -232,9 +231,9 @@ public class ArenaEvents implements Listener {
     }
 
     if (Role.isRole(Role.MURDERER, victim)) {
-      plugin.getRewardsHandler().performReward(attacker, GameReward.RewardType.MURDERER_KILL);
+      plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.MURDERER_KILL);
     } else if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
-      plugin.getRewardsHandler().performReward(attacker, GameReward.RewardType.DETECTIVE_KILL);
+      plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.DETECTIVE_KILL);
     }
 
     victim.damage(100.0);
@@ -283,7 +282,7 @@ public class ArenaEvents implements Listener {
     }
 
     Arena arena = ArenaRegistry.getArena(attacker);
-    MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
+    victim.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"), null, 5, 40, 50);
 
     if (Role.isRole(Role.MURDERER, victim)) {
       ArenaUtils.onMurdererDeath(arena);
@@ -293,18 +292,18 @@ public class ArenaEvents implements Listener {
       ArenaUtils.dropBowAndAnnounce(arena, victim);
     } else if (Role.isRole(Role.INNOCENT, victim)) {
       if (Role.isRole(Role.MURDERER, attacker)) {
-        MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"));
+        victim.sendTitle(null, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"), 5, 40, 5);
       } else {
-        MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Player-Killed-You"));
+        victim.sendTitle(null, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Player-Killed-You"), 5, 40, 5);
       }
 
       //if else, murderer killed, so don't kill him :)
       if (Role.isRole(Role.ANY_DETECTIVE, attacker) || Role.isRole(Role.INNOCENT, attacker)) {
-        MessageUtils.sendTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
-        MessageUtils.sendSubTitle(attacker, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Killed-Innocent"));
+        attacker.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"),
+            ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Killed-Innocent"), 5, 40, 5);
         attacker.damage(100.0);
         ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.INNOCENT_KILL, 0);
-        plugin.getRewardsHandler().performReward(attacker, GameReward.RewardType.DETECTIVE_KILL);
+        plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.DETECTIVE_KILL);
 
         if (Role.isRole(Role.ANY_DETECTIVE, attacker)) {
           arena.setDetectiveDead(true);

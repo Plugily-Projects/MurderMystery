@@ -64,7 +64,6 @@ import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.ItemPosition;
-import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
@@ -189,8 +188,8 @@ public class ArenaManager {
    */
   public static void leaveAttempt(Player player, Arena arena) {
     Debugger.debug(Debugger.Level.INFO, "Initial leave attempt, " + player.getName());
-    MMGameLeaveAttemptEvent gameLeaveAttemptEvent = new MMGameLeaveAttemptEvent(player, arena);
-    Bukkit.getPluginManager().callEvent(gameLeaveAttemptEvent);
+    MMGameLeaveAttemptEvent event = new MMGameLeaveAttemptEvent(player, arena);
+    Bukkit.getPluginManager().callEvent(event);
     User user = plugin.getUserManager().getUser(player);
     if (user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) > user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE)) {
       user.setStat(StatsStorage.StatisticType.HIGHEST_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE));
@@ -208,14 +207,15 @@ public class ArenaManager {
         }
         Player newMurderer = players.get(new Random().nextInt(players.size() - 1));
         arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
+        String title = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title").replace("%role%",
+            ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
+        String subtitle = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle").replace("%role%",
+            ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
         for (Player gamePlayer : arena.getPlayers()) {
-          MessageUtils.sendTitle(gamePlayer, ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title").replace("%role%",
-              ChatManager.colorMessage("Scoreboard.Roles.Murderer")));
-          MessageUtils.sendSubTitle(gamePlayer, ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle").replace("%role%",
-              ChatManager.colorMessage("Scoreboard.Roles.Murderer")));
+          gamePlayer.sendTitle(title, subtitle, 5, 40, 5);
         }
-        MessageUtils.sendTitle(newMurderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"));
-        MessageUtils.sendSubTitle(newMurderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"));
+        newMurderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
+            ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
         ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
         user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
       } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {

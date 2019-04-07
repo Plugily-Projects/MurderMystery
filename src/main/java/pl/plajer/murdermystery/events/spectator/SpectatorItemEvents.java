@@ -84,17 +84,15 @@ public class SpectatorItemEvents implements Listener {
         return;
       }
       ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
-      if (stack != null && stack.hasItemMeta()) {
-        if (stack.getItemMeta().getDisplayName() == null) {
-          return;
-        }
-        if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
-          e.setCancelled(true);
-          openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
-        } else if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
-          e.setCancelled(true);
-          spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
-        }
+      if (stack == null || !stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
+        return;
+      }
+      if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
+        e.setCancelled(true);
+        openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
+      } else if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
+        e.setCancelled(true);
+        spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
       }
     }
   }
@@ -142,23 +140,19 @@ public class SpectatorItemEvents implements Listener {
         || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
       return;
     }
-    if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
-      e.setCancelled(true);
-      if (e.isLeftClick() || e.isRightClick()) {
-        ItemMeta meta = e.getCurrentItem().getItemMeta();
-        for (Player player : arena.getPlayers()) {
-          if (player.getName().equalsIgnoreCase(meta.getDisplayName()) || ChatColor.stripColor(meta.getDisplayName()).contains(player.getName())) {
-            p.sendMessage(ChatManager.formatMessage(arena, ChatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), player));
-            p.teleport(player);
-            p.closeInventory();
-            e.setCancelled(true);
-            return;
-
-          }
-        }
-        p.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
+    if (!e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
+      return;
+    }
+    e.setCancelled(true);
+    ItemMeta meta = e.getCurrentItem().getItemMeta();
+    for (Player player : arena.getPlayers()) {
+      if (player.getName().equalsIgnoreCase(meta.getDisplayName()) || ChatColor.stripColor(meta.getDisplayName()).contains(player.getName())) {
+        p.sendMessage(ChatManager.formatMessage(arena, ChatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), player));
+        p.teleport(player);
+        p.closeInventory();
+        return;
       }
-      e.setCancelled(true);
+      p.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
     }
   }
 

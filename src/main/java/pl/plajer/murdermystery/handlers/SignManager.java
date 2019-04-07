@@ -115,20 +115,21 @@ public class SignManager implements Listener {
       return;
     }
     for (Arena arena : ArenaRegistry.getArenas()) {
-      if (arena.getId().equalsIgnoreCase(e.getLine(1))) {
-        for (int i = 0; i < signLines.size(); i++) {
-          e.setLine(i, formatSign(signLines.get(i), arena));
-        }
-        loadedSigns.put((Sign) e.getBlock().getState(), arena);
-        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
-        String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + ",0.0,0.0";
-        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-        List<String> locs = config.getStringList("instances." + arena.getId() + ".signs");
-        locs.add(location);
-        config.set("instances." + arena.getId() + ".signs", locs);
-        ConfigUtils.saveConfig(plugin, config, "arenas");
-        return;
+      if (!arena.getId().equalsIgnoreCase(e.getLine(1))) {
+        continue;
       }
+      for (int i = 0; i < signLines.size(); i++) {
+        e.setLine(i, formatSign(signLines.get(i), arena));
+      }
+      loadedSigns.put((Sign) e.getBlock().getState(), arena);
+      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
+      String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + ",0.0,0.0";
+      FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+      List<String> locs = config.getStringList("instances." + arena.getId() + ".signs");
+      locs.add(location);
+      config.set("instances." + arena.getId() + ".signs", locs);
+      ConfigUtils.saveConfig(plugin, config, "arenas");
+      return;
     }
     e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Arena-Doesnt-Exists"));
   }
@@ -158,14 +159,15 @@ public class SignManager implements Listener {
     String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + "," + "0.0,0.0";
     for (String arena : config.getConfigurationSection("instances").getKeys(false)) {
       for (String sign : config.getStringList("instances." + arena + ".signs")) {
-        if (sign.equals(location)) {
-          List<String> signs = config.getStringList("instances." + arena + ".signs");
-          signs.remove(location);
-          config.set(arena + ".signs", signs);
-          ConfigUtils.saveConfig(plugin, config, "arenas");
-          e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Removed"));
-          return;
+        if (!sign.equals(location)) {
+          continue;
         }
+        List<String> signs = config.getStringList("instances." + arena + ".signs");
+        signs.remove(location);
+        config.set(arena + ".signs", signs);
+        ConfigUtils.saveConfig(plugin, config, "arenas");
+        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Removed"));
+        return;
       }
     }
     e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatColor.RED + "Couldn't remove sign from configuration! Please do this manually!");
@@ -188,27 +190,25 @@ public class SignManager implements Listener {
         ArenaManager.joinAttempt(e.getPlayer(), arena);
         return;
       }
-      if (e.getPlayer().hasPermission(PermissionsManager.getJoinFullGames())) {
-        for (Player player : arena.getPlayers()) {
-          if (!player.hasPermission(PermissionsManager.getJoinFullGames())) {
-            if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
-              ArenaManager.leaveAttempt(player, arena);
-              player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
-              for (Player p : arena.getPlayers()) {
-                p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), player));
-              }
-              ArenaManager.joinAttempt(e.getPlayer(), arena);
-              return;
-            } else {
-              ArenaManager.joinAttempt(e.getPlayer(), arena);
-              return;
-            }
-          }
-        }
-        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.No-Slots-For-Premium"));
-      } else {
+      if (!e.getPlayer().hasPermission(PermissionsManager.getJoinFullGames())) {
         e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Full-Game-No-Permission"));
+        return;
       }
+      for (Player player : arena.getPlayers()) {
+        if (player.hasPermission(PermissionsManager.getJoinFullGames())) {
+          continue;
+        }
+        ArenaManager.joinAttempt(e.getPlayer(), arena);
+        if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+          ArenaManager.leaveAttempt(player, arena);
+          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
+          for (Player p : arena.getPlayers()) {
+            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), player));
+          }
+          return;
+        }
+      }
+      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.No-Slots-For-Premium"));
     }
   }
 
