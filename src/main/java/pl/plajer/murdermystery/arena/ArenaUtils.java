@@ -48,6 +48,29 @@ public class ArenaUtils {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
+  public static void onMurdererDeath(Arena arena) {
+    for (Player player : arena.getPlayers()) {
+      MessageUtils.sendTitle(player, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"));
+      MessageUtils.sendSubTitle(player, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"));
+      if (Role.isRole(Role.MURDERER, player)) {
+        MessageUtils.sendTitle(player, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"));
+      }
+      User loopUser = plugin.getUserManager().getUser(player);
+      if (Role.isRole(Role.INNOCENT, player)) {
+        ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.SURVIVE_GAME, 0);
+      } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
+        ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.WIN_GAME, 0);
+        ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.DETECTIVE_WIN_GAME, 0);
+      }
+    }
+    ArenaManager.stopGame(false, arena);
+    arena.setArenaState(ArenaState.ENDING);
+    arena.setTimer(5);
+    Player murderer = arena.getCharacter(Arena.CharacterType.MURDERER);
+    MessageUtils.sendTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"));
+    MessageUtils.sendSubTitle(murderer, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"));
+  }
+
   public static void addScore(User user, ScoreAction action, int amount) {
     String msg = ChatManager.colorMessage("In-Game.Messages.Bonus-Score");
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));

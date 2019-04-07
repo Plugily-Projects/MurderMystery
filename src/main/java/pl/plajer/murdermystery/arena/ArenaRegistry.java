@@ -38,6 +38,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -137,8 +138,12 @@ public class ArenaRegistry {
       return;
     }
 
-    //todo section null check
-    for (String id : config.getConfigurationSection("instances").getKeys(false)) {
+    ConfigurationSection section = config.getConfigurationSection("instances");
+    if (section == null) {
+      Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.No-Instances-Created"));
+      return;
+    }
+    for (String id : section.getKeys(false)) {
       Arena arena;
       String s = "instances." + id + ".";
       if (s.contains("default")) {

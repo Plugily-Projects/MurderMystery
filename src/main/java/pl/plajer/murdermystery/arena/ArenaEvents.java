@@ -104,21 +104,36 @@ public class ArenaEvents implements Listener {
     if (!(e.getEntity() instanceof Player)) {
       return;
     }
-    Arena arena = ArenaRegistry.getArena((Player) e.getEntity());
+    Player victim = (Player) e.getEntity();
+    Arena arena = ArenaRegistry.getArena(victim);
     if (arena == null) {
       return;
     }
+    boolean killed = false;
     if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
       if (e.getDamage() >= 20.0) {
         //kill the player for suicidal death, else do not
-        ((Player) e.getEntity()).damage(1000.0);
+        victim.damage(1000.0);
+        killed = true;
       }
       e.setCancelled(true);
     }
     //kill the player and move to the spawn point
     if (e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
-      ((Player) e.getEntity()).damage(1000.0);
-      e.getEntity().teleport(arena.getPlayerSpawnPoints().get(0));
+      victim.damage(1000.0);
+      victim.teleport(arena.getPlayerSpawnPoints().get(0));
+      killed = true;
+    }
+    if (killed) {
+      if (Role.isRole(Role.MURDERER, victim)) {
+        ArenaUtils.onMurdererDeath(arena);
+      } else if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
+        arena.setDetectiveDead(true);
+        if (Role.isRole(Role.FAKE_DETECTIVE, victim)) {
+          arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
+        }
+        ArenaUtils.dropBowAndAnnounce(arena, victim);
+      }
     }
   }
 
@@ -222,7 +237,6 @@ public class ArenaEvents implements Listener {
       plugin.getRewardsHandler().performReward(attacker, GameReward.RewardType.DETECTIVE_KILL);
     }
 
-    //todo god damage override add
     victim.damage(100.0);
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
     User user = plugin.getUserManager().getUser(attacker);
@@ -259,7 +273,6 @@ public class ArenaEvents implements Listener {
       return;
     }
 
-    //todo god override
     victim.damage(100.0);
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
     User user = plugin.getUserManager().getUser(attacker);
@@ -273,27 +286,9 @@ public class ArenaEvents implements Listener {
     MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"));
 
     if (Role.isRole(Role.MURDERER, victim)) {
-      for (Player player : arena.getPlayers()) {
-        MessageUtils.sendTitle(player, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"));
-        MessageUtils.sendSubTitle(player, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"));
-        if (Role.isRole(Role.MURDERER, player)) {
-          MessageUtils.sendTitle(player, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"));
-        }
-        User loopUser = plugin.getUserManager().getUser(player);
-        if (Role.isRole(Role.INNOCENT, player)) {
-          ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.SURVIVE_GAME, 0);
-        } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
-          ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.WIN_GAME, 0);
-          ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.DETECTIVE_WIN_GAME, 0);
-        }
-      }
+      ArenaUtils.onMurdererDeath(arena);
       ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.KILL_MURDERER, 0);
       arena.setCharacter(Arena.CharacterType.HERO, attacker);
-      ArenaManager.stopGame(false, arena);
-      arena.setArenaState(ArenaState.ENDING);
-      arena.setTimer(5);
-      MessageUtils.sendTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"));
-      MessageUtils.sendSubTitle(victim, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"));
     } else if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
       ArenaUtils.dropBowAndAnnounce(arena, victim);
     } else if (Role.isRole(Role.INNOCENT, victim)) {
@@ -322,7 +317,6 @@ public class ArenaEvents implements Listener {
     }
   }
 
-  //todo environmental death
   @EventHandler(priority = EventPriority.HIGH)
   public void onPlayerDie(PlayerDeathEvent e) {
     Arena arena = ArenaRegistry.getArena(e.getEntity());
