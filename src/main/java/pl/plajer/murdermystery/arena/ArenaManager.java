@@ -282,10 +282,6 @@ public class ArenaManager {
    */
   public static void stopGame(boolean quickStop, Arena arena) {
     Debugger.debug(Debugger.Level.INFO, "Game stop event initiate, arena " + arena.getId());
-    if (arena.getArenaState() != ArenaState.IN_GAME) {
-      Debugger.debug(Debugger.Level.INFO, "Game stop event finish, arena " + arena.getId());
-      return;
-    }
     MMGameStopEvent gameStopEvent = new MMGameStopEvent(arena);
     Bukkit.getPluginManager().callEvent(gameStopEvent);
     List<String> summaryMessages = LanguageManager.getLanguageList("In-Game.Messages.Game-End-Messages.Summary-Message");

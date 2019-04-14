@@ -272,7 +272,6 @@ public class SetupInventoryEvents implements Listener {
         List<String> cauldrons = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".mystery-cauldrons"));
         cauldrons.add(targetBlock);
         config.set("instances." + arena.getId() + ".mystery-cauldrons", cauldrons);
-        ConfigUtils.saveConfig(plugin, config, "arenas");
         player.sendMessage("Murder Mystery: New mystery cauldron for arena/instance " + arena.getId() + " was added");
         break;
       case ADD_CONFESSIONAL:
@@ -286,9 +285,13 @@ public class SetupInventoryEvents implements Listener {
         List<String> confessionals = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".confessionals"));
         confessionals.add(targetBlock);
         config.set("instances." + arena.getId() + ".confessionals", confessionals);
-        ConfigUtils.saveConfig(plugin, config, "arenas");
         player.sendMessage("Murder Mystery: New confessional for arena/instance " + arena.getId() + " was added");
         break;
+      /*case SPECIAL_BLOCK_REMOVER:
+        player.getInventory().addItem(new ItemBuilder(Material.BLAZE_ROD).name(ChatManager.colorRawMessage("&e&lSpecial Blocks Remover")).build());
+        player.sendMessage(ChatManager.colorRawMessage("&6You received special blocks remover wand! Click special block to remove it from any arena configuration!\n" +
+            "&cIt will require plugin/server restart to apply changes!"));
+        break;*/
     }
     ConfigUtils.saveConfig(plugin, config, "arenas");
   }

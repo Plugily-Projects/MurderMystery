@@ -93,7 +93,7 @@ public class SpecialBlockEvents implements Listener {
     if (arena == null || e.getClickedBlock() == null || e.getClickedBlock().getType() == null) {
       return;
     }
-    if (arena.getArenaState() != ArenaState.IN_GAME) {
+    if (arena.getArenaState() != ArenaState.IN_GAME || plugin.getUserManager().getUser(e.getPlayer()).isSpectator()) {
       return;
     }
     boolean leverBlock = false;

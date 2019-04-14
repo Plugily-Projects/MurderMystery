@@ -100,6 +100,8 @@ public class UserManager {
     if (!stat.isPersistent()) {
       return;
     }
+    //apply before save
+    fixContirbutionStatistics(user);
     database.saveStatistic(user, stat);
   }
 
@@ -108,6 +110,17 @@ public class UserManager {
       return;
     }
     database.loadStatistic(user, stat);
+    //apply after load to override
+    fixContirbutionStatistics(user);
+  }
+
+  private void fixContirbutionStatistics(User user) {
+    if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) <= 0) {
+      user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
+    }
+    if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) <= 0) {
+      user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
+    }
   }
 
   public void removeUser(User user) {

@@ -149,6 +149,7 @@ public class ArenaEvents implements Listener {
       user.setCooldown("bow_shot", 5);
       Player player = (Player) e.getEntity();
       Utils.applyActionBarCooldown(player, 5);
+      e.getBow().setDurability((short) 0);
     } else {
       e.setCancelled(true);
     }
@@ -164,14 +165,14 @@ public class ArenaEvents implements Listener {
 
   @EventHandler
   public void onItemPickup(PlayerPickupItemEvent e) {
-    if (e.getItem().getItemStack().getType() != Material.GOLD_INGOT) {
-      return;
-    }
     Arena arena = ArenaRegistry.getArena(e.getPlayer());
     if (arena == null) {
       return;
     }
     e.setCancelled(true);
+    if (e.getItem().getItemStack().getType() != Material.GOLD_INGOT) {
+      return;
+    }
     User user = plugin.getUserManager().getUser(e.getPlayer());
     if (user.isSpectator() || arena.getArenaState() != ArenaState.IN_GAME) {
       return;

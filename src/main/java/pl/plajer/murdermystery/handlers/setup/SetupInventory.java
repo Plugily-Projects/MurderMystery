@@ -159,6 +159,11 @@ public class SetupInventory {
         .lore(ChatColor.GOLD + "to allow users to pray there!")
         .lore(ChatColor.RED + "You can either get gifts or curses from prayer!")
         .build());
+    /*inventory.setItem(ClickPosition.SPECIAL_BLOCK_REMOVER.getPosition(), new ItemBuilder(Material.BLAZE_ROD)
+        .name(ChatColor.GOLD + "► Special blocks remover wand")
+        .lore(ChatColor.GRAY + "Use this wand if you want to remove special blocks")
+        .lore(ChatColor.GRAY + "of any arena!")
+        .build());*/
   }
 
   private static String isOptionDone(String path) {
@@ -201,7 +206,8 @@ public class SetupInventory {
 
   public enum ClickPosition {
     SET_ENDING(0), SET_LOBBY(1), ADD_STARTING(2), SET_MINIMUM_PLAYERS(3), SET_MAXIMUM_PLAYERS(4), ADD_SIGN(5), SET_MAP_NAME(6),
-    ADD_GOLD_SPAWN(7), REGISTER_ARENA(8), VIEW_SETUP_VIDEO(17), SPECIAL_BLOCKS(27), ADD_MYSTERY_CAULDRON(28), ADD_CONFESSIONAL(29);
+    ADD_GOLD_SPAWN(7), REGISTER_ARENA(8), VIEW_SETUP_VIDEO(17), SPECIAL_BLOCKS(27), ADD_MYSTERY_CAULDRON(28), ADD_CONFESSIONAL(29),
+    SPECIAL_BLOCK_REMOVER(35);
 
     private int position;
 

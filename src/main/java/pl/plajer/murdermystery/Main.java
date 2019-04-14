@@ -143,11 +143,24 @@ public class Main extends JavaPlugin {
 
   @Override
   public void onEnable() {
+    if (!validateIfPluginShouldStart()) {
+      return;
+    }
+
     ServiceRegistry.registerService(this);
     exceptionLogHandler = new ExceptionLogHandler();
-    version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
     LanguageManager.init(this);
     saveDefaultConfig();
+    Debugger.setEnabled(getConfig().getBoolean("Debug", false));
+    Debugger.debug(Debugger.Level.INFO, "Main setup start");
+    configPreferences = new ConfigPreferences(this);
+    setupFiles();
+    initializeClasses();
+    checkUpdate();
+  }
+
+  private boolean validateIfPluginShouldStart() {
+    version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
     if (!(version.equalsIgnoreCase("v1_11_R1") || version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
         || version.equalsIgnoreCase("v1_13_R2"))) {
       MessageUtils.thisVersionIsNotSupported();
@@ -155,7 +168,7 @@ public class Main extends JavaPlugin {
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider changing your server version?");
       forceDisable = true;
       getServer().getPluginManager().disablePlugin(this);
-      return;
+      return false;
     }
     try {
       Class.forName("org.spigotmc.SpigotConfig");
@@ -165,14 +178,9 @@ public class Main extends JavaPlugin {
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
       forceDisable = true;
       getServer().getPluginManager().disablePlugin(this);
-      return;
+      return false;
     }
-    Debugger.setEnabled(getConfig().getBoolean("Debug", false));
-    Debugger.debug(Debugger.Level.INFO, "Main setup start");
-    configPreferences = new ConfigPreferences(this);
-    setupFiles();
-    initializeClasses();
-    checkUpdate();
+    return true;
   }
 
   @Override
@@ -231,6 +239,22 @@ public class Main extends JavaPlugin {
     new SetupInventoryEvents(this);
     new JoinEvent(this);
     new ChatEvents(this);
+    registerSoftDependenciesAndServices();
+    User.cooldownHandlerTask();
+    ArenaRegistry.registerArenas();
+    new Events(this);
+    new LobbyEvent(this);
+    new SpectatorItemEvents(this);
+    rewardsHandler = new RewardsFactory(this);
+    signManager = new SignManager(this);
+    corpseHandler = new CorpseHandler(this);
+    new BowTrailsHandler(this);
+    MysteryPotionRegistry.init(this);
+    PrayerRegistry.init(this);
+    new SpecialBlockEvents(this);
+  }
+
+  private void registerSoftDependenciesAndServices() {
     startPluginMetrics();
     if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       Debugger.debug(Debugger.Level.INFO, "Hooking into PlaceholderAPI");
@@ -245,18 +269,6 @@ public class Main extends JavaPlugin {
       new MurderMysteryLoses();
       new MurderMysteryWins();
     }
-    User.cooldownHandlerTask();
-    ArenaRegistry.registerArenas();
-    new Events(this);
-    new LobbyEvent(this);
-    new SpectatorItemEvents(this);
-    rewardsHandler = new RewardsFactory(this);
-    signManager = new SignManager(this);
-    corpseHandler = new CorpseHandler(this);
-    new BowTrailsHandler(this);
-    MysteryPotionRegistry.init(this);
-    PrayerRegistry.init(this);
-    new SpecialBlockEvents(this);
   }
 
   private void startPluginMetrics() {

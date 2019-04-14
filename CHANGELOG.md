@@ -1,10 +1,19 @@
-### 1.0.0 Release (28.10.2018-07.04.2019)
+### 1.0.0 Release (28.10.2018-14.04.2019)
 * Added Russian and Spanish locales support
 * Detective bow will now spawn bit higher to avoid touching the floor
 * Spectators can no longer pickup the bow
 * Added arenas.yml instances section check to avoid errors
 * Added death cases caused by fall, game won't break anymore when murderer or detective dies from fall
 * /murdermystery and /murdermysteryadmin commands will now work in game for non ops
+* Sword can no longer go through walls/solid blocks
+* Bow no longer loses durability on arrow shoot
+* New users will now start with default value of contributions for each role 1 not 0 that would
+throw errors in lobby stage
+* Fixed action bar colors were broken
+* Fixed game end announce didn't happen
+* Fixed sword glitch after throwing it
+* Users cannot longer pickup anything from the ground
+* Spectators cannot use special blocks anymore
 > Release Candidate 2 (28.03.2019)
 * Setup GUI will now display 0 minimum players option if accidentally set
 * Bow Time prayer will now add new arrow to the inventory not set and override current amount

@@ -232,13 +232,7 @@ public class Arena extends BukkitRunnable {
         }
         for (Player p : getPlayers()) {
           User user = plugin.getUserManager().getUser(p);
-          try {
-            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
-          } catch (NumberFormatException ex) {
-            Debugger.debug(Debugger.Level.WARN, "Infinite or NaN for player " + p.getName() + " values: "
-                + totalMurderer + "murderer, " + totalDetective + "detective; user: " + user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) + " murderer"
-                + user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) + " detective");
-          }
+          p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
         }
         if (getTimer() == 0 || forceStart) {
           MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
@@ -373,8 +367,8 @@ public class Arena extends BukkitRunnable {
                 }
               }
               ArenaUtils.addScore(plugin.getUserManager().getUser(gameCharacters.get(CharacterType.MURDERER)), ArenaUtils.ScoreAction.WIN_GAME, 0);
-              ArenaManager.stopGame(false, this);
               setArenaState(ArenaState.ENDING);
+              ArenaManager.stopGame(false, this);
               setTimer(10);
               return;
             }

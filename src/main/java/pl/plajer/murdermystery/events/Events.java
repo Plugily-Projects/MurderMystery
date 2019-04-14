@@ -158,6 +158,11 @@ public class Events implements Listener {
   }
 
   private void swordFlyTask(Arena arena, Player attacker, User attackerUser, ArmorStand stand) {
+    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+      if (arena.getArenaState() == ArenaState.IN_GAME) {
+        ItemPosition.setItem(attacker, ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
+      }
+    }, 5 * 21);
     new BukkitRunnable() {
       double posModifier = 0;
       Location loc = attacker.getLocation();
@@ -197,15 +202,10 @@ public class Events implements Listener {
           }
         }
         loc.subtract(x, y, z);
-        if (posModifier > 20) {
+        if (posModifier > 20 || stand.getLocation().add(0, 1, 0).getBlock().getType().isSolid()) {
           this.cancel();
           stand.remove();
         }
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-          if (arena.getArenaState() == ArenaState.IN_GAME) {
-            ItemPosition.setItem(attacker, ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
-          }
-        }, 5 * 21);
       }
     }.runTaskTimer(plugin, 0, 1);
   }
