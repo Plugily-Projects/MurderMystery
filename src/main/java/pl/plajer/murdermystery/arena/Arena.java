@@ -232,7 +232,11 @@ public class Arena extends BukkitRunnable {
         }
         for (Player p : getPlayers()) {
           User user = plugin.getUserManager().getUser(p);
-          p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
+          try {
+            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
+          } catch (NumberFormatException ignored) {
+            //fail silently
+          }
         }
         if (getTimer() == 0 || forceStart) {
           MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
