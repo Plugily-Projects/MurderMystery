@@ -281,11 +281,20 @@ public class ArenaManager {
     List<String> summaryMessages = LanguageManager.getLanguageList("In-Game.Messages.Game-End-Messages.Summary-Message");
     arena.getScoreboardManager().stopAllScoreboards();
     Random rand = new Random();
+
+    Player murderer = arena.getPlayersLeft().get(0);
+    boolean murderWon = arena.getPlayersLeft().size() == 1 && murderer.equals(arena.getCharacter(Arena.CharacterType.MURDERER));
+
     for (final Player player : arena.getPlayers()) {
       User user = plugin.getUserManager().getUser(player);
       if (Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
         user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, rand.nextInt(4) + 1);
         user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, rand.nextInt(4) + 1);
+      }
+      if (murderWon && !Role.isRole(Role.MURDERER, player)) {
+        user.addStat(StatsStorage.StatisticType.LOSES, 1);
+      } else if (murderWon && Role.isRole(Role.MURDERER, player)) {
+        user.addStat(StatsStorage.StatisticType.WINS, 1);
       }
       player.getInventory().clear();
       player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());

@@ -16,6 +16,9 @@ throw errors in lobby stage
 * Spectators cannot use special blocks anymore
 * CorpseReborn and HolographicDisplays are no longer hardcoded dependencies in plugin.yml so without them
 plugin will start with fancy message to install them without throwing not user-friendly exception
+* Fixed kills, loses and wins statistics weren't added anytime
+* Misc code performance improvements
+* Removed Locale suggester
 > Release Candidate 2 (28.03.2019)
 * Setup GUI will now display 0 minimum players option if accidentally set
 * Bow Time prayer will now add new arrow to the inventory not set and override current amount

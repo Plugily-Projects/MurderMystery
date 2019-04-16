@@ -107,6 +107,7 @@ import pl.plajerlair.commonsbox.number.NumberUtils;
  */
 public class Arena extends BukkitRunnable {
 
+  private Random random;
   private Main plugin;
   private Set<Player> players = new HashSet<>();
   @Deprecated //mergeable
@@ -148,6 +149,7 @@ public class Arena extends BukkitRunnable {
       gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Main-Title"), BarColor.BLUE, BarStyle.SOLID);
     }
     scoreboardManager = new ScoreboardManager(this);
+    random = new Random();
   }
 
   public boolean isReady() {
@@ -255,7 +257,7 @@ public class Arena extends BukkitRunnable {
             player.setGameMode(GameMode.ADVENTURE);
             ArenaUtils.hidePlayersOutsideTheGame(player, this);
             player.updateInventory();
-            addStat(player, StatsStorage.StatisticType.GAMES_PLAYED);
+            plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
             setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
             player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
           }
@@ -386,7 +388,7 @@ public class Arena extends BukkitRunnable {
         }
 
         //don't spawn it every time
-        if (new Random().nextInt(2) == 1) {
+        if (random.nextInt(2) == 1) {
           spawnSomeGold();
         }
         setTimer(getTimer() - 1);
@@ -482,7 +484,7 @@ public class Arena extends BukkitRunnable {
     if (goldSpawned.size() >= goldSpawnPoints.size()) {
       return;
     }
-    Location loc = goldSpawnPoints.get(new Random().nextInt(goldSpawnPoints.size()));
+    Location loc = goldSpawnPoints.get(random.nextInt(goldSpawnPoints.size()));
     Item item = loc.getWorld().dropItem(loc, new ItemStack(Material.GOLD_INGOT, 1));
     goldSpawned.add(item);
   }
@@ -697,12 +699,12 @@ public class Arena extends BukkitRunnable {
   }
 
   public void teleportToStartLocation(Player player) {
-    player.teleport(playerSpawnPoints.get(new Random().nextInt(playerSpawnPoints.size())));
+    player.teleport(playerSpawnPoints.get(random.nextInt(playerSpawnPoints.size())));
   }
 
   private void teleportAllToStartLocation() {
     for (Player player : getPlayers()) {
-      player.teleport(playerSpawnPoints.get(new Random().nextInt(playerSpawnPoints.size())));
+      player.teleport(playerSpawnPoints.get(random.nextInt(playerSpawnPoints.size())));
     }
   }
 
@@ -810,11 +812,6 @@ public class Arena extends BukkitRunnable {
       return;
     }
     players.remove(player);
-  }
-
-  void addStat(Player player, StatsStorage.StatisticType stat) {
-    User user = plugin.getUserManager().getUser(player);
-    user.addStat(stat, 1);
   }
 
   public List<Player> getPlayersLeft() {

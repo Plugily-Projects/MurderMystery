@@ -240,6 +240,8 @@ public class ArenaEvents implements Listener {
     victim.damage(100.0);
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
     User user = plugin.getUserManager().getUser(attacker);
+
+    user.addStat(StatsStorage.StatisticType.KILLS, 1);
     user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
     ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
 
@@ -277,6 +279,7 @@ public class ArenaEvents implements Listener {
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
     User user = plugin.getUserManager().getUser(attacker);
 
+    user.addStat(StatsStorage.StatisticType.KILLS, 1);
     if (Role.isRole(Role.MURDERER, attacker)) {
       user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
       ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
@@ -347,7 +350,7 @@ public class ArenaEvents implements Listener {
       return;
     }
     User user = plugin.getUserManager().getUser(player);
-    arena.addStat(player, StatsStorage.StatisticType.DEATHS);
+    user.addStat(StatsStorage.StatisticType.DEATHS, 1);
     player.teleport(loc);
     user.setSpectator(true);
     player.setGameMode(GameMode.SURVIVAL);
