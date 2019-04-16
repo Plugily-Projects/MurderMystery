@@ -108,10 +108,15 @@ public class ArenaManager {
     Debugger.debug(Debugger.Level.INFO, "Final join attempt, " + player.getName());
     User user = plugin.getUserManager().getUser(player);
     arena.getScoreboardManager().createScoreboard(user);
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+      InventorySerializer.saveInventoryToFile(plugin, player);
+    }
+    arena.addPlayer(player);
+    player.setLevel(0);
+    player.setExp(1);
+    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+    player.setFoodLevel(20);
     if ((arena.getArenaState() == ArenaState.IN_GAME || (arena.getArenaState() == ArenaState.STARTING && arena.getTimer() <= 3) || arena.getArenaState() == ArenaState.ENDING)) {
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-        InventorySerializer.saveInventoryToFile(plugin, player);
-      }
       arena.teleportToStartLocation(player);
       player.sendMessage(ChatManager.colorMessage("In-Game.You-Are-Spectator"));
       player.getInventory().clear();
@@ -124,11 +129,6 @@ public class ArenaManager {
         player.removePotionEffect(potionEffect.getType());
       }
 
-      arena.addPlayer(player);
-      player.setLevel(0);
-      player.setExp(1);
-      player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
-      player.setFoodLevel(20);
       player.setGameMode(GameMode.SURVIVAL);
       player.setAllowFlight(true);
       player.setFlying(true);
@@ -155,16 +155,10 @@ public class ArenaManager {
       InventorySerializer.saveInventoryToFile(plugin, player);
     }
     arena.teleportToLobby(player);
-    arena.addPlayer(player);
-    player.setLevel(0);
-    player.setExp(1);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
-    player.setFoodLevel(20);
     player.getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
     player.setFlying(false);
     player.setAllowFlight(false);
     player.getInventory().clear();
-    arena.showPlayers();
     arena.doBarAction(Arena.BarAction.ADD, player);
     if (!plugin.getUserManager().getUser(player).isSpectator()) {
       ChatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);

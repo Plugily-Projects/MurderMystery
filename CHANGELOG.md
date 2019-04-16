@@ -1,5 +1,5 @@
-### 1.0.0 Release (28.10.2018-14.04.2019)
-* Added Russian and Spanish locales support
+### 1.0.0 Release (28.10.2018-16.04.2019)
+* Added Russian, Spanish and Dutch locales support
 * Detective bow will now spawn bit higher to avoid touching the floor
 * Spectators can no longer pickup the bow
 * Added arenas.yml instances section check to avoid errors
