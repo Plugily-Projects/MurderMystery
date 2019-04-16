@@ -14,6 +14,8 @@ throw errors in lobby stage
 * Fixed sword glitch after throwing it
 * Users cannot longer pickup anything from the ground
 * Spectators cannot use special blocks anymore
+* CorpseReborn and HolographicDisplays are no longer hardcoded dependencies in plugin.yml so without them
+plugin will start with fancy message to install them without throwing not user-friendly exception
 > Release Candidate 2 (28.03.2019)
 * Setup GUI will now display 0 minimum players option if accidentally set
 * Bow Time prayer will now add new arrow to the inventory not set and override current amount

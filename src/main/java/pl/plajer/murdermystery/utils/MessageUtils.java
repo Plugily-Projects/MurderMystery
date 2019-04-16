@@ -43,6 +43,21 @@ import org.bukkit.ChatColor;
  */
 public class MessageUtils {
 
+  public static void dependencyWarning() {
+    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "\n" +
+        "\n" +
+        "  _____                                 _                           \n" +
+        " |  __ \\                               | |                          \n" +
+        " | |  | |  ___  _ __    ___  _ __    __| |  ___  _ __    ___  _   _ \n" +
+        " | |  | | / _ \\| '_ \\  / _ \\| '_ \\  / _` | / _ \\| '_ \\  / __|| | | |\n" +
+        " | |__| ||  __/| |_) ||  __/| | | || (_| ||  __/| | | || (__ | |_| |\n" +
+        " |_____/  \\___|| .__/  \\___||_| |_| \\__,_| \\___||_| |_| \\___| \\__, |\n" +
+        "               | |                                             __/ |\n" +
+        "               |_|                                            |___/ \n" +
+        "\n" +
+        " \n");
+  }
+
   public static void thisVersionIsNotSupported() {
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "  _   _           _                                                    _                _ ");
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " | \\ | |   ___   | |_     ___   _   _   _ __    _ __     ___    _ __  | |_    ___    __| |");
