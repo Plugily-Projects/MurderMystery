@@ -37,7 +37,6 @@ import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.ItemPosition;
-import pl.plajer.murdermystery.utils.MessageUtils;
 
 /**
  * @author Plajer
@@ -47,6 +46,29 @@ import pl.plajer.murdermystery.utils.MessageUtils;
 public class ArenaUtils {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
+
+  public static void onMurdererDeath(Arena arena) {
+    for (Player player : arena.getPlayers()) {
+      player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"),
+          ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
+      if (Role.isRole(Role.MURDERER, player)) {
+        player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), null, 5, 40, 5);
+      }
+      User loopUser = plugin.getUserManager().getUser(player);
+      if (Role.isRole(Role.INNOCENT, player)) {
+        ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.SURVIVE_GAME, 0);
+      } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
+        ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.WIN_GAME, 0);
+        ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.DETECTIVE_WIN_GAME, 0);
+      }
+    }
+    arena.setArenaState(ArenaState.ENDING);
+    ArenaManager.stopGame(false, arena);
+    arena.setTimer(5);
+    Player murderer = arena.getCharacter(Arena.CharacterType.MURDERER);
+    murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
+        ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
+  }
 
   public static void addScore(User user, ScoreAction action, int amount) {
     String msg = ChatManager.colorMessage("In-Game.Messages.Bonus-Score");
@@ -90,8 +112,7 @@ public class ArenaUtils {
         if (Role.isRole(Role.MURDERER, p)) {
           continue;
         }
-        MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Watch-Out-Title"));
-        MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Watch-Out-Subtitle"));
+        p.sendTitle(ChatManager.colorMessage("In-Game.Watch-Out-Title"), ChatManager.colorMessage("In-Game.Watch-Out-Subtitle"), 5, 40, 5);
       }
     }
     for (Player p : arena.getPlayersLeft()) {
@@ -119,10 +140,10 @@ public class ArenaUtils {
   public static void dropBowAndAnnounce(Arena arena, Player victim) {
     if (arena.getPlayersLeft().size() > 1) {
       for (Player p : arena.getPlayers()) {
-        MessageUtils.sendTitle(p, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title"));
+        p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title"), null, 5, 40, 5);
       }
       for (Player p : arena.getPlayersLeft()) {
-        MessageUtils.sendSubTitle(p, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle"));
+        p.sendTitle(null, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle"), 5, 40, 5);
       }
     }
 
@@ -130,6 +151,9 @@ public class ArenaUtils {
     ItemLine itemLine = hologram.appendItemLine(new ItemStack(Material.BOW, 1));
 
     itemLine.setPickupHandler(player -> {
+      if (plugin.getUserManager().getUser(player).isSpectator()) {
+        return;
+      }
       if (Role.isRole(Role.INNOCENT, player)) {
         player.playSound(player.getLocation(), Sound.BLOCK_LAVA_POP, 1F, 2F);
         hologram.delete();

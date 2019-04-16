@@ -67,9 +67,9 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.setup.SetupInventory;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.LocationUtils;
-import pl.plajerlair.core.utils.StringMatcher;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+import pl.plajerlair.commonsbox.string.StringMatcher;
 
 /**
  * @author Plajer
@@ -283,9 +283,9 @@ public class MainCommand implements CommandExecutor {
   private void createInstanceInConfig(String id, String worldName) {
     String path = "instances." + id + ".";
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    LocationUtils.saveLoc(plugin, config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    LocationUtils.saveLoc(plugin, config, "arenas", path + "Startlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    LocationUtils.saveLoc(plugin, config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    LocationSerializer.saveLoc(plugin, config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    LocationSerializer.saveLoc(plugin, config, "arenas", path + "Startlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    LocationSerializer.saveLoc(plugin, config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
     config.set(path + "playerspawnpoints", new ArrayList<>());
     config.set(path + "goldspawnpoints", new ArrayList<>());
     config.set(path + "minimumplayers", 2);
@@ -302,29 +302,29 @@ public class MainCommand implements CommandExecutor {
 
     List<Location> playerSpawnPoints = new ArrayList<>();
     for (String loc : config.getStringList(path + "playerspawnpoints")) {
-      playerSpawnPoints.add(LocationUtils.getLocation(loc));
+      playerSpawnPoints.add(LocationSerializer.getLocation(loc));
     }
     arena.setPlayerSpawnPoints(playerSpawnPoints);
     List<Location> goldSpawnPoints = new ArrayList<>();
     for (String loc : config.getStringList(path + "goldspawnpoints")) {
-      goldSpawnPoints.add(LocationUtils.getLocation(loc));
+      goldSpawnPoints.add(LocationSerializer.getLocation(loc));
     }
     arena.setGoldSpawnPoints(goldSpawnPoints);
 
     List<SpecialBlock> specialBlocks = new ArrayList<>();
     if (config.isSet("instances." + arena.getId() + ".mystery-cauldrons")) {
       for (String loc : config.getStringList("instances." + arena.getId() + ".mystery-cauldrons")) {
-        specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
+        specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
       }
     }
     for (SpecialBlock block : specialBlocks) {
       arena.loadSpecialBlock(block);
     }
-    arena.setMinimumPlayers(ConfigUtils.getConfig(plugin, "arenas").getInt(path + "minimumplayers"));
-    arena.setMaximumPlayers(ConfigUtils.getConfig(plugin, "arenas").getInt(path + "maximumplayers"));
-    arena.setMapName(ConfigUtils.getConfig(plugin, "arenas").getString(path + "mapname"));
-    arena.setLobbyLocation(LocationUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path + "lobbylocation")));
-    arena.setEndLocation(LocationUtils.getLocation(ConfigUtils.getConfig(plugin, "arenas").getString(path + "Endlocation")));
+    arena.setMinimumPlayers(config.getInt(path + "minimumplayers"));
+    arena.setMaximumPlayers(config.getInt(path + "maximumplayers"));
+    arena.setMapName(config.getString(path + "mapname"));
+    arena.setLobbyLocation(LocationSerializer.getLocation(config.getString(path + "lobbylocation")));
+    arena.setEndLocation(LocationSerializer.getLocation(config.getString(path + "Endlocation")));
     arena.setReady(false);
 
     ArenaRegistry.registerArena(arena);

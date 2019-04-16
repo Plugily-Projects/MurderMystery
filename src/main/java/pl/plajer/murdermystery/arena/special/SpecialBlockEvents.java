@@ -70,8 +70,8 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.Utils;
-import pl.plajerlair.core.utils.ItemBuilder;
-import pl.plajerlair.core.utils.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * @author Plajer
@@ -93,7 +93,7 @@ public class SpecialBlockEvents implements Listener {
     if (arena == null || e.getClickedBlock() == null || e.getClickedBlock().getType() == null) {
       return;
     }
-    if (arena.getArenaState() != ArenaState.IN_GAME) {
+    if (arena.getArenaState() != ArenaState.IN_GAME || plugin.getUserManager().getUser(e.getPlayer()).isSpectator()) {
       return;
     }
     boolean leverBlock = false;
@@ -177,7 +177,7 @@ public class SpecialBlockEvents implements Listener {
 
   @EventHandler
   public void onMysteryPotionDrink(PlayerItemConsumeEvent e) {
-    if (e.getItem().getType() != XMaterial.POTION.parseMaterial() || !e.getItem().hasItemMeta() || !e.getItem().getItemMeta().hasDisplayName()) {
+    if (e.getItem().getType() != XMaterial.POTION.parseMaterial() || !Utils.isNamed(e.getItem())) {
       return;
     }
     Arena arena = ArenaRegistry.getArena(e.getPlayer());

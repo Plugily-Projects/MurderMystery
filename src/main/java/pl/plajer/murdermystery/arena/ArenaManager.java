@@ -62,14 +62,12 @@ import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.user.User;
+import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.ItemPosition;
-import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.utils.InventoryUtils;
-import pl.plajerlair.core.utils.ItemBuilder;
-import pl.plajerlair.core.utils.MinigameUtils;
-import pl.plajerlair.core.utils.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
 /**
  * @author Plajer
@@ -89,7 +87,7 @@ public class ArenaManager {
    * @see MMGameJoinAttemptEvent
    */
   public static void joinAttempt(Player player, Arena arena) {
-    Debugger.debug(LogLevel.INFO, "Initial join attempt, " + player.getName());
+    Debugger.debug(Debugger.Level.INFO, "Initial join attempt, " + player.getName());
     MMGameJoinAttemptEvent gameJoinAttemptEvent = new MMGameJoinAttemptEvent(player, arena);
     Bukkit.getPluginManager().callEvent(gameJoinAttemptEvent);
     if (!arena.isReady()) {
@@ -107,14 +105,18 @@ public class ArenaManager {
         return;
       }
     }
-    Debugger.debug(LogLevel.INFO, "Final join attempt, " + player.getName());
+    Debugger.debug(Debugger.Level.INFO, "Final join attempt, " + player.getName());
     User user = plugin.getUserManager().getUser(player);
     arena.getScoreboardManager().createScoreboard(user);
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+      InventorySerializer.saveInventoryToFile(plugin, player);
+    }
+    arena.addPlayer(player);
+    player.setLevel(0);
+    player.setExp(1);
+    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+    player.setFoodLevel(20);
     if ((arena.getArenaState() == ArenaState.IN_GAME || (arena.getArenaState() == ArenaState.STARTING && arena.getTimer() <= 3) || arena.getArenaState() == ArenaState.ENDING)) {
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-        player.setLevel(0);
-        InventoryUtils.saveInventoryToFile(plugin, player);
-      }
       arena.teleportToStartLocation(player);
       player.sendMessage(ChatManager.colorMessage("In-Game.You-Are-Spectator"));
       player.getInventory().clear();
@@ -127,11 +129,6 @@ public class ArenaManager {
         player.removePotionEffect(potionEffect.getType());
       }
 
-      arena.addPlayer(player);
-      player.setLevel(0);
-      player.setExp(1);
-      player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
-      player.setFoodLevel(20);
       player.setGameMode(GameMode.SURVIVAL);
       player.setAllowFlight(true);
       player.setFlying(true);
@@ -155,18 +152,13 @@ public class ArenaManager {
       return;
     }
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-      player.setLevel(0);
-      InventoryUtils.saveInventoryToFile(plugin, player);
+      InventorySerializer.saveInventoryToFile(plugin, player);
     }
     arena.teleportToLobby(player);
-    arena.addPlayer(player);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
-    player.setFoodLevel(20);
     player.getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
     player.setFlying(false);
     player.setAllowFlight(false);
     player.getInventory().clear();
-    arena.showPlayers();
     arena.doBarAction(Arena.BarAction.ADD, player);
     if (!plugin.getUserManager().getUser(player).isSpectator()) {
       ChatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
@@ -189,9 +181,9 @@ public class ArenaManager {
    * @see MMGameLeaveAttemptEvent
    */
   public static void leaveAttempt(Player player, Arena arena) {
-    Debugger.debug(LogLevel.INFO, "Initial leave attempt, " + player.getName());
-    MMGameLeaveAttemptEvent gameLeaveAttemptEvent = new MMGameLeaveAttemptEvent(player, arena);
-    Bukkit.getPluginManager().callEvent(gameLeaveAttemptEvent);
+    Debugger.debug(Debugger.Level.INFO, "Initial leave attempt, " + player.getName());
+    MMGameLeaveAttemptEvent event = new MMGameLeaveAttemptEvent(player, arena);
+    Bukkit.getPluginManager().callEvent(event);
     User user = plugin.getUserManager().getUser(player);
     if (user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) > user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE)) {
       user.setStat(StatsStorage.StatisticType.HIGHEST_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE));
@@ -209,14 +201,15 @@ public class ArenaManager {
         }
         Player newMurderer = players.get(new Random().nextInt(players.size() - 1));
         arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
+        String title = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title").replace("%role%",
+            ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
+        String subtitle = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle").replace("%role%",
+            ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
         for (Player gamePlayer : arena.getPlayers()) {
-          MessageUtils.sendTitle(gamePlayer, ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title").replace("%role%",
-              ChatManager.colorMessage("Scoreboard.Roles.Murderer")));
-          MessageUtils.sendSubTitle(gamePlayer, ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle").replace("%role%",
-              ChatManager.colorMessage("Scoreboard.Roles.Murderer")));
+          gamePlayer.sendTitle(title, subtitle, 5, 40, 5);
         }
-        MessageUtils.sendTitle(newMurderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"));
-        MessageUtils.sendSubTitle(newMurderer, ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"));
+        newMurderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
+            ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
         ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
         user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
       } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
@@ -266,7 +259,7 @@ public class ArenaManager {
     arena.teleportToEndLocation(player);
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
         && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-      InventoryUtils.loadInventory(plugin, player);
+      InventorySerializer.loadInventory(plugin, player);
     }
     for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
       if (!stat.isPersistent()) {
@@ -282,11 +275,7 @@ public class ArenaManager {
    * @see MMGameStopEvent
    */
   public static void stopGame(boolean quickStop, Arena arena) {
-    Debugger.debug(LogLevel.INFO, "Game stop event initiate, arena " + arena.getId());
-    if (arena.getArenaState() != ArenaState.IN_GAME) {
-      Debugger.debug(LogLevel.INFO, "Game stop event finish, arena " + arena.getId());
-      return;
-    }
+    Debugger.debug(Debugger.Level.INFO, "Game stop event initiate, arena " + arena.getId());
     MMGameStopEvent gameStopEvent = new MMGameStopEvent(arena);
     Bukkit.getPluginManager().callEvent(gameStopEvent);
     List<String> summaryMessages = LanguageManager.getLanguageList("In-Game.Messages.Game-End-Messages.Summary-Message");
@@ -301,7 +290,7 @@ public class ArenaManager {
       player.getInventory().clear();
       player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
       for (String msg : summaryMessages) {
-        MinigameUtils.sendCenteredMessage(player, formatSummaryPlaceholders(msg, arena));
+        MiscUtils.sendCenteredMessage(player, formatSummaryPlaceholders(msg, arena));
       }
       user.removeScoreboard();
       if (!quickStop && plugin.getConfig().getBoolean("Firework-When-Game-Ends", true)) {
@@ -312,13 +301,13 @@ public class ArenaManager {
             if (i == 4 || !arena.getPlayers().contains(player)) {
               this.cancel();
             }
-            MinigameUtils.spawnRandomFirework(player.getLocation());
+            MiscUtils.spawnRandomFirework(player.getLocation());
             i++;
           }
         }.runTaskTimer(plugin, 30, 30);
       }
     }
-    Debugger.debug(LogLevel.INFO, "Game stop event finish, arena " + arena.getId());
+    Debugger.debug(Debugger.Level.INFO, "Game stop event finish, arena " + arena.getId());
   }
 
   private static String formatSummaryPlaceholders(String msg, Arena arena) {

@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2018  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,8 +36,7 @@ package pl.plajer.murdermystery.handlers;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.Main;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
+import pl.plajer.murdermystery.utils.Debugger;
 
 /**
  * @author Plajer
@@ -73,7 +72,7 @@ public class PermissionsManager {
   private static void setupPermissions() {
     PermissionsManager.setJoinFullGames(plugin.getConfig().getString("Basic-Permissions.Full-Games-Permission", "murdermystery.fullgames"));
     PermissionsManager.setJoinPerm(plugin.getConfig().getString("Basic-Permissions.Join-Permission", "murdermystery.join.<arena>"));
-    Debugger.debug(LogLevel.INFO, "Basic permissions registered");
+    Debugger.debug(Debugger.Level.INFO, "Basic permissions registered");
   }
 
 }

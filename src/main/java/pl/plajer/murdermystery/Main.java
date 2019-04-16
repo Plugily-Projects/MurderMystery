@@ -68,7 +68,6 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.List;
 
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 
@@ -114,23 +113,20 @@ import pl.plajer.murdermystery.leaderheads.MurderMysteryLoses;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryWins;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
-import pl.plajer.murdermystery.user.data.MySQLManager;
+import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.ExceptionLogHandler;
 import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajerlair.core.database.MySQLDatabase;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
-import pl.plajerlair.core.services.ServiceRegistry;
-import pl.plajerlair.core.services.update.UpdateChecker;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.InventoryUtils;
+import pl.plajer.murdermystery.utils.UpdateChecker;
+import pl.plajerlair.commonsbox.database.MysqlDatabase;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+import pl.plajerlair.services.ServiceRegistry;
 
 /**
  * @author Plajer
  * <p>
  * Created at 03.08.2018
  */
-//todo compatmaterialconstants
 public class Main extends JavaPlugin {
 
   private ExceptionLogHandler exceptionLogHandler;
@@ -138,29 +134,33 @@ public class Main extends JavaPlugin {
   private boolean forceDisable = false;
   private BungeeManager bungeeManager;
   private RewardsFactory rewardsHandler;
-  private List<String> fileNames = Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks");
-  private MySQLDatabase database;
+  private MysqlDatabase database;
   private SignManager signManager;
   private MainCommand mainCommand;
   private CorpseHandler corpseHandler;
   private ConfigPreferences configPreferences;
   private UserManager userManager;
 
-  public boolean is1_11_R1() {
-    return version.equalsIgnoreCase("v1_11_R1");
-  }
-
-  public boolean is1_12_R1() {
-    return version.equalsIgnoreCase("v1_12_R1");
-  }
-
   @Override
   public void onEnable() {
+    if (!validateIfPluginShouldStart()) {
+      return;
+    }
+
     ServiceRegistry.registerService(this);
     exceptionLogHandler = new ExceptionLogHandler();
-    version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
     LanguageManager.init(this);
     saveDefaultConfig();
+    Debugger.setEnabled(getConfig().getBoolean("Debug", false));
+    Debugger.debug(Debugger.Level.INFO, "Main setup start");
+    configPreferences = new ConfigPreferences(this);
+    setupFiles();
+    initializeClasses();
+    checkUpdate();
+  }
+
+  private boolean validateIfPluginShouldStart() {
+    version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
     if (!(version.equalsIgnoreCase("v1_11_R1") || version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
         || version.equalsIgnoreCase("v1_13_R2"))) {
       MessageUtils.thisVersionIsNotSupported();
@@ -168,7 +168,7 @@ public class Main extends JavaPlugin {
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider changing your server version?");
       forceDisable = true;
       getServer().getPluginManager().disablePlugin(this);
-      return;
+      return false;
     }
     try {
       Class.forName("org.spigotmc.SpigotConfig");
@@ -178,15 +178,9 @@ public class Main extends JavaPlugin {
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
       forceDisable = true;
       getServer().getPluginManager().disablePlugin(this);
-      return;
+      return false;
     }
-    Debugger.setEnabled(getConfig().getBoolean("Debug", false));
-    Debugger.setPrefix("[MurderMystery Debugger]");
-    Debugger.debug(LogLevel.INFO, "Main setup start");
-    configPreferences = new ConfigPreferences(this);
-    setupFiles();
-    initializeClasses();
-    checkUpdate();
+    return true;
   }
 
   @Override
@@ -194,14 +188,14 @@ public class Main extends JavaPlugin {
     if (forceDisable) {
       return;
     }
-    Debugger.debug(LogLevel.INFO, "System disable init");
+    Debugger.debug(Debugger.Level.INFO, "System disable init");
     Bukkit.getLogger().removeHandler(exceptionLogHandler);
     saveAllUserStatistics();
     for (Hologram hologram : HologramsAPI.getHolograms(this)) {
       hologram.delete();
     }
     if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      getMySQLDatabase().getManager().shutdownConnPool();
+      getMySQLDatabase().shutdownConnPool();
     }
 
     for (Arena arena : ArenaRegistry.getArenas()) {
@@ -210,7 +204,7 @@ public class Main extends JavaPlugin {
         arena.doBarAction(Arena.BarAction.REMOVE, player);
         arena.teleportToEndLocation(player);
         if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-          InventoryUtils.loadInventory(this, player);
+          InventorySerializer.loadInventory(this, player);
         } else {
           player.getInventory().clear();
           player.getInventory().setArmorContents(null);
@@ -231,7 +225,7 @@ public class Main extends JavaPlugin {
     }
     if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
-      database = new MySQLDatabase(this, config.getString("address"), config.getString("user"), config.getString("password"),
+      database = new MysqlDatabase(config.getString("address"), config.getString("user"), config.getString("password"),
           config.getInt("min-connections"), config.getInt("max-connections"));
     }
     userManager = new UserManager(this);
@@ -245,20 +239,7 @@ public class Main extends JavaPlugin {
     new SetupInventoryEvents(this);
     new JoinEvent(this);
     new ChatEvents(this);
-    startPluginMetrics();
-    if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      Debugger.debug(LogLevel.INFO, "Hooking into PlaceholderAPI");
-      new PlaceholderManager().register();
-    }
-    if (Bukkit.getPluginManager().isPluginEnabled("LeaderHeads")) {
-      Debugger.debug(LogLevel.INFO, "Hooking into LeaderHeads");
-      new MurderMysteryDeaths();
-      new MurderMysteryGamesPlayed();
-      new MurderMysteryHighestScore();
-      new MurderMysteryKills();
-      new MurderMysteryLoses();
-      new MurderMysteryWins();
-    }
+    registerSoftDependenciesAndServices();
     User.cooldownHandlerTask();
     ArenaRegistry.registerArenas();
     new Events(this);
@@ -271,6 +252,23 @@ public class Main extends JavaPlugin {
     MysteryPotionRegistry.init(this);
     PrayerRegistry.init(this);
     new SpecialBlockEvents(this);
+  }
+
+  private void registerSoftDependenciesAndServices() {
+    startPluginMetrics();
+    if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+      Debugger.debug(Debugger.Level.INFO, "Hooking into PlaceholderAPI");
+      new PlaceholderManager().register();
+    }
+    if (Bukkit.getPluginManager().isPluginEnabled("LeaderHeads")) {
+      Debugger.debug(Debugger.Level.INFO, "Hooking into LeaderHeads");
+      new MurderMysteryDeaths();
+      new MurderMysteryGamesPlayed();
+      new MurderMysteryHighestScore();
+      new MurderMysteryKills();
+      new MurderMysteryLoses();
+      new MurderMysteryWins();
+    }
   }
 
   private void startPluginMetrics() {
@@ -319,7 +317,7 @@ public class Main extends JavaPlugin {
   }
 
   private void setupFiles() {
-    for (String fileName : fileNames) {
+    for (String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks")) {
       File file = new File(getDataFolder() + File.separator + fileName + ".yml");
       if (!file.exists()) {
         saveResource(fileName + ".yml", false);
@@ -327,12 +325,12 @@ public class Main extends JavaPlugin {
     }
   }
 
-  public boolean is1_9_R1() {
-    return version.equalsIgnoreCase("v1_9_R1");
+  public boolean is1_11_R1() {
+    return version.equalsIgnoreCase("v1_11_R1");
   }
 
-  public boolean is1_10_R1() {
-    return version.equalsIgnoreCase("v1_10_R1");
+  public boolean is1_12_R1() {
+    return version.equalsIgnoreCase("v1_12_R1");
   }
 
   public RewardsFactory getRewardsHandler() {
@@ -347,16 +345,12 @@ public class Main extends JavaPlugin {
     return configPreferences;
   }
 
-  public MySQLDatabase getMySQLDatabase() {
+  public MysqlDatabase getMySQLDatabase() {
     return database;
   }
 
   public SignManager getSignManager() {
     return signManager;
-  }
-
-  public MainCommand getMainCommand() {
-    return mainCommand;
   }
 
   public CorpseHandler getCorpseHandler() {
@@ -376,8 +370,8 @@ public class Main extends JavaPlugin {
         if (!stat.isPersistent()) {
           continue;
         }
-        if (userManager.getDatabase() instanceof MySQLManager) {
-          ((MySQLManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+        if (userManager.getDatabase() instanceof MysqlDatabase) {
+          ((MysqlDatabase) userManager.getDatabase()).executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
           continue;
         }
         userManager.getDatabase().saveStatistic(user, stat);

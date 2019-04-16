@@ -34,6 +34,7 @@
 package pl.plajer.murdermystery.events.spectator;
 
 import java.util.Collections;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -56,9 +57,8 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajerlair.core.spectator.SpectatorSettingsMenu;
-import pl.plajerlair.core.utils.MinigameUtils;
-import pl.plajerlair.core.utils.XMaterial;
+import pl.plajer.murdermystery.utils.Utils;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 
 /**
  * @author Plajer
@@ -84,28 +84,25 @@ public class SpectatorItemEvents implements Listener {
         return;
       }
       ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
-      if (stack != null && stack.hasItemMeta()) {
-        if (stack.getItemMeta().getDisplayName() == null) {
-          return;
-        }
-        if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
-          e.setCancelled(true);
-          openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
-        } else if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
-          e.setCancelled(true);
-          spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
-        }
+      if (stack == null || !stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
+        return;
+      }
+      if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
+        e.setCancelled(true);
+        openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
+      } else if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
+        e.setCancelled(true);
+        spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
       }
     }
   }
 
-  @Deprecated //not multi arena per world safe
   private void openSpectatorMenu(World world, Player p) {
-    Inventory inventory = plugin.getServer().createInventory(null, MinigameUtils.serializeInt(ArenaRegistry.getArena(p).getPlayers().size()),
+    Inventory inventory = plugin.getServer().createInventory(null, Utils.serializeInt(ArenaRegistry.getArena(p).getPlayers().size()),
         ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
+    Set<Player> players = ArenaRegistry.getArena(p).getPlayers();
     for (Player player : world.getPlayers()) {
-      Arena arena = ArenaRegistry.getArena(player);
-      if (arena != null && ArenaRegistry.getArena(p).getPlayers().contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
+      if (players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
         ItemStack skull;
         if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
           skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
@@ -143,23 +140,19 @@ public class SpectatorItemEvents implements Listener {
         || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
       return;
     }
-    if (e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
-      e.setCancelled(true);
-      if (e.isLeftClick() || e.isRightClick()) {
-        ItemMeta meta = e.getCurrentItem().getItemMeta();
-        for (Player player : arena.getPlayers()) {
-          if (player.getName().equalsIgnoreCase(meta.getDisplayName()) || ChatColor.stripColor(meta.getDisplayName()).contains(player.getName())) {
-            p.sendMessage(ChatManager.formatMessage(arena, ChatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), player));
-            p.teleport(player);
-            p.closeInventory();
-            e.setCancelled(true);
-            return;
-
-          }
-        }
-        p.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
+    if (!e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
+      return;
+    }
+    e.setCancelled(true);
+    ItemMeta meta = e.getCurrentItem().getItemMeta();
+    for (Player player : arena.getPlayers()) {
+      if (player.getName().equalsIgnoreCase(meta.getDisplayName()) || ChatColor.stripColor(meta.getDisplayName()).contains(player.getName())) {
+        p.sendMessage(ChatManager.formatMessage(arena, ChatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), player));
+        p.teleport(player);
+        p.closeInventory();
+        return;
       }
-      e.setCancelled(true);
+      p.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
     }
   }
 

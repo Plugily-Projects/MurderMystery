@@ -39,6 +39,7 @@ import java.util.List;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -50,7 +51,7 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajerlair.core.utils.MinigameUtils;
+import pl.plajerlair.commonsbox.string.StringFormatUtils;
 
 /**
  * @author Plajer
@@ -60,6 +61,23 @@ import pl.plajerlair.core.utils.MinigameUtils;
 public class Utils {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
+
+  /**
+   * Serialize int to use it in Inventories size
+   * ex. you have 38 kits and it will serialize it to 45 (9*5)
+   * because it is valid inventory size
+   * next ex. you have 55 items and it will serialize it to 63 (9*7) not 54 because it's too less
+   *
+   * @param i integer to serialize
+   * @return serialized number
+   */
+  public static int serializeInt(Integer i) {
+    if ((i % 9) == 0) {
+      return i;
+    } else {
+      return (int) ((Math.ceil(i / 9) * 9) + 9);
+    }
+  }
 
   /**
    * Checks whether itemstack is named (not null, has meta and display name)
@@ -86,7 +104,7 @@ public class Utils {
         if (ticks >= seconds * 20) {
           this.cancel();
         }
-        String progress = MinigameUtils.getProgressBar(ticks, 5 * 20, 10, "■", "&a", "&c");
+        String progress = StringFormatUtils.getProgressBar(ticks, 5 * 20, 10, "■", ChatColor.COLOR_CHAR + "a", ChatColor.COLOR_CHAR + "c");
         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatManager.colorMessage("In-Game.Cooldown-Format")
             .replace("%progress%", progress).replace("%time%", String.valueOf((double) (100 - ticks) / 20))));
         ticks += 10;

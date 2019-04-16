@@ -44,10 +44,9 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.user.data.FileStats;
-import pl.plajer.murdermystery.user.data.MySQLManager;
+import pl.plajer.murdermystery.user.data.MysqlManager;
 import pl.plajer.murdermystery.user.data.UserDatabase;
-import pl.plajerlair.core.debug.Debugger;
-import pl.plajerlair.core.debug.LogLevel;
+import pl.plajer.murdermystery.utils.Debugger;
 
 /**
  * @author Plajer
@@ -61,7 +60,7 @@ public class UserManager {
 
   public UserManager(Main plugin) {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      database = new MySQLManager(plugin);
+      database = new MysqlManager(plugin);
     } else {
       database = new FileStats(plugin);
     }
@@ -83,7 +82,7 @@ public class UserManager {
         return user;
       }
     }
-    Debugger.debug(LogLevel.INFO, "Registering new user with UUID: " + player.getUniqueId() + " (" + player.getName() + ")");
+    Debugger.debug(Debugger.Level.INFO, "Registering new user with UUID: " + player.getUniqueId() + " (" + player.getName() + ")");
     User user = new User(player);
     users.add(user);
     return user;
@@ -101,6 +100,8 @@ public class UserManager {
     if (!stat.isPersistent()) {
       return;
     }
+    //apply before save
+    fixContirbutionStatistics(user);
     database.saveStatistic(user, stat);
   }
 
@@ -109,6 +110,17 @@ public class UserManager {
       return;
     }
     database.loadStatistic(user, stat);
+    //apply after load to override
+    fixContirbutionStatistics(user);
+  }
+
+  private void fixContirbutionStatistics(User user) {
+    if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) <= 0) {
+      user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
+    }
+    if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) <= 0) {
+      user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
+    }
   }
 
   public void removeUser(User user) {

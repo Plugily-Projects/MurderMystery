@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and Tigerpanzer
+ * Copyright (C) 2019  Plajer's Lair - maintained by Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,10 +35,6 @@ package pl.plajer.murdermystery.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import pl.plajer.murdermystery.Main;
 
 /**
  * @author Plajer
@@ -46,24 +42,6 @@ import pl.plajer.murdermystery.Main;
  * Created at 03.08.2018
  */
 public class MessageUtils {
-
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
-
-  public static void sendTitle(Player player, String text) {
-    if (plugin.is1_9_R1() || plugin.is1_10_R1()) {
-      player.sendTitle(text, null);
-    } else {
-      player.sendTitle(text, null, 5, 40, 5);
-    }
-  }
-
-  public static void sendSubTitle(Player player, String text) {
-    if (plugin.is1_9_R1() || plugin.is1_10_R1()) {
-      player.sendTitle(null, text);
-    } else {
-      player.sendTitle(null, text, 5, 40, 5);
-    }
-  }
 
   public static void thisVersionIsNotSupported() {
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "  _   _           _                                                    _                _ ");

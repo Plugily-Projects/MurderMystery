@@ -70,9 +70,9 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.utils.Utils;
-import pl.plajerlair.core.utils.ConfigUtils;
-import pl.plajerlair.core.utils.LocationUtils;
-import pl.plajerlair.core.utils.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 
 /**
  * @author Plajer
@@ -113,7 +113,7 @@ public class SetupInventoryEvents implements Listener {
     String locationString = player.getLocation().getWorld().getName() + "," + player.getLocation().getX() + "," + player.getLocation().getY() + ","
         + player.getLocation().getZ() + "," + player.getLocation().getYaw() + ",0.0";
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    String targetBlock = LocationUtils.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation());
+    String targetBlock = LocationSerializer.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation());
     switch (slot) {
       case SET_ENDING:
         config.set("instances." + arena.getId() + ".Endlocation", locationString);
@@ -125,7 +125,7 @@ public class SetupInventoryEvents implements Listener {
         break;
       case ADD_STARTING:
         List<String> startingSpawns = config.getStringList("instances." + arena.getId() + ".playerspawnpoints");
-        startingSpawns.add(LocationUtils.locationToString(player.getLocation()));
+        startingSpawns.add(LocationSerializer.locationToString(player.getLocation()));
         config.set("instances." + arena.getId() + ".playerspawnpoints", startingSpawns);
         String startingProgress = startingSpawns.size() >= 4 ? "&e✔ Completed | " : "&c✘ Not completed | ";
         player.sendMessage(ChatManager.colorRawMessage(startingProgress + "&aPlayer spawn added! &8(&7" + startingSpawns.size() + "/4&8)"));
@@ -177,7 +177,7 @@ public class SetupInventoryEvents implements Listener {
         break;
       case ADD_GOLD_SPAWN:
         List<String> goldSpawns = config.getStringList("instances." + arena.getId() + ".goldspawnpoints");
-        goldSpawns.add(LocationUtils.locationToString(player.getLocation()));
+        goldSpawns.add(LocationSerializer.locationToString(player.getLocation()));
         config.set("instances." + arena.getId() + ".goldspawnpoints", goldSpawns);
         String goldProgress = goldSpawns.size() >= 4 ? "&e✔ Completed | " : "&c✘ Not completed | ";
         player.sendMessage(ChatManager.colorRawMessage(goldProgress + "&aGold spawn added! &8(&7" + goldSpawns.size() + "/4&8)"));
@@ -189,16 +189,15 @@ public class SetupInventoryEvents implements Listener {
         }
         String[] locations = new String[] {"lobbylocation", "Endlocation"};
         String[] spawns = new String[] {"goldspawnpoints", "playerspawnpoints"};
+        FileConfiguration arenasConfig = ConfigUtils.getConfig(plugin, "arenas");
         for (String s : locations) {
-          if (!ConfigUtils.getConfig(plugin, "arenas").isSet("instances." + arena.getId() + "." + s) || ConfigUtils.getConfig(plugin, "arenas")
-              .getString("instances." + arena.getId() + "." + s).equals(LocationUtils.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
+          if (!arenasConfig.isSet("instances." + arena.getId() + "." + s) || arenasConfig.getString("instances." + arena.getId() + "." + s).equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
             e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)");
             return;
           }
         }
         for (String s : spawns) {
-          if (!ConfigUtils.getConfig(plugin, "arenas").isSet("instances." + arena.getId() + "." + s) || ConfigUtils.getConfig(plugin, "arenas")
-              .getStringList("instances." + arena.getId() + "." + s).size() < 3) {
+          if (!arenasConfig.isSet("instances." + arena.getId() + "." + s) || arenasConfig.getStringList("instances." + arena.getId() + "." + s).size() < 3) {
             e.getWhoClicked().sendMessage(ChatColor.RED + "Arena validation failed! Please configure following spawns properly: " + s + " (must be minimum 3 spawns)");
             return;
           }
@@ -219,24 +218,24 @@ public class SetupInventoryEvents implements Listener {
         arena.setReady(true);
         List<Location> playerSpawnPoints = new ArrayList<>();
         for (String loc : config.getStringList("instances." + arena.getId() + ".playerspawnpoints")) {
-          playerSpawnPoints.add(LocationUtils.getLocation(loc));
+          playerSpawnPoints.add(LocationSerializer.getLocation(loc));
         }
         arena.setPlayerSpawnPoints(playerSpawnPoints);
         List<Location> goldSpawnPoints = new ArrayList<>();
         for (String loc : config.getStringList("instances." + arena.getId() + ".goldspawnpoints")) {
-          goldSpawnPoints.add(LocationUtils.getLocation(loc));
+          goldSpawnPoints.add(LocationSerializer.getLocation(loc));
         }
         arena.setGoldSpawnPoints(goldSpawnPoints);
 
         List<SpecialBlock> specialBlocks = new ArrayList<>();
         if (config.isSet("instances." + arena.getId() + ".mystery-cauldrons")) {
           for (String loc : config.getStringList("instances." + arena.getId() + ".mystery-cauldrons")) {
-            specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
+            specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
           }
         }
         if (config.isSet("instances." + arena.getId() + ".confessionals")) {
           for (String loc : config.getStringList("instances." + arena.getId() + ".confessionals")) {
-            specialBlocks.add(new SpecialBlock(LocationUtils.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
+            specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
           }
         }
         for (SpecialBlock specialBlock : specialBlocks) {
@@ -248,8 +247,8 @@ public class SetupInventoryEvents implements Listener {
         arena.setMinimumPlayers(config.getInt("instances." + arena.getId() + ".minimumplayers"));
         arena.setMaximumPlayers(config.getInt("instances." + arena.getId() + ".maximumplayers"));
         arena.setMapName(config.getString("instances." + arena.getId() + ".mapname"));
-        arena.setLobbyLocation(LocationUtils.getLocation(config.getString("instances." + arena.getId() + ".lobbylocation")));
-        arena.setEndLocation(LocationUtils.getLocation(config.getString("instances." + arena.getId() + ".Endlocation")));
+        arena.setLobbyLocation(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".lobbylocation")));
+        arena.setEndLocation(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".Endlocation")));
         ArenaRegistry.registerArena(arena);
         arena.start();
         for (Sign s : signsToUpdate) {
@@ -273,7 +272,6 @@ public class SetupInventoryEvents implements Listener {
         List<String> cauldrons = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".mystery-cauldrons"));
         cauldrons.add(targetBlock);
         config.set("instances." + arena.getId() + ".mystery-cauldrons", cauldrons);
-        ConfigUtils.saveConfig(plugin, config, "arenas");
         player.sendMessage("Murder Mystery: New mystery cauldron for arena/instance " + arena.getId() + " was added");
         break;
       case ADD_CONFESSIONAL:
@@ -287,9 +285,13 @@ public class SetupInventoryEvents implements Listener {
         List<String> confessionals = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".confessionals"));
         confessionals.add(targetBlock);
         config.set("instances." + arena.getId() + ".confessionals", confessionals);
-        ConfigUtils.saveConfig(plugin, config, "arenas");
         player.sendMessage("Murder Mystery: New confessional for arena/instance " + arena.getId() + " was added");
         break;
+      /*case SPECIAL_BLOCK_REMOVER:
+        player.getInventory().addItem(new ItemBuilder(Material.BLAZE_ROD).name(ChatManager.colorRawMessage("&e&lSpecial Blocks Remover")).build());
+        player.sendMessage(ChatManager.colorRawMessage("&6You received special blocks remover wand! Click special block to remove it from any arena configuration!\n" +
+            "&cIt will require plugin/server restart to apply changes!"));
+        break;*/
     }
     ConfigUtils.saveConfig(plugin, config, "arenas");
   }
