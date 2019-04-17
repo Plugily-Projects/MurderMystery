@@ -105,7 +105,7 @@ public class JoinEvent implements Listener {
     if (!(plugin.getConfig().getBoolean("Update-Notifier.Enabled", true) || event.getPlayer().hasPermission("murdermystery.updatenotify"))) {
       return;
     }
-    Bukkit.getScheduler().runTaskLater(plugin, () -> UpdateChecker.init(plugin, 1 /* todo */).requestUpdateCheck().whenComplete((result, exception) -> {
+    Bukkit.getScheduler().runTaskLater(plugin, () -> UpdateChecker.init(plugin, 66614).requestUpdateCheck().whenComplete((result, exception) -> {
       if (!result.requiresUpdate()) {
         return;
       }
