@@ -1,3 +1,7 @@
+### 1.0.1 Release (18.04.2019)
+* CorpseReborn and HolographicDisplays are now set as soft dependencies in plugin.yml to allow plugin loader
+to load them before MurderMystery starts and avoid plugin start failure
+
 ### 1.0.0 Release (28.10.2018-16.04.2019)
 * Added Russian, Spanish and Dutch locales support
 * Detective bow will now spawn bit higher to avoid touching the floor
