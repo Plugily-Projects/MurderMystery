@@ -115,7 +115,7 @@ public class Main extends JavaPlugin {
   }
 
   private boolean validateIfPluginShouldStart() {
-    if (!getServer().getPluginManager().isPluginEnabled("CropseReborn") || !getServer().getPluginManager().isPluginEnabled("HolographicDisplays")) {
+    if (!getServer().getPluginManager().isPluginEnabled("CorpseReborn") || !getServer().getPluginManager().isPluginEnabled("HolographicDisplays")) {
       MessageUtils.dependencyWarning();
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "You don't have CorpseReborn or HolographicDisplays installed!");
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "These plugins are required for Murder Mystery to work! Shutting off...");
