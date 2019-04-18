@@ -3,7 +3,8 @@ main: pl.plajer.murdermystery.Main
 authors: [Plajer, Tigerpanzer]
 version: ${project.version}
 api-version: 1.13
-softdepend: [CorpseReborn, HolographicDisplays, PlaceholderAPI, LeaderHeads]
+depend: [CorpseReborn, HolographicDisplays]
+softdepend: [PlaceholderAPI, LeaderHeads]
 
 commands:
   MurderMystery:
