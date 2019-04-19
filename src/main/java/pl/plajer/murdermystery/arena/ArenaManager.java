@@ -16,21 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Murder Mystery is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * Murder Mystery is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package pl.plajer.murdermystery.arena;
 
 import java.util.ArrayList;
@@ -281,11 +266,19 @@ public class ArenaManager {
     List<String> summaryMessages = LanguageManager.getLanguageList("In-Game.Messages.Game-End-Messages.Summary-Message");
     arena.getScoreboardManager().stopAllScoreboards();
     Random rand = new Random();
+
+    boolean murderWon = arena.getPlayersLeft().size() == 1 && arena.getPlayersLeft().equals(arena.getCharacter(Arena.CharacterType.MURDERER));
+
     for (final Player player : arena.getPlayers()) {
       User user = plugin.getUserManager().getUser(player);
       if (Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
         user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, rand.nextInt(4) + 1);
         user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, rand.nextInt(4) + 1);
+      }
+      if (murderWon && !Role.isRole(Role.MURDERER, player)) {
+        user.addStat(StatsStorage.StatisticType.LOSES, 1);
+      } else if (murderWon && Role.isRole(Role.MURDERER, player)) {
+        user.addStat(StatsStorage.StatisticType.WINS, 1);
       }
       player.getInventory().clear();
       player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());

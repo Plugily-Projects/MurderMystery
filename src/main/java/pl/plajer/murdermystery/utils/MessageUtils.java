@@ -16,21 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Murder Mystery is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * Murder Mystery is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package pl.plajer.murdermystery.utils;
 
 import org.bukkit.Bukkit;
@@ -42,6 +27,21 @@ import org.bukkit.ChatColor;
  * Created at 03.08.2018
  */
 public class MessageUtils {
+
+  public static void dependencyWarning() {
+    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "\n" +
+        "\n" +
+        "  _____                                 _                           \n" +
+        " |  __ \\                               | |                          \n" +
+        " | |  | |  ___  _ __    ___  _ __    __| |  ___  _ __    ___  _   _ \n" +
+        " | |  | | / _ \\| '_ \\  / _ \\| '_ \\  / _` | / _ \\| '_ \\  / __|| | | |\n" +
+        " | |__| ||  __/| |_) ||  __/| | | || (_| ||  __/| | | || (__ | |_| |\n" +
+        " |_____/  \\___|| .__/  \\___||_| |_| \\__,_| \\___||_| |_| \\___| \\__, |\n" +
+        "               | |                                             __/ |\n" +
+        "               |_|                                            |___/ \n" +
+        "\n" +
+        " \n");
+  }
 
   public static void thisVersionIsNotSupported() {
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "  _   _           _                                                    _                _ ");

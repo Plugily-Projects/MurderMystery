@@ -16,41 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Murder Mystery is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * Murder Mystery is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/*
- * Murder Mystery is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * Murder Mystery is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package pl.plajer.murdermystery.handlers.language;
-
-import com.earth2me.essentials.Essentials;
-import com.wasteofplastic.askyblock.ASLocale;
-import com.wasteofplastic.askyblock.ASkyBlock;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -67,7 +33,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.services.ServiceRegistry;
@@ -80,7 +45,6 @@ import pl.plajerlair.services.locale.LocaleService;
  * <p>
  * Created at 03.08.2018
  */
-//todo check for changes
 public class LanguageManager {
 
   private static Main plugin;
@@ -96,12 +60,6 @@ public class LanguageManager {
     languageConfig = ConfigUtils.getConfig(plugin, "language");
     registerLocales();
     setupLocale();
-    //we will wait until server is loaded, we won't soft depend those plugins
-    Bukkit.getScheduler().runTaskLater(LanguageManager.plugin, () -> {
-      if (isDefaultLanguageUsed()) {
-        suggestLocale();
-      }
-    }, 100);
   }
 
   private static void registerLocales() {
@@ -171,54 +129,6 @@ public class LanguageManager {
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Murder Mystery] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: "
         + pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
     loadProperties();
-  }
-
-  private static void suggestLocale() {
-    //we will catch any exceptions in case of api changes
-    boolean hasLocale = false;
-    String localeName = "";
-    try {
-      if (plugin.getServer().getPluginManager().isPluginEnabled("ASkyBlock")) {
-        ASLocale locale = ASkyBlock.getPlugin().myLocale();
-        switch (locale.getLocaleName()) {
-          case "pl-PL":
-          case "de-DE":
-          case "fr-FR":
-          case "zh-CN":
-          case "ko-KR":
-          case "ro-RO":
-            hasLocale = true;
-            localeName = locale.getLocaleName();
-            break;
-          default:
-            break;
-        }
-      }
-      if (plugin.getServer().getPluginManager().isPluginEnabled("Essentials")) {
-        Essentials ess = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
-        java.util.Locale locale = ess.getI18n().getCurrentLocale();
-        switch (locale.getCountry()) {
-          case "PL":
-          case "DE":
-          case "KR":
-          case "FR":
-          case "ZH":
-          case "RO":
-            hasLocale = true;
-            localeName = locale.getDisplayName();
-          default:
-            break;
-        }
-      }
-    } catch (Exception e) {
-      Debugger.debug(Debugger.Level.WARN, "[WARN] Plugin has occured a problem suggesting locale, probably API change.");
-    }
-    if (hasLocale) {
-      MessageUtils.info();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Murder Mystery] We've found that you use locale " + localeName + " in other plugins.");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "We recommend you to change plugin's locale to " + localeName + " to have best plugin experience.");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "You can change plugin's locale in config.yml in locale section!");
-    }
   }
 
   public static boolean isDefaultLanguageUsed() {

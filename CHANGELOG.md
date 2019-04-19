@@ -1,3 +1,13 @@
+### 1.0.2 Release (19.04.2019)
+* Fixed Hero in game summary was always `Nobody`
+* Fixed error when nobody was alive and game has ended then the exception would occur
+* Now when typing /mma forcestart with only 1 player game won't start
+* Added few pro tips when editing arena via /mm <arena> edit
+
+### 1.0.1 Release (18.04.2019)
+* CorpseReborn and HolographicDisplays are now set as soft dependencies in plugin.yml to allow plugin loader
+to load them before MurderMystery starts and avoid plugin start failure
+
 ### 1.0.0 Release (28.10.2018-16.04.2019)
 * Added Russian, Spanish and Dutch locales support
 * Detective bow will now spawn bit higher to avoid touching the floor
@@ -14,6 +24,11 @@ throw errors in lobby stage
 * Fixed sword glitch after throwing it
 * Users cannot longer pickup anything from the ground
 * Spectators cannot use special blocks anymore
+* CorpseReborn and HolographicDisplays are no longer hardcoded dependencies in plugin.yml so without them
+plugin will start with fancy message to install them without throwing not user-friendly exception
+* Fixed kills, loses and wins statistics weren't added anytime
+* Misc code performance improvements
+* Removed Locale suggester
 > Release Candidate 2 (28.03.2019)
 * Setup GUI will now display 0 minimum players option if accidentally set
 * Bow Time prayer will now add new arrow to the inventory not set and override current amount

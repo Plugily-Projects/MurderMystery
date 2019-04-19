@@ -16,51 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Murder Mystery is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * Murder Mystery is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/*
- * Murder Mystery is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * Murder Mystery is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/*
- * Murder Mystery is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * Murder Mystery is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package pl.plajer.murdermystery;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
@@ -297,7 +252,7 @@ public class Main extends JavaPlugin {
     if (!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
       return;
     }
-    UpdateChecker.init(this, 1 /* todo */).requestUpdateCheck().whenComplete((result, exception) -> {
+    UpdateChecker.init(this, 66614).requestUpdateCheck().whenComplete((result, exception) -> {
       if (!result.requiresUpdate()) {
         return;
       }

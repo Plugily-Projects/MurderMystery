@@ -16,36 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Murder Mystery is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * Murder Mystery is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/*
- * Murder Mystery is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * Murder Mystery is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Murder Mystery.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package pl.plajer.murdermystery.arena;
 
 import org.bukkit.Bukkit;
@@ -240,6 +210,8 @@ public class ArenaEvents implements Listener {
     victim.damage(100.0);
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
     User user = plugin.getUserManager().getUser(attacker);
+
+    user.addStat(StatsStorage.StatisticType.KILLS, 1);
     user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
     ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
 
@@ -277,6 +249,7 @@ public class ArenaEvents implements Listener {
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
     User user = plugin.getUserManager().getUser(attacker);
 
+    user.addStat(StatsStorage.StatisticType.KILLS, 1);
     if (Role.isRole(Role.MURDERER, attacker)) {
       user.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
       ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
@@ -286,9 +259,9 @@ public class ArenaEvents implements Listener {
     victim.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"), null, 5, 40, 50);
 
     if (Role.isRole(Role.MURDERER, victim)) {
+      arena.setCharacter(Arena.CharacterType.HERO, attacker);
       ArenaUtils.onMurdererDeath(arena);
       ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.KILL_MURDERER, 0);
-      arena.setCharacter(Arena.CharacterType.HERO, attacker);
     } else if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
       ArenaUtils.dropBowAndAnnounce(arena, victim);
     } else if (Role.isRole(Role.INNOCENT, victim)) {
@@ -347,7 +320,7 @@ public class ArenaEvents implements Listener {
       return;
     }
     User user = plugin.getUserManager().getUser(player);
-    arena.addStat(player, StatsStorage.StatisticType.DEATHS);
+    user.addStat(StatsStorage.StatisticType.DEATHS, 1);
     player.teleport(loc);
     user.setSpectator(true);
     player.setGameMode(GameMode.SURVIVAL);
