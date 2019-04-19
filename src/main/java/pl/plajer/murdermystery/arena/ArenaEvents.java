@@ -259,9 +259,9 @@ public class ArenaEvents implements Listener {
     victim.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"), null, 5, 40, 50);
 
     if (Role.isRole(Role.MURDERER, victim)) {
+      arena.setCharacter(Arena.CharacterType.HERO, attacker);
       ArenaUtils.onMurdererDeath(arena);
       ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.KILL_MURDERER, 0);
-      arena.setCharacter(Arena.CharacterType.HERO, attacker);
     } else if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
       ArenaUtils.dropBowAndAnnounce(arena, victim);
     } else if (Role.isRole(Role.INNOCENT, victim)) {

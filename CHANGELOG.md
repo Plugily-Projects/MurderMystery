@@ -1,3 +1,6 @@
+### 1.0.2 Release (19.04.2019)
+* Fixed Hero in game summary was always `Nobody`
+
 ### 1.0.1 Release (18.04.2019)
 * CorpseReborn and HolographicDisplays are now set as soft dependencies in plugin.yml to allow plugin loader
 to load them before MurderMystery starts and avoid plugin start failure
