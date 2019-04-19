@@ -147,6 +147,7 @@ public class MainCommand implements CommandExecutor {
           sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
           return true;
         }
+        SetupInventory.sendProTip((Player) sender);
         new SetupInventory(arena).openInventory((Player) sender);
         return true;
       }
