@@ -136,6 +136,9 @@ public class AdminCommands extends MainCommand {
       return;
     }
     Arena arena = ArenaRegistry.getArena((Player) sender);
+    if (arena.getPlayers().size() < 2) {
+      return;
+    }
     if (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
       arena.setArenaState(ArenaState.STARTING);
       arena.setForceStart(true);

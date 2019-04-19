@@ -1,5 +1,7 @@
 ### 1.0.2 Release (19.04.2019)
 * Fixed Hero in game summary was always `Nobody`
+* Fixed error when nobody was alive and game has ended then the exception would occur
+* Now when typing /mma forcestart with only 1 player game won't start
 
 ### 1.0.1 Release (18.04.2019)
 * CorpseReborn and HolographicDisplays are now set as soft dependencies in plugin.yml to allow plugin loader
