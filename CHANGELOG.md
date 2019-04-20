@@ -1,3 +1,8 @@
+### 1.0.3 Release (20.04.2019)
+* Fixed MySQL database didn't work due to create statement failure
+* Now /mma reload command will force stop all current games before Arenas reload, still command usage is discouraged! (uservoice report)
+* Leaderheads stats placeholders length has been decreased to fit in the sign (uservoice report)
+
 ### 1.0.2 Release (19.04.2019)
 * Fixed Hero in game summary was always `Nobody`
 * Fixed error when nobody was alive and game has ended then the exception would occur

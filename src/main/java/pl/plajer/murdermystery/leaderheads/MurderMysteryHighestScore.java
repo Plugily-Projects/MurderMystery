@@ -36,7 +36,7 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 public class MurderMysteryHighestScore extends OnlineDataCollector {
 
   public MurderMysteryHighestScore() {
-    super("murdermystery-score", "MurderMystery", BoardType.DEFAULT, ChatManager.colorMessage("Leaderheads.Top-Command-Inv-Title"),
+    super("mmpl-score", "MurderMystery", BoardType.DEFAULT, ChatManager.colorMessage("Leaderheads.Top-Command-Inv-Title"),
         ChatManager.colorMessage("Leaderheads.Top-Command-Name").replace("%stat%", "kills"), Arrays.asList(null, null, ChatManager.colorMessage("Leaderheads.Leaderboard-Value.Highest-Score"),
             null));
   }
