@@ -54,7 +54,7 @@ public class MysqlManager implements UserDatabase {
           + "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n"
           + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
           + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
-          + "  `contribmurderer` int(11) NOT NULL DEFAULT '1'\n"
+          + "  `contribmurderer` int(11) NOT NULL DEFAULT '1',\n"
           + "  `contribdetective` int(11) NOT NULL DEFAULT '1'\n"
           + ");");
     } catch (SQLException e) {

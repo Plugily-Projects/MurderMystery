@@ -1,3 +1,6 @@
+### 1.0.3 Release (20.04.2019)
+* Fixed MySQL database didn't work due to create statement failure
+
 ### 1.0.2 Release (19.04.2019)
 * Fixed Hero in game summary was always `Nobody`
 * Fixed error when nobody was alive and game has ended then the exception would occur
