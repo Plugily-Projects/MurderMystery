@@ -36,7 +36,7 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 public class MurderMysteryLoses extends OnlineDataCollector {
 
   public MurderMysteryLoses() {
-    super("murdermystery-loses", "MurderMystery", BoardType.DEFAULT, ChatManager.colorMessage("Leaderheads.Top-Command-Inv-Title"),
+    super("mmpl-loses", "MurderMystery", BoardType.DEFAULT, ChatManager.colorMessage("Leaderheads.Top-Command-Inv-Title"),
         ChatManager.colorMessage("Leaderheads.Top-Command-Name").replace("%stat%", "kills"), Arrays.asList(null, null, ChatManager.colorMessage("Leaderheads.Leaderboard-Value.Loses"), null));
   }
 
