@@ -47,6 +47,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -77,8 +78,8 @@ import pl.plajerlair.commonsbox.number.NumberUtils;
  */
 public class Arena extends BukkitRunnable {
 
-  private Random random;
-  private Main plugin;
+  private static Random random = new Random();
+  private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private Set<Player> players = new HashSet<>();
   @Deprecated //mergeable
   private List<Location> goldSpawnPoints = new ArrayList<>();
@@ -108,8 +109,7 @@ public class Arena extends BukkitRunnable {
   private boolean ready = true;
   private boolean forceStart = false;
 
-  public Arena(String id, Main plugin) {
-    this.plugin = plugin;
+  public Arena(String id) {
     arenaState = ArenaState.WAITING_FOR_PLAYERS;
     this.id = id;
     for (ArenaOption option : ArenaOption.values()) {
@@ -119,7 +119,6 @@ public class Arena extends BukkitRunnable {
       gameBar = Bukkit.createBossBar(ChatManager.colorMessage("Bossbar.Main-Title"), BarColor.BLUE, BarStyle.SOLID);
     }
     scoreboardManager = new ScoreboardManager(this);
-    random = new Random();
   }
 
   public boolean isReady() {

@@ -184,7 +184,7 @@ public class SetupInventoryEvents implements Listener {
             }
           }
         }
-        arena = new Arena(arena.getId(), plugin);
+        arena = new Arena(arena.getId());
         arena.setReady(true);
         List<Location> playerSpawnPoints = new ArrayList<>();
         for (String loc : config.getStringList("instances." + arena.getId() + ".playerspawnpoints")) {

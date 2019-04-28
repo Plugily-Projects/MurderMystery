@@ -49,9 +49,9 @@ import pl.plajerlair.commonsbox.string.StringFormatUtils;
  */
 public class ScoreboardManager {
 
+  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static String boardTitle = ChatManager.colorMessage("Scoreboard.Title");
   private List<Scoreboard> scoreboards = new ArrayList<>();
-  private Main plugin = JavaPlugin.getPlugin(Main.class);
-  private String boardTitle = ChatManager.colorMessage("Scoreboard.Title");
   private Arena arena;
 
   public ScoreboardManager(Arena arena) {
