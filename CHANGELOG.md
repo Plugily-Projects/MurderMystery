@@ -2,6 +2,7 @@
 * Fixed wins/loses weren't properly assigned on game end, only murderer received these stats
 * You can no longer join the game if it's in restarting state
 * You can no longer swap items via hands (i.e. main hand > off hand) when being in game
+* Added `win` and `lose` sections to rewards.yml when player wins or loses the game
 
 ### 1.0.3 Release (20.04.2019)
 * Fixed MySQL database didn't work due to create statement failure

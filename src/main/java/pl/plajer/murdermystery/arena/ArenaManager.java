@@ -46,6 +46,7 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
+import pl.plajer.murdermystery.handlers.rewards.Reward;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.ItemPosition;
@@ -281,14 +282,18 @@ public class ArenaManager {
       if (murderWon) {
         if (Role.isRole(Role.MURDERER, player)) {
           user.addStat(StatsStorage.StatisticType.WINS, 1);
+          plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
         } else {
           user.addStat(StatsStorage.StatisticType.LOSES, 1);
+          plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
         }
       } else {
         if (!Role.isRole(Role.MURDERER, player)) {
           user.addStat(StatsStorage.StatisticType.WINS, 1);
+          plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
         } else {
           user.addStat(StatsStorage.StatisticType.LOSES, 1);
+          plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
         }
       }
       player.getInventory().clear();
