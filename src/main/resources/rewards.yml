@@ -47,4 +47,10 @@ rewards:
   murdererkill:
     - eco give %PLAYER% 2
     - chance(10):eco give %PLAYER% 8
+  # Commands executed when player wins the game
+  win:
+    - say I won the game!
+  # Commands executed when player loses the game
+  lose:
+    - say I lost the game!
 

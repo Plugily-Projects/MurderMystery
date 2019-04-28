@@ -40,6 +40,7 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
@@ -81,6 +82,13 @@ public class Events implements Listener {
     if (ArenaRegistry.isInArena(e.getClicker())) {
       e.setCancelled(true);
       e.getClicker().closeInventory();
+    }
+  }
+
+  @EventHandler
+  public void onItemSwap(PlayerSwapHandItemsEvent e) {
+    if (ArenaRegistry.isInArena(e.getPlayer())) {
+      e.setCancelled(true);
     }
   }
 

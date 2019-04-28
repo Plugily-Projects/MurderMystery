@@ -46,6 +46,7 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
+import pl.plajer.murdermystery.handlers.rewards.Reward;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.ItemPosition;
@@ -89,6 +90,9 @@ public class ArenaManager {
         player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-No-Permission"));
         return;
       }
+    }
+    if (arena.getArenaState() == ArenaState.RESTARTING) {
+      return;
     }
     Debugger.debug(Debugger.Level.INFO, "Final join attempt, " + player.getName());
     User user = plugin.getUserManager().getUser(player);
@@ -275,10 +279,22 @@ public class ArenaManager {
         user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, rand.nextInt(4) + 1);
         user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, rand.nextInt(4) + 1);
       }
-      if (murderWon && !Role.isRole(Role.MURDERER, player)) {
-        user.addStat(StatsStorage.StatisticType.LOSES, 1);
-      } else if (murderWon && Role.isRole(Role.MURDERER, player)) {
-        user.addStat(StatsStorage.StatisticType.WINS, 1);
+      if (murderWon) {
+        if (Role.isRole(Role.MURDERER, player)) {
+          user.addStat(StatsStorage.StatisticType.WINS, 1);
+          plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
+        } else {
+          user.addStat(StatsStorage.StatisticType.LOSES, 1);
+          plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
+        }
+      } else {
+        if (!Role.isRole(Role.MURDERER, player)) {
+          user.addStat(StatsStorage.StatisticType.WINS, 1);
+          plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
+        } else {
+          user.addStat(StatsStorage.StatisticType.LOSES, 1);
+          plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
+        }
       }
       player.getInventory().clear();
       player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());

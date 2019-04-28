@@ -154,7 +154,7 @@ public class SetupInventory {
         .build());*/
   }
 
-  public static void sendProTip(Player p) {
+  private static void sendProTip(Player p) {
     int rand = new Random().nextInt(8 + 1);
     switch (rand) {
       case 0:
@@ -177,7 +177,7 @@ public class SetupInventory {
     }
   }
 
-  private String isOptionDone(String path) {
+  private static String isOptionDone(String path) {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     if (config.isSet(path)) {
       return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(value: " + config.getString(path) + ")";
@@ -185,7 +185,7 @@ public class SetupInventory {
     return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
   }
 
-  private String isOptionDoneList(String path, int minimum) {
+  private static String isOptionDoneList(String path, int minimum) {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     if (config.isSet(path)) {
       if (config.getStringList(path).size() < minimum) {
@@ -196,7 +196,7 @@ public class SetupInventory {
     return ChatColor.GOLD + "" + ChatColor.BOLD + "Done: " + ChatColor.RED + "No";
   }
 
-  private String isOptionDoneBool(String path) {
+  private static String isOptionDoneBool(String path) {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     if (config.isSet(path)) {
       if (Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(LocationSerializer.getLocation(config.getString(path)))) {
@@ -212,6 +212,7 @@ public class SetupInventory {
   }
 
   public void openInventory(Player player) {
+    sendProTip(player);
     player.openInventory(inventory);
   }
 

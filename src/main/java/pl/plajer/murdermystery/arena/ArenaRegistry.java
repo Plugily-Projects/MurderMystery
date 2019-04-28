@@ -134,7 +134,7 @@ public class ArenaRegistry {
       if (s.contains("default")) {
         continue;
       }
-      arena = new Arena(id, plugin);
+      arena = new Arena(id);
       arena.setMinimumPlayers(config.getInt(s + "minimumplayers", 2));
       arena.setMaximumPlayers(config.getInt(s + "maximumplayers", 4));
       arena.setMapName(config.getString(s + "mapname", "none"));

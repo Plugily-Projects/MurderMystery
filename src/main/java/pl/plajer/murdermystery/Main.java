@@ -94,6 +94,7 @@ public class Main extends JavaPlugin {
   private MainCommand mainCommand;
   private CorpseHandler corpseHandler;
   private ConfigPreferences configPreferences;
+  private HookManager hookManager;
   private UserManager userManager;
 
   @Override
@@ -112,6 +113,10 @@ public class Main extends JavaPlugin {
     setupFiles();
     initializeClasses();
     checkUpdate();
+
+    Debugger.debug(Debugger.Level.INFO, "Plugin loaded! Hooking into soft-dependencies in a while!");
+    //start hook manager later in order to allow soft-dependencies to fully load
+    Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20 * 5);
   }
 
   private boolean validateIfPluginShouldStart() {
@@ -146,8 +151,10 @@ public class Main extends JavaPlugin {
     Debugger.debug(Debugger.Level.INFO, "System disable init");
     Bukkit.getLogger().removeHandler(exceptionLogHandler);
     saveAllUserStatistics();
-    for (Hologram hologram : HologramsAPI.getHolograms(this)) {
-      hologram.delete();
+    if (hookManager.isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+      for (Hologram hologram : HologramsAPI.getHolograms(this)) {
+        hologram.delete();
+      }
     }
     if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       getMySQLDatabase().shutdownConnPool();
@@ -310,6 +317,10 @@ public class Main extends JavaPlugin {
 
   public CorpseHandler getCorpseHandler() {
     return corpseHandler;
+  }
+
+  public HookManager getHookManager() {
+    return hookManager;
   }
 
   public UserManager getUserManager() {

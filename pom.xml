@@ -24,7 +24,7 @@
 
     <groupId>pl.plajer</groupId>
     <artifactId>murdermystery</artifactId>
-    <version>1.0.3</version>
+    <version>1.1.0</version>
     <name>MurderMystery</name>
 
     <properties>
@@ -242,8 +242,12 @@
                         <configuration>
                             <relocations>
                                 <relocation>
-                                    <pattern>pl.plajerlair.core</pattern>
-                                    <shadedPattern>pl.plajer.murdermystery.plajerlair.core</shadedPattern>
+                                    <pattern>me.tigerhix.lib.scoreboard</pattern>
+                                    <shadedPattern>pl.plajer.murdermystery.utils.scoreboard</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>pl.plajerlair.services</pattern>
+                                    <shadedPattern>pl.plajer.murdermystery.plajerlair.services</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
