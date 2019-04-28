@@ -32,6 +32,7 @@ import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 
+import pl.plajer.murdermystery.HookManager;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.corpse.Corpse;
@@ -63,6 +64,9 @@ public class CorpseHandler implements Listener {
   }
 
   public void spawnCorpse(Player p, Arena arena) {
+    if (!plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+      return;
+    }
     Hologram hologram = HologramsAPI.createHologram(plugin, p.getLocation().clone().add(0, 1.7, 0));
     hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Corpse-Last-Words").replace("%player%", p.getName()));
     boolean found = false;

@@ -54,6 +54,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 
 import pl.plajer.murdermystery.ConfigPreferences;
+import pl.plajer.murdermystery.HookManager;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.api.events.game.MMGameStartEvent;
@@ -130,6 +131,9 @@ public class Arena extends BukkitRunnable {
   }
 
   public void addCorpse(Corpse corpse) {
+    if (!plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+      return;
+    }
     corpses.add(corpse);
   }
 
@@ -825,6 +829,9 @@ public class Arena extends BukkitRunnable {
   }
 
   public void clearCorpses() {
+    if (!plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+      return;
+    }
     for (Corpse corpse : corpses) {
       if (!corpse.getHologram().isDeleted()) {
         corpse.getHologram().delete();
