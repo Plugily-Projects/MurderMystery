@@ -1,3 +1,6 @@
+### 1.1.0 Release (28.04.2019)
+* Fixed wins/loses weren't properly assigned on game end, only murderer received these stats
+
 ### 1.0.3 Release (20.04.2019)
 * Fixed MySQL database didn't work due to create statement failure
 * Now /mma reload command will force stop all current games before Arenas reload, still command usage is discouraged! (uservoice report)

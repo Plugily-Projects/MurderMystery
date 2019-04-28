@@ -275,10 +275,18 @@ public class ArenaManager {
         user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, rand.nextInt(4) + 1);
         user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, rand.nextInt(4) + 1);
       }
-      if (murderWon && !Role.isRole(Role.MURDERER, player)) {
-        user.addStat(StatsStorage.StatisticType.LOSES, 1);
-      } else if (murderWon && Role.isRole(Role.MURDERER, player)) {
-        user.addStat(StatsStorage.StatisticType.WINS, 1);
+      if (murderWon) {
+        if (Role.isRole(Role.MURDERER, player)) {
+          user.addStat(StatsStorage.StatisticType.WINS, 1);
+        } else {
+          user.addStat(StatsStorage.StatisticType.LOSES, 1);
+        }
+      } else {
+        if (!Role.isRole(Role.MURDERER, player)) {
+          user.addStat(StatsStorage.StatisticType.WINS, 1);
+        } else {
+          user.addStat(StatsStorage.StatisticType.LOSES, 1);
+        }
       }
       player.getInventory().clear();
       player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
