@@ -1,5 +1,6 @@
 ### 1.1.0 Release (28.04.2019)
 * Fixed wins/loses weren't properly assigned on game end, only murderer received these stats
+* You can no longer join the game if it's in restarting state
 
 ### 1.0.3 Release (20.04.2019)
 * Fixed MySQL database didn't work due to create statement failure

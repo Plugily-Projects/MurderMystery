@@ -90,6 +90,9 @@ public class ArenaManager {
         return;
       }
     }
+    if (arena.getArenaState() == ArenaState.RESTARTING) {
+      return;
+    }
     Debugger.debug(Debugger.Level.INFO, "Final join attempt, " + player.getName());
     User user = plugin.getUserManager().getUser(player);
     arena.getScoreboardManager().createScoreboard(user);
