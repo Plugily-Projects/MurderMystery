@@ -68,6 +68,7 @@ import pl.plajer.murdermystery.leaderheads.MurderMysteryLoses;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryWins;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
+import pl.plajer.murdermystery.user.data.MysqlManager;
 import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.ExceptionLogHandler;
 import pl.plajer.murdermystery.utils.MessageUtils;
@@ -336,8 +337,8 @@ public class Main extends JavaPlugin {
         if (!stat.isPersistent()) {
           continue;
         }
-        if (userManager.getDatabase() instanceof MysqlDatabase) {
-          ((MysqlDatabase) userManager.getDatabase()).executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+        if (userManager.getDatabase() instanceof MysqlManager) {
+          ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
           continue;
         }
         userManager.getDatabase().saveStatistic(user, stat);

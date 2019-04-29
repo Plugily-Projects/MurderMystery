@@ -101,4 +101,7 @@ public class MysqlManager implements UserDatabase {
     });
   }
 
+  public MysqlDatabase getDatabase() {
+    return database;
+  }
 }
