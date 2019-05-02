@@ -229,6 +229,10 @@
                                     <shadedPattern>pl.plajer.murdermystery.plajerlair.services</shadedPattern>
                                 </relocation>
                                 <relocation>
+                                    <pattern>pl.plajerlair.commonsbox</pattern>
+                                    <shadedPattern>pl.plajer.murdermystery.plajerlair.commonsbox</shadedPattern>
+                                </relocation>
+                                <relocation>
                                     <pattern>org.bstats</pattern>
                                     <shadedPattern>pl.plajer.murdermystery.utils</shadedPattern>
                                 </relocation>
