@@ -82,8 +82,12 @@
             <configuration>
               <relocations>
                 <relocation>
-                  <pattern>pl.plajerlair.core</pattern>
-                  <shadedPattern>pl.plajer.murdermystery.plajerlair.core</shadedPattern>
+                    <pattern>me.tigerhix.lib.scoreboard</pattern>
+                    <shadedPattern>pl.plajer.murdermystery.utils.scoreboard</shadedPattern>
+                </relocation>
+                  <relocation>
+                      <pattern>pl.plajerlair.services</pattern>
+                      <shadedPattern>pl.plajer.murdermystery.plajerlair.services</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.bstats</pattern>

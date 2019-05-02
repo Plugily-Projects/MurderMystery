@@ -18,14 +18,17 @@
 
 package pl.plajer.murdermystery.commands;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -44,10 +47,12 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
  * <p>
  * Created at 05.08.2018
  */
-@Deprecated
+@Deprecated //movable to arguments registry
 public class AdminCommands extends MainCommand {
 
   private static List<CommandData> command = new LinkedList<>();
+  @Deprecated //one class usage highly encouraged
+  private Set<CommandSender> confirmations = new HashSet<>();
 
   static {
     ChatColor gray = ChatColor.GRAY;
@@ -153,6 +158,14 @@ public class AdminCommands extends MainCommand {
     if (!hasPermission(sender, "murdermystery.admin.reload")) {
       return;
     }
+    if (!confirmations.contains(sender)) {
+      confirmations.add(sender);
+      Bukkit.getScheduler().runTaskLater(plugin, () -> confirmations.remove(sender), 20 * 10);
+      sender.sendMessage(ChatManager.PLUGIN_PREFIX
+          + ChatManager.colorRawMessage("&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"));
+      return;
+    }
+    confirmations.remove(sender);
     for (Arena arena : ArenaRegistry.getArenas()) {
       ArenaManager.stopGame(true, arena);
     }
@@ -169,6 +182,14 @@ public class AdminCommands extends MainCommand {
       sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
       return;
     }
+    if (!confirmations.contains(sender)) {
+      confirmations.add(sender);
+      Bukkit.getScheduler().runTaskLater(plugin, () -> confirmations.remove(sender), 20 * 10);
+      sender.sendMessage(ChatManager.PLUGIN_PREFIX
+          + ChatManager.colorRawMessage("&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"));
+      return;
+    }
+    confirmations.remove(sender);
     ArenaManager.stopGame(false, arena);
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
     config.set("instances." + arenaString, null);
