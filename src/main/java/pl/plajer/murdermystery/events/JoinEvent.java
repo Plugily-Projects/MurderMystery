@@ -86,10 +86,10 @@ public class JoinEvent implements Listener {
 
   @EventHandler
   public void onJoinCheckVersion(final PlayerJoinEvent event) {
-    //we want to be the first :)
-    if (!(plugin.getConfig().getBoolean("Update-Notifier.Enabled", true) || event.getPlayer().hasPermission("murdermystery.updatenotify"))) {
+    if (!plugin.getConfig().getBoolean("Update-Notifier.Enabled", true) || !event.getPlayer().hasPermission("murdermystery.updatenotify")) {
       return;
     }
+    //we want to be the first :)
     Bukkit.getScheduler().runTaskLater(plugin, () -> UpdateChecker.init(plugin, 66614).requestUpdateCheck().whenComplete((result, exception) -> {
       if (!result.requiresUpdate()) {
         return;
