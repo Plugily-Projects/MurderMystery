@@ -188,8 +188,7 @@ public class Main extends JavaPlugin {
     }
     if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
-      database = new MysqlDatabase(config.getString("address"), config.getString("user"), config.getString("password"),
-          config.getInt("min-connections"), config.getInt("max-connections"));
+      database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
     }
     userManager = new UserManager(this);
     SpecialItem.loadAll();

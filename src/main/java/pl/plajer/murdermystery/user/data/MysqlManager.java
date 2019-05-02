@@ -18,6 +18,7 @@
 
 package pl.plajer.murdermystery.user.data;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -44,29 +45,28 @@ public class MysqlManager implements UserDatabase {
   public MysqlManager(Main plugin) {
     this.plugin = plugin;
     database = plugin.getMySQLDatabase();
-    try (Statement stmt = database.getConnection().createStatement()) {
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS `playerstats` (\n"
-          + "  `UUID` text NOT NULL,\n"
-          + "  `name` text NOT NULL,\n"
-          + "  `kills` int(11) NOT NULL DEFAULT '0',\n"
-          + "  `deaths` int(11) NOT NULL DEFAULT '0',\n"
-          + "  `highestscore` int(11) NOT NULL DEFAULT '0',\n"
-          + "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n"
-          + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
-          + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
-          + "  `contribmurderer` int(11) NOT NULL DEFAULT '1',\n"
-          + "  `contribdetective` int(11) NOT NULL DEFAULT '1'\n"
-          + ");");
-    } catch (SQLException e) {
-      e.printStackTrace();
-      MessageUtils.errorOccurred();
-      Bukkit.getConsoleSender().sendMessage("Cannot save contents to MySQL database!");
-      Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
-    }
-  }
-
-  public void insertPlayer(Player player) {
-    database.executeUpdate("INSERT INTO playerstats (UUID,name) VALUES ('" + player.getUniqueId().toString() + "','" + player.getName() + "')");
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+      try (Connection connection = database.getConnection()) {
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("CREATE TABLE IF NOT EXISTS `playerstats` (\n"
+            + "  `UUID` text NOT NULL,\n"
+            + "  `name` text NOT NULL,\n"
+            + "  `kills` int(11) NOT NULL DEFAULT '0',\n"
+            + "  `deaths` int(11) NOT NULL DEFAULT '0',\n"
+            + "  `highestscore` int(11) NOT NULL DEFAULT '0',\n"
+            + "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n"
+            + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
+            + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
+            + "  `contribmurderer` int(11) NOT NULL DEFAULT '1',\n"
+            + "  `contribdetective` int(11) NOT NULL DEFAULT '1'\n"
+            + ");");
+      } catch (SQLException e) {
+        e.printStackTrace();
+        MessageUtils.errorOccurred();
+        Bukkit.getConsoleSender().sendMessage("Cannot save contents to MySQL database!");
+        Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
+      }
+    });
   }
 
   @Override
@@ -77,18 +77,14 @@ public class MysqlManager implements UserDatabase {
   @Override
   public void loadStatistic(User user, StatsStorage.StatisticType stat) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-      ResultSet resultSet = database.executeQuery("SELECT UUID from playerstats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
-      //insert into the database
-      try {
-        if (!resultSet.next()) {
+      try (Connection connection = database.getConnection()) {
+        Statement statement = connection.createStatement();
+        //insert into the database
+        if (!statement.executeQuery("SELECT UUID from playerstats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'").next()) {
           insertPlayer(user.getPlayer());
         }
-      } catch (SQLException e1) {
-        System.out.print("CONNECTION FAILED FOR PLAYER " + user.getPlayer().getName());
-      }
 
-      ResultSet set = database.executeQuery("SELECT " + stat.getName() + " FROM playerstats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
-      try {
+        ResultSet set = statement.executeQuery("SELECT " + stat.getName() + " FROM playerstats WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "'");
         if (!set.next()) {
           user.setStat(stat, 0);
           return;
@@ -99,6 +95,10 @@ public class MysqlManager implements UserDatabase {
         user.setStat(stat, 0);
       }
     });
+  }
+
+  private void insertPlayer(Player player) {
+    database.executeUpdate("INSERT INTO playerstats (UUID,name) VALUES ('" + player.getUniqueId().toString() + "','" + player.getName() + "')");
   }
 
   public MysqlDatabase getDatabase() {
