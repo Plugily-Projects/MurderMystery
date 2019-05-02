@@ -22,7 +22,7 @@
   <groupId>pl.plajer</groupId>
   <artifactId>murdermystery</artifactId>
   <name>MurderMystery</name>
-    <version>1.1.0</version>
+  <version>1.1.0</version>
   <licenses>
     <license>
       <name>GNU General Public License v3</name>
@@ -82,12 +82,12 @@
             <configuration>
               <relocations>
                 <relocation>
-                    <pattern>me.tigerhix.lib.scoreboard</pattern>
-                    <shadedPattern>pl.plajer.murdermystery.utils.scoreboard</shadedPattern>
+                  <pattern>me.tigerhix.lib.scoreboard</pattern>
+                  <shadedPattern>pl.plajer.murdermystery.utils.scoreboard</shadedPattern>
                 </relocation>
-                  <relocation>
-                      <pattern>pl.plajerlair.services</pattern>
-                      <shadedPattern>pl.plajer.murdermystery.plajerlair.services</shadedPattern>
+                <relocation>
+                  <pattern>pl.plajerlair.services</pattern>
+                  <shadedPattern>pl.plajer.murdermystery.plajerlair.services</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.bstats</pattern>
