@@ -1,4 +1,4 @@
-### 1.1.1 Release (28.04.2019 - 02.05.2019)
+### 1.1.1 Release (28.04.2019 - 08.05.2019)
 * Relocate Plajer's Lair Services and TigerHix's ScoreboardLib packages in order to avoid conflict between our minigames if used on same server
 * Fixed saving user data on plugin disable while using MySQL
 * /mma delete and reload require confirmation before execution now, theymust be typed twice to execute
@@ -7,6 +7,7 @@
 * Fixed update notify message was sent to everybody without proper permission check
 * First time database creation is now made async not in main server thread
 * Implemented faster Hikari connection pool library and removed BoneCP, jar size is now 3 times smaller too
+* Apache commons-io is now shaded into jar, 1.14 removed it
 
 ### 1.1.0 Release (28.04.2019)
 * Fixed wins/loses weren't properly assigned on game end, only murderer received these stats
