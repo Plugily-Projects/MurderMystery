@@ -23,6 +23,7 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -79,39 +80,37 @@ import pl.plajerlair.commonsbox.number.NumberUtils;
  */
 public class Arena extends BukkitRunnable {
 
-  private static Random random = new Random();
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Random random = new Random();
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private final String id;
+
   private Set<Player> players = new HashSet<>();
-  @Deprecated //mergeable
   private List<Location> goldSpawnPoints = new ArrayList<>();
   private List<Item> goldSpawned = new ArrayList<>();
-  @Deprecated //mergeable
   private List<Location> playerSpawnPoints = new ArrayList<>();
   private List<Corpse> corpses = new ArrayList<>();
   private List<SpecialBlock> specialBlocks = new ArrayList<>();
-  private Hologram bowHologram;
+
   //contains murderer, detective, fake detective and hero
-  private Map<CharacterType, Player> gameCharacters = new HashMap<>();
-  @Deprecated //api subject to change
+  private Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
+  //all arena values that are integers, contains constant and floating values
+  private Map<ArenaOption, Integer> arenaOptions = new EnumMap<>(ArenaOption.class);
+  //instead of 3 location fields we use map with GameLocation enum
+  private Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
+
+  private Hologram bowHologram;
   private boolean murdererDead;
-  @Deprecated //^
   private boolean detectiveDead;
-  @Deprecated //^
   private boolean murdererLocatorReceived;
+
+  private ArenaState arenaState = ArenaState.WAITING_FOR_PLAYERS;
   private BossBar gameBar;
-  private ArenaState arenaState;
   private ScoreboardManager scoreboardManager;
   private String mapName = "";
-  private String id;
-  //all arena values that are integers, contains constant and floating values
-  private Map<ArenaOption, Integer> arenaOptions = new HashMap<>();
-  //instead of 3 location fields we use map with GameLocation enum
-  private Map<GameLocation, Location> gameLocations = new HashMap<>();
   private boolean ready = true;
   private boolean forceStart = false;
 
   public Arena(String id) {
-    arenaState = ArenaState.WAITING_FOR_PLAYERS;
     this.id = id;
     for (ArenaOption option : ArenaOption.values()) {
       arenaOptions.put(option, option.getDefaultValue());

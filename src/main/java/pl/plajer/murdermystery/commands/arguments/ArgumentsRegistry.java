@@ -70,18 +70,20 @@ public class ArgumentsRegistry implements CommandExecutor {
 
   public ArgumentsRegistry(Main plugin) {
     this.plugin = plugin;
-    TabCompletion completion = new TabCompletion(this);
+    tabCompletion = new TabCompletion(this);
     plugin.getCommand("murdermystery").setExecutor(this);
-    plugin.getCommand("murdermystery").setTabCompleter(completion);
+    plugin.getCommand("murdermystery").setTabCompleter(tabCompletion);
     plugin.getCommand("murdermysteryadmin").setExecutor(this);
-    plugin.getCommand("murdermysteryadmin").setTabCompleter(completion);
+    plugin.getCommand("murdermysteryadmin").setTabCompleter(tabCompletion);
 
+    //register basic arugments
     new CreateArgument(this);
     new JoinArguments(this);
     new LeaveArgument(this);
     new StatsArgument(this);
     new LeaderboardArgument(this);
 
+    //register admin related arguments
     new ListArenasArgument(this);
     new DeleteArgument(this);
     new ForceStartArgument(this);
