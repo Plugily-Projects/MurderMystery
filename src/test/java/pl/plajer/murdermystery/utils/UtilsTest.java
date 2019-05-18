@@ -30,8 +30,8 @@ public class UtilsTest {
 
   @Test
   public void serializeInt() {
-    Assert.assertEquals(1, Utils.serializeInt(3));
-    Assert.assertEquals(5, Utils.serializeInt(37));
-    Assert.assertEquals(5, Utils.serializeInt(43));
+    Assert.assertEquals(9, Utils.serializeInt(3));
+    Assert.assertEquals(45, Utils.serializeInt(37));
+    Assert.assertEquals(45, Utils.serializeInt(43));
   }
 }
