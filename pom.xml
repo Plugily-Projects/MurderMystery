@@ -126,6 +126,13 @@
             <version>1.5</version>
             <scope>compile</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>13.0</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>org.golde.bukkit</groupId>
             <artifactId>corpsereborn</artifactId>

@@ -18,8 +18,10 @@
 
 package pl.plajer.murdermystery.commands;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
@@ -114,8 +116,9 @@ public class GameCommands extends MainCommand {
         } catch (NullPointerException ex) {
           UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-            ResultSet set = plugin.getMySQLDatabase().executeQuery("SELECT name FROM playerstats WHERE UUID='" + current.toString() + "'");
-            try {
+            try (Connection connection = plugin.getMySQLDatabase().getConnection()) {
+              Statement statement = connection.createStatement();
+              ResultSet set = statement.executeQuery("SELECT name FROM playerstats WHERE UUID='" + current.toString() + "'");
               if (set.next()) {
                 sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
                     .replace("%position%", String.valueOf(i + 1))
@@ -125,6 +128,7 @@ public class GameCommands extends MainCommand {
                 return;
               }
             } catch (SQLException ignored) {
+              //failed for second time
             }
           }
           sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Format")
