@@ -116,7 +116,7 @@ public class GameCommands extends MainCommand {
         } catch (NullPointerException ex) {
           UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-            try (Connection connection = plugin.getMySQLDatabase().getConnection()) {
+            try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
               Statement statement = connection.createStatement();
               ResultSet set = statement.executeQuery("SELECT name FROM playerstats WHERE UUID='" + current.toString() + "'");
               if (set.next()) {

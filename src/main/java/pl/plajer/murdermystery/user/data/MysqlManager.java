@@ -44,7 +44,7 @@ public class MysqlManager implements UserDatabase {
 
   public MysqlManager(Main plugin) {
     this.plugin = plugin;
-    database = plugin.getMySQLDatabase();
+    database = plugin.getMysqlDatabase();
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
       try (Connection connection = database.getConnection()) {
         Statement statement = connection.createStatement();

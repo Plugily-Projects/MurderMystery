@@ -158,7 +158,7 @@ public class Main extends JavaPlugin {
       }
     }
     if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      getMySQLDatabase().shutdownConnPool();
+      getMysqlDatabase().shutdownConnPool();
     }
 
     for (Arena arena : ArenaRegistry.getArenas()) {
@@ -311,7 +311,7 @@ public class Main extends JavaPlugin {
     return configPreferences;
   }
 
-  public MysqlDatabase getMySQLDatabase() {
+  public MysqlDatabase getMysqlDatabase() {
     return database;
   }
 
