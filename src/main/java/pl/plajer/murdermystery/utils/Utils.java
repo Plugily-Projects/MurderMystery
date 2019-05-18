@@ -45,8 +45,6 @@ import pl.plajerlair.commonsbox.string.StringFormatUtils;
  */
 public class Utils {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
-
   /**
    * Serialize int to use it in Inventories size
    * ex. you have 38 kits and it will serialize it to 45 (9*5)
@@ -94,7 +92,7 @@ public class Utils {
             .replace("%progress%", progress).replace("%time%", String.valueOf((double) (100 - ticks) / 20))));
         ticks += 10;
       }
-    }.runTaskTimer(plugin, 0, 10);
+    }.runTaskTimer(JavaPlugin.getPlugin(Main.class), 0, 10);
   }
 
   public static List<Block> getNearbyBlocks(Location location, int radius) {
