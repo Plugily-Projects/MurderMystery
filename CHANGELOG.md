@@ -9,6 +9,7 @@
 * Implemented faster Hikari connection pool library and removed BoneCP, jar size is now 3 times smaller too
 * Apache commons-io is now shaded into jar, 1.14 removed it
 * Recoded whole commands structure
+* Scoreboard colors were broken sometimes, this is now fixed (I hope so)
 
 ### 1.1.0 Release (28.04.2019)
 * Fixed wins/loses weren't properly assigned on game end, only murderer received these stats

@@ -100,19 +100,8 @@
         <dependency>
             <groupId>me.tigerhix.lib</groupId>
             <artifactId>scoreboard</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.2</version>
             <scope>compile</scope>
-            <!-- Some broken and outdated repos -->
-            <exclusions>
-                <exclusion>
-                    <groupId>org</groupId>
-                    <artifactId>spigotmc.api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org</groupId>
-                    <artifactId>spigotmc</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
