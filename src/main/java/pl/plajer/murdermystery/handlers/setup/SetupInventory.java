@@ -154,7 +154,7 @@ public class SetupInventory {
         .build());*/
   }
 
-  private static void sendProTip(Player p) {
+  public static void sendProTip(Player p) {
     int rand = new Random().nextInt(8 + 1);
     switch (rand) {
       case 0:

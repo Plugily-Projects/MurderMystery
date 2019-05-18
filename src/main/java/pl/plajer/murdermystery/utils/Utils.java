@@ -27,9 +27,9 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import pl.plajer.murdermystery.Main;
@@ -44,6 +44,15 @@ import pl.plajerlair.commonsbox.string.StringFormatUtils;
  * Created at 06.10.2018
  */
 public class Utils {
+
+  private static Main plugin;
+
+  private Utils() {
+  }
+
+  public static void init(Main plugin) {
+    Utils.plugin = plugin;
+  }
 
   /**
    * Serialize int to use it in Inventories size
@@ -92,7 +101,7 @@ public class Utils {
             .replace("%progress%", progress).replace("%time%", String.valueOf((double) (100 - ticks) / 20))));
         ticks += 10;
       }
-    }.runTaskTimer(JavaPlugin.getPlugin(Main.class), 0, 10);
+    }.runTaskTimer(plugin, 0, 10);
   }
 
   public static List<Block> getNearbyBlocks(Location location, int radius) {
@@ -109,6 +118,22 @@ public class Utils {
 
   public static Location getBlockCenter(Location location) {
     return location.add(0.5, 0, 0.5);
+  }
+
+  public static boolean checkIsInGameInstance(Player player) {
+    if (ArenaRegistry.getArena(player) == null) {
+      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Not-Playing"));
+      return false;
+    }
+    return true;
+  }
+
+  public static boolean hasPermission(CommandSender sender, String perm) {
+    if (sender.hasPermission(perm)) {
+      return true;
+    }
+    sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands-No-Permission"));
+    return false;
   }
 
 }

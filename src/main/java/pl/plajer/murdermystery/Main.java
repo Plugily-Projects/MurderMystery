@@ -41,7 +41,6 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.special.SpecialBlockEvents;
 import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
 import pl.plajer.murdermystery.arena.special.pray.PrayerRegistry;
-import pl.plajer.murdermystery.commands.MainCommand;
 import pl.plajer.murdermystery.events.ChatEvents;
 import pl.plajer.murdermystery.events.Events;
 import pl.plajer.murdermystery.events.JoinEvent;
@@ -73,6 +72,7 @@ import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.ExceptionLogHandler;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajer.murdermystery.utils.UpdateChecker;
+import pl.plajer.murdermystery.utils.Utils;
 import pl.plajer.murdermystery.utils.services.ServiceRegistry;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
@@ -191,6 +191,7 @@ public class Main extends JavaPlugin {
       database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
     }
     userManager = new UserManager(this);
+    Utils.init(this);
     SpecialItem.loadAll();
     PermissionsManager.init();
     new ChatManager(ChatManager.colorMessage("In-Game.Plugin-Prefix"));

@@ -16,42 +16,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.murdermystery.commands;
+package pl.plajer.murdermystery.commands.completion;
+
+import java.util.List;
 
 /**
  * @author Plajer
  * <p>
- * Created at 05.08.2018
+ * Created at 18.05.2019
  */
-public class CommandData {
+public class CompletableArgument {
 
-  private String text;
-  private String command;
-  private String description;
+  private String mainCommand;
+  private String argument;
+  private List<String> completions;
 
-  public CommandData(String text, String command, String description) {
-    this.text = text;
-    this.command = command;
-    this.description = description;
+  public CompletableArgument(String mainCommand, String argument, List<String> completions) {
+    this.mainCommand = mainCommand;
+    this.argument = argument;
+    this.completions = completions;
   }
 
-  public String getText() {
-    return text;
+  /**
+   * @return main command of the argument
+   */
+  public String getMainCommand() {
+    return mainCommand;
   }
 
-  public String getCommand() {
-    return command;
+  /**
+   * @return argument name
+   */
+  public String getArgument() {
+    return argument;
   }
 
-  public void setCommand(String command) {
-    this.command = command;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
+  /**
+   * @return all possible completions for this command argument
+   */
+  public List<String> getCompletions() {
+    return completions;
   }
 }
