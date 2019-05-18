@@ -152,12 +152,6 @@
             <version>3.0.2</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <artifactId>commons-io</artifactId>
-            <groupId>commons-io</groupId>
-            <scope>compile</scope>
-            <version>2.6</version>
-        </dependency>
     </dependencies>
     <build>
         <resources>
@@ -209,10 +203,6 @@
                         </goals>
                         <configuration>
                             <relocations>
-                                <relocation>
-                                    <pattern>org.apache.commons.io</pattern>
-                                    <shadedPattern>pl.plajer.murdermystery.utils.commons.io</shadedPattern>
-                                </relocation>
                                 <relocation>
                                     <pattern>com.zaxxer.hikari</pattern>
                                     <shadedPattern>pl.plajer.murdermystery.database.hikari</shadedPattern>
