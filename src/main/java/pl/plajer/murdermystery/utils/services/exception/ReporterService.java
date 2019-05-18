@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajerlair.services.exception;
+package pl.plajer.murdermystery.utils.services.exception;
 
 import java.io.IOException;
 import java.io.OutputStream;

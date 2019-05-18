@@ -222,10 +222,6 @@
                                     <shadedPattern>pl.plajer.murdermystery.utils.scoreboard</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>pl.plajerlair.services</pattern>
-                                    <shadedPattern>pl.plajer.murdermystery.plajerlair.services</shadedPattern>
-                                </relocation>
-                                <relocation>
                                     <pattern>pl.plajerlair.commonsbox</pattern>
                                     <shadedPattern>pl.plajer.murdermystery.plajerlair.commonsbox</shadedPattern>
                                 </relocation>

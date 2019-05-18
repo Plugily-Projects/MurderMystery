@@ -76,7 +76,7 @@ import pl.plajer.murdermystery.utils.UpdateChecker;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
-import pl.plajerlair.services.ServiceRegistry;
+import pl.plajer.murdermystery.utils.services.ServiceRegistry;
 
 /**
  * @author Plajer

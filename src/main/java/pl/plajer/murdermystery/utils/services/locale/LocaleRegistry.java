@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajerlair.services.locale;
+package pl.plajer.murdermystery.utils.services.locale;
 
 import java.util.ArrayList;
 import java.util.List;

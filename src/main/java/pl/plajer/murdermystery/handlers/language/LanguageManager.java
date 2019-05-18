@@ -35,10 +35,10 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.services.ServiceRegistry;
-import pl.plajerlair.services.locale.Locale;
-import pl.plajerlair.services.locale.LocaleRegistry;
-import pl.plajerlair.services.locale.LocaleService;
+import pl.plajer.murdermystery.utils.services.ServiceRegistry;
+import pl.plajer.murdermystery.utils.services.locale.Locale;
+import pl.plajer.murdermystery.utils.services.locale.LocaleRegistry;
+import pl.plajer.murdermystery.utils.services.locale.LocaleService;
 
 /**
  * @author Plajer

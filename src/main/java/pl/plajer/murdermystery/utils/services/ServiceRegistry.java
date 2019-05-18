@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajerlair.services;
+package pl.plajer.murdermystery.utils.services;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,8 +26,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import pl.plajerlair.services.locale.LocaleService;
-import pl.plajerlair.services.metrics.MetricsService;
+import pl.plajer.murdermystery.utils.services.locale.LocaleService;
+import pl.plajer.murdermystery.utils.services.metrics.MetricsService;
 
 /**
  * Class for registering new services

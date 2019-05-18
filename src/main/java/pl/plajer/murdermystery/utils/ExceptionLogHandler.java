@@ -27,7 +27,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.Main;
-import pl.plajerlair.services.exception.ReportedException;
+import pl.plajer.murdermystery.utils.services.exception.ReportedException;
 
 /**
  * @author Plajer

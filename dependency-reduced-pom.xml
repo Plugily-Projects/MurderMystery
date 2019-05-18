@@ -86,7 +86,7 @@
                   <shadedPattern>pl.plajer.murdermystery.utils.scoreboard</shadedPattern>
                 </relocation>
                 <relocation>
-                  <pattern>pl.plajerlair.services</pattern>
+                  <pattern>pl.plajer.murdermystery.utils.services</pattern>
                   <shadedPattern>pl.plajer.murdermystery.plajerlair.services</shadedPattern>
                 </relocation>
                 <relocation>

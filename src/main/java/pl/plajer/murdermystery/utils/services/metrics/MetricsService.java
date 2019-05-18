@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajerlair.services.metrics;
+package pl.plajer.murdermystery.utils.services.metrics;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,7 +34,7 @@ import javax.net.ssl.HttpsURLConnection;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import pl.plajerlair.services.ServiceRegistry;
+import pl.plajer.murdermystery.utils.services.ServiceRegistry;
 
 /**
  * Metrics service for sending usage data
