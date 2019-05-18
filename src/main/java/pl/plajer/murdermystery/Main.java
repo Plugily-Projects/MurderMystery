@@ -41,6 +41,7 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.special.SpecialBlockEvents;
 import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
 import pl.plajer.murdermystery.arena.special.pray.PrayerRegistry;
+import pl.plajer.murdermystery.commands.arguments.ArgumentsRegistry;
 import pl.plajer.murdermystery.events.ChatEvents;
 import pl.plajer.murdermystery.events.Events;
 import pl.plajer.murdermystery.events.JoinEvent;
@@ -90,9 +91,9 @@ public class Main extends JavaPlugin {
   private boolean forceDisable = false;
   private BungeeManager bungeeManager;
   private RewardsFactory rewardsHandler;
+  private ArgumentsRegistry registry;
   private MysqlDatabase database;
   private SignManager signManager;
-  private MainCommand mainCommand;
   private CorpseHandler corpseHandler;
   private ConfigPreferences configPreferences;
   private HookManager hookManager;
@@ -190,12 +191,12 @@ public class Main extends JavaPlugin {
       FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
       database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
     }
+    new ArgumentsRegistry(this);
     userManager = new UserManager(this);
     Utils.init(this);
     SpecialItem.loadAll();
     PermissionsManager.init();
     new ChatManager(ChatManager.colorMessage("In-Game.Plugin-Prefix"));
-    mainCommand = new MainCommand(this, true);
     new ArenaEvents(this);
     new SpectatorEvents(this);
     new QuitEvent(this);
