@@ -19,6 +19,7 @@
 package pl.plajer.murdermystery.commands;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.command.Command;
@@ -45,7 +46,7 @@ public class TabCompletion implements TabCompleter {
   @Override
   public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
     if (!(sender instanceof Player)) {
-      return null;
+      return Collections.emptyList();
     }
     if (cmd.getName().equalsIgnoreCase("murdermysteryadmin") && args.length == 1) {
       return Arrays.asList("stop", "list", "forcestart", "reload", "delete");
@@ -62,6 +63,6 @@ public class TabCompletion implements TabCompleter {
         }
       }
     }
-    return null;
+    return Collections.emptyList();
   }
 }
