@@ -295,6 +295,10 @@ public class Main extends JavaPlugin {
     return version.equalsIgnoreCase("v1_12_R1");
   }
 
+  public boolean is1_14_R1() {
+    return version.equalsIgnoreCase("v1_14_R1");
+  }
+
   public RewardsFactory getRewardsHandler() {
     return rewardsHandler;
   }
