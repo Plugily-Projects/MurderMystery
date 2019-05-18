@@ -1,4 +1,4 @@
-### 1.1.1 Release (28.04.2019 - 08.05.2019)
+### 1.1.1 Release (28.04.2019 - 18.05.2019)
 * Relocate Plajer's Lair Services and TigerHix's ScoreboardLib packages in order to avoid conflict between our minigames if used on same server
 * Fixed saving user data on plugin disable while using MySQL
 * /mma delete and reload require confirmation before execution now, theymust be typed twice to execute

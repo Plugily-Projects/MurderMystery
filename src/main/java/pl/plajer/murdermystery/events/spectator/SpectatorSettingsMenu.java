@@ -58,7 +58,7 @@ public class SpectatorSettingsMenu implements Listener {
 
   @EventHandler
   public void onSpectatorMenuClick(InventoryClickEvent e) {
-    if (e.getInventory() == null || !e.getInventory().getName().equals(color(inventoryName))) {
+    if (e.getInventory() == null || !e.getView().getTitle().equals(color(inventoryName))) {
       return;
     }
     if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {

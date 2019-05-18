@@ -125,7 +125,7 @@ public class SpectatorItemEvents implements Listener {
         || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
       return;
     }
-    if (!e.getInventory().getName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
+    if (!e.getView().getTitle().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
       return;
     }
     e.setCancelled(true);
