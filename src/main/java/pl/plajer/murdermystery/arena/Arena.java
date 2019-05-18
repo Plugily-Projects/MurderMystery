@@ -75,9 +75,6 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import pl.plajerlair.commonsbox.number.NumberUtils;
 
-/**
- * Created by Tom on 12/08/2014.
- */
 public class Arena extends BukkitRunnable {
 
   private static final Random random = new Random();
@@ -145,6 +142,7 @@ public class Arena extends BukkitRunnable {
     this.bowHologram = bowHologram;
   }
 
+  @Override
   public void run() {
     //idle task
     if (getPlayers().size() == 0 && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
