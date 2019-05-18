@@ -45,7 +45,7 @@ public class ServiceRegistry {
     }
     plugin.getLogger().log(Level.INFO, "Connecting to services, please wait! Server may freeze a bit!");
     try {
-      HttpsURLConnection connection = (HttpsURLConnection) new URL("https://plajer.xyz").openConnection();
+      HttpsURLConnection connection = (HttpsURLConnection) new URL("https://api.plajer.xyz/ping.php").openConnection();
       connection.setConnectTimeout(3000);
       connection.setReadTimeout(2000);
       connection.setRequestMethod("HEAD");

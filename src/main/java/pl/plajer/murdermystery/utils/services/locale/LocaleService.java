@@ -19,24 +19,23 @@
 package pl.plajer.murdermystery.utils.services.locale;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajer.murdermystery.utils.services.ServiceRegistry;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 
 /**
  * Localization service used for fetching latest locales for minigames
@@ -54,9 +53,9 @@ public class LocaleService {
       return;
     }
     this.plugin = plugin;
-    try {
-      String data = IOUtils.toString(requestLocaleFetch(null), StandardCharsets.UTF_8);
-      FileUtils.write(new File(plugin.getDataFolder().getPath() + "/locales/locale_data.yml"), data, StandardCharsets.UTF_8);
+    try (Scanner scanner = new Scanner(requestLocaleFetch(null), "UTF-8").useDelimiter("\\A")) {
+      String data = scanner.hasNext() ? scanner.next() : "";
+      Files.write(new File(plugin.getDataFolder().getPath() + "/locales/locale_data.yml").toPath(), data.getBytes());
       this.localeData = ConfigUtils.getConfig(plugin, "/locales/locale_data");
       plugin.getLogger().log(Level.INFO, "Fetched latest localization file from repository.");
     } catch (IOException ignored) {
@@ -125,9 +124,9 @@ public class LocaleService {
   }
 
   private DownloadStatus writeFile(Locale locale) {
-    try {
-      String data = IOUtils.toString(requestLocaleFetch(locale), StandardCharsets.UTF_8);
-      FileUtils.write(new File(plugin.getDataFolder().getPath() + "/locales/" + locale.getPrefix() + ".properties"), data, StandardCharsets.UTF_8);
+    try (Scanner scanner = new Scanner(requestLocaleFetch(locale), "UTF-8").useDelimiter("\\A")) {
+      String data = scanner.hasNext() ? scanner.next() : "";
+      Files.write(new File(plugin.getDataFolder().getPath() + "/locales/" + locale.getPrefix() + ".properties").toPath(), data.getBytes());
       return DownloadStatus.SUCCESS;
     } catch (IOException ignored) {
       plugin.getLogger().log(Level.WARNING, "Demanded locale " + locale.getPrefix() + " cannot be downloaded! You should notify author!");
@@ -149,9 +148,11 @@ public class LocaleService {
   }
 
   private boolean isExact(Locale locale, File file) {
-    try {
-      String onlineData = IOUtils.toString(requestLocaleFetch(locale), StandardCharsets.UTF_8);
-      String localData = IOUtils.toString(new FileInputStream(file), StandardCharsets.UTF_8);
+    try (Scanner scanner = new Scanner(requestLocaleFetch(locale), "UTF-8").useDelimiter("\\A")) {
+      String onlineData = scanner.hasNext() ? scanner.next() : "";
+      Scanner localScanner = new Scanner(file, "UTF-8").useDelimiter("\\A");
+      String localData = localScanner.hasNext() ? localScanner.next() : "";
+      localScanner.close();
 
       return onlineData.equals(localData);
     } catch (IOException ignored) {
