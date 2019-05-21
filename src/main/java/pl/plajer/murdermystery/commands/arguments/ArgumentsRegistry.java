@@ -111,6 +111,7 @@ public class ArgumentsRegistry implements CommandExecutor {
             }
 
             new SetupInventory(ArenaRegistry.getArena(args[0])).openInventory((Player) sender);
+            return true;
           }
         }
         if (cmd.getName().equalsIgnoreCase("murdermysteryadmin") && args.length == 0) {

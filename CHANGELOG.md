@@ -1,3 +1,6 @@
+### 1.1.2 Release (21.05.2019)
+* Fixed that you couldn't edit arena via /mm <arena> edit
+
 ### 1.1.1 Release (28.04.2019 - 18.05.2019)
 * Relocate Plajer's Lair Services and TigerHix's ScoreboardLib packages in order to avoid conflict between our minigames if used on same server
 * Fixed saving user data on plugin disable while using MySQL
