@@ -110,7 +110,7 @@ public class ArgumentsRegistry implements CommandExecutor {
               return true;
             }
 
-            new SetupInventory(ArenaRegistry.getArena(args[0])).openInventory((Player) sender);
+            new SetupInventory(ArenaRegistry.getArena(args[0]), (Player) sender).openInventory();
             return true;
           }
         }

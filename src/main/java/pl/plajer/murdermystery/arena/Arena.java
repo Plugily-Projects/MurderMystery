@@ -495,6 +495,10 @@ public class Arena extends BukkitRunnable {
     return goldSpawned;
   }
 
+  public List<Location> getGoldSpawnPoints() {
+    return goldSpawnPoints;
+  }
+
   /**
    * Get arena identifier used to get arenas by string.
    *

@@ -59,7 +59,6 @@ import pl.plajer.murdermystery.handlers.SignManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItem;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.handlers.rewards.RewardsFactory;
-import pl.plajer.murdermystery.handlers.setup.SetupInventoryEvents;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryDeaths;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryGamesPlayed;
 import pl.plajer.murdermystery.leaderheads.MurderMysteryHighestScore;
@@ -200,7 +199,6 @@ public class Main extends JavaPlugin {
     new ArenaEvents(this);
     new SpectatorEvents(this);
     new QuitEvent(this);
-    new SetupInventoryEvents(this);
     new JoinEvent(this);
     new ChatEvents(this);
     registerSoftDependenciesAndServices();

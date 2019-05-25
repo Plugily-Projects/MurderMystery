@@ -78,7 +78,6 @@ public class CreateArgument {
           player.sendMessage(ChatColor.GOLD + "Don't know where to start? Check out tutorial video:");
           player.sendMessage(ChatColor.GOLD + SetupInventory.VIDEO_LINK);
           player.sendMessage(ChatColor.BOLD + "------------------------------------------- ");
-          SetupInventory.sendProTip(player);
         }
       }
     });

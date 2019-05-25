@@ -1,6 +1,10 @@
 ### 1.1.2 Release (21/25.05.2019)
 * Fixed that you couldn't edit arena via /mm <arena> edit
 * You will now receive additional message when adding gold/player spawns that 4 is minimum spawns amount so you can add more
+* Totally recoded arena setup gui UI and code structure, now all changes applies to arena instantly
+* Arena setup map name option now is chat based not name tag based
+* Added shift + right click to delete all gold/player spawns (useful if you made a mistke, better than nothing)
+* Added sign spawn protection radius warning, non opped players can't join via signs if sign is in radius of spawn protection
 
 ### 1.1.1 Release (28.04.2019 - 18.05.2019)
 * Relocate Plajer's Lair Services and TigerHix's ScoreboardLib packages in order to avoid conflict between our minigames if used on same server
