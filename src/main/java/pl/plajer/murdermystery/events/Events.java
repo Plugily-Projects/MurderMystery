@@ -216,6 +216,17 @@ public class Events implements Listener {
   }
 
   @EventHandler
+  public void onInGameInteract(PlayerInteractEvent e) {
+    Arena arena = ArenaRegistry.getArena(e.getPlayer());
+    if (arena == null || e.getClickedBlock() == null) {
+      return;
+    }
+    if (e.getClickedBlock().getType() == XMaterial.PAINTING.parseMaterial() || e.getClickedBlock().getType() == XMaterial.FLOWER_POT.parseMaterial()) {
+      e.setCancelled(true);
+    }
+  }
+
+  @EventHandler
   public void onLeave(PlayerInteractEvent event) {
     if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
       return;

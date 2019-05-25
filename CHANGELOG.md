@@ -10,6 +10,8 @@
 * Sword does fly bit faster now (from 0.5 to 0.65 fly speed)
 * Murderer no longer always receive lose statistic even on win
 * Fixed boss bar displays game end message instead of waiting for players after start up
+* /mma help and /mm help will display help pages now
+* Players shouldn't be able to interact with flower pots and paintings anymore
 
 ### 1.1.1 Release (28.04.2019 - 18.05.2019)
 * Relocate Plajer's Lair Services and TigerHix's ScoreboardLib packages in order to avoid conflict between our minigames if used on same server

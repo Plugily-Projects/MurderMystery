@@ -96,7 +96,7 @@ public class ArgumentsRegistry implements CommandExecutor {
     for (Map.Entry<String, List<CommandArgument>> entry : mappedArguments.entrySet()) {
       if (cmd.getName().equalsIgnoreCase(entry.getKey())) {
         if (cmd.getName().equalsIgnoreCase("murdermystery")) {
-          if (args.length == 0) {
+          if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
             sendHelpCommand(sender);
             return true;
           }
@@ -114,7 +114,7 @@ public class ArgumentsRegistry implements CommandExecutor {
             return true;
           }
         }
-        if (cmd.getName().equalsIgnoreCase("murdermysteryadmin") && args.length == 0) {
+        if (cmd.getName().equalsIgnoreCase("murdermysteryadmin") && (args.length == 0 || args[0].equalsIgnoreCase("help"))) {
           if (!sender.hasPermission("murdermystery.admin")) {
             return true;
           }
