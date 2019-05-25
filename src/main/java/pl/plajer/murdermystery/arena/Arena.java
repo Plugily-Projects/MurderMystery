@@ -440,6 +440,7 @@ public class Arena extends BukkitRunnable {
             this.addPlayer(player);
           }
         }
+        gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
         break;
       default:
         break; //o.o?
