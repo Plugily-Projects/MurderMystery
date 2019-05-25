@@ -7,6 +7,8 @@
 * Added sign spawn protection radius warning, non opped players can't join via signs if sign is in radius of spawn protection
 * Debug section is no longer visible part of config, it can be added manually but won't be there by default from now
 * Reload command is no longer discouraged and reloads both config and language file
+* Sword does fly bit faster now (from 0.5 to 0.65 fly speed)
+* Murderer no longer always receive lose statistic even on win
 
 ### 1.1.1 Release (28.04.2019 - 18.05.2019)
 * Relocate Plajer's Lair Services and TigerHix's ScoreboardLib packages in order to avoid conflict between our minigames if used on same server

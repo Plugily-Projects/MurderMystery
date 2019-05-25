@@ -305,7 +305,7 @@ public class ArenaManager {
     arena.getScoreboardManager().stopAllScoreboards();
     Random rand = new Random();
 
-    boolean murderWon = arena.getPlayersLeft().size() == 1 && arena.getPlayersLeft().equals(arena.getCharacter(Arena.CharacterType.MURDERER));
+    boolean murderWon = arena.getPlayersLeft().size() == 1 && arena.getPlayersLeft().get(0).equals(arena.getCharacter(Arena.CharacterType.MURDERER));
 
     for (final Player player : arena.getPlayers()) {
       User user = plugin.getUserManager().getUser(player);

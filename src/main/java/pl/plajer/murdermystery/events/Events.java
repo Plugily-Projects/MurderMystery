@@ -148,9 +148,9 @@ public class Events implements Listener {
 
       @Override
       public void run() {
-        posModifier += 0.5;
+        posModifier += 0.65;
         double x = direction.getX() * posModifier;
-        double y = direction.getY() * posModifier + 0.5;
+        double y = direction.getY() * posModifier + 0.65;
         double z = direction.getZ() * posModifier;
         loc.add(x, y, z);
         stand.teleport(loc);
