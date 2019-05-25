@@ -21,6 +21,7 @@ package pl.plajer.murdermystery.handlers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -182,6 +183,9 @@ public class SignManager implements Listener {
   }
 
   public void loadSigns() {
+    Debugger.debug(Level.INFO, "Signs load event started");
+    long start = System.currentTimeMillis();
+
     loadedSigns.clear();
     for (String path : ConfigUtils.getConfig(plugin, "arenas").getConfigurationSection("instances").getKeys(false)) {
       for (String sign : ConfigUtils.getConfig(plugin, "arenas").getStringList("instances." + path + ".signs")) {
@@ -189,14 +193,18 @@ public class SignManager implements Listener {
         if (loc.getBlock().getState() instanceof Sign) {
           loadedSigns.put((Sign) loc.getBlock().getState(), ArenaRegistry.getArena(path));
         } else {
-          Debugger.debug(Debugger.Level.WARN, "Block at loc " + loc + " for arena " + path + " not a sign");
+          Debugger.debug(Level.WARNING, "Block at location {0} for arena {1} not a sign", loc, path);
         }
       }
     }
+    Debugger.debug(Level.INFO, "Sign load event finished took {0}ms", System.currentTimeMillis() - start);
   }
 
   private void updateSignScheduler() {
     Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+      Debugger.performance("SignUpdate", "[PerformanceMonitor] [SignUpdate] Updating signs");
+      long start = System.currentTimeMillis();
+
       for (Map.Entry<Sign, Arena> entry : loadedSigns.entrySet()) {
         Sign sign = entry.getKey();
         for (int i = 0; i < signLines.size(); i++) {
@@ -241,6 +249,7 @@ public class SignManager implements Listener {
         }
         sign.update();
       }
+      Debugger.performance("SignUpdate", "[PerformanceMonitor] [SignUpdate] Updated signs took {0}ms", System.currentTimeMillis() - start);
     }, 10, 10);
   }
 

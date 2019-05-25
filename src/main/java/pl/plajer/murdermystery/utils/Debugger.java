@@ -18,8 +18,9 @@
 
 package pl.plajer.murdermystery.utils;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Plajer
@@ -28,11 +29,21 @@ import org.bukkit.ChatColor;
  */
 public class Debugger {
 
+  private static HashSet<String> listenedPerformance = new HashSet<>();
   private static boolean enabled = false;
-  private static String prefix = "[Murder Mystery Debugger]";
+  private static boolean deep = false;
+  private static Logger logger = Logger.getLogger("Murder Mystery");
 
   public static void setEnabled(boolean enabled) {
     Debugger.enabled = enabled;
+  }
+
+  public static void deepDebug(boolean deep) {
+    Debugger.deep = deep;
+  }
+
+  public static void monitorPerformance(String task) {
+    listenedPerformance.add(task);
   }
 
   /**
@@ -41,36 +52,43 @@ public class Debugger {
    * debugger is enabled, warnings and errors will be.
    *
    * @param level level of debugged message
-   * @param thing debugged message
+   * @param msg   debugged message
    */
-  public static void debug(Level level, String thing) {
-    switch (level) {
-      case INFO:
-        if (!enabled) {
-          return;
-        }
-        Bukkit.getConsoleSender().sendMessage(prefix + " " + thing);
-        break;
-      case WARN:
-        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + prefix + " " + thing);
-        break;
-      case ERROR:
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + prefix + " " + thing);
-        break;
-      case WTF:
-        Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + prefix + " [SEVERE]" + thing);
-        break;
-      case TASK:
-        if (!enabled) {
-          return;
-        }
-        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + prefix + " Running task '" + thing + "'");
-        break;
+  public static void debug(Level level, String msg) {
+    if (!enabled && (level != Level.WARNING || level != Level.SEVERE)) {
+      return;
     }
+    logger.log(level, "[MMDBG] " + msg);
   }
 
-  public enum Level {
-    INFO, WARN, ERROR, WTF, TASK
+  /**
+   * Prints debug message with selected log level and replaces parameters.
+   * Messages of level INFO or TASK won't be posted if
+   * debugger is enabled, warnings and errors will be.
+   *
+   * @param level level of debugged message
+   * @param msg   debugged message
+   */
+  public static void debug(Level level, String msg, Object... params) {
+    if (!enabled && (level != Level.WARNING || level != Level.SEVERE)) {
+      return;
+    }
+    logger.log(level, "[MMDBG] " + msg, params);
+  }
+
+  /**
+   * Prints performance debug message with selected log level and replaces parameters.
+   *
+   * @param msg debugged message
+   */
+  public static void performance(String monitorName, String msg, Object... params) {
+    if (!deep) {
+      return;
+    }
+    if (!listenedPerformance.contains(monitorName)) {
+      return;
+    }
+    logger.log(Level.INFO, "[MMDBG] " + msg, params);
   }
 
 }

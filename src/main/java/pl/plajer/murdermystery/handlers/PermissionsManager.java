@@ -18,6 +18,8 @@
 
 package pl.plajer.murdermystery.handlers;
 
+import java.util.logging.Level;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.Main;
@@ -57,7 +59,7 @@ public class PermissionsManager {
   private static void setupPermissions() {
     PermissionsManager.setJoinFullGames(plugin.getConfig().getString("Basic-Permissions.Full-Games-Permission", "murdermystery.fullgames"));
     PermissionsManager.setJoinPerm(plugin.getConfig().getString("Basic-Permissions.Join-Permission", "murdermystery.join.<arena>"));
-    Debugger.debug(Debugger.Level.INFO, "Basic permissions registered");
+    Debugger.debug(Level.INFO, "Basic permissions registered");
   }
 
 }

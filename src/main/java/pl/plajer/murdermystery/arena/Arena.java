@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import net.md_5.bungee.api.ChatMessageType;
@@ -148,6 +149,9 @@ public class Arena extends BukkitRunnable {
     if (getPlayers().size() == 0 && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       return;
     }
+    Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Running game task", getId());
+    long start = System.currentTimeMillis();
+
     switch (getArenaState()) {
       case WAITING_FOR_PLAYERS:
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
@@ -157,7 +161,7 @@ public class Arena extends BukkitRunnable {
           if (getTimer() <= 0) {
             setTimer(15);
             ChatManager.broadcast(this, ChatManager.formatMessage(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), getMinimumPlayers()));
-            return;
+            break;
           }
         } else {
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
@@ -440,6 +444,7 @@ public class Arena extends BukkitRunnable {
       default:
         break; //o.o?
     }
+    Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Game task finished took {1}ms", getId(), System.currentTimeMillis() - start);
   }
 
   private String formatRoleChance(User user, int murdererPts, int detectivePts) throws NumberFormatException {
@@ -525,7 +530,7 @@ public class Arena extends BukkitRunnable {
    */
   public void setMinimumPlayers(int minimumPlayers) {
     if (minimumPlayers < 2) {
-      Debugger.debug(Debugger.Level.WARN, "Minimum players amount for arena cannot be less than 2! Setting amount to 2!");
+      Debugger.debug(Level.WARNING, "Minimum players amount for arena cannot be less than 2! Got {0}", minimumPlayers);
       setOptionValue(ArenaOption.MINIMUM_PLAYERS, 2);
       return;
     }
@@ -772,7 +777,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void start() {
-    Debugger.debug(Debugger.Level.INFO, "Game instance started, arena " + this.getId());
+    Debugger.debug(Level.INFO, "[{0}] Game instance started", getId());
     this.runTaskTimer(plugin, 20L, 20L);
     this.setArenaState(ArenaState.RESTARTING);
   }

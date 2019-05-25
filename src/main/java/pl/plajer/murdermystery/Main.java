@@ -23,6 +23,7 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.logging.Level;
 
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 
@@ -90,7 +91,6 @@ public class Main extends JavaPlugin {
   private boolean forceDisable = false;
   private BungeeManager bungeeManager;
   private RewardsFactory rewardsHandler;
-  private ArgumentsRegistry registry;
   private MysqlDatabase database;
   private SignManager signManager;
   private CorpseHandler corpseHandler;
@@ -109,13 +109,23 @@ public class Main extends JavaPlugin {
     LanguageManager.init(this);
     saveDefaultConfig();
     Debugger.setEnabled(getConfig().getBoolean("Debug", false));
-    Debugger.debug(Debugger.Level.INFO, "Main setup start");
+    Debugger.debug(Level.INFO, "[System] Initialization start");
+    if (getConfig().getBoolean("Developer-Mode", false)) {
+      Debugger.deepDebug(true);
+      Debugger.debug(Level.FINE, "Deep debug enabled");
+      for (String listenable : getConfig().getStringList("Performance-Listenable")) {
+        Debugger.monitorPerformance(listenable);
+      }
+    }
+    long start = System.currentTimeMillis();
+
     configPreferences = new ConfigPreferences(this);
     setupFiles();
     initializeClasses();
     checkUpdate();
+    Debugger.debug(Level.INFO, "[System] Initialization finished took {0}ms", System.currentTimeMillis() - start);
 
-    Debugger.debug(Debugger.Level.INFO, "Plugin loaded! Hooking into soft-dependencies in a while!");
+    Debugger.debug(Level.INFO, "Plugin loaded! Hooking into soft-dependencies in a while!");
     //start hook manager later in order to allow soft-dependencies to fully load
     Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20 * 5);
   }
@@ -149,7 +159,9 @@ public class Main extends JavaPlugin {
     if (forceDisable) {
       return;
     }
-    Debugger.debug(Debugger.Level.INFO, "System disable init");
+    Debugger.debug(Level.INFO, "System disable initialized");
+    long start = System.currentTimeMillis();
+
     Bukkit.getLogger().removeHandler(exceptionLogHandler);
     saveAllUserStatistics();
     if (hookManager.isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
@@ -179,6 +191,7 @@ public class Main extends JavaPlugin {
       arena.teleportAllToEndLocation();
       arena.cleanUpArena();
     }
+    Debugger.debug(Level.INFO, "System disable finished took {0}ms", System.currentTimeMillis() - start);
   }
 
   private void initializeClasses() {
@@ -217,13 +230,16 @@ public class Main extends JavaPlugin {
   }
 
   private void registerSoftDependenciesAndServices() {
+    Debugger.debug(Level.INFO, "Hooking into soft dependencies");
+    long start = System.currentTimeMillis();
+
     startPluginMetrics();
     if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      Debugger.debug(Debugger.Level.INFO, "Hooking into PlaceholderAPI");
+      Debugger.debug(Level.INFO, "Hooking into PlaceholderAPI");
       new PlaceholderManager().register();
     }
     if (Bukkit.getPluginManager().isPluginEnabled("LeaderHeads")) {
-      Debugger.debug(Debugger.Level.INFO, "Hooking into LeaderHeads");
+      Debugger.debug(Level.INFO, "Hooking into LeaderHeads");
       new MurderMysteryDeaths();
       new MurderMysteryGamesPlayed();
       new MurderMysteryHighestScore();
@@ -231,6 +247,7 @@ public class Main extends JavaPlugin {
       new MurderMysteryLoses();
       new MurderMysteryWins();
     }
+    Debugger.debug(Level.INFO, "Hooked into soft dependencies took {0}ms", System.currentTimeMillis() - start);
   }
 
   private void startPluginMetrics() {

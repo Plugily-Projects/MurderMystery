@@ -94,9 +94,6 @@ Update-Notifier:
   # BETA IS NOT ALWAYS AS STABLE AS NORMAL RELEASE!
   Notify-Beta-Versions: true
 
-# Should plugin send 'debug spam' to console? IT CAN HELP IF THERE IS SOME WEIRD BEHAVIOUR OCCURRING CAUSED BY THIS PLUGIN
-Debug: false
-
 # Don't modify.
 Version: 1
 

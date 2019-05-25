@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -109,6 +110,9 @@ public class RewardsFactory {
     if (!enabled) {
       return;
     }
+    Debugger.debug(Level.INFO, "[RewardsFactory] Starting rewards registration");
+    long start = System.currentTimeMillis();
+
     Map<Reward.RewardType, Integer> registeredRewards = new HashMap<>();
     for (Reward.RewardType rewardType : Reward.RewardType.values()) {
       for (String reward : config.getStringList("rewards." + rewardType.getPath())) {
@@ -117,8 +121,9 @@ public class RewardsFactory {
       }
     }
     for (Reward.RewardType rewardType : registeredRewards.keySet()) {
-      Debugger.debug(Debugger.Level.INFO, "[RewardsFactory] Registered " + registeredRewards.get(rewardType) + " " + rewardType.name() + " rewards!");
+      Debugger.debug(Level.INFO, "[RewardsFactory] Registered {0} {1} rewards!", registeredRewards.get(rewardType), rewardType.name());
     }
+    Debugger.debug(Level.INFO, "[RewardsFactory] Registered all rewards took {0}ms", System.currentTimeMillis() - start);
   }
 
 }
