@@ -106,7 +106,6 @@ public class MiscComponents implements SetupComponent {
       List<String> locs = config.getStringList("instances." + arena.getId() + ".signs");
       locs.add(signLoc);
       config.set("instances." + arena.getId() + ".signs", locs);
-      plugin.getSignManager().getLoadedSigns().put((Sign) location.getBlock(), arena);
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 5, 0);
 
