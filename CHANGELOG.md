@@ -1,5 +1,6 @@
-### 1.1.2 Release (21.05.2019)
+### 1.1.2 Release (21/25.05.2019)
 * Fixed that you couldn't edit arena via /mm <arena> edit
+* You will now receive additional message when adding gold/player spawns that 4 is minimum spawns amount so you can add more
 
 ### 1.1.1 Release (28.04.2019 - 18.05.2019)
 * Relocate Plajer's Lair Services and TigerHix's ScoreboardLib packages in order to avoid conflict between our minigames if used on same server

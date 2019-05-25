@@ -99,6 +99,9 @@ public class SetupInventoryEvents implements Listener {
         config.set("instances." + arena.getId() + ".playerspawnpoints", startingSpawns);
         String startingProgress = startingSpawns.size() >= 4 ? "&e✔ Completed | " : "&c✘ Not completed | ";
         player.sendMessage(ChatManager.colorRawMessage(startingProgress + "&aPlayer spawn added! &8(&7" + startingSpawns.size() + "/4&8)"));
+        if (startingSpawns.size() == 4) {
+          player.sendMessage(ChatManager.colorRawMessage("&eInfo | &aYou can add more than 4 player spawns! Four is just a minimum!"));
+        }
         break;
       case SET_MINIMUM_PLAYERS:
         if (clickType.isRightClick()) {
@@ -151,6 +154,9 @@ public class SetupInventoryEvents implements Listener {
         config.set("instances." + arena.getId() + ".goldspawnpoints", goldSpawns);
         String goldProgress = goldSpawns.size() >= 4 ? "&e✔ Completed | " : "&c✘ Not completed | ";
         player.sendMessage(ChatManager.colorRawMessage(goldProgress + "&aGold spawn added! &8(&7" + goldSpawns.size() + "/4&8)"));
+        if (goldSpawns.size() == 4) {
+          player.sendMessage(ChatManager.colorRawMessage("&eInfo | &aYou can add more than 4 gold spawns! Four is just a minimum!"));
+        }
         break;
       case REGISTER_ARENA:
         if (ArenaRegistry.getArena(arena.getId()).isReady()) {
