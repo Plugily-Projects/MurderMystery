@@ -207,7 +207,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>com.github.stefvanschie.inventoryframework</pattern>
-                                    <shadedPattern>pl.plajer.villagedefense.utils.inventoryframework</shadedPattern>
+                                    <shadedPattern>pl.plajer.murdermystery.utils.inventoryframework</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.zaxxer.hikari</pattern>
