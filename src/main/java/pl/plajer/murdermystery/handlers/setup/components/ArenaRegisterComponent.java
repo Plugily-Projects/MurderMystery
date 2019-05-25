@@ -70,7 +70,7 @@ public class ArenaRegisterComponent implements SetupComponent {
           .build();
     } else {
       registeredItem = new ItemBuilder(Material.BARRIER)
-          .name(ChatManager.colorRawMessage("&a&lUpdate Arena Registration"))
+          .name(ChatManager.colorRawMessage("&a&lArena Registered - Congratulations"))
           .lore(ChatColor.GRAY + "This arena is already registered!")
           .lore(ChatColor.GRAY + "Good job, you went through whole setup!")
           .lore(ChatColor.GRAY + "You can play on this arena now!")
