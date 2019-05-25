@@ -34,11 +34,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajer.murdermystery.utils.services.ServiceRegistry;
 import pl.plajer.murdermystery.utils.services.locale.Locale;
 import pl.plajer.murdermystery.utils.services.locale.LocaleRegistry;
 import pl.plajer.murdermystery.utils.services.locale.LocaleService;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 
 /**
  * @author Plajer
@@ -156,6 +156,10 @@ public class LanguageManager {
       Bukkit.getConsoleSender().sendMessage("Access string: " + message);
       return "ERR_MESSAGE_NOT_FOUND";
     }
+  }
+
+  public static void reloadConfig() {
+    languageConfig = ConfigUtils.getConfig(plugin, "language");
   }
 
   public static Locale getPluginLocale() {

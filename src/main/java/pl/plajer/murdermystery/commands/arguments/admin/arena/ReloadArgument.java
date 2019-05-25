@@ -36,6 +36,7 @@ import pl.plajer.murdermystery.commands.arguments.data.CommandArgument;
 import pl.plajer.murdermystery.commands.arguments.data.LabelData;
 import pl.plajer.murdermystery.commands.arguments.data.LabeledCommandArgument;
 import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
@@ -62,6 +63,9 @@ public class ReloadArgument {
         confirmations.remove(sender);
         Debugger.debug(Level.INFO, "Initiated plugin reload by {0}", sender.getName());
         long start = System.currentTimeMillis();
+
+        registry.getPlugin().reloadConfig();
+        LanguageManager.reloadConfig();
 
         for (Arena arena : ArenaRegistry.getArenas()) {
           Debugger.debug(Level.INFO, "[Reloader] Stopping {0} instance.");

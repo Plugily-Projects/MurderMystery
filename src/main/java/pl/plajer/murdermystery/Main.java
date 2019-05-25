@@ -22,6 +22,7 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 
@@ -113,7 +114,7 @@ public class Main extends JavaPlugin {
     if (getConfig().getBoolean("Developer-Mode", false)) {
       Debugger.deepDebug(true);
       Debugger.debug(Level.FINE, "Deep debug enabled");
-      for (String listenable : getConfig().getStringList("Performance-Listenable")) {
+      for (String listenable : new ArrayList<>(getConfig().getStringList("Performance-Listenable"))) {
         Debugger.monitorPerformance(listenable);
       }
     }
