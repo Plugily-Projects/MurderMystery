@@ -21,6 +21,7 @@ package pl.plajer.murdermystery.arena;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -73,7 +74,9 @@ public class ArenaManager {
    * @see MMGameJoinAttemptEvent
    */
   public static void joinAttempt(Player player, Arena arena) {
-    Debugger.debug(Debugger.Level.INFO, "Initial join attempt, " + player.getName());
+    Debugger.debug(Level.INFO, "[{0}] Initial join attempt for {1}", arena.getId(), player.getName());
+    long start = System.currentTimeMillis();
+
     MMGameJoinAttemptEvent gameJoinAttemptEvent = new MMGameJoinAttemptEvent(player, arena);
     Bukkit.getPluginManager().callEvent(gameJoinAttemptEvent);
     if (!arena.isReady()) {
@@ -94,12 +97,20 @@ public class ArenaManager {
     if (arena.getArenaState() == ArenaState.RESTARTING) {
       return;
     }
-    Debugger.debug(Debugger.Level.INFO, "Final join attempt, " + player.getName());
+    Debugger.debug(Level.INFO, "[{0}] Checked join attempt for {1} initialized", arena.getId(), player.getName());
     User user = plugin.getUserManager().getUser(player);
     arena.getScoreboardManager().createScoreboard(user);
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.saveInventoryToFile(plugin, player);
     }
+
+    int murderIncrease = player.getEffectivePermissions().stream().filter(permAttach -> permAttach.getPermission().startsWith("murdermystery.role.murderer."))
+        .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(28 /* remove the permission node to obtain the number*/))).max().orElse(0);
+    int detectiveIncrease = player.getEffectivePermissions().stream().filter(permAttach -> permAttach.getPermission().startsWith("murdermystery.role.detective."))
+        .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(29 /* remove the permission node to obtain the number*/))).max().orElse(0);
+    user.addStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, murderIncrease);
+    user.addStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, detectiveIncrease);
+
     arena.addPlayer(player);
     player.setLevel(0);
     player.setExp(1);
@@ -138,6 +149,7 @@ public class ArenaManager {
         }
       }
       ArenaUtils.hidePlayersOutsideTheGame(player, arena);
+      Debugger.debug(Level.INFO, "[{0}] Join attempt as spectator finished for {1} took {2}ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);
       return;
     }
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
@@ -160,6 +172,7 @@ public class ArenaManager {
       ArenaUtils.showPlayer(arenaPlayer, arena);
     }
     arena.showPlayers();
+    Debugger.debug(Level.INFO, "[{0}] Join attempt as player for {1} took {2}ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);
   }
 
   /**
@@ -170,13 +183,30 @@ public class ArenaManager {
    * @see MMGameLeaveAttemptEvent
    */
   public static void leaveAttempt(Player player, Arena arena) {
-    Debugger.debug(Debugger.Level.INFO, "Initial leave attempt, " + player.getName());
+    Debugger.debug(Level.INFO, "[{0}] Initial leave attempt for {1}", arena.getId(), player.getName());
+    long start = System.currentTimeMillis();
+
     MMGameLeaveAttemptEvent event = new MMGameLeaveAttemptEvent(player, arena);
     Bukkit.getPluginManager().callEvent(event);
     User user = plugin.getUserManager().getUser(player);
     if (user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) > user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE)) {
       user.setStat(StatsStorage.StatisticType.HIGHEST_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE));
     }
+
+    //todo change later
+    int murderDecrease = player.getEffectivePermissions().stream().filter(permAttach -> permAttach.getPermission().startsWith("murdermystery.role.murderer."))
+        .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(28 /* remove the permission node to obtain the number*/))).max().orElse(0);
+    int detectiveDecrease = player.getEffectivePermissions().stream().filter(permAttach -> permAttach.getPermission().startsWith("murdermystery.role.detective."))
+        .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(29 /* remove the permission node to obtain the number*/))).max().orElse(0);
+    user.addStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, -murderDecrease);
+    if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) <= 0) {
+      user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
+    }
+    user.addStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, -detectiveDecrease);
+    if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) <= 0) {
+      user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
+    }
+
     arena.getScoreboardManager().removeScoreboard(user);
     //-1 cause we didn't remove player yet
     if (arena.getArenaState() == ArenaState.IN_GAME && arena.getPlayersLeft().size() - 1 > 1) {
@@ -255,6 +285,8 @@ public class ArenaManager {
         user.setStat(stat, 0);
       }
     }
+
+    Debugger.debug(Level.INFO, "[{0}] Game leave finished for {1} took{2}ms ", arena.getId(), player.getName(), System.currentTimeMillis() - start);
   }
 
   /**
@@ -264,14 +296,16 @@ public class ArenaManager {
    * @see MMGameStopEvent
    */
   public static void stopGame(boolean quickStop, Arena arena) {
-    Debugger.debug(Debugger.Level.INFO, "Game stop event initiate, arena " + arena.getId());
+    Debugger.debug(Level.INFO, "[{0}] Stop game event initialized with quickStop {1}", quickStop);
+    long start = System.currentTimeMillis();
+
     MMGameStopEvent gameStopEvent = new MMGameStopEvent(arena);
     Bukkit.getPluginManager().callEvent(gameStopEvent);
     List<String> summaryMessages = LanguageManager.getLanguageList("In-Game.Messages.Game-End-Messages.Summary-Message");
     arena.getScoreboardManager().stopAllScoreboards();
     Random rand = new Random();
 
-    boolean murderWon = arena.getPlayersLeft().size() == 1 && arena.getPlayersLeft().equals(arena.getCharacter(Arena.CharacterType.MURDERER));
+    boolean murderWon = arena.getPlayersLeft().size() == 1 && arena.getPlayersLeft().get(0).equals(arena.getCharacter(Arena.CharacterType.MURDERER));
 
     for (final Player player : arena.getPlayers()) {
       User user = plugin.getUserManager().getUser(player);
@@ -298,8 +332,10 @@ public class ArenaManager {
       }
       player.getInventory().clear();
       player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
-      for (String msg : summaryMessages) {
-        MiscUtils.sendCenteredMessage(player, formatSummaryPlaceholders(msg, arena));
+      if (!quickStop) {
+        for (String msg : summaryMessages) {
+          MiscUtils.sendCenteredMessage(player, formatSummaryPlaceholders(msg, arena));
+        }
       }
       user.removeScoreboard();
       if (!quickStop && plugin.getConfig().getBoolean("Firework-When-Game-Ends", true)) {
@@ -316,7 +352,7 @@ public class ArenaManager {
         }.runTaskTimer(plugin, 30, 30);
       }
     }
-    Debugger.debug(Debugger.Level.INFO, "Game stop event finish, arena " + arena.getId());
+    Debugger.debug(Level.INFO, "[{0}] Stop game event finished took{1}ms ", arena.getId(), System.currentTimeMillis() - start);
   }
 
   private static String formatSummaryPlaceholders(String msg, Arena arena) {

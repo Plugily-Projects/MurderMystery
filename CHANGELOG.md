@@ -1,5 +1,30 @@
-### 1.1.1 Release (28.04.2019)
-* * Relocate Plajer's Lair Services and TigerHix's ScoreboardLib packages in order to avoid conflict between our minigames if used on same server
+### 1.1.2 Release (21/25.05.2019)
+* Fixed that you couldn't edit arena via /mm <arena> edit
+* You will now receive additional message when adding gold/player spawns that 4 is minimum spawns amount so you can add more
+* Totally recoded arena setup gui UI and code structure, now all changes applies to arena instantly
+* Arena setup map name option now is chat based not name tag based
+* Added shift + right click to delete all gold/player spawns (useful if you made a mistke, better than nothing)
+* Added sign spawn protection radius warning, non opped players can't join via signs if sign is in radius of spawn protection
+* Debug section is no longer visible part of config, it can be added manually but won't be there by default from now
+* Reload command is no longer discouraged and reloads both config and language file
+* Sword does fly bit faster now (from 0.5 to 0.65 fly speed)
+* Murderer no longer always receive lose statistic even on win
+* Fixed boss bar displays game end message instead of waiting for players after start up
+* /mma help and /mm help will display help pages now
+* Players shouldn't be able to interact with flower pots and paintings anymore
+
+### 1.1.1 Release (28.04.2019 - 18.05.2019)
+* Relocate Plajer's Lair Services and TigerHix's ScoreboardLib packages in order to avoid conflict between our minigames if used on same server
+* Fixed saving user data on plugin disable while using MySQL
+* /mma delete and reload require confirmation before execution now, theymust be typed twice to execute
+* Added permissions for increased chance of being murderer or detective, node: `murdermystery.role.murderer.<1/100>` or
+`murdermystery.role.detective.<1/100>` the number is the amount of bonus points to give on arena join
+* Fixed update notify message was sent to everybody without proper permission check
+* First time database creation is now made async not in main server thread
+* Implemented faster Hikari connection pool library and removed BoneCP, jar size is now 3 times smaller too
+* Apache commons-io is now shaded into jar, 1.14 removed it
+* Recoded whole commands structure
+* Scoreboard colors were broken sometimes, this is now fixed (I hope so)
 
 ### 1.1.0 Release (28.04.2019)
 * Fixed wins/loses weren't properly assigned on game end, only murderer received these stats

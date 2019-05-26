@@ -27,7 +27,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.Main;
-import pl.plajerlair.services.exception.ReportedException;
+import pl.plajer.murdermystery.utils.services.exception.ReportedException;
 
 /**
  * @author Plajer
@@ -38,7 +38,7 @@ public class ExceptionLogHandler extends Handler {
 
   //these classes if found in stacktraces won't be reported
   //to the Error Service
-  private List<String> blacklistedClasses = Arrays.asList("pl.plajer.murdermystery.user.data.MySQLManager", "pl.murdermystery.plajerlair.core.database.MySQLDatabase");
+  private List<String> blacklistedClasses = Arrays.asList("pl.plajer.murdermystery.user.data.MySQLManager", "pl.plajerlair.commonsbox.database.MySQLDatabase");
 
   public ExceptionLogHandler() {
     Bukkit.getLogger().addHandler(this);

@@ -29,7 +29,7 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
-import pl.plajerlair.services.exception.ReportedException;
+import pl.plajer.murdermystery.utils.services.exception.ReportedException;
 
 /**
  * @author Plajer

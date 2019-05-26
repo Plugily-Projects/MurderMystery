@@ -16,44 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.murdermystery.commands.test;
+package pl.plajer.murdermystery.utils;
 
-import org.bukkit.command.CommandSender;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author Plajer
  * <p>
- * Created at 31.10.2018
+ * Created at 18.05.2019
  */
-public class CommandArgument {
+public class UtilsTest {
 
-  private String argumentName;
-  private String permission;
-  private ExecutorType validExecutors;
-
-  public CommandArgument(String argumentName, String permission, ExecutorType validExecutors) {
-    this.argumentName = argumentName;
-    this.permission = permission;
-    this.validExecutors = validExecutors;
+  @Test
+  public void serializeInt() {
+    Assert.assertEquals(9, Utils.serializeInt(3));
+    Assert.assertEquals(45, Utils.serializeInt(37));
+    Assert.assertEquals(45, Utils.serializeInt(43));
   }
-
-  public String getArgumentName() {
-    return argumentName;
-  }
-
-  public String getPermission() {
-    return permission;
-  }
-
-  public ExecutorType getValidExecutors() {
-    return validExecutors;
-  }
-
-  public void execute(CommandSender sender, String[] args) {
-  }
-
-  public enum ExecutorType {
-    BOTH, CONSOLE, PLAYER
-  }
-
 }

@@ -16,42 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.murdermystery.commands;
+package pl.plajer.murdermystery.handlers.setup.components;
+
+import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+
+import pl.plajer.murdermystery.handlers.setup.SetupInventory;
 
 /**
  * @author Plajer
  * <p>
- * Created at 05.08.2018
+ * Created at 25.05.2019
  */
-public class CommandData {
+public interface SetupComponent {
 
-  private String text;
-  private String command;
-  private String description;
+  void prepare(SetupInventory setupInventory);
 
-  public CommandData(String text, String command, String description) {
-    this.text = text;
-    this.command = command;
-    this.description = description;
-  }
+  void injectComponents(StaticPane pane);
 
-  public String getText() {
-    return text;
-  }
-
-  public String getCommand() {
-    return command;
-  }
-
-  public void setCommand(String command) {
-    this.command = command;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
 }

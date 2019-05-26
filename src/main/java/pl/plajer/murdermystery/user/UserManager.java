@@ -20,6 +20,7 @@ package pl.plajer.murdermystery.user;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -67,7 +68,7 @@ public class UserManager {
         return user;
       }
     }
-    Debugger.debug(Debugger.Level.INFO, "Registering new user with UUID: " + player.getUniqueId() + " (" + player.getName() + ")");
+    Debugger.debug(Level.INFO, "Registering new user {0} ({1})", player.getUniqueId(), player.getName());
     User user = new User(player);
     users.add(user);
     return user;

@@ -23,6 +23,7 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import net.md_5.bungee.api.ChatMessageType;
@@ -74,44 +76,39 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import pl.plajerlair.commonsbox.number.NumberUtils;
 
-/**
- * Created by Tom on 12/08/2014.
- */
 public class Arena extends BukkitRunnable {
 
-  private static Random random = new Random();
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Random random = new Random();
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private final String id;
+
   private Set<Player> players = new HashSet<>();
-  @Deprecated //mergeable
   private List<Location> goldSpawnPoints = new ArrayList<>();
   private List<Item> goldSpawned = new ArrayList<>();
-  @Deprecated //mergeable
   private List<Location> playerSpawnPoints = new ArrayList<>();
   private List<Corpse> corpses = new ArrayList<>();
   private List<SpecialBlock> specialBlocks = new ArrayList<>();
-  private Hologram bowHologram;
+
   //contains murderer, detective, fake detective and hero
-  private Map<CharacterType, Player> gameCharacters = new HashMap<>();
-  @Deprecated //api subject to change
+  private Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
+  //all arena values that are integers, contains constant and floating values
+  private Map<ArenaOption, Integer> arenaOptions = new EnumMap<>(ArenaOption.class);
+  //instead of 3 location fields we use map with GameLocation enum
+  private Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
+
+  private Hologram bowHologram;
   private boolean murdererDead;
-  @Deprecated //^
   private boolean detectiveDead;
-  @Deprecated //^
   private boolean murdererLocatorReceived;
+
+  private ArenaState arenaState = ArenaState.WAITING_FOR_PLAYERS;
   private BossBar gameBar;
-  private ArenaState arenaState;
   private ScoreboardManager scoreboardManager;
   private String mapName = "";
-  private String id;
-  //all arena values that are integers, contains constant and floating values
-  private Map<ArenaOption, Integer> arenaOptions = new HashMap<>();
-  //instead of 3 location fields we use map with GameLocation enum
-  private Map<GameLocation, Location> gameLocations = new HashMap<>();
   private boolean ready = true;
   private boolean forceStart = false;
 
   public Arena(String id) {
-    arenaState = ArenaState.WAITING_FOR_PLAYERS;
     this.id = id;
     for (ArenaOption option : ArenaOption.values()) {
       arenaOptions.put(option, option.getDefaultValue());
@@ -146,11 +143,15 @@ public class Arena extends BukkitRunnable {
     this.bowHologram = bowHologram;
   }
 
+  @Override
   public void run() {
     //idle task
     if (getPlayers().size() == 0 && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       return;
     }
+    Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Running game task", getId());
+    long start = System.currentTimeMillis();
+
     switch (getArenaState()) {
       case WAITING_FOR_PLAYERS:
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
@@ -160,7 +161,7 @@ public class Arena extends BukkitRunnable {
           if (getTimer() <= 0) {
             setTimer(15);
             ChatManager.broadcast(this, ChatManager.formatMessage(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), getMinimumPlayers()));
-            return;
+            break;
           }
         } else {
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
@@ -439,10 +440,12 @@ public class Arena extends BukkitRunnable {
             this.addPlayer(player);
           }
         }
+        gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
         break;
       default:
         break; //o.o?
     }
+    Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Game task finished took {1}ms", getId(), System.currentTimeMillis() - start);
   }
 
   private String formatRoleChance(User user, int murdererPts, int detectivePts) throws NumberFormatException {
@@ -498,6 +501,10 @@ public class Arena extends BukkitRunnable {
     return goldSpawned;
   }
 
+  public List<Location> getGoldSpawnPoints() {
+    return goldSpawnPoints;
+  }
+
   /**
    * Get arena identifier used to get arenas by string.
    *
@@ -524,7 +531,7 @@ public class Arena extends BukkitRunnable {
    */
   public void setMinimumPlayers(int minimumPlayers) {
     if (minimumPlayers < 2) {
-      Debugger.debug(Debugger.Level.WARN, "Minimum players amount for arena cannot be less than 2! Setting amount to 2!");
+      Debugger.debug(Level.WARNING, "Minimum players amount for arena cannot be less than 2! Got {0}", minimumPlayers);
       setOptionValue(ArenaOption.MINIMUM_PLAYERS, 2);
       return;
     }
@@ -771,7 +778,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void start() {
-    Debugger.debug(Debugger.Level.INFO, "Game instance started, arena " + this.getId());
+    Debugger.debug(Level.INFO, "[{0}] Game instance started", getId());
     this.runTaskTimer(plugin, 20L, 20L);
     this.setArenaState(ArenaState.RESTARTING);
   }

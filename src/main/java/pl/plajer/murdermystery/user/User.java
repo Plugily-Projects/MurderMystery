@@ -18,6 +18,7 @@
 
 package pl.plajer.murdermystery.user;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class User {
   private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
   private Player player;
   private boolean spectator = false;
-  private Map<StatsStorage.StatisticType, Integer> stats = new HashMap<>();
+  private Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
   private Map<String, Double> cooldowns = new HashMap<>();
 
   public User(Player player) {

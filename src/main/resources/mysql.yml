@@ -9,9 +9,3 @@ user: <user>
 
 # MySQL user password
 password: <password>
-
-# Minimum connections to database.
-min-connections: 2
-
-# Maximum connections to database.
-max-connections: 10

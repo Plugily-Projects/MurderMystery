@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajerlair.services.exception;
+package pl.plajer.murdermystery.utils.services.exception;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import pl.plajerlair.services.ServiceRegistry;
+import pl.plajer.murdermystery.utils.services.ServiceRegistry;
 
 /**
  * Create reported exception with data sent to plajer.xyz reporter service

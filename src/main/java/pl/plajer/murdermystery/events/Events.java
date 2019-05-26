@@ -148,9 +148,9 @@ public class Events implements Listener {
 
       @Override
       public void run() {
-        posModifier += 0.5;
+        posModifier += 0.65;
         double x = direction.getX() * posModifier;
-        double y = direction.getY() * posModifier + 0.5;
+        double y = direction.getY() * posModifier + 0.65;
         double z = direction.getZ() * posModifier;
         loc.add(x, y, z);
         stand.teleport(loc);
@@ -213,6 +213,17 @@ public class Events implements Listener {
     }
     event.setCancelled(true);
     event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
+  }
+
+  @EventHandler
+  public void onInGameInteract(PlayerInteractEvent e) {
+    Arena arena = ArenaRegistry.getArena(e.getPlayer());
+    if (arena == null || e.getClickedBlock() == null) {
+      return;
+    }
+    if (e.getClickedBlock().getType() == XMaterial.PAINTING.parseMaterial() || e.getClickedBlock().getType() == XMaterial.FLOWER_POT.parseMaterial()) {
+      e.setCancelled(true);
+    }
   }
 
   @EventHandler
