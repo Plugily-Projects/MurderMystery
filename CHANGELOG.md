@@ -1,4 +1,4 @@
-### 1.1.2 Release (21/25.05.2019)
+### 1.1.2 Release (21.05.2019 - 01.06.2019)
 * Fixed that you couldn't edit arena via /mm <arena> edit
 * You will now receive additional message when adding gold/player spawns that 4 is minimum spawns amount so you can add more
 * Totally recoded arena setup gui UI and code structure, now all changes applies to arena instantly
@@ -12,6 +12,7 @@
 * Fixed boss bar displays game end message instead of waiting for players after start up
 * /mma help and /mm help will display help pages now
 * Players shouldn't be able to interact with flower pots and paintings anymore
+* Fixed PlaceholderAPI placeholders didn't work on in-game scoreboard
 
 ### 1.1.1 Release (28.04.2019 - 18.05.2019)
 * Relocate Plajer's Lair Services and TigerHix's ScoreboardLib packages in order to avoid conflict between our minigames if used on same server
