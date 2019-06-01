@@ -172,7 +172,7 @@ public class ScoreboardManager {
     formattedLine = StringUtils.replace(formattedLine, "%SCORE%", String.valueOf(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE)));
     formattedLine = ChatManager.colorRawMessage(formattedLine);
     if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      PlaceholderAPI.setPlaceholders(user.getPlayer(), formattedLine);
+      formattedLine = PlaceholderAPI.setPlaceholders(user.getPlayer(), formattedLine);
     }
     return formattedLine;
   }
