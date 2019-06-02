@@ -55,7 +55,12 @@ public class LocaleService {
     this.plugin = plugin;
     try (Scanner scanner = new Scanner(requestLocaleFetch(null), "UTF-8").useDelimiter("\\A")) {
       String data = scanner.hasNext() ? scanner.next() : "";
-      Files.write(new File(plugin.getDataFolder().getPath() + "/locales/locale_data.yml").toPath(), data.getBytes());
+      File file = new File(plugin.getDataFolder().getPath() + "/locales/locale_data.yml");
+      if (!file.exists()) {
+        new File(plugin.getDataFolder().getPath() + "/locales").mkdir();
+        file.createNewFile();
+      }
+      Files.write(file.toPath(), data.getBytes());
       this.localeData = ConfigUtils.getConfig(plugin, "/locales/locale_data");
       plugin.getLogger().log(Level.INFO, "Fetched latest localization file from repository.");
     } catch (IOException ignored) {
