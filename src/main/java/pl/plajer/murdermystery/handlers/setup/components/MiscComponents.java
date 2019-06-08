@@ -124,7 +124,7 @@ public class MiscComponents implements SetupComponent {
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
           String name = ChatManager.colorRawMessage(input);
-          player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aName of arena " + arena.getId() + " set to " + name));
+          player.sendRawMessage(ChatManager.colorRawMessage("&e✔ Completed | &aName of arena " + arena.getId() + " set to " + name));
           config.set("instances." + arena.getId() + ".mapname", arena.getMapName());
           arena.setMapName(name);
           ConfigUtils.saveConfig(plugin, config, "arenas");
