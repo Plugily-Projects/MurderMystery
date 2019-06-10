@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.murdermystery.handlers.setup.components;
+package pl.plajer.murdermystery.handlers.setup;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,7 +35,7 @@ public class SetupUtilities {
   private FileConfiguration config;
   private Arena arena;
 
-  public SetupUtilities(FileConfiguration config, Arena arena) {
+  SetupUtilities(FileConfiguration config, Arena arena) {
     this.config = config;
     this.arena = arena;
   }

@@ -1,6 +1,6 @@
 name: MurderMystery
 main: pl.plajer.murdermystery.Main
-authors: [Plajer, Tigerpanzer]
+authors: [Plajer, Tigerpanzer, montlikadani]
 version: ${project.version}
 api-version: 1.13
 depend: [HolographicDisplays]

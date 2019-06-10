@@ -184,8 +184,10 @@ public class Arena extends BukkitRunnable {
           player.setLevel(getTimer());
         }
         if (getPlayers().size() < getMinimumPlayers() && !forceStart) {
-          gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
-          gameBar.setProgress(1.0);
+          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+            gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
+            gameBar.setProgress(1.0);
+          }
           ChatManager.broadcast(this, ChatManager.formatMessage(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), getMinimumPlayers()));
           setArenaState(ArenaState.WAITING_FOR_PLAYERS);
           Bukkit.getPluginManager().callEvent(new MMGameStartEvent(this));
@@ -440,7 +442,9 @@ public class Arena extends BukkitRunnable {
             this.addPlayer(player);
           }
         }
-        gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
+        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+          gameBar.setTitle(ChatManager.colorMessage("Bossbar.Waiting-For-Players"));
+        }
         break;
       default:
         break; //o.o?

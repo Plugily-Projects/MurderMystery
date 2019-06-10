@@ -1,5 +1,7 @@
 ## This file is dedicated to **Murder Mystery** project's all-time contributors.
 
+## **very outdated, please nag me if you still see it here**
+
 **I'm sincerely glad to everyone who supported our project every time!**
 
 **Contributors are listed in alphabetical order, every contributor is equally important!**
