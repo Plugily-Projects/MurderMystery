@@ -2,7 +2,7 @@
 * Fixed boss bar when disabled could throw errors breaking the game
 * Fixed PlaceholderAPI placeholders didn't work on in-game scoreboard
 * Fixed locales never worked if there was no locales folder
-* Fixed new arena name message wasn't sent
+* Fixed new arena name message wasn't sent in setup editor
 
 ### 1.1.2 Release (21/25.05.2019)
 * Fixed that you couldn't edit arena via /mm <arena> edit
