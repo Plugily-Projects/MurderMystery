@@ -17,7 +17,7 @@ Have fun using it! Leave a good rating if you really like it.
 |-------------------------------------------------------------|-------------------------------------------------|----------------------------------------------------------------------------|
 | [InventoryFramework](https://github.com/stefvanschie/IF/)   | [stefvanschie](https://github.com/stefvanschie) | [Unlicense](https://github.com/stefvanschie/IF/blob/master/LICENSE)        |
 | [ScoreboardLib](https://github.com/TigerHix/ScoreboardLib/) | [TigerHix](https://github.com/TigerHix)         | [LGPLv3](https://github.com/TigerHix/ScoreboardLib/blob/master/LICENSE)    |
-| [BoneCP](https://github.com/wwadge/bonecp)                  | [wwadge](https://github.com/wwadge)             | [Apache License 2.0](https://github.com/wwadge/bonecp/blob/master/LICENSE) |
+| [HikariCP](https://github.com/brettwooldridge/HikariCP)     | [brettwooldridge](https://github.com/brettwooldridge) | [Apache License 2.0](https://github.com/brettwooldridge/HikariCP/blob/dev/LICENSE) |
 | [bStats](https://github.com/Bastian/bStats-Metrics)         | [Bastian](https://github.com/Bastian)           | [LGPLv3](https://github.com/Bastian/bStats-Metrics/blob/master/LICENSE)    |
 | [Commons Box](https://github.com/Plajer/Commons-Box)        | [Plajer](https://github.com/Plajer)             | [GPLv3](https://github.com/Plajer/Commons-Box/blob/master/LICENSE.md)      |
 ## Open Source Licenses
