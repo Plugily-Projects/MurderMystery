@@ -121,7 +121,7 @@ In-Game:
   #Used in most game messages.
   Plugin-Prefix: "&4[Murder Mystery] "
   Already-Playing: "&cYou are already queued for a game! You can leave a game with /mm leave."
-  Join-No-Permission: "&cYou don't have permission to join this arena!"
+  Join-No-Permission: "&cYou don't have &6%permission% &cpermission to join this arena!"
   Full-Game-No-Permission: "&cYou don't have the permission to join full games!"
   No-Slots-For-Premium: "&cThis game is already full of premium players! Sorry"
   You-Are-Spectator: "&cYou're now a spectator! You can fly now!"
