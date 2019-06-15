@@ -45,7 +45,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
-import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 
 import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
@@ -75,14 +74,6 @@ public class Events implements Listener {
   public Events(Main plugin) {
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
-  }
-
-  @EventHandler
-  public void onCorpseClick(CorpseClickEvent e) {
-    if (ArenaRegistry.isInArena(e.getClicker())) {
-      e.setCancelled(true);
-      e.getClicker().closeInventory();
-    }
   }
 
   @EventHandler

@@ -1,3 +1,6 @@
+### 1.1.4 Release (15.06.2019)
+* Plugin will no longer send error messages `failed to register events` if corpse reborn wasn't installed
+
 ### 1.1.3 Release (01/08.06.2019)
 * Fixed boss bar when disabled could throw errors breaking the game
 * Fixed PlaceholderAPI placeholders didn't work on in-game scoreboard

@@ -29,12 +29,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
+import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 
 import pl.plajer.murdermystery.HookManager;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
+import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.corpse.Corpse;
 
 /**
@@ -50,13 +52,13 @@ public class CorpseHandler implements Listener {
 
   public CorpseHandler(Main plugin) {
     this.plugin = plugin;
-    if (plugin.getConfig().getBoolean("Override-Corpses-Spawn", true)) {
-      plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
     registerLastWord("murdermystery.lastwords.meme", ChatManager.colorMessage("In-Game.Messages.Last-Words.Meme"));
     registerLastWord("murdermystery.lastwords.rage", ChatManager.colorMessage("In-Game.Messages.Last-Words.Rage"));
     registerLastWord("murdermystery.lastwords.pro", ChatManager.colorMessage("In-Game.Messages.Last-Words.Pro"));
     registerLastWord("default", ChatManager.colorMessage("In-Game.Messages.Last-Words.Default"));
+    if (plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+      plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
   }
 
   public void registerLastWord(String permission, String lastWord) {
@@ -91,11 +93,22 @@ public class CorpseHandler implements Listener {
 
   @EventHandler
   public void onCorpseSpawn(CorpseSpawnEvent e) {
+    if (!plugin.getConfig().getBoolean("Override-Corpses-Spawn", true)) {
+      return;
+    }
     if (lastSpawnedCorpse == null) {
       return;
     }
     if (!e.getCorpse().equals(lastSpawnedCorpse)) {
       e.setCancelled(true);
+    }
+  }
+
+  @EventHandler
+  public void onCorpseClick(CorpseClickEvent e) {
+    if (ArenaRegistry.isInArena(e.getClicker())) {
+      e.setCancelled(true);
+      e.getClicker().closeInventory();
     }
   }
 
