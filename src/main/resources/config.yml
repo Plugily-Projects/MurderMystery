@@ -53,6 +53,11 @@ ChatFormat-Enabled: true
 # WARNING: If disabled, two corpses will be spawned when player in-game dies
 Override-Corpses-Spawn: true
 
+# How many blocks per tick sword thrown by murderer should fly
+# Please avoid high values as it might look like the sword is
+# blinking each tick
+Murderer-Sword-Speed: 0.65
+
 # Basic permissions for game, permissions explained here: https://wiki.plajer.xyz/minecraft/murdermystery/cmds_and_perms.php#basic-permissions
 Basic-Permissions:
   Full-Games-Permission: "murdermystery.fullgames"
@@ -95,6 +100,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 1
+Version: 2
 
 # No way! You've reached the end! But... where's the dragon!?

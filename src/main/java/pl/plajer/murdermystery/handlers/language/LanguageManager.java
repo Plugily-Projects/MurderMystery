@@ -52,11 +52,15 @@ public class LanguageManager {
   private static Properties properties = new Properties();
   private static FileConfiguration languageConfig;
 
+  private LanguageManager() {
+  }
+
   public static void init(Main plugin) {
     LanguageManager.plugin = plugin;
     if (!new File(LanguageManager.plugin.getDataFolder() + File.separator + "language.yml").exists()) {
       LanguageManager.plugin.saveResource("language.yml", false);
     }
+    new LanguageMigrator(plugin);
     languageConfig = ConfigUtils.getConfig(plugin, "language");
     registerLocales();
     setupLocale();

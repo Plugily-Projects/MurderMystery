@@ -131,7 +131,7 @@ public class Events implements Listener {
       if (arena.getArenaState() == ArenaState.IN_GAME) {
         ItemPosition.setItem(attacker, ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
       }
-    }, 5 * 21);
+    }, 5 * 21L);
     new BukkitRunnable() {
       double posModifier = 0;
       Location loc = attacker.getLocation();
@@ -139,7 +139,7 @@ public class Events implements Listener {
 
       @Override
       public void run() {
-        posModifier += 0.65;
+        posModifier += plugin.getConfig().getDouble("Murderer-Sword-Speed", 0.65);
         double x = direction.getX() * posModifier;
         double y = direction.getY() * posModifier + 0.65;
         double z = direction.getZ() * posModifier;
@@ -153,22 +153,8 @@ public class Events implements Listener {
           if (ArenaRegistry.isInArena(victim) && plugin.getUserManager().getUser(victim).isSpectator()) {
             continue;
           }
-          if (victim.getLocation().distance(loc) < 1.0) {
-            if (!victim.equals(attacker)) {
-              victim.damage(100.0);
-              victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
-              victim.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"),
-                  ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"), 5, 40, 5);
-              attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
-              attackerUser.addStat(StatsStorage.StatisticType.KILLS, 1);
-              ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
-              if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
-                if (Role.isRole(Role.FAKE_DETECTIVE, victim)) {
-                  arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
-                }
-                ArenaUtils.dropBowAndAnnounce(arena, victim);
-              }
-            }
+          if (victim.getLocation().distance(loc) < 1.0 && !victim.equals(attacker)) {
+            killBySword(arena, attackerUser, victim);
           }
         }
         loc.subtract(x, y, z);
@@ -178,6 +164,22 @@ public class Events implements Listener {
         }
       }
     }.runTaskTimer(plugin, 0, 1);
+  }
+
+  private void killBySword(Arena arena, User attackerUser, Player victim) {
+    victim.damage(100.0);
+    victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
+    victim.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"),
+        ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"), 5, 40, 5);
+    attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
+    attackerUser.addStat(StatsStorage.StatisticType.KILLS, 1);
+    ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
+    if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
+      if (Role.isRole(Role.FAKE_DETECTIVE, victim)) {
+        arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
+      }
+      ArenaUtils.dropBowAndAnnounce(arena, victim);
+    }
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)

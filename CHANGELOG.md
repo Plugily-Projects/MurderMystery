@@ -3,6 +3,7 @@
 * Join permission message outputs required permission node now
 * Added Portuguese (BR) locale (`pt_br` in config.yml)
 * Locales with special characters like Russian or Korean will now work properly and won't be seen as `?` characters
+* Added configurable murderer thrown sword speed
 
 ### 1.1.3 Release (01/08.06.2019)
 * Fixed boss bar when disabled could throw errors breaking the game
