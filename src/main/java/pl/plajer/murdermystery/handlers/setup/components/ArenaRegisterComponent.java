@@ -38,6 +38,7 @@ import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.setup.SetupInventory;
+import pl.plajer.murdermystery.handlers.sign.ArenaSign;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
@@ -106,11 +107,10 @@ public class ArenaRegisterComponent implements SetupComponent {
       ConfigUtils.saveConfig(plugin, config, "arenas");
       List<Sign> signsToUpdate = new ArrayList<>();
       ArenaRegistry.unregisterArena(setupInventory.getArena());
-      if (plugin.getSignManager().getLoadedSigns().containsValue(setupInventory.getArena())) {
-        for (Sign s : plugin.getSignManager().getLoadedSigns().keySet()) {
-          if (plugin.getSignManager().getLoadedSigns().get(s).equals(setupInventory.getArena())) {
-            signsToUpdate.add(s);
-          }
+
+      for (ArenaSign arenaSign : plugin.getSignManager().getArenaSigns()) {
+        if (arenaSign.getArena().equals(setupInventory.getArena())) {
+          signsToUpdate.add(arenaSign.getSign());
         }
       }
       arena = new Arena(setupInventory.getArena().getId());
@@ -151,7 +151,7 @@ public class ArenaRegisterComponent implements SetupComponent {
       ArenaRegistry.registerArena(arena);
       arena.start();
       for (Sign s : signsToUpdate) {
-        plugin.getSignManager().getLoadedSigns().put(s, arena);
+        plugin.getSignManager().getArenaSigns().add(new ArenaSign(s, arena));
       }
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 8, 0);

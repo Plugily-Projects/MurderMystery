@@ -49,7 +49,6 @@ public class LanguageMigrator {
     File file = new File(plugin.getDataFolder() + "/config.yml");
 
     int version = plugin.getConfig().getInt("Version", CONFIG_FILE_VERSION - 1);
-    updateConfigVersionControl(version);
 
     for (int i = version; i < CONFIG_FILE_VERSION; i++) {
       switch (version) {
@@ -64,6 +63,7 @@ public class LanguageMigrator {
       }
       version++;
     }
+    updateConfigVersionControl(version);
     plugin.reloadConfig();
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Village Defense] [System notify] Config updated, no comments were removed :)");
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Village Defense] [System notify] You're using latest config file version! Nice!");
@@ -71,7 +71,7 @@ public class LanguageMigrator {
 
   private void updateConfigVersionControl(int oldVersion) {
     File file = new File(plugin.getDataFolder() + "/config.yml");
-    MigratorUtils.removeLineFromFile(file, "# Don't modify.");
+    MigratorUtils.removeLineFromFile(file, "# Don't modify");
     MigratorUtils.removeLineFromFile(file, "Version: " + oldVersion);
     MigratorUtils.removeLineFromFile(file, "# No way! You've reached the end! But... where's the dragon!?");
     MigratorUtils.addNewLines(file, "# Don't modify\r\nVersion: " + CONFIG_FILE_VERSION + "\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");

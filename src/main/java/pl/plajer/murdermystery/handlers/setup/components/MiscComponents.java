@@ -42,6 +42,7 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.setup.SetupInventory;
+import pl.plajer.murdermystery.handlers.sign.ArenaSign;
 import pl.plajer.murdermystery.utils.conversation.SimpleConversationBuilder;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
@@ -100,7 +101,7 @@ public class MiscComponents implements SetupComponent {
         e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&cYou can ignore this warning and add sign with Shift + Left Click, but for now &c&loperation is cancelled"));
         return;
       }
-      plugin.getSignManager().getLoadedSigns().put((Sign) location.getBlock().getState(), arena);
+      plugin.getSignManager().getArenaSigns().add(new ArenaSign((Sign) location.getBlock().getState(), arena));
       player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Signs.Sign-Created"));
       String signLoc = location.getBlock().getWorld().getName() + "," + location.getBlock().getX() + "," + location.getBlock().getY() + "," + location.getBlock().getZ() + ",0.0,0.0";
       List<String> locs = config.getStringList("instances." + arena.getId() + ".signs");

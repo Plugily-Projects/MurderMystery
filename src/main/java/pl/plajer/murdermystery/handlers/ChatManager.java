@@ -28,14 +28,15 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.utils.MessageUtils;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import pl.plajer.murdermystery.utils.services.exception.ReportedException;
+import pl.plajerlair.commonsbox.string.StringFormatUtils;
 
 /**
  * @author Plajer
  * <p>
  * Created at 03.08.2018
  */
+@Deprecated //remove static usage
 public class ChatManager {
 
   public static String PLUGIN_PREFIX;
