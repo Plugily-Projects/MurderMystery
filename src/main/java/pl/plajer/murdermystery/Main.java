@@ -128,7 +128,7 @@ public class Main extends JavaPlugin {
 
     Debugger.debug(Level.INFO, "Plugin loaded! Hooking into soft-dependencies in a while!");
     //start hook manager later in order to allow soft-dependencies to fully load
-    Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20 * 5);
+    Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
   }
 
   private boolean validateIfPluginShouldStart() {

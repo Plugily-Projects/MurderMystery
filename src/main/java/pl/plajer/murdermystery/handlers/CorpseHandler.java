@@ -56,9 +56,12 @@ public class CorpseHandler implements Listener {
     registerLastWord("murdermystery.lastwords.rage", ChatManager.colorMessage("In-Game.Messages.Last-Words.Rage"));
     registerLastWord("murdermystery.lastwords.pro", ChatManager.colorMessage("In-Game.Messages.Last-Words.Pro"));
     registerLastWord("default", ChatManager.colorMessage("In-Game.Messages.Last-Words.Default"));
-    if (plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
-      plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
+    //run bit later than hook manager to ensure it's not null
+    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+      if (plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+      }
+    }, 25L * 5);
   }
 
   public void registerLastWord(String permission, String lastWord) {
