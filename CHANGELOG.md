@@ -1,6 +1,8 @@
-### 1.1.4 Release (15.06.2019)
+### 1.1.4 Release (15.06.2019 - 10.07.2019)
 * Plugin will no longer send error messages `failed to register events` if corpse reborn wasn't installed
 * Join permission message outputs required permission node now
+* Added Portuguese (BR) locale (`pt_br` in config.yml)
+* Locales with special characters like Russian or Korean will now work properly and won't be seen as `?` characters
 
 ### 1.1.3 Release (01/08.06.2019)
 * Fixed boss bar when disabled could throw errors breaking the game

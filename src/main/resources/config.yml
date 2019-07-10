@@ -15,7 +15,7 @@
 #    cs - Český jazyk               ro - Limba română
 #    vn - Tiếng Việt                it - Lingua italiana
 #    ru - Русский язык              es - Idioma español
-#    nl - Nederlandse taal
+#    nl - Nederlandse taal          pt_br - Português (Brasil)
 locale: default
 
 # Enable bossbar support?

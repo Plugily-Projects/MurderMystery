@@ -19,9 +19,11 @@
 package pl.plajer.murdermystery.utils.services.locale;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -58,7 +60,10 @@ public class LocaleService {
       File file = new File(plugin.getDataFolder().getPath() + "/locales/locale_data.yml");
       if (!file.exists()) {
         new File(plugin.getDataFolder().getPath() + "/locales").mkdir();
-        file.createNewFile();
+        if (!file.createNewFile()) {
+          plugin.getLogger().log(Level.WARNING, "Couldn't create locales folder! We must disable locales support.");
+          return;
+        }
       }
       Files.write(file.toPath(), data.getBytes());
       this.localeData = ConfigUtils.getConfig(plugin, "/locales/locale_data");
@@ -87,6 +92,7 @@ public class LocaleService {
       conn.setRequestMethod("POST");
       conn.setRequestProperty("User-Agent", "PLLocale/1.0");
       conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+      conn.setRequestProperty("Accept-Charset", "UTF-8");
       conn.setDoOutput(true);
 
       OutputStream os = conn.getOutputStream();
@@ -131,7 +137,9 @@ public class LocaleService {
   private DownloadStatus writeFile(Locale locale) {
     try (Scanner scanner = new Scanner(requestLocaleFetch(locale), "UTF-8").useDelimiter("\\A")) {
       String data = scanner.hasNext() ? scanner.next() : "";
-      Files.write(new File(plugin.getDataFolder().getPath() + "/locales/" + locale.getPrefix() + ".properties").toPath(), data.getBytes());
+      try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(plugin.getDataFolder().getPath() + "/locales/" + locale.getPrefix() + ".properties")), StandardCharsets.UTF_8)) {
+        writer.write(data);
+      }
       return DownloadStatus.SUCCESS;
     } catch (IOException ignored) {
       plugin.getLogger().log(Level.WARNING, "Demanded locale " + locale.getPrefix() + " cannot be downloaded! You should notify author!");
