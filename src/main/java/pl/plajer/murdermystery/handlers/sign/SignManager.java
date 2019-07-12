@@ -188,6 +188,9 @@ public class SignManager implements Listener {
 
   @Nullable
   private ArenaSign getArenaSignByBlock(Block block) {
+    if (block == null) {
+      return null;
+    }
     ArenaSign arenaSign = null;
     for (ArenaSign sign : arenaSigns) {
       if (sign.getSign().getLocation().equals(block.getLocation())) {

@@ -1,3 +1,6 @@
+### 1.1.5 Release (12.07.2019)
+* Fixed errors in console when joining game via sign
+
 ### 1.1.4 Release (15.06.2019 - 10.07.2019)
 * Plugin will no longer send error messages `failed to register events` if corpse reborn wasn't installed
 * Join permission message outputs required permission node now
