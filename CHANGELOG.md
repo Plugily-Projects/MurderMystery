@@ -1,3 +1,6 @@
+### 1.1.6 Release (13.07.2019)
+* Changed Chinese (Simplified) locale prefix from zh to cn and Chinese (Traditional) from zh_hk to zh_tw
+
 ### 1.1.5 Release (12.07.2019)
 * Fixed errors in console when joining game via sign
 
