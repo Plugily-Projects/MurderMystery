@@ -82,7 +82,7 @@ public class SpecialBlocksComponents implements SetupComponent {
       List<String> cauldrons = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".mystery-cauldrons"));
       cauldrons.add(LocationSerializer.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
       config.set("instances." + arena.getId() + ".mystery-cauldrons", cauldrons);
-      player.sendMessage(ChatColor.YELLOW + "Murder Mystery: New mystery cauldron for arena/instance " + arena.getId() + " was added");
+      player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aAdded Cauldron special block!"));
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 1, 3);
 
@@ -109,7 +109,8 @@ public class SpecialBlocksComponents implements SetupComponent {
       List<String> confessionals = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".confessionals"));
       confessionals.add(LocationSerializer.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
       config.set("instances." + arena.getId() + ".confessionals", confessionals);
-      player.sendMessage(ChatColor.YELLOW + "Murder Mystery: New confessional for arena/instance " + arena.getId() + " was added");
+      player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aAdded Confessional special block!"));
+      player.sendMessage(ChatManager.colorRawMessage("&eInfo | &aRemember to place any lever in radius of 3 near enchant table!"));
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 2, 3);
   }
