@@ -40,7 +40,7 @@ public class ForceStartArgument {
 
   public ForceStartArgument(ArgumentsRegistry registry) {
     registry.mapArgument("murdermysteryadmin", new LabeledCommandArgument("forcestart", "murdermystery.admin.forcestart", CommandArgument.ExecutorType.PLAYER,
-        new LabelData("/vda forcestart", "/vda forcestart", "&7Force starts arena you're in\n&6Permission: &7murdermystery.admin.forcestart")) {
+        new LabelData("/mma forcestart", "/mma forcestart", "&7Force starts arena you're in\n&6Permission: &7murdermystery.admin.forcestart")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (!Utils.checkIsInGameInstance((Player) sender)) {

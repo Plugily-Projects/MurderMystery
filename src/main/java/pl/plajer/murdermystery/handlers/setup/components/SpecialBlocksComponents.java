@@ -82,17 +82,21 @@ public class SpecialBlocksComponents implements SetupComponent {
       List<String> cauldrons = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".mystery-cauldrons"));
       cauldrons.add(LocationSerializer.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
       config.set("instances." + arena.getId() + ".mystery-cauldrons", cauldrons);
-      player.sendMessage("Murder Mystery: New mystery cauldron for arena/instance " + arena.getId() + " was added");
+      player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aAdded Cauldron special block!"));
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 1, 3);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ENCHANTING_TABLE.parseItem())
         .name(ChatManager.colorRawMessage("&e&lAdd Confessional"))
-        .lore(ChatColor.GRAY + "Target enchanting table and add praise to the developer")
-        .lore(ChatColor.GRAY + "confessional, gift for the developer costs 1 gold!")
-        .lore(ChatColor.GOLD + "Add some levers in radius of 3 blocks near the enchant table")
+        .lore(ChatColor.GRAY + "Target enchanting table and")
+        .lore(ChatColor.GRAY + "add praise to the developer")
+        .lore(ChatColor.GRAY + "confessional, gift for")
+        .lore(ChatColor.GRAY + "the developer costs 1 gold!")
+        .lore(ChatColor.GOLD + "Add some levers in radius")
+        .lore(ChatColor.GOLD + "of 3 blocks near the enchant table")
         .lore(ChatColor.GOLD + "to allow users to pray there!")
-        .lore(ChatColor.RED + "You can either get gifts or curses from prayer!")
+        .lore(ChatColor.RED + "You can either get gifts")
+        .lore(ChatColor.RED + "or curses from prayer!")
         .build(), e -> {
       e.getWhoClicked().closeInventory();
       if (e.getWhoClicked().getTargetBlock(null, 10).getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
@@ -105,7 +109,8 @@ public class SpecialBlocksComponents implements SetupComponent {
       List<String> confessionals = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".confessionals"));
       confessionals.add(LocationSerializer.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
       config.set("instances." + arena.getId() + ".confessionals", confessionals);
-      player.sendMessage("Murder Mystery: New confessional for arena/instance " + arena.getId() + " was added");
+      player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aAdded Confessional special block!"));
+      player.sendMessage(ChatManager.colorRawMessage("&eInfo | &aRemember to place any lever in radius of 3 near enchant table!"));
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 2, 3);
   }
