@@ -33,6 +33,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 
@@ -193,6 +194,9 @@ public class Main extends JavaPlugin {
       arena.teleportAllToEndLocation();
       arena.cleanUpArena();
     }
+
+    HandlerList.unregisterAll(this);
+
     Debugger.debug(Level.INFO, "System disable finished took {0}ms", System.currentTimeMillis() - start);
   }
 
@@ -349,6 +353,20 @@ public class Main extends JavaPlugin {
 
   public UserManager getUserManager() {
     return userManager;
+  }
+
+  public void loadListeners() {
+    HandlerList.unregisterAll(this);
+
+    new ArenaEvents(this);
+    new SpectatorEvents(this);
+    new QuitEvent(this);
+    new JoinEvent(this);
+    new ChatEvents(this);
+    new Events(this);
+    new LobbyEvent(this);
+    new SpectatorItemEvents(this);
+    new SpecialBlockEvents(this);
   }
 
   private void saveAllUserStatistics() {
