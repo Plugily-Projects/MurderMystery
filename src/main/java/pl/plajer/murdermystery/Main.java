@@ -135,7 +135,7 @@ public class Main extends JavaPlugin {
   private boolean validateIfPluginShouldStart() {
     version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
     if (!(version.equalsIgnoreCase("v1_11_R1") || version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
-        || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1"))) {
+      || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1"))) {
       MessageUtils.thisVersionIsNotSupported();
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by Murder Mystery!");
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider changing your server version?");
@@ -287,7 +287,7 @@ public class Main extends JavaPlugin {
         if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
           Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[MurderMystery] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
           Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[MurderMystery] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
-              result.getNewestVersion()));
+            result.getNewestVersion()));
         }
         return;
       }

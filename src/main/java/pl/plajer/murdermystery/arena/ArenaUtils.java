@@ -26,6 +26,9 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -47,10 +50,68 @@ public class ArenaUtils {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
+  /**
+   * Hides player name tag in a hacky way.
+   *
+   * @param player player to hide name tag for
+   */
+  public static void hideNameTag(Player player) {
+    ArmorStand stand = (ArmorStand) player.getWorld().spawnEntity(player.getLocation(), EntityType.ARMOR_STAND);
+    stand.setInvulnerable(true);
+    stand.setSmall(true);
+    stand.setSilent(true);
+    stand.setArms(false);
+    stand.setGliding(true);
+    stand.setBasePlate(false);
+    stand.setMarker(true);
+    stand.setVisible(false);
+    stand.setGravity(false);
+    stand.setAI(false);
+    stand.setCustomName("MurderMysteryArmorStand");
+    player.addPassenger(stand);
+  }
+
+  /**
+   * Shows player's name tag if was hidden by hideNameTag method
+   *
+   * @param player player to show name tag for
+   * @see ArenaUtils#hideNameTag(Player)
+   */
+  public static void showNameTag(Player player) {
+    for (Entity entity : player.getPassengers()) {
+      if (!(entity instanceof ArmorStand) && entity.getCustomName() == null) {
+        continue;
+      }
+      if (entity.getCustomName().equals("MurderMysteryArmorStand")) {
+        player.removePassenger(entity);
+        entity.remove();
+        break;
+      }
+    }
+  }
+
+  /**
+   * Checks whether player has his name tag hidden
+   *
+   * @param player player to check
+   * @return true if hidden, false otherwise
+   */
+  public static boolean hasNameTagHidden(Player player) {
+    for (Entity entity : player.getPassengers()) {
+      if (entity == null || entity.getCustomName() == null) {
+        continue;
+      }
+      if (entity.getCustomName().equals("MurderMysteryArmorStand")) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public static void onMurdererDeath(Arena arena) {
     for (Player player : arena.getPlayers()) {
       player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"),
-          ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
+        ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
       if (Role.isRole(Role.MURDERER, player)) {
         player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), null, 5, 40, 5);
       }
@@ -67,7 +128,7 @@ public class ArenaUtils {
     arena.setTimer(5);
     Player murderer = arena.getCharacter(Arena.CharacterType.MURDERER);
     murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
-        ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
+      ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
   }
 
   public static void addScore(User user, ScoreAction action, int amount) {

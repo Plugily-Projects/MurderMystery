@@ -22,35 +22,35 @@
   <groupId>pl.plajer</groupId>
   <artifactId>murdermystery</artifactId>
   <name>MurderMystery</name>
-    <version>1.1.5</version>
-    <developers>
-        <developer>
-            <name>Plajer</name>
-            <url>https://www.spigotmc.org/members/423193/</url>
-            <roles>
-                <role>developer</role>
-                <role>translator - Polish language</role>
-            </roles>
-        </developer>
-        <developer>
-            <name>Tigerpanzer</name>
-            <url>https://www.spigotmc.org/members/414545/</url>
-            <roles>
-                <role>helper developer</role>
-                <role>translator - German language</role>
-                <role>tester</role>
-            </roles>
-        </developer>
-    </developers>
-    <contributors>
-        <contributor>
-            <name>montlikadani</name>
-            <url>https://www.spigotmc.org/members/251100/</url>
-            <roles>
-                <role>code contributor</role>
-            </roles>
-        </contributor>
-    </contributors>
+  <version>1.1.6</version>
+  <developers>
+    <developer>
+      <name>Plajer</name>
+      <url>https://www.spigotmc.org/members/423193/</url>
+      <roles>
+        <role>developer</role>
+        <role>translator - Polish language</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Tigerpanzer</name>
+      <url>https://www.spigotmc.org/members/414545/</url>
+      <roles>
+        <role>helper developer</role>
+        <role>translator - German language</role>
+        <role>tester</role>
+      </roles>
+    </developer>
+  </developers>
+  <contributors>
+    <contributor>
+      <name>montlikadani</name>
+      <url>https://www.spigotmc.org/members/251100/</url>
+      <roles>
+        <role>code contributor</role>
+      </roles>
+    </contributor>
+  </contributors>
   <licenses>
     <license>
       <name>GNU General Public License v3</name>
@@ -238,11 +238,11 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-        <groupId>org.golde.bukkit</groupId>
-        <artifactId>corpsereborn</artifactId>
-        <version>1.0.0</version>
-        <scope>system</scope>
-        <systemPath>${project.basedir}/lib/LeaderHeadsAPI.jar</systemPath>
+      <groupId>org.golde.bukkit</groupId>
+      <artifactId>corpsereborn</artifactId>
+      <version>1.0.0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/lib/LeaderHeadsAPI.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>me.robin</groupId>

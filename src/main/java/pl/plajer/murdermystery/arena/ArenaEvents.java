@@ -23,7 +23,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -41,6 +41,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.spigotmc.event.entity.EntityDismountEvent;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
@@ -66,6 +67,22 @@ public class ArenaEvents implements Listener {
   public ArenaEvents(Main plugin) {
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
+  }
+
+  @EventHandler
+  public void onArmorStandEject(EntityDismountEvent e) {
+    if (!(e.getEntity() instanceof ArmorStand) || e.getEntity().getCustomName() == null
+      || !e.getEntity().getCustomName().equals("MurderMysteryArmorStand")) {
+      return;
+    }
+    if (!(e.getDismounted() instanceof Player)) {
+      return;
+    }
+    if (e.getDismounted().isDead()) {
+      e.getEntity().remove();
+    }
+    //we could use setCancelled here but for 1.12 support we cannot (no api)
+    e.getDismounted().addPassenger(e.getEntity());
   }
 
   @EventHandler
@@ -296,14 +313,11 @@ public class ArenaEvents implements Listener {
     if (arena == null) {
       return;
     }
-    if (e.getEntity().isDead()) {
-      e.getEntity().setHealth(e.getEntity().getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
-    }
     Location loc = e.getEntity().getLocation();
     e.setDeathMessage("");
     e.getDrops().clear();
     e.setDroppedExp(0);
-    e.getEntity().spigot().respawn();
+    Bukkit.getScheduler().runTaskLater(plugin, () -> e.getEntity().spigot().respawn(), 2);
     plugin.getCorpseHandler().spawnCorpse(e.getEntity(), arena);
     e.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
     Player player = e.getEntity();

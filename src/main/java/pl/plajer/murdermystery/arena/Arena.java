@@ -146,7 +146,7 @@ public class Arena extends BukkitRunnable {
   @Override
   public void run() {
     //idle task
-    if (getPlayers().size() == 0 && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+    if (getPlayers().isEmpty() && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       return;
     }
     Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Running game task", getId());
@@ -224,7 +224,7 @@ public class Arena extends BukkitRunnable {
             gameBar.setProgress(1.0);
           }
           setTimer(5);
-          if (players.size() == 0) {
+          if (players.isEmpty()) {
             break;
           }
           teleportAllToStartLocation();
@@ -232,6 +232,7 @@ public class Arena extends BukkitRunnable {
             player.getInventory().clear();
             player.setGameMode(GameMode.ADVENTURE);
             ArenaUtils.hidePlayersOutsideTheGame(player, this);
+            ArenaUtils.hideNameTag(player);
             player.updateInventory();
             plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
             setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
@@ -246,7 +247,7 @@ public class Arena extends BukkitRunnable {
             detectiveChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) totalDetective) * 100.0);
           }
           Map<User, Double> sortedMurderer = murdererChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
-              Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+            Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
           Set<Player> playersToSet = new HashSet<>(getPlayers());
           Player murderer = ((User) sortedMurderer.keySet().toArray()[0]).getPlayer();
@@ -254,17 +255,17 @@ public class Arena extends BukkitRunnable {
           plugin.getUserManager().getUser(murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
           playersToSet.remove(murderer);
           murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
-              ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
+            ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
           detectiveChances.remove(sortedMurderer.keySet().toArray()[0]);
 
           Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
-              Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+            Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
           Player detective = ((User) sortedDetective.keySet().toArray()[0]).getPlayer();
           gameCharacters.put(CharacterType.DETECTIVE, detective);
           plugin.getUserManager().getUser(detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
           detective.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"),
-              ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
+            ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
           playersToSet.remove(detective);
 
           ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
@@ -272,7 +273,7 @@ public class Arena extends BukkitRunnable {
 
           for (Player p : playersToSet) {
             p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"),
-                ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
+              ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
           }
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
             gameBar.setTitle(ChatManager.colorMessage("Bossbar.In-Game-Info"));
@@ -297,10 +298,10 @@ public class Arena extends BukkitRunnable {
           setTimer(10);
         }
         if (getTimer() <= (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 10)
-            && getTimer() > (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15)) {
+          && getTimer() > (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15)) {
           for (Player p : getPlayers()) {
             p.sendMessage(ChatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword")
-                .replace("%time%", String.valueOf(getTimer() - (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15))));
+              .replace("%time%", String.valueOf(getTimer() - (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15))));
             p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
           }
           if (getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
@@ -343,7 +344,7 @@ public class Arena extends BukkitRunnable {
             if (getPlayersLeft().get(0).equals(gameCharacters.get(CharacterType.MURDERER))) {
               for (Player p : getPlayers()) {
                 p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
-                    ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone"), 5, 40, 5);
+                  ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone"), 5, 40, 5);
                 if (p.equals(gameCharacters.get(CharacterType.MURDERER))) {
                   p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
                 }
@@ -507,6 +508,10 @@ public class Arena extends BukkitRunnable {
 
   public List<Location> getGoldSpawnPoints() {
     return goldSpawnPoints;
+  }
+
+  public void setGoldSpawnPoints(List<Location> goldSpawnPoints) {
+    this.goldSpawnPoints = goldSpawnPoints;
   }
 
   /**
@@ -722,10 +727,6 @@ public class Arena extends BukkitRunnable {
     }
 
     player.teleport(location);
-  }
-
-  public void setGoldSpawnPoints(List<Location> goldSpawnPoints) {
-    this.goldSpawnPoints = goldSpawnPoints;
   }
 
   public List<Location> getPlayerSpawnPoints() {
