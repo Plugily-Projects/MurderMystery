@@ -62,12 +62,6 @@ import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.handlers.rewards.RewardsFactory;
 import pl.plajer.murdermystery.handlers.sign.ArenaSign;
 import pl.plajer.murdermystery.handlers.sign.SignManager;
-import pl.plajer.murdermystery.leaderheads.MurderMysteryDeaths;
-import pl.plajer.murdermystery.leaderheads.MurderMysteryGamesPlayed;
-import pl.plajer.murdermystery.leaderheads.MurderMysteryHighestScore;
-import pl.plajer.murdermystery.leaderheads.MurderMysteryKills;
-import pl.plajer.murdermystery.leaderheads.MurderMysteryLoses;
-import pl.plajer.murdermystery.leaderheads.MurderMysteryWins;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.user.UserManager;
 import pl.plajer.murdermystery.user.data.MysqlManager;
@@ -240,15 +234,6 @@ public class Main extends JavaPlugin {
     if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       Debugger.debug(Level.INFO, "Hooking into PlaceholderAPI");
       new PlaceholderManager().register();
-    }
-    if (Bukkit.getPluginManager().isPluginEnabled("LeaderHeads")) {
-      Debugger.debug(Level.INFO, "Hooking into LeaderHeads");
-      new MurderMysteryDeaths();
-      new MurderMysteryGamesPlayed();
-      new MurderMysteryHighestScore();
-      new MurderMysteryKills();
-      new MurderMysteryLoses();
-      new MurderMysteryWins();
     }
     Debugger.debug(Level.INFO, "Hooked into soft dependencies took {0}ms", System.currentTimeMillis() - start);
   }

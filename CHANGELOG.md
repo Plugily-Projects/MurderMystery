@@ -3,6 +3,8 @@
 * Respawn will now properly work on 1.14
 * Fixed /vda typo in force start command
 * Prettified special blocks setup messages
+* Dropped leaderheads support, leaderheads now uses PlaceholderAPI to retrieve statistics and we do support
+PAPI so please use that
 
 ### 1.1.5 Release (12.07.2019)
 * Fixed errors in console when joining game via sign
