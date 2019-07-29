@@ -56,7 +56,6 @@ public class LeaveArgument {
             return;
           }
           Arena arena = ArenaRegistry.getArena(player);
-          arena.teleportToEndLocation(player);
           ArenaManager.leaveAttempt(player, arena);
           Debugger.debug(Level.INFO, "{0} has left the arena {1}! Teleported to end location.", player.getName(), arena.getId());
         }

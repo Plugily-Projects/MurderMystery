@@ -1,7 +1,8 @@
-### 1.1.6 Release (13/26.07.2019)
+### 1.1.6 Release (13/29.07.2019)
 * Changed Chinese (Simplified) locale prefix from zh to cn and Chinese (Traditional) from zh_hk to zh_tw
-* Added hidden name tags in game
 * Respawn will now properly work on 1.14
+* Fixed /vda typo in force start command
+* Prettified special blocks setup messages
 
 ### 1.1.5 Release (12.07.2019)
 * Fixed errors in console when joining game via sign

@@ -317,7 +317,6 @@ public class ArenaEvents implements Listener {
     e.setDeathMessage("");
     e.getDrops().clear();
     e.setDroppedExp(0);
-    Bukkit.getScheduler().runTaskLater(plugin, () -> e.getEntity().spigot().respawn(), 2);
     plugin.getCorpseHandler().spawnCorpse(e.getEntity(), arena);
     e.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
     Player player = e.getEntity();
@@ -347,6 +346,7 @@ public class ArenaEvents implements Listener {
 
     //we must call it tick/two later due to instant respawn bug
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
+      e.getEntity().spigot().respawn();
       player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
       player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
       player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
