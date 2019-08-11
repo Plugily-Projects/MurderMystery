@@ -135,10 +135,8 @@ public class Arena extends BukkitRunnable {
   }
 
   public void setBowHologram(Hologram bowHologram) {
-    if (this.bowHologram != null) {
-      if (!this.bowHologram.isDeleted()) {
-        this.bowHologram.delete();
-      }
+    if (this.bowHologram != null && !this.bowHologram.isDeleted()) {
+      this.bowHologram.delete();
     }
     this.bowHologram = bowHologram;
   }

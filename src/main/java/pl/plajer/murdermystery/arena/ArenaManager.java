@@ -65,6 +65,9 @@ public class ArenaManager {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
+  private ArenaManager() {
+  }
+
   /**
    * Attempts player to join arena.
    * Calls MMGameJoinAttemptEvent.
