@@ -232,6 +232,7 @@ public class Arena extends BukkitRunnable {
             player.getInventory().clear();
             player.setGameMode(GameMode.ADVENTURE);
             ArenaUtils.hidePlayersOutsideTheGame(player, this);
+            ArenaUtils.hideNametag(player);
             player.updateInventory();
             plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
             setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
@@ -389,6 +390,7 @@ public class Arena extends BukkitRunnable {
                 players.showPlayer(player);
               }
             }
+            ArenaUtils.showNametag(player);
             for (PotionEffect effect : player.getActivePotionEffects()) {
               player.removePotionEffect(effect.getType());
             }

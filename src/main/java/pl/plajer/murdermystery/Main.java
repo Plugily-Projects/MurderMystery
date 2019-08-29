@@ -36,6 +36,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 
+import pl.plajer.murdermystery.arena.ArenaUtils;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaEvents;
@@ -172,6 +173,7 @@ public class Main extends JavaPlugin {
     for (Arena arena : ArenaRegistry.getArenas()) {
       arena.getScoreboardManager().stopAllScoreboards();
       for (Player player : arena.getPlayers()) {
+        ArenaUtils.showNametag(player);
         arena.doBarAction(Arena.BarAction.REMOVE, player);
         arena.teleportToEndLocation(player);
         if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {

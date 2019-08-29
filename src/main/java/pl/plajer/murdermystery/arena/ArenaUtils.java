@@ -30,6 +30,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
@@ -200,6 +205,25 @@ public class ArenaUtils {
       }
       player.hidePlayer(players);
       players.hidePlayer(player);
+    }
+  }
+
+  public static void hideNametag(Player player) {
+    //hacky workaround to hide name tag without scoreboard teams
+    Slime slime = (Slime) player.getWorld().spawnEntity(player.getLocation(), EntityType.SLIME);
+    slime.setAI(false);
+    slime.setInvulnerable(true);
+    slime.setCollidable(false);
+    slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, Integer.MAX_VALUE, false, false));
+    slime.setSize(-1);
+    player.addPassenger(slime);
+  }
+
+  public static void showNametag(Player player) {
+    for (Entity passenger : player.getPassengers()) {
+      if (passenger.getType() == EntityType.SLIME) {
+        passenger.remove();
+      }
     }
   }
 
