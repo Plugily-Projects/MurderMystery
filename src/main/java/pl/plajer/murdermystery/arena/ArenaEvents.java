@@ -145,8 +145,8 @@ public class ArenaEvents implements Listener {
   @EventHandler
   public void onArrowPickup(PlayerPickupArrowEvent e) {
     if (ArenaRegistry.isInArena(e.getPlayer())) {
+      e.getItem().remove();
       e.setCancelled(true);
-      e.getArrow().remove();
     }
   }
 
