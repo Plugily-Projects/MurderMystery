@@ -243,6 +243,7 @@ public class ArenaManager {
       }
       plugin.getCorpseHandler().spawnCorpse(player, arena);
     }
+    //ArenaUtils.showNametag(player);
     player.getInventory().clear();
     player.getInventory().setArmorContents(null);
     arena.removePlayer(player);
