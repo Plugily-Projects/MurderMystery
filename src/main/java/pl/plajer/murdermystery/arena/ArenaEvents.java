@@ -313,7 +313,6 @@ public class ArenaEvents implements Listener {
     if (arena == null) {
       return;
     }
-    Location loc = e.getEntity().getLocation();
     e.setDeathMessage("");
     e.getDrops().clear();
     e.setDroppedExp(0);
@@ -321,7 +320,6 @@ public class ArenaEvents implements Listener {
     e.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
     Player player = e.getEntity();
     if (arena.getArenaState() == ArenaState.STARTING) {
-      player.teleport(loc);
       return;
     } else if (arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
       player.getInventory().clear();
@@ -329,12 +327,10 @@ public class ArenaEvents implements Listener {
       player.setAllowFlight(false);
       User user = plugin.getUserManager().getUser(player);
       user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
-      player.teleport(arena.getEndLocation());
       return;
     }
     User user = plugin.getUserManager().getUser(player);
     user.addStat(StatsStorage.StatisticType.DEATHS, 1);
-    player.teleport(loc);
     user.setSpectator(true);
     player.setGameMode(GameMode.SURVIVAL);
     user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
@@ -347,7 +343,6 @@ public class ArenaEvents implements Listener {
     //we must call it tick/two later due to instant respawn bug
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       e.getEntity().spigot().respawn();
-      player.teleport(loc);
       player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
       player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
       player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
@@ -356,13 +351,21 @@ public class ArenaEvents implements Listener {
 
   @EventHandler
   public void onRespawn(PlayerRespawnEvent e) {
-    Arena arena = ArenaRegistry.getArena(e.getPlayer());
+    Player player = e.getPlayer();
+    Arena arena = ArenaRegistry.getArena(player);
     if (arena == null) {
       return;
     }
-    if (arena.getPlayers().contains(e.getPlayer())) {
-      Player player = e.getPlayer();
+    if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+      e.setRespawnLocation(player.getLocation());
+      return;
+    } else if (arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
+      e.setRespawnLocation(arena.getEndLocation());
+      return;
+    }
+    if (arena.getPlayers().contains(player)) {
       User user = plugin.getUserManager().getUser(player);
+      e.setRespawnLocation(player.getLocation());
       player.setAllowFlight(true);
       player.setFlying(true);
       user.setSpectator(true);
