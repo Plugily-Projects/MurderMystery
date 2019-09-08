@@ -173,7 +173,7 @@ public class Main extends JavaPlugin {
     for (Arena arena : ArenaRegistry.getArenas()) {
       arena.getScoreboardManager().stopAllScoreboards();
       for (Player player : arena.getPlayers()) {
-        ArenaUtils.showNametag(player);
+        //ArenaUtils.showNametag(player);
         arena.doBarAction(Arena.BarAction.REMOVE, player);
         arena.teleportToEndLocation(player);
         if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {

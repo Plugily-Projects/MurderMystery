@@ -208,24 +208,28 @@ public class ArenaUtils {
     }
   }
 
+  /*
+  buggy nametag remover - disabled, need another try!
   public static void hideNametag(Player player) {
     //hacky workaround to hide name tag without scoreboard teams
     Slime slime = (Slime) player.getWorld().spawnEntity(player.getLocation(), EntityType.SLIME);
     slime.setAI(false);
     slime.setInvulnerable(true);
     slime.setCollidable(false);
-    slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, Integer.MAX_VALUE, false, false));
+    //slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, Integer.MAX_VALUE, false, false));
     slime.setSize(-1);
     player.addPassenger(slime);
+    player.sendMessage("HIDE");
   }
 
   public static void showNametag(Player player) {
     for (Entity passenger : player.getPassengers()) {
       if (passenger.getType() == EntityType.SLIME) {
         passenger.remove();
+        player.sendMessage("SHOW");
       }
     }
-  }
+  }*/
 
   public enum ScoreAction {
     KILL_PLAYER(100, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Kill-Player")), KILL_MURDERER(200, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Kill-Murderer")),
