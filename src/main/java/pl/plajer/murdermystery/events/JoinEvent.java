@@ -73,10 +73,12 @@ public class JoinEvent implements Listener {
       player.hidePlayer(event.getPlayer());
       event.getPlayer().hidePlayer(player);
     }
-    User user = plugin.getUserManager().getUser(event.getPlayer());
-    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-      plugin.getUserManager().loadStatistic(user, stat);
-    }
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+      User user = plugin.getUserManager().getUser(event.getPlayer());
+      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        plugin.getUserManager().loadStatistic(user, stat);
+      }
+    });
     //load player inventory in case of server crash, file is deleted once loaded so if file was already
     //deleted player won't receive his backup, in case of crash he will get it back
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
