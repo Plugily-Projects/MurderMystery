@@ -73,8 +73,8 @@ public class JoinEvent implements Listener {
       player.hidePlayer(event.getPlayer());
       event.getPlayer().hidePlayer(player);
     }
+    User user = plugin.getUserManager().getUser(event.getPlayer());
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-      User user = plugin.getUserManager().getUser(event.getPlayer());
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         plugin.getUserManager().loadStatistic(user, stat);
       }
