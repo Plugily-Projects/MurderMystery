@@ -156,33 +156,7 @@ public class SignManager implements Listener {
       if (arena == null) {
         return;
       }
-      if (ArenaRegistry.isInArena(e.getPlayer())) {
-        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
-        return;
-      }
-      if (arena.getPlayers().size() < arena.getMaximumPlayers()) {
-        ArenaManager.joinAttempt(e.getPlayer(), arena);
-        return;
-      }
-      if (!e.getPlayer().hasPermission(PermissionsManager.getJoinFullGames())) {
-        e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Full-Game-No-Permission"));
-        return;
-      }
-      for (Player player : arena.getPlayers()) {
-        if (player.hasPermission(PermissionsManager.getJoinFullGames())) {
-          continue;
-        }
-        ArenaManager.joinAttempt(e.getPlayer(), arena);
-        if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
-          ArenaManager.leaveAttempt(player, arena);
-          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
-          for (Player p : arena.getPlayers()) {
-            p.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), player));
-          }
-          return;
-        }
-      }
-      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.No-Slots-For-Premium"));
+      ArenaManager.joinAttempt(e.getPlayer(), arena);
     }
   }
 

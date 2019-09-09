@@ -18,6 +18,8 @@
 
 package pl.plajer.murdermystery.commands.arguments.game;
 
+import java.util.Random;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -37,6 +39,8 @@ import pl.plajer.murdermystery.handlers.ChatManager;
  */
 public class JoinArguments {
 
+  private Random random = new Random();
+
   public JoinArguments(ArgumentsRegistry registry) {
     //join argument
     registry.mapArgument("murdermystery", new CommandArgument("join", "", CommandArgument.ExecutorType.PLAYER) {
@@ -44,10 +48,6 @@ public class JoinArguments {
       public void execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
           sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Type-Arena-Name"));
-          return;
-        }
-        if (ArenaRegistry.isInArena(((Player) sender))) {
-          sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
           return;
         }
         for (Arena arena : ArenaRegistry.getArenas()) {
@@ -65,12 +65,19 @@ public class JoinArguments {
       registry.mapArgument("murdermystery", new CommandArgument("randomjoin", "", CommandArgument.ExecutorType.PLAYER) {
         @Override
         public void execute(CommandSender sender, String[] args) {
-          if (ArenaRegistry.isInArena(((Player) sender))) {
-            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
-            return;
+          //first random get method
+          for (int i = 0; i < ArenaRegistry.getArenas().size(); i++) {
+            Arena arena = getRandomArena();
+            if ((arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
+              && arena.getPlayers().size() < arena.getMaximumPlayers()) {
+              ArenaManager.joinAttempt((Player) sender, arena);
+              return;
+            }
           }
+          //fallback safe method
           for (Arena arena : ArenaRegistry.getArenas()) {
-            if (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
+            if ((arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
+              && arena.getPlayers().size() < arena.getMaximumPlayers()) {
               ArenaManager.joinAttempt((Player) sender, arena);
               return;
             }
@@ -79,6 +86,10 @@ public class JoinArguments {
         }
       });
     }
+  }
+
+  private Arena getRandomArena() {
+    return ArenaRegistry.getArenas().get(random.nextInt(ArenaRegistry.getArenas().size()));
   }
 
 }

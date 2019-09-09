@@ -220,7 +220,6 @@ public class Arena extends BukkitRunnable {
           MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
           Bukkit.getPluginManager().callEvent(gameStartEvent);
           setArenaState(ArenaState.IN_GAME);
-          ArenaUtils.nameTagHiderUpdate();
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
             gameBar.setProgress(1.0);
           }
@@ -230,6 +229,7 @@ public class Arena extends BukkitRunnable {
           }
           teleportAllToStartLocation();
           for (Player player : getPlayers()) {
+            ArenaUtils.updateNameTagsVisibility(player);
             player.getInventory().clear();
             player.setGameMode(GameMode.ADVENTURE);
             ArenaUtils.hidePlayersOutsideTheGame(player, this);

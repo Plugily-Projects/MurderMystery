@@ -87,6 +87,10 @@ public class ArenaManager {
       player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-Cancelled-Via-API"));
       return;
     }
+    if (ArenaRegistry.isInArena(player)) {
+      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
+      return;
+    }
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       if (!player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
         || !player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId()))) {
@@ -97,6 +101,30 @@ public class ArenaManager {
     }
     if (arena.getArenaState() == ArenaState.RESTARTING) {
       return;
+    }
+    if (arena.getPlayers().size() >= arena.getMaximumPlayers() && arena.getArenaState() == ArenaState.STARTING) {
+      if(!player.hasPermission(PermissionsManager.getJoinFullGames())) {
+        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Full-Game-No-Permission"));
+        return;
+      }
+      //1. when full arena && starting check if has permission to full join - no = no join
+      //2. if has check fo someone who dont have then kick and replace
+      //if arena isnt max players then go and add player anyway i think all covered good yes
+      boolean foundSlot = false;
+      for (Player loopPlayer : arena.getPlayers()) {
+        if (loopPlayer.hasPermission(PermissionsManager.getJoinFullGames())) {
+          continue;
+        }
+        ArenaManager.leaveAttempt(loopPlayer, arena);
+        loopPlayer.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
+        ChatManager.broadcast(arena, ChatManager.formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), loopPlayer));
+        foundSlot = true;
+        break;
+      }
+      if (!foundSlot) {
+        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.No-Slots-For-Premium"));
+        return;
+      }
     }
     Debugger.debug(Level.INFO, "[{0}] Checked join attempt for {1} initialized", arena.getId(), player.getName());
     User user = plugin.getUserManager().getUser(player);
@@ -173,7 +201,7 @@ public class ArenaManager {
       ArenaUtils.showPlayer(arenaPlayer, arena);
     }
     arena.showPlayers();
-    ArenaUtils.nameTagHider(player);
+    ArenaUtils.updateNameTagsVisibility(player);
     Debugger.debug(Level.INFO, "[{0}] Join attempt as player for {1} took {2}ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);
   }
 

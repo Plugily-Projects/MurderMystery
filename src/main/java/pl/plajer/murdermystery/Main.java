@@ -125,8 +125,13 @@ public class Main extends JavaPlugin {
     Debugger.debug(Level.INFO, "Plugin loaded! Hooking into soft-dependencies in a while!");
     //start hook manager later in order to allow soft-dependencies to fully load
     Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
-    //Maybe this can be removed but if something goes wrong it will be gone wrong xd (like worldswitch/teleport etc)
-    Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> ArenaUtils.nameTagHiderUpdate(), 0L, 140L);
+    if(configPreferences.getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
+      Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+          ArenaUtils.updateNameTagsVisibility(player);
+        }
+      }, 60, 140);
+    }
   }
 
   private boolean validateIfPluginShouldStart() {

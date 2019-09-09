@@ -34,6 +34,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.role.Role;
@@ -207,39 +208,32 @@ public class ArenaUtils {
     }
   }
 
-  public static void nameTagHider(final Player p) {
-    try {
-      for (Player players : plugin.getServer().getOnlinePlayers()) {
-        if (ArenaRegistry.getArena(players) != null) {
-          Scoreboard scoreboard = players.getScoreboard();
-          if (scoreboard == Bukkit.getScoreboardManager().getMainScoreboard()) {
-            scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-          }
-          Team team = scoreboard.getTeam("Hide");
-          if (team == null) {
-            team = scoreboard.registerNewTeam("Hide");
-          }
-          team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
-          Arena arena = ArenaRegistry.getArena(players);
-          if (arena.getArenaState() == ArenaState.IN_GAME) {
-            team.addEntry(p.getName());
-          } else if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
-            team.removeEntry(p.getName());
-          } else if (arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
-            team.removeEntry(p.getName());
-          }
-          players.setScoreboard(scoreboard);
-        }
-      }
-    } catch (NullPointerException ex) {
-      MessageUtils.errorOccurred();
-      Bukkit.getConsoleSender().sendMessage("NameTagHider can´t find Arena! Contact Developer if there are a lot of errors");
+  public static void updateNameTagsVisibility(final Player p) {
+    if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
+      return;
     }
-  }
-
-  public static void nameTagHiderUpdate() {
-    for (final Player player : Bukkit.getOnlinePlayers()) {
-      nameTagHider(player);
+    for (Player players : plugin.getServer().getOnlinePlayers()) {
+      Arena arena = ArenaRegistry.getArena(players);
+      if (arena == null) {
+        continue;
+      }
+      Scoreboard scoreboard = players.getScoreboard();
+      if (scoreboard == Bukkit.getScoreboardManager().getMainScoreboard()) {
+        scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+      }
+      Team team = scoreboard.getTeam("MMHide");
+      if (team == null) {
+        team = scoreboard.registerNewTeam("MMHide");
+      }
+      team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
+      if (arena.getArenaState() == ArenaState.IN_GAME) {
+        team.addEntry(p.getName());
+      } else if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+        team.removeEntry(p.getName());
+      } else if (arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
+        team.removeEntry(p.getName());
+      }
+      players.setScoreboard(scoreboard);
     }
   }
 

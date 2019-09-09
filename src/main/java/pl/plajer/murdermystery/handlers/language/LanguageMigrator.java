@@ -31,7 +31,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 2;
+  public static final int CONFIG_FILE_VERSION = 3;
   private Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -58,6 +58,9 @@ public class LanguageMigrator {
               "# blinking each tick\r\n" +
               "Murderer-Sword-Speed: 0.65");
           break;
+        case 2:
+          MigratorUtils.addNewLines(file, "# Should players' name tags in game be hidden?\r\n" +
+            "Nametags-Hidden: true");
         default:
           break;
       }
