@@ -23,6 +23,7 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -30,13 +31,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
+import pl.plajer.murdermystery.ConfigPreferences;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.ItemPosition;
+import pl.plajer.murdermystery.utils.MessageUtils;
 
 /**
  * @author Plajer
@@ -200,6 +205,35 @@ public class ArenaUtils {
       }
       player.hidePlayer(players);
       players.hidePlayer(player);
+    }
+  }
+
+  public static void updateNameTagsVisibility(final Player p) {
+    if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
+      return;
+    }
+    for (Player players : plugin.getServer().getOnlinePlayers()) {
+      Arena arena = ArenaRegistry.getArena(players);
+      if (arena == null) {
+        continue;
+      }
+      Scoreboard scoreboard = players.getScoreboard();
+      if (scoreboard == Bukkit.getScoreboardManager().getMainScoreboard()) {
+        scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+      }
+      Team team = scoreboard.getTeam("MMHide");
+      if (team == null) {
+        team = scoreboard.registerNewTeam("MMHide");
+      }
+      team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
+      if (arena.getArenaState() == ArenaState.IN_GAME) {
+        team.addEntry(p.getName());
+      } else if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+        team.removeEntry(p.getName());
+      } else if (arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
+        team.removeEntry(p.getName());
+      }
+      players.setScoreboard(scoreboard);
     }
   }
 

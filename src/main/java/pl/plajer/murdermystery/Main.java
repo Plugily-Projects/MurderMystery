@@ -40,6 +40,7 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaEvents;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.arena.ArenaUtils;
 import pl.plajer.murdermystery.arena.special.SpecialBlockEvents;
 import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
 import pl.plajer.murdermystery.arena.special.pray.PrayerRegistry;
@@ -124,6 +125,13 @@ public class Main extends JavaPlugin {
     Debugger.debug(Level.INFO, "Plugin loaded! Hooking into soft-dependencies in a while!");
     //start hook manager later in order to allow soft-dependencies to fully load
     Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
+    if(configPreferences.getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
+      Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+          ArenaUtils.updateNameTagsVisibility(player);
+        }
+      }, 60, 140);
+    }
   }
 
   private boolean validateIfPluginShouldStart() {

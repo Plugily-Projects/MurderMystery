@@ -1,3 +1,18 @@
+### 1.2.0 Release (08/09.09.2019) (by Tigerpanzer)
+* Added name tags hide feature in game
+* Game will now properly end when murderer dies by environment
+* Detective will now drop bow when dies by environment
+* Fixed 1.14 NoClassFound error when user tries to pick up an arrow
+* You shouldn't be teleported to spawn on death in game (you'll stay at the death location)
+* Murderer will no longer throw the sword if you interact physically with redstone mechanisms
+* Fixed issue that you could join full games before they started (in game you join as spectator)
+now proper full game permission check will occur and do the thing to allow or disallow you to join
+* /mm randomjoin will now really join random arena not first one it find good to join
+* Updated bunch of locales
+* Fixed Russian locale was broken
+* Added Slovak and Turkish locales (thanks to POEditor contributors)
+* Fixed bug that auto respawn didn't work
+
 ### 1.1.6 Release (13/29.07.2019)
 * Changed Chinese (Simplified) locale prefix from zh to cn and Chinese (Traditional) from zh_hk to zh_tw
 * Respawn will now properly work on 1.14

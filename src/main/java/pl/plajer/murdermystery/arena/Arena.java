@@ -229,6 +229,7 @@ public class Arena extends BukkitRunnable {
           }
           teleportAllToStartLocation();
           for (Player player : getPlayers()) {
+            ArenaUtils.updateNameTagsVisibility(player);
             player.getInventory().clear();
             player.setGameMode(GameMode.ADVENTURE);
             ArenaUtils.hidePlayersOutsideTheGame(player, this);

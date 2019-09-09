@@ -82,6 +82,9 @@ Block-Commands-In-Game: true
 # Should we fire some cool fireworks at location of every player after the game ends?
 Firework-When-Game-Ends: true
 
+# Should players' name tags in game be hidden?
+Nametags-Hidden: true
+
 # Should blocks behind game signs change their color based on game state?
 # They will change color to:
 # - white (waiting for players) stained glass
@@ -100,6 +103,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 2
+Version: 3
 
 # No way! You've reached the end! But... where's the dragon!?
