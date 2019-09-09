@@ -62,7 +62,7 @@ public class SpectatorItemEvents implements Listener {
 
   @EventHandler
   public void onSpectatorItemClick(PlayerInteractEvent e) {
-    if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+    if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
       if (ArenaRegistry.getArena(e.getPlayer()) == null) {
         return;
       }
