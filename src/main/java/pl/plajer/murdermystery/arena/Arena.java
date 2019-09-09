@@ -220,6 +220,7 @@ public class Arena extends BukkitRunnable {
           MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
           Bukkit.getPluginManager().callEvent(gameStartEvent);
           setArenaState(ArenaState.IN_GAME);
+          ArenaUtils.nameTagHiderUpdate();
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
             gameBar.setProgress(1.0);
           }
@@ -232,7 +233,6 @@ public class Arena extends BukkitRunnable {
             player.getInventory().clear();
             player.setGameMode(GameMode.ADVENTURE);
             ArenaUtils.hidePlayersOutsideTheGame(player, this);
-            //ArenaUtils.hideNametag(player);
             player.updateInventory();
             plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
             setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
@@ -390,7 +390,6 @@ public class Arena extends BukkitRunnable {
                 players.showPlayer(player);
               }
             }
-            //ArenaUtils.showNametag(player);
             for (PotionEffect effect : player.getActivePotionEffects()) {
               player.removePotionEffect(effect.getType());
             }
@@ -712,7 +711,6 @@ public class Arena extends BukkitRunnable {
       System.out.print("EndLocation for arena " + getId() + " isn't intialized!");
     }
     for (Player player : getPlayers()) {
-      //ArenaUtils.showNametag(player);
       player.teleport(location);
     }
   }

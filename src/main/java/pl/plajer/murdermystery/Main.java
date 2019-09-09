@@ -36,11 +36,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 
-import pl.plajer.murdermystery.arena.ArenaUtils;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaEvents;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+import pl.plajer.murdermystery.arena.ArenaUtils;
 import pl.plajer.murdermystery.arena.special.SpecialBlockEvents;
 import pl.plajer.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
 import pl.plajer.murdermystery.arena.special.pray.PrayerRegistry;
@@ -125,6 +125,8 @@ public class Main extends JavaPlugin {
     Debugger.debug(Level.INFO, "Plugin loaded! Hooking into soft-dependencies in a while!");
     //start hook manager later in order to allow soft-dependencies to fully load
     Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
+    //Maybe this can be removed but if something goes wrong it will be gone wrong xd (like worldswitch/teleport etc)
+    Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> ArenaUtils.nameTagHiderUpdate(), 0L, 140L);
   }
 
   private boolean validateIfPluginShouldStart() {
@@ -173,7 +175,6 @@ public class Main extends JavaPlugin {
     for (Arena arena : ArenaRegistry.getArenas()) {
       arena.getScoreboardManager().stopAllScoreboards();
       for (Player player : arena.getPlayers()) {
-        //ArenaUtils.showNametag(player);
         arena.doBarAction(Arena.BarAction.REMOVE, player);
         arena.teleportToEndLocation(player);
         if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {

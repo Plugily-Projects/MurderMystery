@@ -89,9 +89,9 @@ public class ArenaManager {
     }
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       if (!player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
-          || !player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId()))) {
+        || !player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId()))) {
         player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-No-Permission").replace("%permission%",
-            PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())));
+          PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())));
         return;
       }
     }
@@ -106,9 +106,9 @@ public class ArenaManager {
     }
 
     int murderIncrease = player.getEffectivePermissions().stream().filter(permAttach -> permAttach.getPermission().startsWith("murdermystery.role.murderer."))
-        .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(28 /* remove the permission node to obtain the number*/))).max().orElse(0);
+      .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(28 /* remove the permission node to obtain the number*/))).max().orElse(0);
     int detectiveIncrease = player.getEffectivePermissions().stream().filter(permAttach -> permAttach.getPermission().startsWith("murdermystery.role.detective."))
-        .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(29 /* remove the permission node to obtain the number*/))).max().orElse(0);
+      .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(29 /* remove the permission node to obtain the number*/))).max().orElse(0);
     user.addStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, murderIncrease);
     user.addStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, detectiveIncrease);
 
@@ -173,6 +173,7 @@ public class ArenaManager {
       ArenaUtils.showPlayer(arenaPlayer, arena);
     }
     arena.showPlayers();
+    ArenaUtils.nameTagHider(player);
     Debugger.debug(Level.INFO, "[{0}] Join attempt as player for {1} took {2}ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);
   }
 
@@ -196,9 +197,9 @@ public class ArenaManager {
 
     //todo change later
     int murderDecrease = player.getEffectivePermissions().stream().filter(permAttach -> permAttach.getPermission().startsWith("murdermystery.role.murderer."))
-        .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(28 /* remove the permission node to obtain the number*/))).max().orElse(0);
+      .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(28 /* remove the permission node to obtain the number*/))).max().orElse(0);
     int detectiveDecrease = player.getEffectivePermissions().stream().filter(permAttach -> permAttach.getPermission().startsWith("murdermystery.role.detective."))
-        .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(29 /* remove the permission node to obtain the number*/))).max().orElse(0);
+      .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(29 /* remove the permission node to obtain the number*/))).max().orElse(0);
     user.addStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, -murderDecrease);
     if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) <= 0) {
       user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
@@ -222,14 +223,14 @@ public class ArenaManager {
         Player newMurderer = players.get(new Random().nextInt(players.size() - 1));
         arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
         String title = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title").replace("%role%",
-            ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
+          ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
         String subtitle = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle").replace("%role%",
-            ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
+          ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
         for (Player gamePlayer : arena.getPlayers()) {
           gamePlayer.sendTitle(title, subtitle, 5, 40, 5);
         }
         newMurderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
-            ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
+          ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
         ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
         user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
       } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
@@ -243,7 +244,6 @@ public class ArenaManager {
       }
       plugin.getCorpseHandler().spawnCorpse(player, arena);
     }
-    //ArenaUtils.showNametag(player);
     player.getInventory().clear();
     player.getInventory().setArmorContents(null);
     arena.removePlayer(player);
@@ -279,7 +279,7 @@ public class ArenaManager {
     }
     arena.teleportToEndLocation(player);
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-        && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+      && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, player);
     }
     for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
@@ -375,9 +375,9 @@ public class ArenaManager {
       formatted = StringUtils.replace(formatted, "%murderer%", arena.getCharacter(Arena.CharacterType.MURDERER).getName());
     }
     formatted = StringUtils.replace(formatted, "%murderer_kills%",
-        String.valueOf(plugin.getUserManager().getUser(arena.getCharacter(Arena.CharacterType.MURDERER)).getStat(StatsStorage.StatisticType.LOCAL_KILLS)));
+      String.valueOf(plugin.getUserManager().getUser(arena.getCharacter(Arena.CharacterType.MURDERER)).getStat(StatsStorage.StatisticType.LOCAL_KILLS)));
     formatted = StringUtils.replace(formatted, "%hero%", arena.isCharacterSet(Arena.CharacterType.HERO)
-        ? arena.getCharacter(Arena.CharacterType.HERO).getName() : ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody"));
+      ? arena.getCharacter(Arena.CharacterType.HERO).getName() : ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody"));
     return formatted;
   }
 

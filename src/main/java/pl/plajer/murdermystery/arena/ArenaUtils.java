@@ -23,6 +23,7 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -30,11 +31,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
@@ -42,6 +40,7 @@ import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.ItemPosition;
+import pl.plajer.murdermystery.utils.MessageUtils;
 
 /**
  * @author Plajer
@@ -208,28 +207,41 @@ public class ArenaUtils {
     }
   }
 
-  /*
-  buggy nametag remover - disabled, need another try!
-  public static void hideNametag(Player player) {
-    //hacky workaround to hide name tag without scoreboard teams
-    Slime slime = (Slime) player.getWorld().spawnEntity(player.getLocation(), EntityType.SLIME);
-    slime.setAI(false);
-    slime.setInvulnerable(true);
-    slime.setCollidable(false);
-    //slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, Integer.MAX_VALUE, false, false));
-    slime.setSize(-1);
-    player.addPassenger(slime);
-    player.sendMessage("HIDE");
+  public static void nameTagHider(final Player p) {
+    try {
+      for (Player players : plugin.getServer().getOnlinePlayers()) {
+        if (ArenaRegistry.getArena(players) != null) {
+          Scoreboard scoreboard = players.getScoreboard();
+          if (scoreboard == Bukkit.getScoreboardManager().getMainScoreboard()) {
+            scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+          }
+          Team team = scoreboard.getTeam("Hide");
+          if (team == null) {
+            team = scoreboard.registerNewTeam("Hide");
+          }
+          team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
+          Arena arena = ArenaRegistry.getArena(players);
+          if (arena.getArenaState() == ArenaState.IN_GAME) {
+            team.addEntry(p.getName());
+          } else if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+            team.removeEntry(p.getName());
+          } else if (arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
+            team.removeEntry(p.getName());
+          }
+          players.setScoreboard(scoreboard);
+        }
+      }
+    } catch (NullPointerException ex) {
+      MessageUtils.errorOccurred();
+      Bukkit.getConsoleSender().sendMessage("NameTagHider can´t find Arena! Contact Developer if there are a lot of errors");
+    }
   }
 
-  public static void showNametag(Player player) {
-    for (Entity passenger : player.getPassengers()) {
-      if (passenger.getType() == EntityType.SLIME) {
-        passenger.remove();
-        player.sendMessage("SHOW");
-      }
+  public static void nameTagHiderUpdate() {
+    for (final Player player : Bukkit.getOnlinePlayers()) {
+      nameTagHider(player);
     }
-  }*/
+  }
 
   public enum ScoreAction {
     KILL_PLAYER(100, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Kill-Player")), KILL_MURDERER(200, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Kill-Murderer")),
