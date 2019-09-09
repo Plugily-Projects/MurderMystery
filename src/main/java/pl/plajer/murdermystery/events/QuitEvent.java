@@ -49,11 +49,9 @@ public class QuitEvent implements Listener {
       ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArena(event.getPlayer()));
     }
     final User user = plugin.getUserManager().getUser(event.getPlayer());
-    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        plugin.getUserManager().saveStatistic(user, stat);
-      }
-    });
+    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+      plugin.getUserManager().saveStatistic(user, stat);
+    }
     plugin.getUserManager().removeUser(user);
   }
 
