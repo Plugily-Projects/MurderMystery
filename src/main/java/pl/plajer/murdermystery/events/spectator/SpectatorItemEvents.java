@@ -22,10 +22,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.SkullType;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -54,6 +51,7 @@ public class SpectatorItemEvents implements Listener {
 
   private Main plugin;
   private SpectatorSettingsMenu spectatorSettingsMenu;
+  private final boolean isPaper = Bukkit.getServer().getVersion().contains("Paper");
 
   public SpectatorItemEvents(Main plugin) {
     this.plugin = plugin;
@@ -95,7 +93,13 @@ public class SpectatorItemEvents implements Listener {
           skull = XMaterial.PLAYER_HEAD.parseItem();
         }
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
-        meta.setOwner(player.getName());
+        if (isPaper) {
+          if (player.getPlayerProfile().hasTextures()) {
+            meta.setPlayerProfile(player.getPlayerProfile());
+          }
+        } else {
+          meta.setOwner(player.getName());
+        }
         meta.setDisplayName(player.getName());
         String role = ChatManager.colorMessage("In-Game.Spectator.Target-Player-Role");
         if (Role.isRole(Role.MURDERER, player)) {
