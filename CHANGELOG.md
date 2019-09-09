@@ -11,6 +11,7 @@ now proper full game permission check will occur and do the thing to allow or di
 * Updated bunch of locales
 * Fixed Russian locale was broken
 * Added Slovak and Turkish locales (thanks to POEditor contributors)
+* Fixed bug that auto respawn didn't work
 
 ### 1.1.6 Release (13/29.07.2019)
 * Changed Chinese (Simplified) locale prefix from zh to cn and Chinese (Traditional) from zh_hk to zh_tw

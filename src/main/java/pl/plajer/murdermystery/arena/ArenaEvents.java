@@ -333,13 +333,13 @@ public class ArenaEvents implements Listener {
     player.getInventory().clear();
     ChatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
 
-    //we must call it tick/two later due to instant respawn bug
+    //we must call it ticks later due to instant respawn bug
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       e.getEntity().spigot().respawn();
       player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
       player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
       player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
-    }, 2);
+    }, 5);
   }
 
   @EventHandler
