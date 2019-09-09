@@ -107,9 +107,6 @@ public class ArenaManager {
         player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Full-Game-No-Permission"));
         return;
       }
-      //1. when full arena && starting check if has permission to full join - no = no join
-      //2. if has check fo someone who dont have then kick and replace
-      //if arena isnt max players then go and add player anyway i think all covered good yes
       boolean foundSlot = false;
       for (Player loopPlayer : arena.getPlayers()) {
         if (loopPlayer.hasPermission(PermissionsManager.getJoinFullGames())) {
