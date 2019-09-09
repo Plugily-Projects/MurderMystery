@@ -55,7 +55,7 @@ public class SpectatorItemEvents implements Listener {
 
   private Main plugin;
   private SpectatorSettingsMenu spectatorSettingsMenu;
-  private final boolean isPaper = Bukkit.getServer().getVersion().contains("Paper");
+  private final boolean paper = Bukkit.getServer().getVersion().contains("Paper");
 
   public SpectatorItemEvents(Main plugin) {
     this.plugin = plugin;
@@ -97,7 +97,7 @@ public class SpectatorItemEvents implements Listener {
           skull = XMaterial.PLAYER_HEAD.parseItem();
         }
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
-        if (isPaper) {
+        if (paper) {
           if (player.getPlayerProfile().hasTextures()) {
             meta.setPlayerProfile(player.getPlayerProfile());
           }
