@@ -1,3 +1,7 @@
+### 1.2.1 Release (11/XX.09.2019) (by Tigerpanzer)
+* The sword will be now available at cooldown to hit someone as murder (after a 1 sec throw
+cooldown because the sword is not available if you throw it)
+
 ### 1.2.0 Release (08/09.09.2019) (by Tigerpanzer)
 * Added name tags hide feature in game
 * Game will now properly end when murderer dies by environment

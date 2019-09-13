@@ -114,7 +114,8 @@ public class Events implements Listener {
       return;
     }
     attackerUser.setCooldown("sword_shoot", 5);
-    attacker.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+    //sword is throwing one second -_-
+    attacker.setCooldown(Material.IRON_SWORD, 20);
     final ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(attacker.getLocation(), EntityType.ARMOR_STAND);
     stand.setVisible(false);
     stand.setInvulnerable(true);
@@ -127,11 +128,13 @@ public class Events implements Listener {
   }
 
   private void swordFlyTask(Arena arena, Player attacker, User attackerUser, ArmorStand stand) {
+    /* old method to bring the sword back
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       if (arena.getArenaState() == ArenaState.IN_GAME) {
         ItemPosition.setItem(attacker, ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
+        attacker.setCooldown(Material.IRON_SWORD, 1);
       }
-    }, 5 * 21L);
+    }, 5 * 21L);*/
     new BukkitRunnable() {
       double posModifier = 0;
       Location loc = attacker.getLocation();

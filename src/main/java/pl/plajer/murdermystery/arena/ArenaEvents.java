@@ -204,6 +204,11 @@ public class ArenaEvents implements Listener {
       return;
     }
 
+    //check if sword has cooldown
+    if (attacker.hasCooldown(Material.IRON_SWORD)) {
+      return;
+    }
+
     if (Role.isRole(Role.MURDERER, victim)) {
       plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.MURDERER_KILL);
     } else if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
