@@ -1,6 +1,8 @@
-### 1.2.1 Release (11/XX.09.2019) (by Tigerpanzer)
+### 1.2.1 Release (11/13.09.2019) (by Tigerpanzer)
+* Added a lobby time shorter when the maximum player size is reached
 * The sword will be now available at cooldown to hit someone as murder (after a 1 sec throw
 cooldown because the sword is not available if you throw it)
+* Fixed 1.14 ClassNotFoundException error when a paper server version is used
 
 ### 1.2.0 Release (08/09.09.2019) (by Tigerpanzer)
 * Added name tags hide feature in game

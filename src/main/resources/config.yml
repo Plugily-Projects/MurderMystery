@@ -25,6 +25,9 @@ Bossbar-Enabled: true
 # How many seconds game should take to start.
 Starting-Waiting-Time: 60
 
+# How many seconds game should take to start if the round is full.
+Starting-Shorting-Time: 15
+
 # How many seconds classic game should play.
 Classic-Gameplay-Time: 270
 
@@ -104,6 +107,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 3
+Version: 4
 
 # No way! You've reached the end! But... where's the dragon!?

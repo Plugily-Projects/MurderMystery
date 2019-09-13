@@ -31,7 +31,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 3;
+  public static final int CONFIG_FILE_VERSION = 4;
   private Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -61,6 +61,10 @@ public class LanguageMigrator {
         case 2:
           MigratorUtils.addNewLines(file, "# Should players' name tags in game be hidden?\r\n" +
             "Nametags-Hidden: true");
+          break;
+        case 3:
+          MigratorUtils.addNewLines(file, "# How many seconds game should take to start if the round is full.\r\n" +
+            "Starting-Shorting-Time: 15");
         default:
           break;
       }
@@ -68,8 +72,8 @@ public class LanguageMigrator {
     }
     updateConfigVersionControl(version);
     plugin.reloadConfig();
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Village Defense] [System notify] Config updated, no comments were removed :)");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Village Defense] [System notify] You're using latest config file version! Nice!");
+    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Murder Mystery] [System notify] Config updated, no comments were removed :)");
+    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Murder Mystery] [System notify] You're using latest config file version! Nice!");
   }
 
   private void updateConfigVersionControl(int oldVersion) {
