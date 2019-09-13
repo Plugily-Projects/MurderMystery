@@ -3,6 +3,8 @@
 * The sword will be now available at cooldown to hit someone as murder (after a 1 sec throw
 cooldown because the sword is not available if you throw it)
 * Fixed 1.14 ClassNotFoundException error when a paper server version is used
+* Fix GUI opening on physical actions (Especially on redstone block) (thanks to BestMark)
+* Fix null on getting corpse data from corpse reborn (thanks to BestMark)
 
 ### 1.2.0 Release (08/09.09.2019) (by Tigerpanzer)
 * Added name tags hide feature in game
