@@ -63,8 +63,8 @@ public class LanguageMigrator {
             "Nametags-Hidden: true");
           break;
         case 3:
-          MigratorUtils.addNewLines(file, "# How many seconds game should take to start if the round is full.\r\n" +
-            "Starting-Shorting-Time: 15");
+          MigratorUtils.addNewLines(file, "# Lobby waiting time set when lobby max players number is reached, used to start game quicker.\r\n" +
+            "Start-Time-On-Full-Lobby: 15");
         default:
           break;
       }

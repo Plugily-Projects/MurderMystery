@@ -25,8 +25,8 @@ Bossbar-Enabled: true
 # How many seconds game should take to start.
 Starting-Waiting-Time: 60
 
-# How many seconds game should take to start if the round is full.
-Starting-Shorting-Time: 15
+# Lobby waiting time set when lobby max players number is reached, used to start game quicker.
+Start-Time-On-Full-Lobby: 15
 
 # How many seconds classic game should play.
 Classic-Gameplay-Time: 270
