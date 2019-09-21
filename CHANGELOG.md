@@ -1,3 +1,7 @@
+### 1.2.1 Release (21/XX.09.2019) (by Tigerpanzer)
+* Now players can´t interact with armorstands when they are in the arena
+* Now players can´t destroy itemframes, paintings, and armorstands when they are in the arena
+
 ### 1.2.1 Release (11/13.09.2019) (by Tigerpanzer)
 * Added a lobby time shorter when the maximum player size is reached
 * The sword will be now available at cooldown to hit someone as murder (after a 1 sec throw
