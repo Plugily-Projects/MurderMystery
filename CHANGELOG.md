@@ -1,4 +1,4 @@
-### 1.2.1 Release (21/XX.09.2019) (by Tigerpanzer)
+### 1.2.2 Release (21/XX.09.2019) (by Tigerpanzer)
 * Now players can´t interact with armorstands when they are in the arena
 * Now players can´t destroy itemframes, paintings, and armorstands when they are in the arena
 

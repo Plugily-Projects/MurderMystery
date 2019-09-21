@@ -238,7 +238,7 @@ public class Events implements Listener {
     }
   }
 
-  @EventHandler
+  @EventHandler(priority = EventPriority.HIGH)
   public void onFoodLevelChange(FoodLevelChangeEvent event) {
     if (event.getEntity().getType() == EntityType.PLAYER && ArenaRegistry.isInArena((Player) event.getEntity())) {
       event.setFoodLevel(20);
