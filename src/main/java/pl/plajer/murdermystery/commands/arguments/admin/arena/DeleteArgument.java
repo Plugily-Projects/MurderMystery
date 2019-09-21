@@ -46,8 +46,8 @@ public class DeleteArgument {
 
   public DeleteArgument(ArgumentsRegistry registry) {
     registry.mapArgument("murdermysteryadmin", new LabeledCommandArgument("delete", "murdermystery.admin.delete", CommandArgument.ExecutorType.PLAYER,
-        new LabelData("/mma delete &6<arena>", "/mma delete <arena>",
-            "&7Deletes specified arena\n&6Permission: &7murdermystery.admin.delete")) {
+      new LabelData("/mma delete &6<arena>", "/mma delete <arena>",
+        "&7Deletes specified arena\n&6Permission: &7murdermystery.admin.delete")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (args.length == 1) {

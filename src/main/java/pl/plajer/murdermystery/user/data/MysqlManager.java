@@ -49,17 +49,17 @@ public class MysqlManager implements UserDatabase {
       try (Connection connection = database.getConnection()) {
         Statement statement = connection.createStatement();
         statement.executeUpdate("CREATE TABLE IF NOT EXISTS `playerstats` (\n"
-            + "  `UUID` text NOT NULL,\n"
-            + "  `name` text NOT NULL,\n"
-            + "  `kills` int(11) NOT NULL DEFAULT '0',\n"
-            + "  `deaths` int(11) NOT NULL DEFAULT '0',\n"
-            + "  `highestscore` int(11) NOT NULL DEFAULT '0',\n"
-            + "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n"
-            + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
-            + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
-            + "  `contribmurderer` int(11) NOT NULL DEFAULT '1',\n"
-            + "  `contribdetective` int(11) NOT NULL DEFAULT '1'\n"
-            + ");");
+          + "  `UUID` text NOT NULL,\n"
+          + "  `name` text NOT NULL,\n"
+          + "  `kills` int(11) NOT NULL DEFAULT '0',\n"
+          + "  `deaths` int(11) NOT NULL DEFAULT '0',\n"
+          + "  `highestscore` int(11) NOT NULL DEFAULT '0',\n"
+          + "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n"
+          + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
+          + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
+          + "  `contribmurderer` int(11) NOT NULL DEFAULT '1',\n"
+          + "  `contribdetective` int(11) NOT NULL DEFAULT '1'\n"
+          + ");");
       } catch (SQLException e) {
         e.printStackTrace();
         MessageUtils.errorOccurred();

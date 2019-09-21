@@ -106,7 +106,7 @@ public class ArenaManager {
       return;
     }
     if (arena.getPlayers().size() >= arena.getMaximumPlayers() && arena.getArenaState() == ArenaState.STARTING) {
-      if(!player.hasPermission(PermissionsManager.getJoinFullGames())) {
+      if (!player.hasPermission(PermissionsManager.getJoinFullGames())) {
         player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Full-Game-No-Permission"));
         return;
       }

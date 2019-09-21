@@ -59,7 +59,7 @@ public class ExceptionLogHandler extends Handler {
       return;
     }
     if (throwable.getStackTrace().length == 0
-        || !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")) {
+      || !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")) {
       return;
     }
     if (containsBlacklistedClass(throwable)) {

@@ -112,7 +112,7 @@ public class LanguageManager {
       return;
     }
     try (InputStreamReader reader = new InputStreamReader(new FileInputStream(plugin.getDataFolder() + "/locales/"
-        + pluginLocale.getPrefix() + ".properties"), StandardCharsets.UTF_8)) {
+      + pluginLocale.getPrefix() + ".properties"), StandardCharsets.UTF_8)) {
       properties.load(reader);
     } catch (IOException e) {
       e.printStackTrace();
@@ -138,7 +138,7 @@ public class LanguageManager {
       pluginLocale = LocaleRegistry.getByName("English");
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Murder Mystery] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: "
-        + pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
+      + pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
     loadProperties();
   }
 

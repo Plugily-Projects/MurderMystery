@@ -18,7 +18,6 @@
 
 package pl.plajer.murdermystery.events;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -52,13 +51,11 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
-import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.arena.ArenaUtils;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.user.User;
-import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.Utils;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 
@@ -114,7 +111,6 @@ public class Events implements Listener {
       return;
     }
     attackerUser.setCooldown("sword_shoot", 5);
-    //sword is throwing one second -_-
     attacker.setCooldown(Material.IRON_SWORD, 20);
     final ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(attacker.getLocation(), EntityType.ARMOR_STAND);
     stand.setVisible(false);
@@ -128,13 +124,6 @@ public class Events implements Listener {
   }
 
   private void swordFlyTask(Arena arena, Player attacker, User attackerUser, ArmorStand stand) {
-    /* old method to bring the sword back
-    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      if (arena.getArenaState() == ArenaState.IN_GAME) {
-        ItemPosition.setItem(attacker, ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
-        attacker.setCooldown(Material.IRON_SWORD, 1);
-      }
-    }, 5 * 21L);*/
     new BukkitRunnable() {
       double posModifier = 0;
       Location loc = attacker.getLocation();
@@ -173,7 +162,7 @@ public class Events implements Listener {
     victim.damage(100.0);
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
     victim.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"),
-        ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"), 5, 40, 5);
+      ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"), 5, 40, 5);
     attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
     attackerUser.addStat(StatsStorage.StatisticType.KILLS, 1);
     ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
@@ -203,8 +192,8 @@ public class Events implements Listener {
       return;
     }
     if (event.getMessage().startsWith("/mm") || event.getMessage().startsWith("/murdermystery")
-        || event.getMessage().startsWith("/murdermysteryadmin") || event.getMessage().contains("leave")
-        || event.getMessage().contains("stats") || event.getMessage().startsWith("/mma")) {
+      || event.getMessage().startsWith("/murdermysteryadmin") || event.getMessage().contains("leave")
+      || event.getMessage().contains("stats") || event.getMessage().startsWith("/mma")) {
       return;
     }
     event.setCancelled(true);

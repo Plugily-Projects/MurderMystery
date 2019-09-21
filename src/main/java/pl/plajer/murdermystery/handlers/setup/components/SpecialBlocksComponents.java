@@ -60,17 +60,17 @@ public class SpecialBlocksComponents implements SetupComponent {
     Main plugin = setupInventory.getPlugin();
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.PAPER.parseItem())
-        .name(ChatManager.colorRawMessage("&6&lSpecial Blocks Section"))
-        .lore(ChatColor.GRAY + "Items on the right will allow")
-        .lore(ChatColor.GRAY + "you to add special game blocks!")
-        .build()), 0, 3);
+      .name(ChatManager.colorRawMessage("&6&lSpecial Blocks Section"))
+      .lore(ChatColor.GRAY + "Items on the right will allow")
+      .lore(ChatColor.GRAY + "you to add special game blocks!")
+      .build()), 0, 3);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ENDER_CHEST.parseItem())
-        .name(ChatManager.colorRawMessage("&e&lAdd Mystery Cauldron"))
-        .lore(ChatColor.GRAY + "Target a cauldron and add it to the game")
-        .lore(ChatColor.GRAY + "it will cost 1 gold per potion!")
-        .lore(ChatColor.GRAY + "Configure cauldron potions in specialblocks.yml file!")
-        .build(), e -> {
+      .name(ChatManager.colorRawMessage("&e&lAdd Mystery Cauldron"))
+      .lore(ChatColor.GRAY + "Target a cauldron and add it to the game")
+      .lore(ChatColor.GRAY + "it will cost 1 gold per potion!")
+      .lore(ChatColor.GRAY + "Configure cauldron potions in specialblocks.yml file!")
+      .build(), e -> {
       e.getWhoClicked().closeInventory();
       if (e.getWhoClicked().getTargetBlock(null, 10).getType() != XMaterial.CAULDRON.parseMaterial()) {
         e.getWhoClicked().sendMessage(ChatColor.RED + "Please target cauldron to continue!");
@@ -78,7 +78,7 @@ public class SpecialBlocksComponents implements SetupComponent {
       }
 
       arena.loadSpecialBlock(new SpecialBlock(e.getWhoClicked().getTargetBlock(null, 10).getLocation(),
-          SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
+        SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
       List<String> cauldrons = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".mystery-cauldrons"));
       cauldrons.add(LocationSerializer.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
       config.set("instances." + arena.getId() + ".mystery-cauldrons", cauldrons);
@@ -87,17 +87,17 @@ public class SpecialBlocksComponents implements SetupComponent {
     }), 1, 3);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ENCHANTING_TABLE.parseItem())
-        .name(ChatManager.colorRawMessage("&e&lAdd Confessional"))
-        .lore(ChatColor.GRAY + "Target enchanting table and")
-        .lore(ChatColor.GRAY + "add praise to the developer")
-        .lore(ChatColor.GRAY + "confessional, gift for")
-        .lore(ChatColor.GRAY + "the developer costs 1 gold!")
-        .lore(ChatColor.GOLD + "Add some levers in radius")
-        .lore(ChatColor.GOLD + "of 3 blocks near the enchant table")
-        .lore(ChatColor.GOLD + "to allow users to pray there!")
-        .lore(ChatColor.RED + "You can either get gifts")
-        .lore(ChatColor.RED + "or curses from prayer!")
-        .build(), e -> {
+      .name(ChatManager.colorRawMessage("&e&lAdd Confessional"))
+      .lore(ChatColor.GRAY + "Target enchanting table and")
+      .lore(ChatColor.GRAY + "add praise to the developer")
+      .lore(ChatColor.GRAY + "confessional, gift for")
+      .lore(ChatColor.GRAY + "the developer costs 1 gold!")
+      .lore(ChatColor.GOLD + "Add some levers in radius")
+      .lore(ChatColor.GOLD + "of 3 blocks near the enchant table")
+      .lore(ChatColor.GOLD + "to allow users to pray there!")
+      .lore(ChatColor.RED + "You can either get gifts")
+      .lore(ChatColor.RED + "or curses from prayer!")
+      .build(), e -> {
       e.getWhoClicked().closeInventory();
       if (e.getWhoClicked().getTargetBlock(null, 10).getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
         e.getWhoClicked().sendMessage(ChatColor.RED + "Please target enchanting table to continue!");
@@ -105,7 +105,7 @@ public class SpecialBlocksComponents implements SetupComponent {
       }
 
       arena.loadSpecialBlock(new SpecialBlock(e.getWhoClicked().getTargetBlock(null, 10).getLocation(),
-          SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
+        SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
       List<String> confessionals = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".confessionals"));
       confessionals.add(LocationSerializer.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
       config.set("instances." + arena.getId() + ".confessionals", confessionals);

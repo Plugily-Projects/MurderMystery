@@ -39,17 +39,17 @@ public class SimpleConversationBuilder {
 
   public SimpleConversationBuilder() {
     conversationFactory = new ConversationFactory(plugin)
-        .withModality(true)
-        .withLocalEcho(false)
-        .withEscapeSequence("cancel")
-        .withTimeout(30)
-        .addConversationAbandonedListener(listener -> {
-          if (listener.gracefulExit()) {
-            return;
-          }
-          listener.getContext().getForWhom().sendRawMessage(ChatManager.colorRawMessage("&7Operation cancelled!"));
-        })
-        .thatExcludesNonPlayersWithMessage(ChatColor.RED + "Only by players!");
+      .withModality(true)
+      .withLocalEcho(false)
+      .withEscapeSequence("cancel")
+      .withTimeout(30)
+      .addConversationAbandonedListener(listener -> {
+        if (listener.gracefulExit()) {
+          return;
+        }
+        listener.getContext().getForWhom().sendRawMessage(ChatManager.colorRawMessage("&7Operation cancelled!"));
+      })
+      .thatExcludesNonPlayersWithMessage(ChatColor.RED + "Only by players!");
   }
 
   public SimpleConversationBuilder withPrompt(Prompt prompt) {

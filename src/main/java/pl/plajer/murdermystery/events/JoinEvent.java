@@ -52,7 +52,7 @@ public class JoinEvent implements Listener {
   @EventHandler
   public void onLogin(PlayerLoginEvent e) {
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && !plugin.getServer().hasWhitelist()
-        || e.getResult() != PlayerLoginEvent.Result.KICK_WHITELIST) {
+      || e.getResult() != PlayerLoginEvent.Result.KICK_WHITELIST) {
       return;
     }
     if (e.getPlayer().hasPermission(PermissionsManager.getJoinFullGames())) {

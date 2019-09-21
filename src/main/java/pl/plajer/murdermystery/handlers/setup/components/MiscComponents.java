@@ -72,17 +72,17 @@ public class MiscComponents implements SetupComponent {
     ItemStack bungeeItem;
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       bungeeItem = new ItemBuilder(Material.SIGN)
-          .name(ChatManager.colorRawMessage("&e&lAdd Game Sign"))
-          .lore(ChatColor.GRAY + "Target a sign and click this.")
-          .lore(ChatColor.DARK_GRAY + "(this will set target sign as game sign)")
-          .build();
+        .name(ChatManager.colorRawMessage("&e&lAdd Game Sign"))
+        .lore(ChatColor.GRAY + "Target a sign and click this.")
+        .lore(ChatColor.DARK_GRAY + "(this will set target sign as game sign)")
+        .build();
     } else {
       bungeeItem = new ItemBuilder(Material.BARRIER)
-          .name(ChatManager.colorRawMessage("&c&lAdd Game Sign"))
-          .lore(ChatColor.GRAY + "Option disabled in bungee cord mode.")
-          .lore(ChatColor.DARK_GRAY + "Bungee mode is meant to be one arena per server")
-          .lore(ChatColor.DARK_GRAY + "If you wish to have multi arena, disable bungee in config!")
-          .build();
+        .name(ChatManager.colorRawMessage("&c&lAdd Game Sign"))
+        .lore(ChatColor.GRAY + "Option disabled in bungee cord mode.")
+        .lore(ChatColor.DARK_GRAY + "Bungee mode is meant to be one arena per server")
+        .lore(ChatColor.DARK_GRAY + "If you wish to have multi arena, disable bungee in config!")
+        .build();
     }
     pane.addItem(new GuiItem(bungeeItem, e -> {
       if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
@@ -95,9 +95,9 @@ public class MiscComponents implements SetupComponent {
         return;
       }
       if (location.distance(e.getWhoClicked().getWorld().getSpawnLocation()) <= Bukkit.getServer().getSpawnRadius()
-          && e.getClick() != ClickType.SHIFT_LEFT) {
+        && e.getClick() != ClickType.SHIFT_LEFT) {
         e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&c&l✖ &cWarning | Server spawn protection is set to &6" + Bukkit.getServer().getSpawnRadius()
-            + " &cand sign you want to place is in radius of this protection! &c&lNon opped players won't be able to interact with this sign and can't join the game so."));
+          + " &cand sign you want to place is in radius of this protection! &c&lNon opped players won't be able to interact with this sign and can't join the game so."));
         e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&cYou can ignore this warning and add sign with Shift + Left Click, but for now &c&loperation is cancelled"));
         return;
       }
@@ -111,10 +111,10 @@ public class MiscComponents implements SetupComponent {
     }), 5, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(Material.NAME_TAG)
-        .name(ChatManager.colorRawMessage("&e&lSet Map Name"))
-        .lore(ChatColor.GRAY + "Click to set arena map name")
-        .lore("", ChatManager.colorRawMessage("&a&lCurrently: &e" + config.getString("instances." + arena.getId() + ".mapname")))
-        .build(), e -> {
+      .name(ChatManager.colorRawMessage("&e&lSet Map Name"))
+      .lore(ChatColor.GRAY + "Click to set arena map name")
+      .lore("", ChatManager.colorRawMessage("&a&lCurrently: &e" + config.getString("instances." + arena.getId() + ".mapname")))
+      .build(), e -> {
       e.getWhoClicked().closeInventory();
       new SimpleConversationBuilder().withPrompt(new StringPrompt() {
         @Override
@@ -137,12 +137,12 @@ public class MiscComponents implements SetupComponent {
     }), 6, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(Material.GOLD_INGOT)
-        .name(ChatManager.colorRawMessage("&e&lAdd Gold Spawn"))
-        .lore(ChatColor.GRAY + "Add new gold spawn")
-        .lore(ChatColor.GRAY + "on the place you're standing at.")
-        .lore("", setupInventory.getSetupUtilities().isOptionDoneList("instances." + arena.getId() + ".goldspawnpoints", 4))
-        .lore("", ChatManager.colorRawMessage("&8Shift + Right Click to remove all spawns"))
-        .build(), e -> {
+      .name(ChatManager.colorRawMessage("&e&lAdd Gold Spawn"))
+      .lore(ChatColor.GRAY + "Add new gold spawn")
+      .lore(ChatColor.GRAY + "on the place you're standing at.")
+      .lore("", setupInventory.getSetupUtilities().isOptionDoneList("instances." + arena.getId() + ".goldspawnpoints", 4))
+      .lore("", ChatManager.colorRawMessage("&8Shift + Right Click to remove all spawns"))
+      .build(), e -> {
       e.getWhoClicked().closeInventory();
       if (e.getClick() == ClickType.SHIFT_RIGHT) {
         config.set("instances." + arena.getId() + ".goldspawnpoints", new ArrayList<>());
@@ -167,10 +167,10 @@ public class MiscComponents implements SetupComponent {
     }), 7, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
-        .name(ChatManager.colorRawMessage("&e&lView Setup Video"))
-        .lore(ChatColor.GRAY + "Having problems with setup or wanna")
-        .lore(ChatColor.GRAY + "know some useful tips? Click to get video link!")
-        .build(), e -> {
+      .name(ChatManager.colorRawMessage("&e&lView Setup Video"))
+      .lore(ChatColor.GRAY + "Having problems with setup or wanna")
+      .lore(ChatColor.GRAY + "know some useful tips? Click to get video link!")
+      .build(), e -> {
       e.getWhoClicked().closeInventory();
       player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&6Check out this video: " + SetupInventory.VIDEO_LINK));
     }), 8, 1);

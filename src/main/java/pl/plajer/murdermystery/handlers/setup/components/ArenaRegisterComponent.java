@@ -65,17 +65,17 @@ public class ArenaRegisterComponent implements SetupComponent {
     ItemStack registeredItem;
     if (!setupInventory.getArena().isReady()) {
       registeredItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseItem())
-          .name(ChatManager.colorRawMessage("&e&lRegister Arena - Finish Setup"))
-          .lore(ChatColor.GRAY + "Click this when you're done with configuration.")
-          .lore(ChatColor.GRAY + "It will validate and register arena.")
-          .build();
+        .name(ChatManager.colorRawMessage("&e&lRegister Arena - Finish Setup"))
+        .lore(ChatColor.GRAY + "Click this when you're done with configuration.")
+        .lore(ChatColor.GRAY + "It will validate and register arena.")
+        .build();
     } else {
       registeredItem = new ItemBuilder(Material.BARRIER)
-          .name(ChatManager.colorRawMessage("&a&lArena Registered - Congratulations"))
-          .lore(ChatColor.GRAY + "This arena is already registered!")
-          .lore(ChatColor.GRAY + "Good job, you went through whole setup!")
-          .lore(ChatColor.GRAY + "You can play on this arena now!")
-          .build();
+        .name(ChatManager.colorRawMessage("&a&lArena Registered - Congratulations"))
+        .lore(ChatColor.GRAY + "This arena is already registered!")
+        .lore(ChatColor.GRAY + "Good job, you went through whole setup!")
+        .lore(ChatColor.GRAY + "You can play on this arena now!")
+        .build();
     }
     pane.addItem(new GuiItem(registeredItem, e -> {
       Arena arena = setupInventory.getArena();

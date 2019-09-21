@@ -22,11 +22,11 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.World;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -55,13 +55,13 @@ public class SpectatorItemEvents implements Listener {
 
   private Main plugin;
   private SpectatorSettingsMenu spectatorSettingsMenu;
-  private final boolean paper = Bukkit.getServer().getVersion().contains("Paper");
+  private boolean usesPaperSpigot = Bukkit.getServer().getVersion().contains("Paper");
 
   public SpectatorItemEvents(Main plugin) {
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
     spectatorSettingsMenu = new SpectatorSettingsMenu(plugin, ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Inventory-Name"),
-        ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Speed-Name"));
+      ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Speed-Name"));
   }
 
   @EventHandler
@@ -86,7 +86,7 @@ public class SpectatorItemEvents implements Listener {
 
   private void openSpectatorMenu(World world, Player p) {
     Inventory inventory = plugin.getServer().createInventory(null, Utils.serializeInt(ArenaRegistry.getArena(p).getPlayers().size()),
-        ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
+      ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
     Set<Player> players = ArenaRegistry.getArena(p).getPlayers();
     for (Player player : world.getPlayers()) {
       if (players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
@@ -97,10 +97,8 @@ public class SpectatorItemEvents implements Listener {
           skull = XMaterial.PLAYER_HEAD.parseItem();
         }
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
-        if (paper) {
-          if (player.getPlayerProfile().hasTextures()) {
-            meta.setPlayerProfile(player.getPlayerProfile());
-          }
+        if (usesPaperSpigot && player.getPlayerProfile().hasTextures()) {
+          meta.setPlayerProfile(player.getPlayerProfile());
         } else {
           meta.setOwner(player.getName());
         }
@@ -130,7 +128,7 @@ public class SpectatorItemEvents implements Listener {
     }
     Arena arena = ArenaRegistry.getArena(p);
     if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
-        || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
+      || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
       return;
     }
     if (!e.getView().getTitle().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {

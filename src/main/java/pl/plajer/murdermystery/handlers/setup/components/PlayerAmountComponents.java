@@ -52,13 +52,13 @@ public class PlayerAmountComponents implements SetupComponent {
     Arena arena = setupInventory.getArena();
     Main plugin = setupInventory.getPlugin();
     pane.addItem(new GuiItem(new ItemBuilder(Material.COAL).amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("minimumplayers"))
-        .name(ChatManager.colorRawMessage("&e&lSet Minimum Players Amount"))
-        .lore(ChatColor.GRAY + "LEFT click to decrease")
-        .lore(ChatColor.GRAY + "RIGHT click to increase")
-        .lore(ChatColor.DARK_GRAY + "(how many players are needed")
-        .lore(ChatColor.DARK_GRAY + "for game to start lobby countdown)")
-        .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".minimumplayers"))
-        .build(), e -> {
+      .name(ChatManager.colorRawMessage("&e&lSet Minimum Players Amount"))
+      .lore(ChatColor.GRAY + "LEFT click to decrease")
+      .lore(ChatColor.GRAY + "RIGHT click to increase")
+      .lore(ChatColor.DARK_GRAY + "(how many players are needed")
+      .lore(ChatColor.DARK_GRAY + "for game to start lobby countdown)")
+      .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".minimumplayers"))
+      .build(), e -> {
       if (e.getClick().isRightClick()) {
         e.getInventory().getItem(e.getSlot()).setAmount(e.getCurrentItem().getAmount() + 1);
       }
@@ -76,13 +76,13 @@ public class PlayerAmountComponents implements SetupComponent {
     }), 3, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE)
-        .amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("maximumplayers"))
-        .name(ChatManager.colorRawMessage("&e&lSet Maximum Players Amount"))
-        .lore(ChatColor.GRAY + "LEFT click to decrease")
-        .lore(ChatColor.GRAY + "RIGHT click to increase")
-        .lore(ChatColor.DARK_GRAY + "(how many players arena can hold)")
-        .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".maximumplayers"))
-        .build(), e -> {
+      .amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("maximumplayers"))
+      .name(ChatManager.colorRawMessage("&e&lSet Maximum Players Amount"))
+      .lore(ChatColor.GRAY + "LEFT click to decrease")
+      .lore(ChatColor.GRAY + "RIGHT click to increase")
+      .lore(ChatColor.DARK_GRAY + "(how many players arena can hold)")
+      .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".maximumplayers"))
+      .build(), e -> {
       if (e.getClick().isRightClick()) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
       }

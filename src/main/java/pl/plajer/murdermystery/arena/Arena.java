@@ -173,7 +173,7 @@ public class Arena extends BukkitRunnable {
         setTimer(getTimer() - 1);
         break;
       case STARTING:
-        if  (getPlayers().size() == getMaximumPlayers() && getTimer() >= plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15) && !forceStart){
+        if (getPlayers().size() == getMaximumPlayers() && getTimer() >= plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15) && !forceStart) {
           setTimer(plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15));
           ChatManager.broadcast(this, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Start-In").replace("%TIME%", String.valueOf(getTimer())));
         }

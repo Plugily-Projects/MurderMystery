@@ -198,7 +198,7 @@ public class SpectatorEvents implements Listener {
       return;
     }
     if (arena.getArenaState() != ArenaState.IN_GAME
-        || plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
+      || plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
       event.setCancelled(true);
     }
   }

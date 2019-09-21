@@ -66,8 +66,8 @@ public class MetricsService {
         Bukkit.getScheduler().runTask(plugin, () -> {
           try {
             final byte[] post = ("pass=metricsservice&type=" + plugin.getName() + "&pluginversion=" + plugin.getDescription().getVersion() +
-                "&serverversion=" + plugin.getServer().getBukkitVersion() + "&ip=" + InetAddress.getLocalHost().getHostAddress() + ":" + plugin.getServer().getPort() +
-                "&playersonline=" + Bukkit.getOnlinePlayers().size()).getBytes(StandardCharsets.UTF_8);
+              "&serverversion=" + plugin.getServer().getBukkitVersion() + "&ip=" + InetAddress.getLocalHost().getHostAddress() + ":" + plugin.getServer().getPort() +
+              "&playersonline=" + Bukkit.getOnlinePlayers().size()).getBytes(StandardCharsets.UTF_8);
             new Thread(() -> {
               try {
                 plugin.getLogger().log(Level.FINE, "Metrics data sent!");
@@ -86,7 +86,7 @@ public class MetricsService {
                 StringBuilder content;
 
                 try (BufferedReader in = new BufferedReader(
-                    new InputStreamReader(conn.getInputStream()))) {
+                  new InputStreamReader(conn.getInputStream()))) {
 
                   String line;
                   content = new StringBuilder();

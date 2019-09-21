@@ -54,9 +54,9 @@ public class LanguageMigrator {
       switch (version) {
         case 1:
           MigratorUtils.addNewLines(file, "# How many blocks per tick sword thrown by murderer should fly\r\n" +
-              "# Please avoid high values as it might look like the sword is\r\n" +
-              "# blinking each tick\r\n" +
-              "Murderer-Sword-Speed: 0.65");
+            "# Please avoid high values as it might look like the sword is\r\n" +
+            "# blinking each tick\r\n" +
+            "Murderer-Sword-Speed: 0.65");
           break;
         case 2:
           MigratorUtils.addNewLines(file, "# Should players' name tags in game be hidden?\r\n" +

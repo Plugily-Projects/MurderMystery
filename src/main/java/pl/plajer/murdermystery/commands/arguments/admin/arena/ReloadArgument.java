@@ -51,7 +51,7 @@ public class ReloadArgument {
 
   public ReloadArgument(ArgumentsRegistry registry) {
     registry.mapArgument("murdermysteryadmin", new LabeledCommandArgument("reload", "murdermystery.admin.reload", CommandArgument.ExecutorType.BOTH,
-        new LabelData("/mma reload", "/mma reload", "&7Reload all game arenas and configurations\n&7&lArenas will be stopped!\n&6Permission: &7murdermystery.admin.reload")) {
+      new LabelData("/mma reload", "/mma reload", "&7Reload all game arenas and configurations\n&7&lArenas will be stopped!\n&6Permission: &7murdermystery.admin.reload")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (!confirmations.contains(sender)) {

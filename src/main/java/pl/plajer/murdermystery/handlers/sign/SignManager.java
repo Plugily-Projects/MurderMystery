@@ -33,7 +33,6 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -47,7 +46,6 @@ import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
 import pl.plajer.murdermystery.handlers.ChatManager;
-import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
 import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
@@ -82,7 +80,7 @@ public class SignManager implements Listener {
   @EventHandler
   public void onSignChange(SignChangeEvent e) {
     if (!e.getPlayer().hasPermission("murdermystery.admin.sign.create")
-        || !e.getLine(0).equalsIgnoreCase("[murdermystery]")) {
+      || !e.getLine(0).equalsIgnoreCase("[murdermystery]")) {
       return;
     }
     if (e.getLine(1).isEmpty()) {

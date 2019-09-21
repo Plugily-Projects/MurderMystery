@@ -102,7 +102,7 @@ public class ArgumentsRegistry implements CommandExecutor {
           }
           if (args.length > 1 && args[1].equalsIgnoreCase("edit")) {
             if (!checkSenderIsExecutorType(sender, CommandArgument.ExecutorType.PLAYER)
-                || !Utils.hasPermission(sender, "murdermystery.admin.create")) {
+              || !Utils.hasPermission(sender, "murdermystery.admin.create")) {
               return true;
             }
             if (ArenaRegistry.getArena(args[0]) == null) {
@@ -185,11 +185,11 @@ public class ArgumentsRegistry implements CommandExecutor {
       sender.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");
     }
     List<LabelData> data = mappedArguments.get("murdermysteryadmin").stream().filter(arg -> arg instanceof LabeledCommandArgument)
-        .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList());
+      .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList());
     data.add(new LabelData("/mm &6<arena>&f edit", "/mm <arena> edit",
-        "&7Edit existing arena\n&6Permission: &7murdermystery.admin.edit"));
+      "&7Edit existing arena\n&6Permission: &7murdermystery.admin.edit"));
     data.addAll(mappedArguments.get("murdermystery").stream().filter(arg -> arg instanceof LabeledCommandArgument)
-        .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList()));
+      .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList()));
     for (LabelData labelData : data) {
       TextComponent component;
       if (sender instanceof Player) {

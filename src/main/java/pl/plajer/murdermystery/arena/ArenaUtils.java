@@ -41,7 +41,6 @@ import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.ItemPosition;
-import pl.plajer.murdermystery.utils.MessageUtils;
 
 /**
  * @author Plajer
@@ -209,7 +208,7 @@ public class ArenaUtils {
   }
 
   public static void updateNameTagsVisibility(final Player p) {
-    if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
       return;
     }
     for (Player players : plugin.getServer().getOnlinePlayers()) {

@@ -39,7 +39,7 @@ public class StopArgument {
 
   public StopArgument(ArgumentsRegistry registry) {
     registry.mapArgument("murdermysteryadmin", new LabeledCommandArgument("stop", "murdermystery.admin.stop", CommandArgument.ExecutorType.PLAYER,
-        new LabelData("/mma stop", "/mma stop", "&7Stops the arena you're in\n&7&lYou must be in target arena!\n&6Permission: &7murdermystery.admin.stop")) {
+      new LabelData("/mma stop", "/mma stop", "&7Stops the arena you're in\n&7&lYou must be in target arena!\n&6Permission: &7murdermystery.admin.stop")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (!Utils.checkIsInGameInstance((Player) sender)) {

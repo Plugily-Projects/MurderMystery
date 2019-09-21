@@ -52,7 +52,7 @@ public class CreateArgument {
   public CreateArgument(ArgumentsRegistry registry) {
     this.registry = registry;
     registry.mapArgument("murdermystery", new LabeledCommandArgument("create", "murdermystery.admin.create", CommandArgument.ExecutorType.PLAYER,
-        new LabelData("/mm create &6<arena>", "/mm create <arena>", "&7Create new arena\n&6Permission: &7murdermystery.admin.create")) {
+      new LabelData("/mm create &6<arena>", "/mm create <arena>", "&7Create new arena\n&6Permission: &7murdermystery.admin.create")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (args.length == 1) {

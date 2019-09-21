@@ -46,7 +46,7 @@ public class HookManager {
         if (!Bukkit.getPluginManager().isPluginEnabled(requiredHook.getPluginName())) {
           hooks.put(feature, false);
           Debugger.debug(Level.INFO, "[HookManager] Feature {0} won't be enabled because {1} is not installed! Please install it in order to enable this feature in-game!",
-              feature.name(), requiredHook.getPluginName());
+            feature.name(), requiredHook.getPluginName());
           hooked = false;
           break;
         }

@@ -87,15 +87,15 @@ public class SpectatorSettingsMenu implements Listener {
   private void initInventory() {
     Inventory inv = Bukkit.createInventory(null, 9 * 4, inventoryName);
     inv.setItem(11, new ItemBuilder(Material.LEATHER_BOOTS)
-        .name(color(speedOptionName + " I")).build());
+      .name(color(speedOptionName + " I")).build());
     inv.setItem(12, new ItemBuilder(Material.CHAINMAIL_BOOTS)
-        .name(color(speedOptionName + " II")).build());
+      .name(color(speedOptionName + " II")).build());
     inv.setItem(13, new ItemBuilder(Material.IRON_BOOTS)
-        .name(color(speedOptionName + " III")).build());
+      .name(color(speedOptionName + " III")).build());
     inv.setItem(14, new ItemBuilder(XMaterial.GOLDEN_BOOTS.parseItem())
-        .name(color(speedOptionName + " IV")).build());
+      .name(color(speedOptionName + " IV")).build());
     inv.setItem(15, new ItemBuilder(Material.DIAMOND_BOOTS)
-        .name(color(speedOptionName + " V")).build());
+      .name(color(speedOptionName + " V")).build());
     this.inv = inv;
   }
 
