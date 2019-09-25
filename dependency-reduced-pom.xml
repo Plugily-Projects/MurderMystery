@@ -4,23 +4,23 @@
   <groupId>pl.plajer</groupId>
   <artifactId>murdermystery</artifactId>
   <name>MurderMystery</name>
-  <version>1.2.1</version>
+  <version>1.2.2-pre</version>
   <developers>
+    <developer>
+      <name>Tigerpanzer</name>
+      <url>https://www.spigotmc.org/members/414545/</url>
+      <roles>
+        <role>maintainer</role>
+        <role>translator - German language</role>
+        <role>tester</role>
+      </roles>
+    </developer>
     <developer>
       <name>Plajer</name>
       <url>https://www.spigotmc.org/members/423193/</url>
       <roles>
         <role>developer</role>
         <role>translator - Polish language</role>
-      </roles>
-    </developer>
-    <developer>
-      <name>Tigerpanzer</name>
-      <url>https://www.spigotmc.org/members/414545/</url>
-      <roles>
-        <role>helper developer</role>
-        <role>translator - German language</role>
-        <role>tester</role>
       </roles>
     </developer>
   </developers>
