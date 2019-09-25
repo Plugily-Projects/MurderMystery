@@ -44,7 +44,7 @@ DatabaseActivated: false
 
 # Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
 # This saves inventory of players and restores it after player leaves arena.
-# Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
+# Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions, gamemode
 InventoryManager: true
 
 # Should in-game chat format be enabled?

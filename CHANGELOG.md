@@ -1,7 +1,7 @@
 ### 1.2.2 Release (21/XX.09.2019) (by Tigerpanzer)
 * Added option to disable fall damage in the arena
-* Attempt to fix sound after player death
-* Fixed the ArrayIndexOutOfBoundsException when the murder left before the game starts
+* Fixed sound after player death
+* Fixed the ArrayIndexOutOfBoundsException when the murder left before the game starts (crashing game)
 * Now players can´t interact with armorstands when they are in the arena
 * Now players can´t destroy itemframes, paintings, and armorstands when they are in the arena
 

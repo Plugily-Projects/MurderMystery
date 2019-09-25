@@ -239,38 +239,44 @@ public class ArenaManager {
 
     arena.getScoreboardManager().removeScoreboard(user);
     //-1 cause we didn't remove player yet
-    if (arena.getArenaState() == ArenaState.IN_GAME && arena.getPlayersLeft().size() - 1 > 1) {
-      if (Role.isRole(Role.MURDERER, player)) {
-        List<Player> players = new ArrayList<>();
-        for (Player gamePlayer : arena.getPlayersLeft()) {
-          if (Role.isRole(Role.ANY_DETECTIVE, gamePlayer)) {
-            continue;
+    if (arena.getArenaState() == ArenaState.IN_GAME) {
+      if (arena.getPlayersLeft().size() - 1 > 1) {
+        if (Role.isRole(Role.MURDERER, player)) {
+          List<Player> players = new ArrayList<>();
+          for (Player gamePlayer : arena.getPlayersLeft()) {
+            if (Role.isRole(Role.ANY_DETECTIVE, gamePlayer) || Role.isRole(Role.MURDERER, gamePlayer)) {
+              continue;
+            }
+            players.add(gamePlayer);
           }
-          players.add(gamePlayer);
+          Player newMurderer = players.get(new Random().nextInt(players.size()));
+          arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
+          String title = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title").replace("%role%",
+            ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
+          String subtitle = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle").replace("%role%",
+            ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
+          for (Player gamePlayer : arena.getPlayers()) {
+            gamePlayer.sendTitle(title, subtitle, 5, 40, 5);
+          }
+          newMurderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
+            ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
+          ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
+          user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
+        } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
+          arena.setDetectiveDead(true);
+          if (Role.isRole(Role.FAKE_DETECTIVE, player)) {
+            arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
+          } else {
+            user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
+          }
+          ArenaUtils.dropBowAndAnnounce(arena, player);
         }
-        Player newMurderer = players.get(new Random().nextInt(players.size()));
-        arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
-        String title = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title").replace("%role%",
-          ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
-        String subtitle = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle").replace("%role%",
-          ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
-        for (Player gamePlayer : arena.getPlayers()) {
-          gamePlayer.sendTitle(title, subtitle, 5, 40, 5);
-        }
-        newMurderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
-          ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
-        ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
-        user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
-      } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
-        arena.setDetectiveDead(true);
-        if (Role.isRole(Role.FAKE_DETECTIVE, player)) {
-          arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
-        } else {
-          user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
-        }
-        ArenaUtils.dropBowAndAnnounce(arena, player);
+        plugin.getCorpseHandler().spawnCorpse(player, arena);
+      } else {
+        arena.setArenaState(ArenaState.ENDING);
+        ArenaManager.stopGame(false, arena);
+        arena.setTimer(10);
       }
-      plugin.getCorpseHandler().spawnCorpse(player, arena);
     }
     player.getInventory().clear();
     player.getInventory().setArmorContents(null);
