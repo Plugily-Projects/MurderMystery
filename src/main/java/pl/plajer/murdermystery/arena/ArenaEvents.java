@@ -214,8 +214,9 @@ public class ArenaEvents implements Listener {
       plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.DETECTIVE_KILL);
     }
 
-    victim.damage(100.0);
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
+    victim.damage(100.0);
+
     User user = plugin.getUserManager().getUser(attacker);
 
     user.addStat(StatsStorage.StatisticType.KILLS, 1);
@@ -252,8 +253,9 @@ public class ArenaEvents implements Listener {
       return;
     }
 
-    victim.damage(100.0);
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
+    victim.damage(100.0);
+
     User user = plugin.getUserManager().getUser(attacker);
 
     user.addStat(StatsStorage.StatisticType.KILLS, 1);

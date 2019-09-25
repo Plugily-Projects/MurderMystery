@@ -162,8 +162,8 @@ public class Events implements Listener {
   }
 
   private void killBySword(Arena arena, User attackerUser, Player victim) {
-    victim.damage(100.0);
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
+    victim.damage(100.0);
     victim.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"),
       ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You"), 5, 40, 5);
     attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
