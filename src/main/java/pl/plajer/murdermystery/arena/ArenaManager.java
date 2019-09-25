@@ -145,7 +145,7 @@ public class ArenaManager {
     player.setExp(1);
     player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
     player.setFoodLevel(20);
-    if ((arena.getArenaState() == ArenaState.IN_GAME || (arena.getArenaState() == ArenaState.STARTING && arena.getTimer() <= 3) || arena.getArenaState() == ArenaState.ENDING)) {
+    if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)) {
       arena.teleportToStartLocation(player);
       player.sendMessage(ChatManager.colorMessage("In-Game.You-Are-Spectator"));
       player.getInventory().clear();

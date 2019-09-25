@@ -1,4 +1,9 @@
 ### 1.2.2 Release (21/XX.09.2019) (by Tigerpanzer)
+* Fixed Prayer-death after game end
+* Fixed getting damage from fire after you join a game
+* Fixed the hero name in the summary message
+* Fixed disable null error (Inventories now regenerating after server stop)
+* Changed that player will be a spectator when the starting time is under 3
 * Added option to disable fall damage in the arena
 * Fixed sound after player death
 * Fixed the ArrayIndexOutOfBoundsException when the murder left before the game starts (crashing game)

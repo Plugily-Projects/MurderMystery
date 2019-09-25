@@ -255,7 +255,11 @@ public class ArenaEvents implements Listener {
       e.setCancelled(true);
       return;
     }
-
+    Arena arena = ArenaRegistry.getArena(attacker);
+    //we need to set it before the victim die, because of hero character
+    if (Role.isRole(Role.MURDERER, victim)) {
+      arena.setCharacter(Arena.CharacterType.HERO, attacker);
+    }
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
     victim.damage(100.0);
 
@@ -267,11 +271,9 @@ public class ArenaEvents implements Listener {
       ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
     }
 
-    Arena arena = ArenaRegistry.getArena(attacker);
     victim.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"), null, 5, 40, 50);
 
     if (Role.isRole(Role.MURDERER, victim)) {
-      arena.setCharacter(Arena.CharacterType.HERO, attacker);
       ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.KILL_MURDERER, 0);
     } else if (Role.isRole(Role.INNOCENT, victim)) {
       if (Role.isRole(Role.MURDERER, attacker)) {
@@ -348,7 +350,7 @@ public class ArenaEvents implements Listener {
       player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
       player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
       player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
-    }, 5);
+    }, 10);
   }
 
   @EventHandler

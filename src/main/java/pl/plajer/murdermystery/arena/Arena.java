@@ -66,6 +66,7 @@ import pl.plajer.murdermystery.arena.managers.ScoreboardManager;
 import pl.plajer.murdermystery.arena.options.ArenaOption;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
+import pl.plajer.murdermystery.arena.special.pray.PrayerRegistry;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.rewards.Reward;
 import pl.plajer.murdermystery.user.User;
@@ -128,7 +129,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void addCorpse(Corpse corpse) {
-    if (!plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+    if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
       return;
     }
     corpses.add(corpse);
@@ -374,6 +375,7 @@ public class Arena extends BukkitRunnable {
         break;
       case ENDING:
         scoreboardManager.stopAllScoreboards();
+        PrayerRegistry.deathTask.cancel();
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           plugin.getServer().setWhitelist(false);
         }
@@ -843,7 +845,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void clearCorpses() {
-    if (!plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+    if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
       return;
     }
     for (Corpse corpse : corpses) {

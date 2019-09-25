@@ -168,7 +168,7 @@ public class Main extends JavaPlugin {
 
     Bukkit.getLogger().removeHandler(exceptionLogHandler);
     saveAllUserStatistics();
-    if (hookManager.isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+    if (hookManager != null && hookManager.isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
       for (Hologram hologram : HologramsAPI.getHolograms(this)) {
         hologram.delete();
       }

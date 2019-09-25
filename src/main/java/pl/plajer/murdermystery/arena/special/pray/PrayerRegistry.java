@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
@@ -76,6 +77,8 @@ public class PrayerRegistry {
     return prayers;
   }
 
+  public static BukkitTask deathTask;
+
   public static void applyRandomPrayer(User user) {
     Prayer prayer = getRandomPray();
     user.setStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY, prayer.getPrayerType().ordinal());
@@ -112,7 +115,7 @@ public class PrayerRegistry {
       case GOLD_RUSH:
         break;
       case INCOMING_DEATH:
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+       deathTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
           if (arena.getArenaState() == ArenaState.IN_GAME) {
             player.damage(1000);
           }

@@ -58,7 +58,7 @@ public class CorpseHandler implements Listener {
     registerLastWord("default", ChatManager.colorMessage("In-Game.Messages.Last-Words.Default"));
     //run bit later than hook manager to ensure it's not null
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      if (plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+      if (plugin.getHookManager() != null && plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
       }
     }, 25L * 5);
@@ -69,7 +69,7 @@ public class CorpseHandler implements Listener {
   }
 
   public void spawnCorpse(Player p, Arena arena) {
-    if (!plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+    if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
       return;
     }
     Hologram hologram = HologramsAPI.createHologram(plugin, p.getLocation().clone().add(0, 1.7, 0));
