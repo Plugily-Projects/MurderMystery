@@ -31,7 +31,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 4;
+  public static final int CONFIG_FILE_VERSION = 5;
   private Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -65,6 +65,10 @@ public class LanguageMigrator {
         case 3:
           MigratorUtils.addNewLines(file, "# Lobby waiting time set when lobby max players number is reached, used to start game quicker.\r\n" +
             "Start-Time-On-Full-Lobby: 15");
+          break;
+        case 4:
+          MigratorUtils.addNewLines(file, "# Should players get no fall damage?\r\n" +
+            "Disable-Fall-Damage: false");
         default:
           break;
       }
