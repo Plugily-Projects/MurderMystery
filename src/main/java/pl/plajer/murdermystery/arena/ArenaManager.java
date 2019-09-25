@@ -248,7 +248,7 @@ public class ArenaManager {
           }
           players.add(gamePlayer);
         }
-        Player newMurderer = players.get(new Random().nextInt(players.size() - 1));
+        Player newMurderer = players.get(new Random().nextInt(players.size()));
         arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
         String title = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title").replace("%role%",
           ChatManager.colorMessage("Scoreboard.Roles.Murderer"));

@@ -1,4 +1,5 @@
 ### 1.2.2 Release (21/XX.09.2019) (by Tigerpanzer)
+* Fixed the ArrayIndexOutOfBoundsException when the murder left before the game starts
 * Now players can´t interact with armorstands when they are in the arena
 * Now players can´t destroy itemframes, paintings, and armorstands when they are in the arena
 
