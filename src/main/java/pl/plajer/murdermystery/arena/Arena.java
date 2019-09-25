@@ -375,7 +375,9 @@ public class Arena extends BukkitRunnable {
         break;
       case ENDING:
         scoreboardManager.stopAllScoreboards();
-        PrayerRegistry.deathTask.cancel();
+        if (PrayerRegistry.deathTask != null) {
+          PrayerRegistry.deathTask.cancel();
+        }
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           plugin.getServer().setWhitelist(false);
         }
