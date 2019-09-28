@@ -1,4 +1,5 @@
 ### 1.2.2 Release (21/XX.09.2019) (by Tigerpanzer)
+* Fixed wrong location of corpse, hologram and bow after player left the game
 * Fixed Prayer-death after game end
 * Fixed getting damage from fire after you join a game
 * Fixed the hero name in the summary message

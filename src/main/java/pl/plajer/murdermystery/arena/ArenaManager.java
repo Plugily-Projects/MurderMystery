@@ -239,7 +239,7 @@ public class ArenaManager {
 
     arena.getScoreboardManager().removeScoreboard(user);
     //-1 cause we didn't remove player yet
-    if (arena.getArenaState() == ArenaState.IN_GAME) {
+    if (arena.getArenaState() == ArenaState.IN_GAME && !plugin.getUserManager().getUser(player).isSpectator()) {
       if (arena.getPlayersLeft().size() - 1 > 1) {
         if (Role.isRole(Role.MURDERER, player)) {
           List<Player> players = new ArrayList<>();
