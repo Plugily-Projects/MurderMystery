@@ -18,7 +18,10 @@
 
 package pl.plajer.murdermystery.commands.arguments.game;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -66,14 +69,25 @@ public class JoinArguments {
         @Override
         public void execute(CommandSender sender, String[] args) {
           //first random get method
-          for (int i = 0; i < ArenaRegistry.getArenas().size(); i++) {
-            Arena arena = getRandomArena();
-            if ((arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
-              && arena.getPlayers().size() < arena.getMaximumPlayers()) {
-              ArenaManager.joinAttempt((Player) sender, arena);
-              return;
+          Map<Arena, Integer> arenas = new HashMap<>();
+          for (Arena arena : ArenaRegistry.getArenas()) {
+            if (arena.getArenaState() == ArenaState.STARTING && arena.getPlayers().size() < arena.getMaximumPlayers()) {
+              arenas.put(arena, arena.getPlayers().size());
             }
           }
+          Stream<Map.Entry<Arena, Integer>> sorted =
+            arenas.entrySet().stream()
+              .sorted(Map.Entry.comparingByValue());
+
+          if (sorted.findFirst().isPresent()) {
+            ArenaManager.joinAttempt((Player) sender, sorted.findFirst().get().getKey());
+            return;
+          }
+          if (sorted.findAny().isPresent()) {
+            ArenaManager.joinAttempt((Player) sender, sorted.findAny().get().getKey());
+            return;
+          }
+
           //fallback safe method
           for (Arena arena : ArenaRegistry.getArenas()) {
             if ((arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
@@ -87,9 +101,4 @@ public class JoinArguments {
       });
     }
   }
-
-  private Arena getRandomArena() {
-    return ArenaRegistry.getArenas().get(random.nextInt(ArenaRegistry.getArenas().size()));
-  }
-
 }

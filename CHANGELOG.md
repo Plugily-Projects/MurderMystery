@@ -1,4 +1,5 @@
 ### 1.2.2 Release (21/XX.09.2019) (by Tigerpanzer)
+* Changed the way how randomjoin is working (now it will search for the most players first)
 * Fixed wrong location of corpse, hologram and bow after player left the game
 * Fixed Prayer-death after game end
 * Fixed getting damage from fire after you join a game
