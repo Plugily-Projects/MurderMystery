@@ -23,10 +23,13 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Stream;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import pl.plajer.murdermystery.ConfigPreferences;
+import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaManager;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
@@ -75,17 +78,13 @@ public class JoinArguments {
               arenas.put(arena, arena.getPlayers().size());
             }
           }
-          Stream<Map.Entry<Arena, Integer>> sorted =
-            arenas.entrySet().stream()
-              .sorted(Map.Entry.comparingByValue());
-
-          if (sorted.findFirst().isPresent()) {
-            ArenaManager.joinAttempt((Player) sender, sorted.findFirst().get().getKey());
-            return;
-          }
-          if (sorted.findAny().isPresent()) {
-            ArenaManager.joinAttempt((Player) sender, sorted.findAny().get().getKey());
-            return;
+          if (arenas.size() > 0) {
+            Stream<Map.Entry<Arena, Integer>> sorted = arenas.entrySet().stream().sorted(Map.Entry.comparingByValue());
+            Arena arena = sorted.findFirst().get().getKey();
+            if (arena != null) {
+              ArenaManager.joinAttempt((Player) sender, arena);
+              return;
+            }
           }
 
           //fallback safe method
