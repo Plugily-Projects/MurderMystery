@@ -53,7 +53,7 @@ public class StatsStorage {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
-  public static Map sortByValue(Map<?, ?> unsortMap) {
+  private static Map sortByValue(Map<?, ?> unsortMap) {
     List list = new LinkedList<>(unsortMap.entrySet());
     list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
     Map sortedMap = new LinkedHashMap();
