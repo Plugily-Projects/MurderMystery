@@ -1,7 +1,7 @@
-### 1.2.2 Release (21/XX.09.2019) (by Tigerpanzer)
+### 1.3.0 Release (21/02.10.2019) (by Tigerpanzer)
 * Changed the way how randomjoin is working (now it will search for the most players first)
 * Fixed wrong location of corpse, hologram and bow after player left the game
-* Fixed Prayer-death after game end
+* Fixed when you took death prayer you could die in next game
 * Fixed getting damage from fire after you join a game
 * Fixed the hero name in the summary message
 * Fixed disable null error (Inventories now regenerating after server stop)
