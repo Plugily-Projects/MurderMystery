@@ -1,16 +1,17 @@
-### 1.3.0 Release (21/02.10.2019) (by Tigerpanzer)
-* Changed the way how randomjoin is working (now it will search for the most players first)
-* Fixed wrong location of corpse, hologram and bow after player left the game
+### 1.3.0 Release (21.09.2019 - 03.10.2019) (by Tigerpanzer)
+* Changed the way how randomjoin works (now it will search for the most players first)
+* Fixed wrong location of corpse, hologram and bow spawn after player left the game
 * Fixed when you took death prayer you could die in next game
 * Fixed getting damage from fire after you join a game
-* Fixed the hero name in the summary message
-* Fixed disable null error (Inventories now regenerating after server stop)
+* Fixed the hero name in the summary message was always none
+* Inventories will now properly regenerate on plugin disable
 * Changed that player will be a spectator when the starting time is under 3
 * Added option to disable fall damage in the arena
-* Fixed sound after player death
+* Fixed sound after player death that could be heard in lobby
 * Fixed the ArrayIndexOutOfBoundsException when the murder left before the game starts (crashing game)
 * Now players can´t interact with armorstands when they are in the arena
 * Now players can´t destroy itemframes, paintings, and armorstands when they are in the arena
+* Proofread and updated locales ~Plajer
 
 ### 1.2.1 Release (11/13.09.2019) (by Tigerpanzer)
 * Added a lobby time shorter when the maximum player size is reached
