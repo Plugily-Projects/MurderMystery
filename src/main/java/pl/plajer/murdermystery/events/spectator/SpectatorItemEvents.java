@@ -100,7 +100,7 @@ public class SpectatorItemEvents implements Listener {
         if (usesPaperSpigot && player.getPlayerProfile().hasTextures()) {
           meta.setPlayerProfile(player.getPlayerProfile());
         } else {
-          meta.setOwner(player.getName());
+          meta.setOwningPlayer(player);
         }
         meta.setDisplayName(player.getName());
         String role = ChatManager.colorMessage("In-Game.Spectator.Target-Player-Role");
