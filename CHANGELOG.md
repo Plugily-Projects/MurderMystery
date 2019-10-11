@@ -1,3 +1,7 @@
+### 1.3.1 Release (11.10.2019 - XX.11.2019) (by Tigerpanzer)
+* Fixed that you can sleep in beds
+* Fixed player spawning after a death in blocks
+
 ### 1.3.0 Release (21.09.2019 - 03.10.2019) (by Tigerpanzer)
 * Changed the way how randomjoin works (now it will search for the most players first)
 * Fixed wrong location of corpse, hologram and bow spawn after player left the game

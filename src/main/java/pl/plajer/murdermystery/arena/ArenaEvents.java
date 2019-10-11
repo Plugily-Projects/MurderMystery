@@ -22,6 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -369,7 +370,11 @@ public class ArenaEvents implements Listener {
     }
     if (arena.getPlayers().contains(player)) {
       User user = plugin.getUserManager().getUser(player);
-      e.setRespawnLocation(player.getLocation());
+      if (player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.AIR) {
+        e.setRespawnLocation(player.getLocation());
+      } else {
+        e.setRespawnLocation(arena.getPlayerSpawnPoints().get(0));
+      }
       player.setAllowFlight(true);
       player.setFlying(true);
       user.setSpectator(true);

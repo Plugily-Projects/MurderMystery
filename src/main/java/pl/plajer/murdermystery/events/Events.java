@@ -209,7 +209,7 @@ public class Events implements Listener {
     if (arena == null || e.getClickedBlock() == null) {
       return;
     }
-    if (e.getClickedBlock().getType() == XMaterial.PAINTING.parseMaterial() || e.getClickedBlock().getType() == XMaterial.FLOWER_POT.parseMaterial()) {
+    if (e.getClickedBlock() instanceof org.bukkit.block.Bed || e.getClickedBlock().getType() == XMaterial.PAINTING.parseMaterial() || e.getClickedBlock().getType() == XMaterial.FLOWER_POT.parseMaterial()) {
       e.setCancelled(true);
     }
   }
