@@ -66,7 +66,7 @@ public class DeleteArgument {
           return;
         }
         confirmations.remove(sender);
-        ArenaManager.stopGame(false, arena);
+        ArenaManager.stopGame(true, arena);
         FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
         config.set("instances." + args[1], null);
         ConfigUtils.saveConfig(registry.getPlugin(), config, "arenas");

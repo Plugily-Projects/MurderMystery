@@ -296,9 +296,7 @@ public class Arena extends BukkitRunnable {
           }
         }
         if (getTimer() <= 0) {
-          setArenaState(ArenaState.ENDING);
           ArenaManager.stopGame(false, this);
-          setTimer(10);
         }
         if (getTimer() <= (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 10)
           && getTimer() > (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15)) {
@@ -337,9 +335,7 @@ public class Arena extends BukkitRunnable {
         switch (getPlayersLeft().size()) {
           //game end
           case 0:
-            setArenaState(ArenaState.ENDING);
             ArenaManager.stopGame(false, this);
-            setTimer(10);
             return;
 
           //winner check
@@ -353,9 +349,7 @@ public class Arena extends BukkitRunnable {
                 }
               }
               ArenaUtils.addScore(plugin.getUserManager().getUser(gameCharacters.get(CharacterType.MURDERER)), ArenaUtils.ScoreAction.WIN_GAME, 0);
-              setArenaState(ArenaState.ENDING);
               ArenaManager.stopGame(false, this);
-              setTimer(10);
               return;
             }
             break;

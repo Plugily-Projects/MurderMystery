@@ -273,9 +273,7 @@ public class ArenaManager {
         }
         plugin.getCorpseHandler().spawnCorpse(player, arena);
       } else {
-        arena.setArenaState(ArenaState.ENDING);
         ArenaManager.stopGame(false, arena);
-        arena.setTimer(10);
       }
     }
     player.getInventory().clear();
@@ -337,6 +335,13 @@ public class ArenaManager {
 
     MMGameStopEvent gameStopEvent = new MMGameStopEvent(arena);
     Bukkit.getPluginManager().callEvent(gameStopEvent);
+    arena.setArenaState(ArenaState.ENDING);
+    if (quickStop) {
+      arena.setTimer(2);
+      ChatManager.broadcast(arena, ChatManager.colorRawMessage("&cThe game has been force stopped by command"));
+    } else {
+      arena.setTimer(10);
+    }
     List<String> summaryMessages = LanguageManager.getLanguageList("In-Game.Messages.Game-End-Messages.Summary-Message");
     arena.getScoreboardManager().stopAllScoreboards();
     Random rand = new Random();

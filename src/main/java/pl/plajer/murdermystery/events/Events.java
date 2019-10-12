@@ -39,6 +39,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -204,14 +205,23 @@ public class Events implements Listener {
   }
 
   @EventHandler
-  public void onInGameInteract(PlayerInteractEvent e) {
-    Arena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena == null || e.getClickedBlock() == null) {
+  public void onInGameInteract(PlayerInteractEvent event) {
+    Arena arena = ArenaRegistry.getArena(event.getPlayer());
+    if (arena == null || event.getClickedBlock() == null) {
       return;
     }
-    if (e.getClickedBlock() instanceof org.bukkit.block.Bed || e.getClickedBlock().getType() == XMaterial.PAINTING.parseMaterial() || e.getClickedBlock().getType() == XMaterial.FLOWER_POT.parseMaterial()) {
-      e.setCancelled(true);
+    if (event.getClickedBlock().getType() == XMaterial.PAINTING.parseMaterial() || event.getClickedBlock().getType() == XMaterial.FLOWER_POT.parseMaterial()) {
+      event.setCancelled(true);
     }
+  }
+
+  @EventHandler
+  public void onInGameBedEnter(PlayerBedEnterEvent event) {
+    Arena arena = ArenaRegistry.getArena(event.getPlayer());
+    if (arena == null) {
+      return;
+    }
+    event.setCancelled(true);
   }
 
   @EventHandler

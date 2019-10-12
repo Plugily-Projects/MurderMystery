@@ -46,7 +46,7 @@ public class StopArgument {
           return;
         }
         if (ArenaRegistry.getArena((Player) sender).getArenaState() != ArenaState.ENDING) {
-          ArenaManager.stopGame(false, ArenaRegistry.getArena((Player) sender));
+          ArenaManager.stopGame(true, ArenaRegistry.getArena((Player) sender));
           //todo execute success command message
         }
       }

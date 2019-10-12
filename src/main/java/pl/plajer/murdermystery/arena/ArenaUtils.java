@@ -66,9 +66,7 @@ public class ArenaUtils {
         ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.DETECTIVE_WIN_GAME, 0);
       }
     }
-    arena.setArenaState(ArenaState.ENDING);
     ArenaManager.stopGame(false, arena);
-    arena.setTimer(5);
     Player murderer = arena.getCharacter(Arena.CharacterType.MURDERER);
     murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
       ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
