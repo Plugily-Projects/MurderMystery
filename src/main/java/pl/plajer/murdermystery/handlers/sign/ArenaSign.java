@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import javax.annotation.Nullable;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -52,10 +53,13 @@ public class ArenaSign {
   }
 
   private void setBehindBlock() {
-    if (plugin.is1_14_R1()) {
-      this.behind = getBlockBehind();
-    } else {
-      this.behind = getBlockBehindLegacy();
+    this.behind = null;
+    if (sign.getBlock().getType() == Material.WALL_SIGN) {
+      if (plugin.is1_14_R1()) {
+        this.behind = getBlockBehind();
+      } else {
+        this.behind = getBlockBehindLegacy();
+      }
     }
   }
 
