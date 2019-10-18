@@ -207,31 +207,31 @@ public class SignManager implements Listener {
           switch (arenaSign.getArena().getArenaState()) {
             case WAITING_FOR_PLAYERS:
               behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
-              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+              if (plugin.is1_12_R1()) {
                 behind.setData((byte) 0);
               }
               break;
             case STARTING:
               behind.setType(XMaterial.YELLOW_STAINED_GLASS.parseMaterial());
-              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+              if (plugin.is1_12_R1()) {
                 behind.setData((byte) 4);
               }
               break;
             case IN_GAME:
               behind.setType(XMaterial.ORANGE_STAINED_GLASS.parseMaterial());
-              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+              if (plugin.is1_12_R1()) {
                 behind.setData((byte) 1);
               }
               break;
             case ENDING:
               behind.setType(XMaterial.GRAY_STAINED_GLASS.parseMaterial());
-              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+              if (plugin.is1_12_R1()) {
                 behind.setData((byte) 7);
               }
               break;
             case RESTARTING:
               behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
-              if (plugin.is1_11_R1() || plugin.is1_12_R1()) {
+              if (plugin.is1_12_R1()) {
                 behind.setData((byte) 15);
               }
               break;

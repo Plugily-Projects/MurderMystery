@@ -136,7 +136,7 @@ public class Main extends JavaPlugin {
 
   private boolean validateIfPluginShouldStart() {
     version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-    if (!(version.equalsIgnoreCase("v1_11_R1") || version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
+    if (!(version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
       || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1"))) {
       MessageUtils.thisVersionIsNotSupported();
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by Murder Mystery!");
@@ -298,10 +298,6 @@ public class Main extends JavaPlugin {
         saveResource(fileName + ".yml", false);
       }
     }
-  }
-
-  public boolean is1_11_R1() {
-    return version.equalsIgnoreCase("v1_11_R1");
   }
 
   public boolean is1_12_R1() {
