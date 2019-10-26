@@ -39,8 +39,10 @@ public class ExceptionLogHandler extends Handler {
   //these classes if found in stacktraces won't be reported
   //to the Error Service
   private List<String> blacklistedClasses = Arrays.asList("pl.plajer.murdermystery.user.data.MysqlManager", "pl.plajer.murdermystery.plajerlair.commonsbox.database.MysqlDatabase");
+  private Main plugin;
 
-  public ExceptionLogHandler() {
+  public ExceptionLogHandler(Main plugin) {
+    this.plugin = plugin;
     Bukkit.getLogger().addHandler(this);
   }
 
@@ -59,13 +61,17 @@ public class ExceptionLogHandler extends Handler {
       return;
     }
     if (throwable.getStackTrace().length == 0
-      || !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")) {
+      || throwable.getCause() != null ? !throwable.getCause().getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")
+      : !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")) {
       return;
     }
     if (containsBlacklistedClass(throwable)) {
       return;
     }
-    new ReportedException(JavaPlugin.getPlugin(Main.class), (Exception) throwable);
+    new ReportedException(plugin, (Exception) throwable);
+    record.setThrown(null);
+    record.setMessage("[MurderMystery] We have found a bug in the code. Contact us at our official discord server (Invite link: https://discordapp.com/invite/UXzUdTP) with the following error given" +
+      " above!");
   }
 
   private boolean containsBlacklistedClass(Throwable throwable) {

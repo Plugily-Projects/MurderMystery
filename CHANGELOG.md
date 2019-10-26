@@ -1,6 +1,7 @@
 ### 1.3.2 Release (26.10.2019 - XX.11.2019) (by Tigerpanzer)
 * Fixed incompatibility with essentials respawn
 * You can now choose your own cooldown for sword attack/fly and bow shoot
+* Clearer way of error reporting
 
 ### 1.3.1 Release (11/18.10.2019) (by Tigerpanzer)
 * Fixed that you can sleep in beds

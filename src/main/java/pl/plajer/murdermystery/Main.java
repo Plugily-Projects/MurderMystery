@@ -102,7 +102,7 @@ public class Main extends JavaPlugin {
     }
 
     ServiceRegistry.registerService(this);
-    exceptionLogHandler = new ExceptionLogHandler();
+    exceptionLogHandler = new ExceptionLogHandler(this);
     LanguageManager.init(this);
     saveDefaultConfig();
     Debugger.setEnabled(getConfig().getBoolean("Debug", false));
