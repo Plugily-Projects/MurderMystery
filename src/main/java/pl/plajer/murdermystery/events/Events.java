@@ -114,8 +114,8 @@ public class Events implements Listener {
     if (attackerUser.getCooldown("sword_shoot") > 0) {
       return;
     }
-    attackerUser.setCooldown("sword_shoot", 5);
-    attacker.setCooldown(Material.IRON_SWORD, 20);
+    attackerUser.setCooldown("sword_shoot", plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5));
+    attacker.setCooldown(Material.IRON_SWORD, 20 * (plugin.getConfig().getInt("Murderer-Sword-Attack-Cooldown", 1)));
     final ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(attacker.getLocation(), EntityType.ARMOR_STAND);
     stand.setVisible(false);
     stand.setInvulnerable(true);
@@ -124,7 +124,7 @@ public class Events implements Listener {
     stand.setCollidable(false);
     stand.setSilent(true);
     swordFlyTask(arena, attacker, attackerUser, stand);
-    Utils.applyActionBarCooldown(attacker, 5);
+    Utils.applyActionBarCooldown(attacker, plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5));
   }
 
   private void swordFlyTask(Arena arena, Player attacker, User attackerUser, ArmorStand stand) {

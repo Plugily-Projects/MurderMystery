@@ -31,7 +31,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 5;
+  public static final int CONFIG_FILE_VERSION = 6;
   private Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -69,6 +69,18 @@ public class LanguageMigrator {
         case 4:
           MigratorUtils.addNewLines(file, "# Should players get no fall damage?\r\n" +
             "Disable-Fall-Damage: false");
+          break;
+        case 5:
+          MigratorUtils.addNewLines(file, "#How long should be the sword attack after throw cooldown in seconds?\r\n" +
+            "#Its normal lower than Murderer-Sword-Fly-Cooldown!\r\n" +
+            "Murderer-Sword-Attack-Cooldown: 1\r\n" +
+            "\r\n" +
+            "#How long should be the sword fly cooldown in seconds?\r\n" +
+            "Murderer-Sword-Fly-Cooldown: 5\r\n" +
+            "\r\n" +
+            "#How long should be the bow shoot cooldown in seconds?\r\n" +
+            "Detective-Bow-Cooldown: 5");
+          break;
         default:
           break;
       }

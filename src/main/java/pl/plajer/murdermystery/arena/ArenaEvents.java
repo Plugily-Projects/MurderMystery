@@ -122,9 +122,9 @@ public class ArenaEvents implements Listener {
     }
     User user = plugin.getUserManager().getUser((Player) e.getEntity());
     if (user.getCooldown("bow_shot") == 0) {
-      user.setCooldown("bow_shot", 5);
+      user.setCooldown("bow_shot", plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
       Player player = (Player) e.getEntity();
-      Utils.applyActionBarCooldown(player, 5);
+      Utils.applyActionBarCooldown(player, plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
       e.getBow().setDurability((short) 0);
     } else {
       e.setCancelled(true);
@@ -354,7 +354,7 @@ public class ArenaEvents implements Listener {
     }, 10);
   }
 
-  @EventHandler
+  @EventHandler(priority = EventPriority.HIGH)
   public void onRespawn(PlayerRespawnEvent e) {
     Player player = e.getPlayer();
     Arena arena = ArenaRegistry.getArena(player);

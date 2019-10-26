@@ -62,6 +62,16 @@ Override-Corpses-Spawn: true
 # blinking each tick
 Murderer-Sword-Speed: 0.65
 
+#How long should be the sword attack after throw cooldown in seconds?
+#Its normal lower than Murderer-Sword-Fly-Cooldown!
+Murderer-Sword-Attack-Cooldown: 1
+
+#How long should be the sword fly cooldown in seconds?
+Murderer-Sword-Fly-Cooldown: 5
+
+#How long should be the bow shoot cooldown in seconds?
+Detective-Bow-Cooldown: 5
+
 # Basic permissions for game, permissions explained here: https://wiki.plajer.xyz/minecraft/murdermystery/cmds_and_perms.php#basic-permissions
 Basic-Permissions:
   Full-Games-Permission: "murdermystery.fullgames"
@@ -110,6 +120,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 5
+Version: 6
 
 # No way! You've reached the end! But... where's the dragon!?

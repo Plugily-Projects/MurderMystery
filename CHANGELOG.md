@@ -1,4 +1,8 @@
-### 1.3.1 Release (11.10.2019 - 18.11.2019) (by Tigerpanzer)
+### 1.3.2 Release (26.10.2019 - XX.11.2019) (by Tigerpanzer)
+* Fixed incompatibility with essentials respawn
+* You can now choose your own cooldown for sword attack/fly and bow shoot
+
+### 1.3.1 Release (11/18.10.2019) (by Tigerpanzer)
 * Fixed that you can sleep in beds
 * Fixed player spawning after a death in blocks
 * Fixed arena stop when it will be called due to reload, stop, delete
