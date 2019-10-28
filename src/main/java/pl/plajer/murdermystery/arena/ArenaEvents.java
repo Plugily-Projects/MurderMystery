@@ -203,12 +203,14 @@ public class ArenaEvents implements Listener {
 
     //todo support for skins later
     //just don't kill user if item isn't murderer sword
-    if (attacker.getInventory().getItemInMainHand().getType() != Material.IRON_SWORD) {
+    if (attacker.getInventory().getItemInMainHand().getType() != XMaterial.fromString(plugin.getConfig().getString("Murderer-Sword-Material",
+      "IRON_SWORD")).parseMaterial()) {
       return;
     }
 
     //check if sword has cooldown
-    if (attacker.hasCooldown(Material.IRON_SWORD)) {
+    if (attacker.hasCooldown(XMaterial.fromString(plugin.getConfig().getString("Murderer-Sword-Material",
+      "IRON_SWORD")).parseMaterial())) {
       return;
     }
 

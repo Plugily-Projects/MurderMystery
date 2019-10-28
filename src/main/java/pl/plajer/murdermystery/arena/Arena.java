@@ -73,6 +73,7 @@ import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.Utils;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import pl.plajerlair.commonsbox.number.NumberUtils;
@@ -306,7 +307,8 @@ public class Arena extends BukkitRunnable {
             p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
           }
           if (getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
-            ItemPosition.setItem(gameCharacters.get(CharacterType.MURDERER), ItemPosition.MURDERER_SWORD, new ItemStack(Material.IRON_SWORD, 1));
+            ItemPosition.setItem(gameCharacters.get(CharacterType.MURDERER), ItemPosition.MURDERER_SWORD, XMaterial.fromString(plugin.getConfig().getString("Murderer-Sword-Material",
+              "IRON_SWORD")).parseItem());
             gameCharacters.get(CharacterType.MURDERER).getInventory().setHeldItemSlot(0);
           }
         }

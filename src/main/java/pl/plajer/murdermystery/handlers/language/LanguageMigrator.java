@@ -31,7 +31,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 6;
+  public static final int CONFIG_FILE_VERSION = 7;
   private Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -81,6 +81,9 @@ public class LanguageMigrator {
             "#How long should be the bow shoot cooldown in seconds?\r\n" +
             "Detective-Bow-Cooldown: 5");
           break;
+        case 6:
+          MigratorUtils.addNewLines(file, "# Which item should be your Murderer sword?\r\n" +
+            "Murderer-Sword-Material: IRON_SWORD");
         default:
           break;
       }

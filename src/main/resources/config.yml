@@ -57,6 +57,9 @@ ChatFormat-Enabled: true
 # WARNING: If disabled, two corpses will be spawned when player in-game dies
 Override-Corpses-Spawn: true
 
+# Which item should be your Murderer sword?
+Murderer-Sword-Material: IRON_SWORD
+
 # How many blocks per tick sword thrown by murderer should fly
 # Please avoid high values as it might look like the sword is
 # blinking each tick
@@ -120,6 +123,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 6
+Version: 7
 
 # No way! You've reached the end! But... where's the dragon!?
