@@ -84,6 +84,7 @@ public class LanguageMigrator {
         case 6:
           MigratorUtils.addNewLines(file, "# Which item should be your Murderer sword?\r\n" +
             "Murderer-Sword-Material: IRON_SWORD");
+          break;
         case 8:
           MigratorUtils.addNewLines(file, "#How much arrows should a player with bow gets when he pick up a gold ingot?\r\n" +
             "Detective-Gold-Pick-Up-Arrows: 1\r\n" +
@@ -93,6 +94,7 @@ public class LanguageMigrator {
             "\r\n" +
             "#How much arrows should the player get when the prayer gives a bow to him?\r\n" +
             "Detective-Prayer-Arrows: 2\r\n");
+          break;
         default:
           break;
       }
