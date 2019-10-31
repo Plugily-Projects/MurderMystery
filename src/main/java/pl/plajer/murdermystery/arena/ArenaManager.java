@@ -260,8 +260,7 @@ public class ArenaManager {
           }
           newMurderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
             ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
-          ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, new ItemStack(XMaterial.fromString(plugin.getConfig().getString("Murderer-Sword-Material",
-            "IRON_SWORD")).parseMaterial(), 1));
+          ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
           user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
         } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
           arena.setDetectiveDead(true);

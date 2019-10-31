@@ -307,8 +307,7 @@ public class Arena extends BukkitRunnable {
             p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
           }
           if (getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
-            ItemPosition.setItem(gameCharacters.get(CharacterType.MURDERER), ItemPosition.MURDERER_SWORD, XMaterial.fromString(plugin.getConfig().getString("Murderer-Sword-Material",
-              "IRON_SWORD")).parseItem());
+            ItemPosition.setItem(gameCharacters.get(CharacterType.MURDERER), ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
             gameCharacters.get(CharacterType.MURDERER).getInventory().setHeldItemSlot(0);
           }
         }

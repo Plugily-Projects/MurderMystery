@@ -51,27 +51,27 @@ public class LanguageMigrator {
     int version = plugin.getConfig().getInt("Version", CONFIG_FILE_VERSION - 1);
 
     for (int i = version; i < CONFIG_FILE_VERSION; i++) {
-      switch (version) {
+      switch (i) {
         case 1:
-          MigratorUtils.addNewLines(file, "# How many blocks per tick sword thrown by murderer should fly\r\n" +
+          MigratorUtils.addNewLines(file, "\r\n# How many blocks per tick sword thrown by murderer should fly\r\n" +
             "# Please avoid high values as it might look like the sword is\r\n" +
             "# blinking each tick\r\n" +
-            "Murderer-Sword-Speed: 0.65");
+            "Murderer-Sword-Speed: 0.65\r\n");
           break;
         case 2:
-          MigratorUtils.addNewLines(file, "# Should players' name tags in game be hidden?\r\n" +
-            "Nametags-Hidden: true");
+          MigratorUtils.addNewLines(file, "\r\n# Should players' name tags in game be hidden?\r\n" +
+            "Nametags-Hidden: true\r\n");
           break;
         case 3:
-          MigratorUtils.addNewLines(file, "# Lobby waiting time set when lobby max players number is reached, used to start game quicker.\r\n" +
-            "Start-Time-On-Full-Lobby: 15");
+          MigratorUtils.addNewLines(file, "\r\n# Lobby waiting time set when lobby max players number is reached, used to start game quicker.\r\n" +
+            "Start-Time-On-Full-Lobby: 15\r\n");
           break;
         case 4:
-          MigratorUtils.addNewLines(file, "# Should players get no fall damage?\r\n" +
-            "Disable-Fall-Damage: false");
+          MigratorUtils.addNewLines(file, "\r\n# Should players get no fall damage?\r\n" +
+            "Disable-Fall-Damage: false\r\n");
           break;
         case 5:
-          MigratorUtils.addNewLines(file, "#How long should be the sword attack after throw cooldown in seconds?\r\n" +
+          MigratorUtils.addNewLines(file, "\r\n#How long should be the sword attack after throw cooldown in seconds?\r\n" +
             "#Its normal lower than Murderer-Sword-Fly-Cooldown!\r\n" +
             "Murderer-Sword-Attack-Cooldown: 1\r\n" +
             "\r\n" +
@@ -79,14 +79,14 @@ public class LanguageMigrator {
             "Murderer-Sword-Fly-Cooldown: 5\r\n" +
             "\r\n" +
             "#How long should be the bow shoot cooldown in seconds?\r\n" +
-            "Detective-Bow-Cooldown: 5");
+            "Detective-Bow-Cooldown: 5\r\n");
           break;
         case 6:
-          MigratorUtils.addNewLines(file, "# Which item should be your Murderer sword?\r\n" +
-            "Murderer-Sword-Material: IRON_SWORD");
+          MigratorUtils.addNewLines(file, "\r\n# Which item should be your Murderer sword?\r\n" +
+            "Murderer-Sword-Material: IRON_SWORD\r\n");
           break;
-        case 8:
-          MigratorUtils.addNewLines(file, "#How much arrows should a player with bow gets when he pick up a gold ingot?\r\n" +
+        case 7:
+          MigratorUtils.addNewLines(file, "\r\n#How much arrows should a player with bow gets when he pick up a gold ingot?\r\n" +
             "Detective-Gold-Pick-Up-Arrows: 1\r\n" +
             "\r\n" +
             "#How much arrows should the detective gets on game start or when a player get a bow?\r\n" +
@@ -98,7 +98,7 @@ public class LanguageMigrator {
         default:
           break;
       }
-      version++;
+      i++;
     }
     updateConfigVersionControl(version);
     plugin.reloadConfig();
@@ -111,7 +111,7 @@ public class LanguageMigrator {
     MigratorUtils.removeLineFromFile(file, "# Don't modify");
     MigratorUtils.removeLineFromFile(file, "Version: " + oldVersion);
     MigratorUtils.removeLineFromFile(file, "# No way! You've reached the end! But... where's the dragon!?");
-    MigratorUtils.addNewLines(file, "# Don't modify\r\nVersion: " + CONFIG_FILE_VERSION + "\r\n\r\n# No way! You've reached the end! But... where's the dragon!?");
+    MigratorUtils.addNewLines(file, "# Don't modify\r\nVersion: " + CONFIG_FILE_VERSION + "\r\n# No way! You've reached the end! But... where's the dragon!?");
   }
 
 }

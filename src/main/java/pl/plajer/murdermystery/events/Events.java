@@ -108,21 +108,18 @@ public class Events implements Listener {
     final Player attacker = e.getPlayer();
     final User attackerUser = plugin.getUserManager().getUser(attacker);
     //todo not hardcoded!
-    if (attacker.getInventory().getItemInMainHand().getType() != XMaterial.fromString(plugin.getConfig().getString("Murderer-Sword-Material",
-      "IRON_SWORD")).parseMaterial()) {
+    if (attacker.getInventory().getItemInMainHand().getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
       return;
     }
     if (attackerUser.getCooldown("sword_shoot") > 0) {
       return;
     }
     attackerUser.setCooldown("sword_shoot", plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5));
-    attacker.setCooldown(XMaterial.fromString(plugin.getConfig().getString("Murderer-Sword-Material",
-      "IRON_SWORD")).parseMaterial(), 20 * (plugin.getConfig().getInt("Murderer-Sword-Attack-Cooldown", 1)));
+    attacker.setCooldown(plugin.getConfigPreferences().getMurdererSword().getType(), 20 * (plugin.getConfig().getInt("Murderer-Sword-Attack-Cooldown", 1)));
     final ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(attacker.getLocation(), EntityType.ARMOR_STAND);
     stand.setVisible(false);
     stand.setInvulnerable(true);
-    stand.setItemInHand(XMaterial.fromString(plugin.getConfig().getString("Murderer-Sword-Material",
-      "IRON_SWORD")).parseItem());
+    stand.setItemInHand(plugin.getConfigPreferences().getMurdererSword());
     stand.setRightArmPose(new EulerAngle(Math.toRadians(350.0), Math.toRadians(attacker.getLocation().getPitch() * -1.0), Math.toRadians(90.0)));
     stand.setCollidable(false);
     stand.setSilent(true);
