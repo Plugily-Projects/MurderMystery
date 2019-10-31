@@ -50,6 +50,8 @@ public class ConfigPreferences {
     } catch (Exception ex) {
       MessageUtils.errorOccurred();
       Bukkit.getConsoleSender().sendMessage("Can not found Material " + plugin.getConfig().getString("Murderer-Sword-Material", "IRON_SWORD"));
+      //Set the murdererSword to avoid errors
+      murdererSword = XMaterial.IRON_SWORD.parseItem();
     }
   }
 
