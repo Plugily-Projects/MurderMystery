@@ -97,7 +97,7 @@ public class PrayerRegistry {
         break;
       case BOW_TIME:
         ItemPosition.addItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-        ItemPosition.setItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, 1));
+        ItemPosition.setItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Prayer-Arrows", 2)));
         break;
       case DETECTIVE_REVELATION:
         String detectiveName;

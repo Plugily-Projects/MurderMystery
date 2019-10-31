@@ -3,6 +3,7 @@
 * You can now choose your own cooldown for sword attack/fly and bow shoot
 * Clearer way of error reporting
 * Added option to change murderer sword item
+* Added options to specify arrows amount
 
 ### 1.3.1 Release (11/18.10.2019) (by Tigerpanzer)
 * Fixed that you can sleep in beds

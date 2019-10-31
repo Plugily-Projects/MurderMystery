@@ -273,7 +273,7 @@ public class Arena extends BukkitRunnable {
           playersToSet.remove(detective);
 
           ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-          ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, 64));
+          ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
 
           for (Player p : playersToSet) {
             p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"),

@@ -31,7 +31,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 7;
+  public static final int CONFIG_FILE_VERSION = 8;
   private Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -84,6 +84,15 @@ public class LanguageMigrator {
         case 6:
           MigratorUtils.addNewLines(file, "# Which item should be your Murderer sword?\r\n" +
             "Murderer-Sword-Material: IRON_SWORD");
+        case 8:
+          MigratorUtils.addNewLines(file, "#How much arrows should a player with bow gets when he pick up a gold ingot?\r\n" +
+            "Detective-Gold-Pick-Up-Arrows: 1\r\n" +
+            "\r\n" +
+            "#How much arrows should the detective gets on game start or when a player get a bow?\r\n" +
+            "Detective-Default-Arrows: 3\r\n" +
+            "\r\n" +
+            "#How much arrows should the player get when the prayer gives a bow to him?\r\n" +
+            "Detective-Prayer-Arrows: 2\r\n");
         default:
           break;
       }
