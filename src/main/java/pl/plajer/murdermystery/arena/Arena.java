@@ -254,26 +254,32 @@ public class Arena extends BukkitRunnable {
             Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
           Set<Player> playersToSet = new HashSet<>(getPlayers());
-          Player murderer = ((User) sortedMurderer.keySet().toArray()[0]).getPlayer();
-          setCharacter(CharacterType.MURDERER, murderer);
-          plugin.getUserManager().getUser(murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
-          playersToSet.remove(murderer);
-          murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
-            ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
-          detectiveChances.remove(sortedMurderer.keySet().toArray()[0]);
+          int maxmurderer = (getPlayers().size() / plugin.getConfig().getInt("Player-Per-Murderer", 5));
+          for (int i = 0; i < (maxmurderer == 0 ? 1 : maxmurderer); i++) {
+            Player murderer = ((User) sortedMurderer.keySet().toArray()[i]).getPlayer();
+            setCharacter(CharacterType.MURDERER, murderer);
+            plugin.getUserManager().getUser(murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
+            playersToSet.remove(murderer);
+            murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
+              ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
+            detectiveChances.remove(sortedMurderer.keySet().toArray()[i]);
+          }
 
           Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
             Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
-          Player detective = ((User) sortedDetective.keySet().toArray()[0]).getPlayer();
-          gameCharacters.put(CharacterType.DETECTIVE, detective);
-          plugin.getUserManager().getUser(detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
-          detective.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"),
-            ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
-          playersToSet.remove(detective);
+          int maxdetectives = (getPlayers().size() / plugin.getConfig().getInt("Player-Per-Detective", 7));
+          for (int i = 0; i < (maxdetectives == 0 ? 1 : maxdetectives); i++) {
+            Player detective = ((User) sortedDetective.keySet().toArray()[i]).getPlayer();
+            gameCharacters.put(CharacterType.DETECTIVE, detective);
+            plugin.getUserManager().getUser(detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
+            detective.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"),
+              ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
+            playersToSet.remove(detective);
 
-          ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-          ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
+            ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+            ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
+          }
 
           for (Player p : playersToSet) {
             p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"),

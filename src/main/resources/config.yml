@@ -84,6 +84,13 @@ Detective-Prayer-Arrows: 2
 #How long should be the bow shoot cooldown in seconds?
 Detective-Bow-Cooldown: 5
 
+#How many murderer should be ingame? This means one murderer for that amount of players.
+#Default: 5 players are 1 murderer, that means if we have 14 Players it will calculate 2 murderer!
+Player-Per-Murderer: 5
+
+#How many detectives should be ingame? (Same configuration as Player-Per-Murderer)
+Player-Per-Detective: 7
+
 # Basic permissions for game, permissions explained here: https://wiki.plajer.xyz/minecraft/murdermystery/cmds_and_perms.php#basic-permissions
 Basic-Permissions:
   Full-Games-Permission: "murdermystery.fullgames"
@@ -132,6 +139,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 8
+Version: 9
 
 # No way! You've reached the end! But... where's the dragon!?
