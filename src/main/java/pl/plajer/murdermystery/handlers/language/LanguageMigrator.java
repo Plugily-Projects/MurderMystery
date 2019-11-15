@@ -31,7 +31,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 9;
+  public static final int CONFIG_FILE_VERSION = 8;
   private Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -94,14 +94,6 @@ public class LanguageMigrator {
             "\r\n" +
             "#How much arrows should the player get when the prayer gives a bow to him?\r\n" +
             "Detective-Prayer-Arrows: 2\r\n");
-          break;
-        case 8:
-          MigratorUtils.addNewLines(file, "\r\n#How many murderer should be ingame? This means one murderer for that amount of players.\r\n" +
-            "#Default: 5 players are 1 murderer, that means if we have 14 Players it will calculate 2 murderer!\r\n" +
-            "Player-Per-Murderer: 5\r\n" +
-            "\r\n" +
-            "#How many detectives should be ingame? (Same configuration as Player-Per-Murderer)\r\n" +
-            "Player-Per-Detective: 7\r\n");
           break;
         default:
           break;

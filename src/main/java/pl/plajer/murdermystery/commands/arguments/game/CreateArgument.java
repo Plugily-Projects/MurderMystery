@@ -93,6 +93,8 @@ public class CreateArgument {
     config.set(path + "goldspawnpoints", new ArrayList<>());
     config.set(path + "minimumplayers", 2);
     config.set(path + "maximumplayers", 10);
+    config.set(path + "playerpermurderer", 5);
+    config.set(path + "playerperdetective", 7);
     config.set(path + "mapname", id);
     config.set(path + "signs", new ArrayList<>());
     config.set(path + "isdone", false);
@@ -125,6 +127,8 @@ public class CreateArgument {
     }
     arena.setMinimumPlayers(config.getInt(path + "minimumplayers"));
     arena.setMaximumPlayers(config.getInt(path + "maximumplayers"));
+    arena.setDetectives(config.getInt(path + "playerperdetective"));
+    arena.setMurderers(config.getInt(path + "playerpermurderer"));
     arena.setMapName(config.getString(path + "mapname"));
     arena.setLobbyLocation(LocationSerializer.getLocation(config.getString(path + "lobbylocation")));
     arena.setEndLocation(LocationSerializer.getLocation(config.getString(path + "Endlocation")));

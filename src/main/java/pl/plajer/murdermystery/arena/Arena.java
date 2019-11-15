@@ -93,6 +93,9 @@ public class Arena extends BukkitRunnable {
   private List<Player> allMurderer = new ArrayList<>();
   private List<Player> allDetectives = new ArrayList<>();
 
+  private int murderers = 0;
+  private int detectives = 0;
+
   //contains murderer, detective, fake detective and hero
   private Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
   //all arena values that are integers, contains constant and floating values
@@ -256,8 +259,8 @@ public class Arena extends BukkitRunnable {
             Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
           Set<Player> playersToSet = new HashSet<>(getPlayers());
-          int maxmurderer = (getPlayers().size() / plugin.getConfig().getInt("Player-Per-Murderer", 5));
-          int maxdetectives = (getPlayers().size() / plugin.getConfig().getInt("Player-Per-Detective", 7));
+          int maxmurderer = (getPlayers().size() / murderers);
+          int maxdetectives = (getPlayers().size() / detectives);
 
           if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
             ChatManager.broadcast(this, "Murderers and detectives amount was reduced due to invalid settings, click here for more <link>");
@@ -494,12 +497,20 @@ public class Arena extends BukkitRunnable {
     this.murdererDead = murdererDead;
   }
 
+  public void setMurderers(int murderers) {
+    this.murderers = murderers;
+  }
+
   public boolean isDetectiveDead() {
     return detectiveDead;
   }
 
   public void setDetectiveDead(boolean detectiveDead) {
     this.detectiveDead = detectiveDead;
+  }
+
+  public void setDetectives(int detectives) {
+    this.detectives = detectives;
   }
 
   public boolean isMurdererLocatorReceived() {

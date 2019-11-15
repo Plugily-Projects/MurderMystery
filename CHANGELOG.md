@@ -1,4 +1,4 @@
-### 1.4.0 Release (26.10.2019 - 14.11.2019) (by Tigerpanzer)
+### 1.4.0 Release (26.10.2019 - 15.11.2019) (by Tigerpanzer)
 * Fixed incompatibility with essentials respawn
 * You can now choose your own cooldown for sword attack/fly and bow shoot
 * Clearer way of error reporting

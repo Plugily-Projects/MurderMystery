@@ -29,6 +29,7 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.setup.SetupInventory;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
@@ -98,6 +99,61 @@ public class PlayerAmountComponents implements SetupComponent {
       ConfigUtils.saveConfig(plugin, config, "arenas");
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
     }), 4, 0);
+
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.IRON_SWORD.parseItem())
+      .amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("playerpermurderer"))
+      .name(ChatManager.colorRawMessage("&e&lSet Player per Murderer Amount"))
+      .lore(ChatColor.GRAY + "LEFT click to decrease")
+      .lore(ChatColor.GRAY + "RIGHT click to increase")
+      .lore(ChatColor.DARK_GRAY + "How many murderer should be ingame? This means ")
+      .lore(ChatColor.DARK_GRAY + "one murderer for that amount of players. Default: ")
+      .lore(ChatColor.DARK_GRAY + "5 players are 1 murderer, that means if we have ")
+      .lore(ChatColor.DARK_GRAY + "14 Players it will calculate 2 murderer! ")
+      .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".playerpermurderer"))
+      .build(), e -> {
+      if (e.getClick().isRightClick()) {
+        e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
+      }
+      if (e.getClick().isLeftClick()) {
+        e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
+      }
+      if (e.getInventory().getItem(e.getSlot()).getAmount() < 2) {
+        e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 2! Game is not designed for more murderers than players!"));
+        e.getInventory().getItem(e.getSlot()).setAmount(2);
+      }
+      config.set("instances." + arena.getId() + ".playerpermurderer", e.getCurrentItem().getAmount());
+      arena.setMurderers(e.getCurrentItem().getAmount());
+      ConfigUtils.saveConfig(plugin, config, "arenas");
+      new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
+    }), 1, 1);
+
+
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.BOW.parseItem())
+      .amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("playerperdetective"))
+      .name(ChatManager.colorRawMessage("&e&lSet Player per Detective Amount"))
+      .lore(ChatColor.GRAY + "LEFT click to decrease")
+      .lore(ChatColor.GRAY + "RIGHT click to increase")
+      .lore(ChatColor.DARK_GRAY + "How many detectives should be ingame? This means ")
+      .lore(ChatColor.DARK_GRAY + "one detective for that amount of players. Default: ")
+      .lore(ChatColor.DARK_GRAY + "7 players are 1 detective, that means if we have ")
+      .lore(ChatColor.DARK_GRAY + "18 Players it will calculate 2 detectives! ")
+      .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".playerperdetective"))
+      .build(), e -> {
+      if (e.getClick().isRightClick()) {
+        e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
+      }
+      if (e.getClick().isLeftClick()) {
+        e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
+      }
+      if (e.getInventory().getItem(e.getSlot()).getAmount() < 2) {
+        e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 2! Game is not designed for more detectives than players!"));
+        e.getInventory().getItem(e.getSlot()).setAmount(2);
+      }
+      config.set("instances." + arena.getId() + ".playerperdetective", e.getCurrentItem().getAmount());
+      arena.setDetectives(e.getCurrentItem().getAmount());
+      ConfigUtils.saveConfig(plugin, config, "arenas");
+      new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
+    }), 2, 1);
   }
 
 }

@@ -14,3 +14,5 @@ instances:
       - world,364.0,63.0,-72.0,0.0,0.0
     mystery-cauldrons:
       - world,364.0,63.0,-72.0,0.0,0.0
+    playerpermurderer: 5
+    playerperdetective: 7
