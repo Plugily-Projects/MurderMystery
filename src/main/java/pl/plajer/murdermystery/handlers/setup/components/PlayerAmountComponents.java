@@ -102,7 +102,7 @@ public class PlayerAmountComponents implements SetupComponent {
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.IRON_SWORD.parseItem())
       .amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("playerpermurderer"))
-      .name(ChatManager.colorRawMessage("&e&lSet Player per Murderer Amount"))
+      .name(ChatManager.colorRawMessage("&e&lSet Player Per Murderer Amount"))
       .lore(ChatColor.GRAY + "LEFT click to decrease")
       .lore(ChatColor.GRAY + "RIGHT click to increase")
       .lore(ChatColor.DARK_GRAY + "How many murderer should be ingame? This means ")
@@ -115,9 +115,11 @@ public class PlayerAmountComponents implements SetupComponent {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
       }
       if (e.getClick().isLeftClick()) {
-        e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
+        if (e.getCurrentItem().getAmount() > 1) {
+          e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
+        }
       }
-      if (e.getInventory().getItem(e.getSlot()).getAmount() < 2) {
+      if (e.getInventory().getItem(e.getSlot()).getAmount() <= 1) {
         e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 2! Game is not designed for more murderers than players!"));
         e.getInventory().getItem(e.getSlot()).setAmount(2);
       }
@@ -125,12 +127,12 @@ public class PlayerAmountComponents implements SetupComponent {
       arena.setMurderers(e.getCurrentItem().getAmount());
       ConfigUtils.saveConfig(plugin, config, "arenas");
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
-    }), 1, 1);
+    }), 3, 1);
 
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.BOW.parseItem())
       .amount(setupInventory.getSetupUtilities().getMinimumValueHigherThanZero("playerperdetective"))
-      .name(ChatManager.colorRawMessage("&e&lSet Player per Detective Amount"))
+      .name(ChatManager.colorRawMessage("&e&lSet Player Per Detective Amount"))
       .lore(ChatColor.GRAY + "LEFT click to decrease")
       .lore(ChatColor.GRAY + "RIGHT click to increase")
       .lore(ChatColor.DARK_GRAY + "How many detectives should be ingame? This means ")
@@ -143,9 +145,11 @@ public class PlayerAmountComponents implements SetupComponent {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
       }
       if (e.getClick().isLeftClick()) {
-        e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
+        if (e.getCurrentItem().getAmount() > 1) {
+          e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
+        }
       }
-      if (e.getInventory().getItem(e.getSlot()).getAmount() < 2) {
+      if (e.getInventory().getItem(e.getSlot()).getAmount() <= 1) {
         e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 2! Game is not designed for more detectives than players!"));
         e.getInventory().getItem(e.getSlot()).setAmount(2);
       }
@@ -153,7 +157,7 @@ public class PlayerAmountComponents implements SetupComponent {
       arena.setDetectives(e.getCurrentItem().getAmount());
       ConfigUtils.saveConfig(plugin, config, "arenas");
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
-    }), 2, 1);
+    }), 4, 1);
   }
 
 }
