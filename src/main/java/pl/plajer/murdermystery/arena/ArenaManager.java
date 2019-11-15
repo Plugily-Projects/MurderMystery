@@ -251,6 +251,7 @@ public class ArenaManager {
           }
           Player newMurderer = players.get(new Random().nextInt(players.size()));
           arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
+          arena.addToMurdererList(newMurderer);
           String title = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title").replace("%role%",
             ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
           String subtitle = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle").replace("%role%",
@@ -262,7 +263,7 @@ public class ArenaManager {
             ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
           ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
           user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
-        } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
+        } else if (Role.isRole(Role.ANY_DETECTIVE, player) && arena.lastAliveDetective()) {
           arena.setDetectiveDead(true);
           if (Role.isRole(Role.FAKE_DETECTIVE, player)) {
             arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
@@ -346,7 +347,7 @@ public class ArenaManager {
     arena.getScoreboardManager().stopAllScoreboards();
     Random rand = new Random();
 
-    boolean murderWon = arena.getPlayersLeft().size() == 1 && arena.getPlayersLeft().get(0).equals(arena.getCharacter(Arena.CharacterType.MURDERER));
+    boolean murderWon = arena.getPlayersLeft().size() == arena.aliveMurderer();
 
     for (final Player player : arena.getPlayers()) {
       User user = plugin.getUserManager().getUser(player);
@@ -398,23 +399,33 @@ public class ArenaManager {
 
   private static String formatSummaryPlaceholders(String msg, Arena arena) {
     String formatted = msg;
-    if (arena.getPlayersLeft().size() == 1 && arena.getPlayersLeft().get(0).equals(arena.getCharacter(Arena.CharacterType.MURDERER))) {
+    List<String> murderer = new ArrayList<>();
+    int murdererKills = 0;
+    for (Player p : arena.getMurdererList()) {
+      murderer.add(p.getName());
+      murdererKills = murdererKills + plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS);
+    }
+    List<String> detective = new ArrayList<>();
+    for (Player p : arena.getDetectiveList()) {
+      detective.add(p.getName());
+    }
+    if (arena.getPlayersLeft().size() == arena.aliveMurderer()) {
       formatted = StringUtils.replace(formatted, "%winner%", ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Murderer"));
     } else {
       formatted = StringUtils.replace(formatted, "%winner%", ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Players"));
     }
     if (arena.isDetectiveDead()) {
-      formatted = StringUtils.replace(formatted, "%detective%", ChatColor.STRIKETHROUGH + arena.getCharacter(Arena.CharacterType.DETECTIVE).getName());
+      formatted = StringUtils.replace(formatted, "%detective%", ChatColor.STRIKETHROUGH + detective.toString());
     } else {
-      formatted = StringUtils.replace(formatted, "%detective%", arena.getCharacter(Arena.CharacterType.DETECTIVE).getName());
+      formatted = StringUtils.replace(formatted, "%detective%", detective.toString());
     }
     if (arena.isMurdererDead()) {
-      formatted = StringUtils.replace(formatted, "%murderer%", ChatColor.STRIKETHROUGH + arena.getCharacter(Arena.CharacterType.MURDERER).getName());
+      formatted = StringUtils.replace(formatted, "%murderer%", murderer.toString());
     } else {
-      formatted = StringUtils.replace(formatted, "%murderer%", arena.getCharacter(Arena.CharacterType.MURDERER).getName());
+      formatted = StringUtils.replace(formatted, "%murderer%", murderer.toString());
     }
     formatted = StringUtils.replace(formatted, "%murderer_kills%",
-      String.valueOf(plugin.getUserManager().getUser(arena.getCharacter(Arena.CharacterType.MURDERER)).getStat(StatsStorage.StatisticType.LOCAL_KILLS)));
+      String.valueOf(murdererKills));
     formatted = StringUtils.replace(formatted, "%hero%", arena.isCharacterSet(Arena.CharacterType.HERO)
       ? arena.getCharacter(Arena.CharacterType.HERO).getName() : ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody"));
     return formatted;

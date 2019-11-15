@@ -138,7 +138,7 @@ public class ScoreboardManager {
     formattedLine = StringUtils.replace(formattedLine, "%MAPNAME%", arena.getMapName());
     int innocents = 0;
     for (Player p : arena.getPlayersLeft()) {
-      if (Role.isRole(Role.ANY_DETECTIVE, p)) {
+      if (Role.isRole(Role.MURDERER, p)) {
         continue;
       }
       innocents++;

@@ -5,6 +5,9 @@
 * Added option to change murderer sword item
 * Added options to specify arrows amount
 * Added a way to configure how many murderers & detectives are selected for a game
+* Changed the way of drop bow (The bow will be dropped if the last detective die)
+* Fixed inventory innocents count
+* Added compass distance to bow and player locator
 
 ### 1.3.1 Release (11/18.10.2019) (by Tigerpanzer)
 * Fixed that you can sleep in beds

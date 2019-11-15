@@ -90,6 +90,8 @@ public class Arena extends BukkitRunnable {
   private List<Location> playerSpawnPoints = new ArrayList<>();
   private List<Corpse> corpses = new ArrayList<>();
   private List<SpecialBlock> specialBlocks = new ArrayList<>();
+  private List<Player> allMurderer = new ArrayList<>();
+  private List<Player> allDetectives = new ArrayList<>();
 
   //contains murderer, detective, fake detective and hero
   private Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
@@ -258,6 +260,7 @@ public class Arena extends BukkitRunnable {
           for (int i = 0; i < (maxmurderer == 0 ? 1 : maxmurderer); i++) {
             Player murderer = ((User) sortedMurderer.keySet().toArray()[i]).getPlayer();
             setCharacter(CharacterType.MURDERER, murderer);
+            allMurderer.add(murderer);
             plugin.getUserManager().getUser(murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
             playersToSet.remove(murderer);
             murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
@@ -267,11 +270,11 @@ public class Arena extends BukkitRunnable {
 
           Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
             Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-
           int maxdetectives = (getPlayers().size() / plugin.getConfig().getInt("Player-Per-Detective", 7));
           for (int i = 0; i < (maxdetectives == 0 ? 1 : maxdetectives); i++) {
             Player detective = ((User) sortedDetective.keySet().toArray()[i]).getPlayer();
-            gameCharacters.put(CharacterType.DETECTIVE, detective);
+            setCharacter(CharacterType.DETECTIVE, detective);
+            allDetectives.add(detective);
             plugin.getUserManager().getUser(detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
             detective.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"),
               ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
@@ -313,8 +316,10 @@ public class Arena extends BukkitRunnable {
             p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
           }
           if (getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
-            ItemPosition.setItem(gameCharacters.get(CharacterType.MURDERER), ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
-            gameCharacters.get(CharacterType.MURDERER).getInventory().setHeldItemSlot(0);
+            for (Player p : allMurderer) {
+              ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
+              p.getInventory().setHeldItemSlot(0);
+            }
           }
         }
 
@@ -335,38 +340,32 @@ public class Arena extends BukkitRunnable {
           }
         }
 
-        if (getTimer() <= 30 || getPlayersLeft().size() == 2) {
+        if (getTimer() <= 30 || getPlayersLeft().size() == aliveMurderer() + 1) {
           ArenaUtils.updateInnocentLocator(this);
         }
-
-        switch (getPlayersLeft().size()) {
-          //game end
-          case 0:
-            ArenaManager.stopGame(false, this);
-            return;
-
+        //no players - stop game
+        if (getPlayersLeft().size() == 0) {
+          ArenaManager.stopGame(false, this);
+        } else
           //winner check
-          case 1:
-            if (getPlayersLeft().get(0).equals(gameCharacters.get(CharacterType.MURDERER))) {
-              for (Player p : getPlayers()) {
-                p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
-                  ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone"), 5, 40, 5);
-                if (p.equals(gameCharacters.get(CharacterType.MURDERER))) {
-                  p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
+          if (getPlayersLeft().size() == aliveMurderer()) {
+            for (Player p : getPlayers()) {
+              p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
+                ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone"), 5, 40, 5);
+              if (allMurderer.contains(p)) {
+                p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
+              }
+            }
+            ArenaManager.stopGame(false, this);
+          } else
+            //murderer speed add
+            if (getPlayersLeft().size() == aliveMurderer() + 1) {
+              for (Player p : allMurderer) {
+                if (isMurderAlive(p)) {
+                  p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0));
                 }
               }
-              ArenaUtils.addScore(plugin.getUserManager().getUser(gameCharacters.get(CharacterType.MURDERER)), ArenaUtils.ScoreAction.WIN_GAME, 0);
-              ArenaManager.stopGame(false, this);
-              return;
             }
-            break;
-          //murderer speed add
-          case 2:
-            gameCharacters.get(CharacterType.MURDERER).addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0));
-            break;
-          default:
-            break;
-        }
 
         //don't spawn it every time
         if (random.nextInt(2) == 1) {
@@ -457,7 +456,11 @@ public class Arena extends BukkitRunnable {
       default:
         break; //o.o?
     }
-    Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Game task finished took {1}ms", getId(), System.currentTimeMillis() - start);
+    Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Game task finished took {1}ms",
+
+      getId(), System.
+
+        currentTimeMillis() - start);
   }
 
   private String formatRoleChance(User user, int murdererPts, int detectivePts) throws NumberFormatException {
@@ -833,6 +836,8 @@ public class Arena extends BukkitRunnable {
     bowHologram = null;
     setMurdererDead(false);
     gameCharacters.clear();
+    allMurderer.clear();
+    allDetectives.clear();
     setDetectiveDead(false);
     clearCorpses();
     clearGold();
@@ -873,6 +878,68 @@ public class Arena extends BukkitRunnable {
 
   public Player getCharacter(CharacterType type) {
     return gameCharacters.get(type);
+  }
+
+  public void addToDetectiveList(Player player) {
+    allDetectives.add(player);
+  }
+
+  public boolean lastAliveDetective() {
+    return aliveDetective() < 1;
+  }
+
+  public int aliveDetective() {
+    int alive = 0;
+    for (Player p : getPlayersLeft()) {
+      if (Role.isRole(Role.ANY_DETECTIVE, p) && isDetectiveAlive(p)) {
+        alive++;
+      }
+    }
+    return alive;
+  }
+
+  public boolean isDetectiveAlive(Player player) {
+    for (Player p : getPlayersLeft()) {
+      if (p == player && allDetectives.contains(p)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public List<Player> getDetectiveList() {
+    return allDetectives;
+  }
+
+  public void addToMurdererList(Player player) {
+    allMurderer.add(player);
+  }
+
+  public boolean lastAliveMurderer() {
+    return aliveMurderer() < 1;
+  }
+
+  public int aliveMurderer() {
+    int alive = 0;
+    for (Player p : getPlayersLeft()) {
+      if (allMurderer.contains(p) && isMurderAlive(p)) {
+        alive++;
+      }
+    }
+    return alive;
+  }
+
+  public boolean isMurderAlive(Player player) {
+    for (Player p : getPlayersLeft()) {
+      if (p == player && allMurderer.contains(p)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public List<Player> getMurdererList() {
+    return allMurderer;
   }
 
   public int getOption(ArenaOption option) {

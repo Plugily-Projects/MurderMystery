@@ -170,7 +170,7 @@ public class Events implements Listener {
     attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
     attackerUser.addStat(StatsStorage.StatisticType.KILLS, 1);
     ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
-    if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
+    if (Role.isRole(Role.ANY_DETECTIVE, victim) && arena.lastAliveDetective()) {
       if (Role.isRole(Role.FAKE_DETECTIVE, victim)) {
         arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
       }

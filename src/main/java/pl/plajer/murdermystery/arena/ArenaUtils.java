@@ -67,9 +67,10 @@ public class ArenaUtils {
       }
     }
     ArenaManager.stopGame(false, arena);
-    Player murderer = arena.getCharacter(Arena.CharacterType.MURDERER);
-    murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
-      ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
+    for (Player murderer : arena.getMurdererList()) {
+      murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
+        ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
+    }
   }
 
   public static void addScore(User user, ScoreAction action, int amount) {
@@ -107,7 +108,11 @@ public class ArenaUtils {
       ItemMeta innocentMeta = innocentLocator.getItemMeta();
       innocentMeta.setDisplayName(ChatManager.colorMessage("In-Game.Innocent-Locator-Item-Name"));
       innocentLocator.setItemMeta(innocentMeta);
-      ItemPosition.setItem(arena.getCharacter(Arena.CharacterType.MURDERER), ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
+      for (Player p : arena.getPlayersLeft()) {
+        if (arena.isMurderAlive(p)) {
+          ItemPosition.setItem(p, ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
+        }
+      }
       arena.setMurdererLocatorReceived(true);
 
       for (Player p : arena.getPlayersLeft()) {
@@ -121,7 +126,11 @@ public class ArenaUtils {
       if (Role.isRole(Role.MURDERER, p)) {
         continue;
       }
-      arena.getCharacter(Arena.CharacterType.MURDERER).setCompassTarget(p.getLocation());
+      for (Player murder : arena.getMurdererList()) {
+        if (arena.isMurderAlive(murder)) {
+          murder.setCompassTarget(p.getLocation());
+        }
+      }
       break;
     }
   }
