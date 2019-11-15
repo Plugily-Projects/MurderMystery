@@ -4,7 +4,7 @@
 * Clearer way of error reporting
 * Added option to change murderer sword item
 * Added options to specify arrows amount
-* Added a way to configure how many murderers & detectives are selected for a game
+* Added a way to configure how many murderers & detectives are selected for a game (definable per arena)
 * Changed the way of drop bow (The bow will be dropped if the last detective die)
 * Fixed inventory innocents count
 * Added compass distance to bow and player locator
