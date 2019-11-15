@@ -257,7 +257,14 @@ public class Arena extends BukkitRunnable {
 
           Set<Player> playersToSet = new HashSet<>(getPlayers());
           int maxmurderer = (getPlayers().size() / plugin.getConfig().getInt("Player-Per-Murderer", 5));
-          for (int i = 0; i < (maxmurderer == 0 ? 1 : maxmurderer); i++) {
+          int maxdetectives = (getPlayers().size() / plugin.getConfig().getInt("Player-Per-Detective", 7));
+
+          if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
+            ChatManager.broadcast(this, "Murderers and detectives amount was reduced due to invalid settings, click here for more <link>");
+            maxmurderer = getPlayers().size() / 5;
+            maxdetectives = getPlayers().size() / 7;
+          }
+          for (int i = 0; i < (maxmurderer <= 0 ? 1 : maxmurderer); i++) {
             Player murderer = ((User) sortedMurderer.keySet().toArray()[i]).getPlayer();
             setCharacter(CharacterType.MURDERER, murderer);
             allMurderer.add(murderer);
@@ -270,8 +277,7 @@ public class Arena extends BukkitRunnable {
 
           Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
             Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-          int maxdetectives = (getPlayers().size() / plugin.getConfig().getInt("Player-Per-Detective", 7));
-          for (int i = 0; i < (maxdetectives == 0 ? 1 : maxdetectives); i++) {
+          for (int i = 0; i < (maxdetectives <= 0 ? 1 : maxdetectives); i++) {
             Player detective = ((User) sortedDetective.keySet().toArray()[i]).getPlayer();
             setCharacter(CharacterType.DETECTIVE, detective);
             allDetectives.add(detective);
@@ -885,7 +891,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public boolean lastAliveDetective() {
-    return aliveDetective() < 1;
+    return aliveDetective() <= 1;
   }
 
   public int aliveDetective() {
@@ -916,7 +922,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public boolean lastAliveMurderer() {
-    return aliveMurderer() < 1;
+    return aliveMurderer() <= 1;
   }
 
   public int aliveMurderer() {

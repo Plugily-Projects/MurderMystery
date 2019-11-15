@@ -8,6 +8,7 @@
 * Changed the way of drop bow (The bow will be dropped if the last detective die)
 * Fixed inventory innocents count
 * Added compass distance to bow and player locator
+* Fixed the +- message for minus points in score messages
 
 ### 1.3.1 Release (11/18.10.2019) (by Tigerpanzer)
 * Fixed that you can sleep in beds

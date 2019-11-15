@@ -399,30 +399,33 @@ public class ArenaManager {
 
   private static String formatSummaryPlaceholders(String msg, Arena arena) {
     String formatted = msg;
-    List<String> murderer = new ArrayList<>();
+    StringBuilder murders = new StringBuilder();
+    StringBuilder detectives = new StringBuilder();
     int murdererKills = 0;
     for (Player p : arena.getMurdererList()) {
-      murderer.add(p.getName());
+      murders.append(p.getName()).append(" (").append(plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS)).append("), ");
       murdererKills = murdererKills + plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS);
     }
-    List<String> detective = new ArrayList<>();
+    murders.deleteCharAt(murders.length() - 2);
+
     for (Player p : arena.getDetectiveList()) {
-      detective.add(p.getName());
+      detectives.append(p.getName()).append(", ");
     }
+    detectives.deleteCharAt(detectives.length() - 2);
     if (arena.getPlayersLeft().size() == arena.aliveMurderer()) {
       formatted = StringUtils.replace(formatted, "%winner%", ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Murderer"));
     } else {
       formatted = StringUtils.replace(formatted, "%winner%", ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Players"));
     }
     if (arena.isDetectiveDead()) {
-      formatted = StringUtils.replace(formatted, "%detective%", ChatColor.STRIKETHROUGH + detective.toString());
+      formatted = StringUtils.replace(formatted, "%detective%", ChatColor.STRIKETHROUGH + detectives.toString());
     } else {
-      formatted = StringUtils.replace(formatted, "%detective%", detective.toString());
+      formatted = StringUtils.replace(formatted, "%detective%", detectives.toString());
     }
     if (arena.isMurdererDead()) {
-      formatted = StringUtils.replace(formatted, "%murderer%", murderer.toString());
+      formatted = StringUtils.replace(formatted, "%murderer%", murders.toString());
     } else {
-      formatted = StringUtils.replace(formatted, "%murderer%", murderer.toString());
+      formatted = StringUtils.replace(formatted, "%murderer%", murders.toString());
     }
     formatted = StringUtils.replace(formatted, "%murderer_kills%",
       String.valueOf(murdererKills));
