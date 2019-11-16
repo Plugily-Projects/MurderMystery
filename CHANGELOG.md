@@ -1,4 +1,4 @@
-### 1.4.0 Release (26.10.2019 - 15.11.2019) (by Tigerpanzer)
+### 1.4.0 Release (26.10.2019 - 16.11.2019) (by Tigerpanzer)
 * Fixed incompatibility with essentials respawn
 * You can now choose your own cooldown for sword attack/fly and bow shoot
 * Clearer way of error reporting
@@ -6,7 +6,7 @@
 * Added options to specify arrows amount
 * Added a way to configure how many murderers & detectives are selected for a game (definable per arena)
 * Changed the way of drop bow (The bow will be dropped if the last detective die)
-* Fixed inventory innocents count
+* Fixed scoreboard innocents count
 * Added compass distance to bow and player locator
 * Fixed the +- message for minus points in score messages
 * Fixed the exp and level save on InventoryManager
