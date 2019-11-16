@@ -66,11 +66,14 @@ public class ArenaUtils {
         ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.DETECTIVE_WIN_GAME, 0);
       }
     }
-    ArenaManager.stopGame(false, arena);
     for (Player murderer : arena.getMurdererList()) {
       murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
         ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
     }
+    //we must call it ticks later due to instant respawn bug
+    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+      ArenaManager.stopGame(false, arena);
+    }, 5);
   }
 
   public static void addScore(User user, ScoreAction action, int amount) {

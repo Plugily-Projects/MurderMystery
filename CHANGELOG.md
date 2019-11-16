@@ -9,6 +9,8 @@
 * Fixed inventory innocents count
 * Added compass distance to bow and player locator
 * Fixed the +- message for minus points in score messages
+* Fixed the exp and level save on InventoryManager
+* Fixed instant respawn bug on last murderer
 
 ### 1.3.1 Release (11/18.10.2019) (by Tigerpanzer)
 * Fixed that you can sleep in beds
