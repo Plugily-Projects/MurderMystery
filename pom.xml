@@ -159,13 +159,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.golde.bukkit</groupId>
-            <artifactId>corpsereborn</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/LeaderHeadsAPI.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>com.gmail.filoghost.holographicdisplays</groupId>
             <artifactId>holographicdisplays-api</artifactId>
             <version>2.3.1</version>
