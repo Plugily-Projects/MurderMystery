@@ -23,13 +23,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
@@ -52,6 +51,9 @@ public class PrayerRegistry {
   private static Main plugin;
   private static List<Prayer> prayers = new ArrayList<>();
   private static Random rand;
+
+  private PrayerRegistry() {
+  }
 
   public static void init(Main plugin) {
     PrayerRegistry.plugin = plugin;
@@ -76,8 +78,6 @@ public class PrayerRegistry {
   public static List<Prayer> getPrayers() {
     return prayers;
   }
-
-  public static BukkitTask deathTask;
 
   public static void applyRandomPrayer(User user) {
     Prayer prayer = getRandomPray();
@@ -110,16 +110,23 @@ public class PrayerRegistry {
         }
         prayMessage = prayMessage.stream().map(msg -> msg.replace("%detective%", detectiveName)).collect(Collectors.toList());
         break;
-      case GOLD_BAN:
-        break;
-      case GOLD_RUSH:
-        break;
       case INCOMING_DEATH:
-       deathTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
-          if (arena.getArenaState() == ArenaState.IN_GAME) {
-            player.damage(1000);
+        new BukkitRunnable() {
+          int time = 60;
+
+          @Override
+          public void run() {
+            if (arena == null || arena.getArenaState() != ArenaState.IN_GAME || !arena.getPlayersLeft().contains(player)) {
+              this.cancel();
+              return;
+            }
+            time--;
+            if (time == 0) {
+              player.damage(1000);
+              this.cancel();
+            }
           }
-        }, 20 * 60);
+        }.runTaskTimer(plugin, 20, 20);
         break;
       case SINGLE_COMPENSATION:
         ItemPosition.addItem(player, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, 5));
@@ -128,6 +135,9 @@ public class PrayerRegistry {
       case SLOWNESS_CURSE:
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0, false, false));
         break;
+      case GOLD_BAN:
+      case GOLD_RUSH:
+        //unused
       default:
         break;
     }
