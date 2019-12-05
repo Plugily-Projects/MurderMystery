@@ -5,8 +5,17 @@
 Hub: lobby
 
 # Should game server be closed after game?
-Shutdown-When-Game-Ends: false
+Shutdown-When-Game-Ends: true
 
 # This is useful for bungee game systems.
-# Game state will be visible at MOTD.
-MOTD-manager: true
+# %state% - Game state will be visible at MOTD.
+MOTD:
+  Manager: false
+  Message: "The actual game state of mm is %state%"
+  Game-States:
+    Inactive: "&lInactive..."
+    In-Game: "&lIn-game"
+    Starting: "&e&lStarting"
+    Full-Game: "&4&lFULL"
+    Ending: "&lEnding"
+    Restarting: "&c&lRestarting"

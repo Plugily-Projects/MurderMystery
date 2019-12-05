@@ -21,6 +21,9 @@ package pl.plajer.murdermystery.handlers;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -44,23 +47,34 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 public class BungeeManager implements Listener {
 
   private Main plugin;
+  private Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
+  private String MOTD;
 
   public BungeeManager(Main plugin) {
     this.plugin = plugin;
+    gameStateToString.put(ArenaState.WAITING_FOR_PLAYERS, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Inactive")));
+    gameStateToString.put(ArenaState.STARTING, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Starting")));
+    gameStateToString.put(ArenaState.IN_GAME, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.In-Game")));
+    gameStateToString.put(ArenaState.ENDING, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Ending")));
+    gameStateToString.put(ArenaState.RESTARTING, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Restarting")));
+    MOTD = ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Message"));
     plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
   public void connectToHub(Player player) {
+    if (!ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends", true)) {
+      return;
+    }
     ByteArrayDataOutput out = ByteStreams.newDataOutput();
     out.writeUTF("Connect");
     out.writeUTF(getHubServerName());
     player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
   }
 
-  private String getMOTD() {
+  private ArenaState getArenaState() {
     Arena arena = ArenaRegistry.getArenas().get(0);
-    return arena.getArenaState().toString();
+    return arena.getArenaState();
   }
 
   private String getHubServerName() {
@@ -69,11 +83,14 @@ public class BungeeManager implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onServerListPing(ServerListPingEvent event) {
+    if (!ConfigUtils.getConfig(plugin, "bungee").getBoolean("MOTD.Manager", false)) {
+      return;
+    }
     if (ArenaRegistry.getArenas().isEmpty()) {
       return;
     }
     event.setMaxPlayers(ArenaRegistry.getArenas().get(0).getMaximumPlayers());
-    event.setMotd(this.getMOTD());
+    event.setMotd(MOTD.replace("%state%", gameStateToString.get(getArenaState())));
   }
 
 

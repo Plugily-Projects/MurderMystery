@@ -31,7 +31,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 8;
+  public static final int CONFIG_FILE_VERSION = 9;
   private Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -47,6 +47,7 @@ public class LanguageMigrator {
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Murder Mystery] System notify >> Your config file is outdated! Updating...");
     File file = new File(plugin.getDataFolder() + "/config.yml");
+    File bungeefile = new File(plugin.getDataFolder() + "/bungee.yml");
 
     int version = plugin.getConfig().getInt("Version", CONFIG_FILE_VERSION - 1);
 
@@ -94,6 +95,24 @@ public class LanguageMigrator {
             "\r\n" +
             "#How much arrows should the player get when the prayer gives a bow to him?\r\n" +
             "Detective-Prayer-Arrows: 2\r\n");
+          break;
+        case 8:
+          MigratorUtils.removeLineFromFile(bungeefile, "# This is useful for bungee game systems.");
+          MigratorUtils.removeLineFromFile(bungeefile, "# Game state will be visible at MOTD.");
+          MigratorUtils.removeLineFromFile(bungeefile, "MOTD-manager: false");
+          MigratorUtils.removeLineFromFile(bungeefile, "MOTD-manager: true");
+          MigratorUtils.addNewLines(bungeefile, "\r\n# This is useful for bungee game systems.\r\n" +
+            "# %state% - Game state will be visible at MOTD.\r\n" +
+            "MOTD:\r\n" +
+            "  Manager: false\r\n" +
+            "  Message: \"The actual game state of mm is %state%\"\r\n" +
+            "  Game-States:\r\n" +
+            "    Inactive: \"&lInactive...\"\r\n" +
+            "    In-Game: \"&lIn-game\"\r\n" +
+            "    Starting: \"&e&lStarting\"\r\n" +
+            "    Full-Game: \"&4&lFULL\"\r\n" +
+            "    Ending: \"&lEnding\"\r\n" +
+            "    Restarting: \"&c&lRestarting\"\r\n");
           break;
         default:
           break;

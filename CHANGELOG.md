@@ -1,3 +1,7 @@
+### 1.4.1 Release (05.12.2019 - XX.12.2019) (by Tigerpanzer)
+* Added a new MOTD Manager in the bungee.yml (Now you can define the states on yourself) 
+* Now the values in bungee.yml will work
+
 ### 1.4.0 Release (26.10.2019 - 16.11.2019) (by Tigerpanzer)
 * Fixed incompatibility with essentials respawn
 * You can now choose your own cooldown for sword attack/fly and bow shoot
