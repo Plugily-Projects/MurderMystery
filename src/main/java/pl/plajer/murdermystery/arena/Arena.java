@@ -263,7 +263,7 @@ public class Arena extends BukkitRunnable {
           int maxdetectives = (getPlayers().size() / detectives);
 
           if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
-            ChatManager.broadcast(this, "Murderers and detectives amount was reduced due to invalid settings, click here for more <link>");
+            ChatManager.broadcast(this, "Murderers and detectives amount was reduced due to invalid settings, contact ServerAdministrator");
             maxmurderer = getPlayers().size() / 5;
             maxdetectives = getPlayers().size() / 7;
           }

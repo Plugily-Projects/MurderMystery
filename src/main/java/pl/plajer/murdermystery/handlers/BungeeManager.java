@@ -106,7 +106,6 @@ public class BungeeManager implements Listener {
     if (ArenaRegistry.getArena(event.getPlayer()) != null) {
       ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(0));
     }
-
   }
 
 }
