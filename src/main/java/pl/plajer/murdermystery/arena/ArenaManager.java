@@ -420,10 +420,10 @@ public class ArenaManager {
     } else {
       formatted = StringUtils.replace(formatted, "%detective%", detectives.toString());
     }
-    if (arena.isMurdererDead()) {
+    if (arena.lastAliveMurderer()) {
       formatted = StringUtils.replace(formatted, "%murderer%", murders.toString());
     } else {
-      formatted = StringUtils.replace(formatted, "%murderer%", murders.toString());
+      formatted = StringUtils.replace(formatted, "%murderer%", ChatColor.STRIKETHROUGH + murders.toString());
     }
     formatted = StringUtils.replace(formatted, "%murderer_kills%",
       String.valueOf(murdererKills));

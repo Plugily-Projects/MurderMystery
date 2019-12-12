@@ -102,7 +102,6 @@ public class Arena extends BukkitRunnable {
   private Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
 
   private Hologram bowHologram;
-  private boolean murdererDead;
   private boolean detectiveDead;
   private boolean murdererLocatorReceived;
 
@@ -484,14 +483,6 @@ public class Arena extends BukkitRunnable {
     goldSpawned.add(item);
   }
 
-  public boolean isMurdererDead() {
-    return murdererDead;
-  }
-
-  public void setMurdererDead(boolean murdererDead) {
-    this.murdererDead = murdererDead;
-  }
-
   public void setMurderers(int murderers) {
     this.murderers = murderers;
   }
@@ -845,7 +836,6 @@ public class Arena extends BukkitRunnable {
     }
     murdererLocatorReceived = false;
     bowHologram = null;
-    setMurdererDead(false);
     gameCharacters.clear();
     allMurderer.clear();
     allDetectives.clear();
@@ -932,7 +922,7 @@ public class Arena extends BukkitRunnable {
 
 
   public boolean lastAliveMurderer() {
-    return aliveMurderer() <= 1;
+    return aliveMurderer() == 1;
   }
 
   public int aliveMurderer() {

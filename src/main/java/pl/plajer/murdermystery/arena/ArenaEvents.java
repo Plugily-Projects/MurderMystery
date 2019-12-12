@@ -399,12 +399,12 @@ public class ArenaEvents implements Listener {
   public void playerCommandExecution(PlayerCommandPreprocessEvent e) {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.ENABLE_SHORT_COMMANDS)) {
       Player player = e.getPlayer();
-      if (e.getMessage().equals("/start")) {
+      if (e.getMessage().equalsIgnoreCase("/start")) {
         player.performCommand("mma forcestart");
         e.setCancelled(true);
         return;
       }
-      if (e.getMessage().equals("/leave")) {
+      if (e.getMessage().equalsIgnoreCase("/leave")) {
         player.performCommand("mm leave");
         e.setCancelled(true);
       }

@@ -7,6 +7,7 @@
 * Fixed incompatibility with chatcontrol
 * Minecraft 1.15 compatible
 * Fixed the murderer draw when murderer leaves ingame
+* Fixed SummaryMessage (murderer will now be strike out)
 
 ### 1.4.0 Release (26.10.2019 - 16.11.2019) (by Tigerpanzer)
 * Fixed incompatibility with essentials respawn
