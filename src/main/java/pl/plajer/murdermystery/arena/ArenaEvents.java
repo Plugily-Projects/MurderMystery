@@ -35,6 +35,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -390,6 +391,22 @@ public class ArenaEvents implements Listener {
     if (e.getWhoClicked() instanceof Player) {
       if (ArenaRegistry.getArena((Player) e.getWhoClicked()) != null) {
         e.setResult(Event.Result.DENY);
+      }
+    }
+  }
+
+  @EventHandler
+  public void playerCommandExecution(PlayerCommandPreprocessEvent e) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.ENABLE_SHORT_COMMANDS)) {
+      Player player = e.getPlayer();
+      if (e.getMessage().equals("/start")) {
+        player.performCommand("mma forcestart");
+        e.setCancelled(true);
+        return;
+      }
+      if (e.getMessage().equals("/leave")) {
+        player.performCommand("mm leave");
+        e.setCancelled(true);
       }
     }
   }

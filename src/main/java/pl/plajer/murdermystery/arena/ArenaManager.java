@@ -246,6 +246,7 @@ public class ArenaManager {
             }
             players.add(gamePlayer);
           }
+          arena.removeFromMurdererList(player);
           Player newMurderer = players.get(new Random().nextInt(players.size()));
           arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
           arena.addToMurdererList(newMurderer);

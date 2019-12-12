@@ -31,7 +31,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 9;
+  public static final int CONFIG_FILE_VERSION = 10;
   private Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -113,6 +113,11 @@ public class LanguageMigrator {
             "    Full-Game: \"&4&lFULL\"\r\n" +
             "    Ending: \"&lEnding\"\r\n" +
             "    Restarting: \"&c&lRestarting\"\r\n");
+          break;
+        case 9:
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "# Should we enable short commands such as /start and /leave\r\n" +
+            "Enable-Short-Commands: false\r\n");
           break;
         default:
           break;

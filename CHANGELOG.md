@@ -1,7 +1,12 @@
 ### 1.4.1 Release (05.12.2019 - XX.12.2019) (by Tigerpanzer)
 * Added a new MOTD Manager in the bungee.yml (Now you can define the states on yourself) 
 * Now the values in bungee.yml will work
-* Arena will not be stopped anymore on starting phase when there are null players (only resetting it to waiting for players)
+* Arena will not be stopped anymore on starting phase
+  when there are null players (only resetting it to waiting for players)
+* You can now activate short commands (/start and /leave)
+* Fixed incompatibility with chatcontrol
+* Minecraft 1.15 compatible
+* Fixed the murderer draw when murderer leaves ingame
 
 ### 1.4.0 Release (26.10.2019 - 16.11.2019) (by Tigerpanzer)
 * Fixed incompatibility with essentials respawn

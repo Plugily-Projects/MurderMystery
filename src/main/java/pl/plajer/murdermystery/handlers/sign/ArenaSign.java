@@ -55,7 +55,7 @@ public class ArenaSign {
   private void setBehindBlock() {
     this.behind = null;
     if (sign.getBlock().getType() == Material.WALL_SIGN) {
-      if (plugin.is1_14_R1()) {
+      if (plugin.is1_14_R1() || plugin.is1_15_R1()) {
         this.behind = getBlockBehind();
       } else {
         this.behind = getBlockBehindLegacy();

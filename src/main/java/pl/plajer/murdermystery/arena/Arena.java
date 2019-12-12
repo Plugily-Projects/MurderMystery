@@ -932,6 +932,11 @@ public class Arena extends BukkitRunnable {
     allMurderer.add(player);
   }
 
+  public void removeFromMurdererList(Player player) {
+    allMurderer.remove(player);
+  }
+
+
   public boolean lastAliveMurderer() {
     return aliveMurderer() <= 1;
   }

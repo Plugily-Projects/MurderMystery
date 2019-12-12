@@ -91,6 +91,9 @@ Basic-Permissions:
   # use 'murdermystery.join.*' to enable access to all arenas
   Join-Permission: "murdermystery.join.<arena>"
 
+# Should we enable short commands such as /start and /leave
+Enable-Short-Commands: false
+
 # Should /mm leave command be blocked?
 Disable-Leave-Command: false
 
@@ -132,6 +135,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 9
+Version: 10
 
 # No way! You've reached the end! But... where's the dragon!?
