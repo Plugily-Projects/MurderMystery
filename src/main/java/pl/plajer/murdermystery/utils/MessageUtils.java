@@ -28,6 +28,9 @@ import org.bukkit.ChatColor;
  */
 public class MessageUtils {
 
+  private MessageUtils() {
+  }
+
   public static void thisVersionIsNotSupported() {
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "  _   _           _                                                    _                _ ");
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " | \\ | |   ___   | |_     ___   _   _   _ __    _ __     ___    _ __  | |_    ___    __| |");

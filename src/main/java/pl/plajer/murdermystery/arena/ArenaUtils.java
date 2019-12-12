@@ -71,9 +71,7 @@ public class ArenaUtils {
         ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
     }
     //we must call it ticks later due to instant respawn bug
-    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      ArenaManager.stopGame(false, arena);
-    }, 5);
+    Bukkit.getScheduler().runTaskLater(plugin, () -> ArenaManager.stopGame(false, arena), 5);
   }
 
   public static void addScore(User user, ScoreAction action, int amount) {

@@ -9,7 +9,7 @@ As an innocent you must just survive till the end!
 Have fun using it! Leave a good rating if you really like it.
 
 ## Want to contribute in this project?
-[**💣 Issues Reporting**](https://github.com/Plajer-Lair/Village_Defense/issues/new)        [**❤ Make Donation**](https://www.paypal.me/Plajer)
+[**💣 Issues Reporting (Discord)**](https://discordapp.com/invite/UXzUdTP)        [**❤ Make Donation**](https://www.paypal.me/Plajer)
 
 # Credits
 ## Open Source Libraries

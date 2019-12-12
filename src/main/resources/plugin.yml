@@ -8,11 +8,11 @@ softdepend: [CorpseReborn, PlaceholderAPI, LeaderHeads]
 
 commands:
   MurderMystery:
-    description: Murder mystery Commands
+    description: Murder mystery commands
     usage: "\u00A76Correct usage: /mm [stats/leave/join]"
     aliases: [mm, murder]
   MurderMysteryAdmin:
-    description:
+    description: Murder mystery admin commands
     usage: "\u00A76Correct usage: /mma [option]"
     aliases: [mma, murderadmin]
 

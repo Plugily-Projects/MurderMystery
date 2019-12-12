@@ -39,6 +39,9 @@ public class ServiceRegistry {
   private static long serviceCooldown = 0;
   private static LocaleService localeService;
 
+  private ServiceRegistry() {
+  }
+
   public static boolean registerService(JavaPlugin plugin) {
     if (registeredService != null && registeredService.equals(plugin)) {
       return false;

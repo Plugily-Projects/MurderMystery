@@ -24,7 +24,6 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.utils.services.exception.ReportedException;

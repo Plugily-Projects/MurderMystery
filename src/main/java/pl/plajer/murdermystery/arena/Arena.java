@@ -66,14 +66,12 @@ import pl.plajer.murdermystery.arena.managers.ScoreboardManager;
 import pl.plajer.murdermystery.arena.options.ArenaOption;
 import pl.plajer.murdermystery.arena.role.Role;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
-import pl.plajer.murdermystery.arena.special.pray.PrayerRegistry;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.rewards.Reward;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.ItemPosition;
 import pl.plajer.murdermystery.utils.Utils;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import pl.plajerlair.commonsbox.number.NumberUtils;
@@ -384,9 +382,6 @@ public class Arena extends BukkitRunnable {
         break;
       case ENDING:
         scoreboardManager.stopAllScoreboards();
-        if (PrayerRegistry.deathTask != null) {
-          PrayerRegistry.deathTask.cancel();
-        }
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           plugin.getServer().setWhitelist(false);
         }
@@ -786,8 +781,6 @@ public class Arena extends BukkitRunnable {
     specialBlocks.add(block);
     Hologram holo;
     switch (block.getSpecialBlockType()) {
-      case HORSE_PURCHASE:
-        break;
       case MYSTERY_CAULDRON:
         holo = HologramsAPI.createHologram(plugin, Utils.getBlockCenter(block.getLocation().clone().add(0, 1.8, 0)));
         holo.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
@@ -798,8 +791,9 @@ public class Arena extends BukkitRunnable {
           holo.appendTextLine(str);
         }
         break;
+      case HORSE_PURCHASE:
       case RAPID_TELEPORTATION:
-        break;
+        //not yet implemented
       default:
         break;
     }
