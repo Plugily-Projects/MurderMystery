@@ -1,4 +1,7 @@
-### 1.4.1 Release (05.12.2019 - XX.12.2019) (by Tigerpanzer)
+### 1.4.2 Release (20.12.2019 - XX.12.2019) (by Tigerpanzer)
+* Fixed spectator gui opened on physical actions
+
+### 1.4.1 Release (05.12.2019 - 13.12.2019) (by Tigerpanzer)
 * Added a new MOTD Manager in the bungee.yml (Now you can define the states on yourself) 
 * Now the values in bungee.yml will work
 * Arena will not be stopped anymore on starting phase
