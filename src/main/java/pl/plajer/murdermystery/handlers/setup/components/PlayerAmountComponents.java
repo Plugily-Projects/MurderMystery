@@ -109,6 +109,7 @@ public class PlayerAmountComponents implements SetupComponent {
       .lore(ChatColor.DARK_GRAY + "one murderer for that amount of players. Default: ")
       .lore(ChatColor.DARK_GRAY + "5 players are 1 murderer, that means if we have ")
       .lore(ChatColor.DARK_GRAY + "14 Players it will calculate 2 murderer! ")
+      .lore(ChatColor.DARK_GRAY + "Set it to 1 if you want only one murderer ")
       .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".playerpermurderer"))
       .build(), e -> {
       if (e.getClick().isRightClick()) {
@@ -119,9 +120,9 @@ public class PlayerAmountComponents implements SetupComponent {
           e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
         }
       }
-      if (e.getInventory().getItem(e.getSlot()).getAmount() <= 1) {
-        e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 2! Game is not designed for more murderers than players!"));
-        e.getInventory().getItem(e.getSlot()).setAmount(2);
+      if (e.getInventory().getItem(e.getSlot()).getAmount() < 1) {
+        e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 1! Game is not designed for more murderers than players!"));
+        e.getInventory().getItem(e.getSlot()).setAmount(1);
       }
       config.set("instances." + arena.getId() + ".playerpermurderer", e.getCurrentItem().getAmount());
       arena.setMurderers(e.getCurrentItem().getAmount());
@@ -139,6 +140,7 @@ public class PlayerAmountComponents implements SetupComponent {
       .lore(ChatColor.DARK_GRAY + "one detective for that amount of players. Default: ")
       .lore(ChatColor.DARK_GRAY + "7 players are 1 detective, that means if we have ")
       .lore(ChatColor.DARK_GRAY + "18 Players it will calculate 2 detectives! ")
+      .lore(ChatColor.DARK_GRAY + "Set it to 1 if you want only one detectives ")
       .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".playerperdetective"))
       .build(), e -> {
       if (e.getClick().isRightClick()) {
@@ -149,9 +151,9 @@ public class PlayerAmountComponents implements SetupComponent {
           e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
         }
       }
-      if (e.getInventory().getItem(e.getSlot()).getAmount() <= 1) {
-        e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 2! Game is not designed for more detectives than players!"));
-        e.getInventory().getItem(e.getSlot()).setAmount(2);
+      if (e.getInventory().getItem(e.getSlot()).getAmount() < 1) {
+        e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 1! Game is not designed for more detectives than players!"));
+        e.getInventory().getItem(e.getSlot()).setAmount(1);
       }
       config.set("instances." + arena.getId() + ".playerperdetective", e.getCurrentItem().getAmount());
       arena.setDetectives(e.getCurrentItem().getAmount());

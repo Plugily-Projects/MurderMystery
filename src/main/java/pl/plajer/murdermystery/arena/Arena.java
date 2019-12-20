@@ -256,9 +256,14 @@ public class Arena extends BukkitRunnable {
             Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
           Set<Player> playersToSet = new HashSet<>(getPlayers());
-          int maxmurderer = (getPlayers().size() / murderers);
-          int maxdetectives = (getPlayers().size() / detectives);
-
+          int maxmurderer = 1;
+          int maxdetectives = 1;
+          if (murderers != 1) {
+            maxmurderer = (getPlayers().size() / murderers);
+          }
+          if (detectives != 1) {
+            maxdetectives = (getPlayers().size() / detectives);
+          }
           if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
             ChatManager.broadcast(this, "Murderers and detectives amount was reduced due to invalid settings, contact ServerAdministrator");
             maxmurderer = getPlayers().size() / 5;
