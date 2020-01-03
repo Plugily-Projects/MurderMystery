@@ -455,6 +455,9 @@ public class Arena extends BukkitRunnable {
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           for (Player player : plugin.getServer().getOnlinePlayers()) {
             this.addPlayer(player);
+            User user = plugin.getUserManager().getUser(player);
+            this.doBarAction(Arena.BarAction.ADD, player);
+            this.getScoreboardManager().createScoreboard(user);
           }
         }
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
