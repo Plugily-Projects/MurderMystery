@@ -62,16 +62,16 @@ public class JoinEvent implements Listener {
 
   @EventHandler
   public void onJoin(PlayerJoinEvent event) {
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+      for (Player player : plugin.getServer().getOnlinePlayers()) {
+        if (ArenaRegistry.getArena(player) == null) {
+          continue;
+        }
+        player.hidePlayer(event.getPlayer());
+        event.getPlayer().hidePlayer(player);
+      }  
+    } else {
       ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
-      return;
-    }
-    for (Player player : plugin.getServer().getOnlinePlayers()) {
-      if (ArenaRegistry.getArena(player) == null) {
-        continue;
-      }
-      player.hidePlayer(event.getPlayer());
-      event.getPlayer().hidePlayer(player);
     }
     User user = plugin.getUserManager().getUser(event.getPlayer());
     for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
