@@ -205,6 +205,11 @@ public class ArenaEvents implements Listener {
       return;
     }
 
+    //check if victim is murderer
+    if (Role.isRole(Role.MURDERER, victim)) {
+      return;
+    }
+
     //todo support for skins later
     //just don't kill user if item isn't murderer sword
     if (attacker.getInventory().getItemInMainHand().getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
