@@ -105,7 +105,11 @@ public class Main extends JavaPlugin {
     exceptionLogHandler = new ExceptionLogHandler(this);
     LanguageManager.init(this);
     saveDefaultConfig();
-    Debugger.setEnabled(getConfig().getBoolean("Debug", false));
+    if (getDescription().getVersion().contains("b")){
+      Debugger.setEnabled(true);
+    } else {
+      Debugger.setEnabled(getConfig().getBoolean("Debug", false));
+    }
     Debugger.debug(Level.INFO, "[System] Initialization start");
     if (getConfig().getBoolean("Developer-Mode", false)) {
       Debugger.deepDebug(true);
