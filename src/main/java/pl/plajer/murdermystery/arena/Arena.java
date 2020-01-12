@@ -460,6 +460,9 @@ public class Arena extends BukkitRunnable {
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           for (Player player : plugin.getServer().getOnlinePlayers()) {
             this.addPlayer(player);
+            User user = plugin.getUserManager().getUser(player);
+            this.doBarAction(Arena.BarAction.ADD, player);
+            this.getScoreboardManager().createScoreboard(user);
           }
         }
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
@@ -721,7 +724,8 @@ public class Arena extends BukkitRunnable {
   }
 
   public void teleportAllToEndLocation() {
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
+      && ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends", true)) {
       for (Player player : getPlayers()) {
         plugin.getBungeeManager().connectToHub(player);
       }
@@ -739,7 +743,8 @@ public class Arena extends BukkitRunnable {
   }
 
   public void teleportToEndLocation(Player player) {
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
+      && ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends", true)) {
       plugin.getBungeeManager().connectToHub(player);
       return;
     }
