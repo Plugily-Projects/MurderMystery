@@ -258,18 +258,23 @@ public class Arena extends BukkitRunnable {
           Set<Player> playersToSet = new HashSet<>(getPlayers());
           int maxmurderer = 1;
           int maxdetectives = 1;
-          if (murderers != 1) {
+          if (murderers != 1 && getPlayers().size() > murderers) {
             maxmurderer = (getPlayers().size() / murderers);
           }
-          if (detectives != 1) {
+          if (detectives != 1 && getPlayers().size() > detectives) {
             maxdetectives = (getPlayers().size() / detectives);
           }
           if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
             ChatManager.broadcast(this, "Murderers and detectives amount was reduced due to invalid settings, contact ServerAdministrator");
-            maxmurderer = getPlayers().size() / 5;
-            maxdetectives = getPlayers().size() / 7;
+            //Make sure to have one innocent!
+            if (maxdetectives > 1) {
+              maxdetectives--;
+            } else if (maxmurderer > 1) {
+              maxmurderer--;
+            }
           }
-          for (int i = 0; i < (maxmurderer <= 0 ? 1 : maxmurderer); i++) {
+          Debugger.debug(Level.INFO, "Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3}", this, maxdetectives, maxmurderer, getPlayers().size());
+          for (int i = 0; i < (maxmurderer); i++) {
             Player murderer = ((User) sortedMurderer.keySet().toArray()[i]).getPlayer();
             setCharacter(CharacterType.MURDERER, murderer);
             allMurderer.add(murderer);
@@ -282,7 +287,7 @@ public class Arena extends BukkitRunnable {
 
           Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
             Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-          for (int i = 0; i < (maxdetectives <= 0 ? 1 : maxdetectives); i++) {
+          for (int i = 0; i < (maxdetectives); i++) {
             Player detective = ((User) sortedDetective.keySet().toArray()[i]).getPlayer();
             setCharacter(CharacterType.DETECTIVE, detective);
             allDetectives.add(detective);
