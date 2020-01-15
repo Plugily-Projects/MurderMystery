@@ -273,7 +273,8 @@ public class Arena extends BukkitRunnable {
               maxmurderer--;
             }
           }
-          Debugger.debug(Level.INFO, "Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3}", this, maxdetectives, maxmurderer, getPlayers().size());
+          Debugger.debug(Level.INFO, "Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
+            getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
           for (int i = 0; i < (maxmurderer); i++) {
             Player murderer = ((User) sortedMurderer.keySet().toArray()[i]).getPlayer();
             setCharacter(CharacterType.MURDERER, murderer);
