@@ -49,8 +49,8 @@ public class MysqlManager implements UserDatabase {
       try (Connection connection = database.getConnection()) {
         Statement statement = connection.createStatement();
         statement.executeUpdate("CREATE TABLE IF NOT EXISTS `playerstats` (\n"
-          + "  `UUID` text NOT NULL,\n"
-          + "  `name` text NOT NULL,\n"
+          + "  `UUID` char(36) NOT NULL PRIMARY KEY,\n"
+          + "  `name` varchar(16) NOT NULL,\n"
           + "  `kills` int(11) NOT NULL DEFAULT '0',\n"
           + "  `deaths` int(11) NOT NULL DEFAULT '0',\n"
           + "  `highestscore` int(11) NOT NULL DEFAULT '0',\n"
