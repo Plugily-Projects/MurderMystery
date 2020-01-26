@@ -1,5 +1,6 @@
 ### 1.4.2 Release (20.12.2019 - XX.12.2019) (by Tigerpanzer)
 * Fixed spectator gui opened on physical actions
+* Added option to control the time between gold spawns
 * Added better option to allow only 1 murderer/detectives
 * Fixed division by null error
 * Fixed murderer can kill other murderer

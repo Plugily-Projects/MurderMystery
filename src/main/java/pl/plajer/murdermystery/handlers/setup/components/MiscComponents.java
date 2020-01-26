@@ -166,6 +166,35 @@ public class MiscComponents implements SetupComponent {
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 7, 0);
 
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.GOLD_NUGGET.parseItem())
+      .amount(config.getInt("instances." + arena.getId() + "." + "spawngoldtime"))
+      .name(ChatManager.colorRawMessage("&e&lSet gold spawn time in seconds"))
+      .lore(ChatColor.GRAY + "LEFT click to decrease")
+      .lore(ChatColor.GRAY + "RIGHT click to increase")
+      .lore(ChatColor.DARK_GRAY + "How much gold should be spawned? ")
+      .lore(ChatColor.DARK_GRAY + "That means 1 gold spawned every ... seconds")
+      .lore(ChatColor.DARK_GRAY + "Default: 5")
+      .lore(ChatColor.DARK_GRAY + "Every 5 seconds it will spawn 1 gold")
+      .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".spawngoldtime"))
+      .build(), e -> {
+      if (e.getClick().isRightClick()) {
+        e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
+      }
+      if (e.getClick().isLeftClick()) {
+        if (e.getCurrentItem().getAmount() > 1) {
+          e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
+        }
+      }
+      if (e.getInventory().getItem(e.getSlot()).getAmount() < 1) {
+        e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 1! Game is not designed without gold!"));
+        e.getInventory().getItem(e.getSlot()).setAmount(1);
+      }
+      config.set("instances." + arena.getId() + ".spawngoldtime", e.getCurrentItem().getAmount());
+      arena.setDetectives(e.getCurrentItem().getAmount());
+      ConfigUtils.saveConfig(plugin, config, "arenas");
+      new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
+    }), 7, 1);
+
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
       .name(ChatManager.colorRawMessage("&e&lView Setup Video"))
       .lore(ChatColor.GRAY + "Having problems with setup or wanna")

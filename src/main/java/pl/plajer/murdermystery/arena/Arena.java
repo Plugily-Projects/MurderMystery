@@ -93,6 +93,8 @@ public class Arena extends BukkitRunnable {
 
   private int murderers = 0;
   private int detectives = 0;
+  private int spawnGoldTimer = 0;
+  private int spawnGoldTime = 0;
 
   //contains murderer, detective, fake detective and hero
   private Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
@@ -385,8 +387,11 @@ public class Arena extends BukkitRunnable {
             }
 
         //don't spawn it every time
-        if (random.nextInt(2) == 1) {
+        if (spawnGoldTimer == spawnGoldTime) {
           spawnSomeGold();
+          spawnGoldTimer = 0;
+        } else {
+          spawnGoldTimer++;
         }
         setTimer(getTimer() - 1);
         break;
@@ -499,6 +504,10 @@ public class Arena extends BukkitRunnable {
 
   public void setMurderers(int murderers) {
     this.murderers = murderers;
+  }
+
+  public void setSpawnGoldTime(int spawnGoldTime) {
+    this.spawnGoldTime = spawnGoldTime;
   }
 
   public boolean isDetectiveDead() {
