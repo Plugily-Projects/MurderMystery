@@ -263,10 +263,12 @@ public class Arena extends BukkitRunnable {
           Set<Player> playersToSet = new HashSet<>(getPlayers());
           int maxmurderer = 1;
           int maxdetectives = 1;
-          if (murderers != 1 && getPlayers().size() > murderers) {
+          Debugger.debug(Level.INFO, "Before: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
+            getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
+          if (murderers != 1 && murderers != 0 && getPlayers().size() > murderers) {
             maxmurderer = (getPlayers().size() / murderers);
           }
-          if (detectives != 1 && getPlayers().size() > detectives) {
+          if (detectives != 1 && detectives != 0 && getPlayers().size() > detectives) {
             maxdetectives = (getPlayers().size() / detectives);
           }
           if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
@@ -278,7 +280,7 @@ public class Arena extends BukkitRunnable {
               maxmurderer--;
             }
           }
-          Debugger.debug(Level.INFO, "Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
+          Debugger.debug(Level.INFO, "After: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
             getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
           for (int i = 0; i < (maxmurderer); i++) {
             Player murderer = ((User) sortedMurderer.keySet().toArray()[i]).getPlayer();
