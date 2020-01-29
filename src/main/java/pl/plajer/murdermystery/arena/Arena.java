@@ -106,6 +106,7 @@ public class Arena extends BukkitRunnable {
   private Hologram bowHologram;
   private boolean detectiveDead;
   private boolean murdererLocatorReceived;
+  private boolean hideChances;
 
   private ArenaState arenaState = ArenaState.WAITING_FOR_PLAYERS;
   private BossBar gameBar;
@@ -216,12 +217,14 @@ public class Arena extends BukkitRunnable {
           totalMurderer += user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER);
           totalDetective += user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE);
         }
-        for (Player p : getPlayers()) {
-          User user = plugin.getUserManager().getUser(p);
-          try {
-            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
-          } catch (NumberFormatException ignored) {
-            //fail silently
+        if (!hideChances) {
+          for (Player p : getPlayers()) {
+            User user = plugin.getUserManager().getUser(p);
+            try {
+              p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
+            } catch (NumberFormatException ignored) {
+              //fail silently
+            }
           }
         }
         if (getTimer() == 0 || forceStart) {
@@ -508,6 +511,10 @@ public class Arena extends BukkitRunnable {
 
   public void setSpawnGoldTime(int spawnGoldTime) {
     this.spawnGoldTime = spawnGoldTime;
+  }
+
+  public void setHideChances(boolean hideChances) {
+    this.hideChances = hideChances;
   }
 
   public boolean isDetectiveDead() {

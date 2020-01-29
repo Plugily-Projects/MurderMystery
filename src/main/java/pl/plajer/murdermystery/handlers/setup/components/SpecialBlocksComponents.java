@@ -23,6 +23,7 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -33,6 +34,7 @@ import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.special.SpecialBlock;
 import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.setup.SetupInventory;
+import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
@@ -72,7 +74,8 @@ public class SpecialBlocksComponents implements SetupComponent {
       .lore(ChatColor.GRAY + "Configure cauldron potions in specialblocks.yml file!")
       .build(), e -> {
       e.getWhoClicked().closeInventory();
-      if (e.getWhoClicked().getTargetBlock(null, 10).getType() != XMaterial.CAULDRON.parseMaterial()) {
+      Debugger.debug(Level.INFO, "" + e.getWhoClicked().getTargetBlock(null, 10).getType() + e.getWhoClicked().getTargetBlock(null, 10).getLocation());
+      if (e.getWhoClicked().getTargetBlock(null, 15).getType() != XMaterial.CAULDRON.parseMaterial()) {
         e.getWhoClicked().sendMessage(ChatColor.RED + "Please target cauldron to continue!");
         return;
       }
@@ -99,7 +102,8 @@ public class SpecialBlocksComponents implements SetupComponent {
       .lore(ChatColor.RED + "or curses from prayer!")
       .build(), e -> {
       e.getWhoClicked().closeInventory();
-      if (e.getWhoClicked().getTargetBlock(null, 10).getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
+      Debugger.debug(Level.INFO, "" + e.getWhoClicked().getTargetBlock(null, 10).getType() + e.getWhoClicked().getTargetBlock(null, 10).getLocation());
+      if (e.getWhoClicked().getTargetBlock(null, 15).getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
         e.getWhoClicked().sendMessage(ChatColor.RED + "Please target enchanting table to continue!");
         return;
       }

@@ -141,6 +141,7 @@ public class ArenaRegistry {
       arena.setMaximumPlayers(config.getInt(s + "maximumplayers", 4));
       arena.setMapName(config.getString(s + "mapname", "none"));
       arena.setSpawnGoldTime(plugin.getConfig().getInt(s + "spawngoldtime", 5));
+      arena.setHideChances(plugin.getConfig().getBoolean(s + "hidechances", false));
       arena.setMurderers(plugin.getConfig().getInt(s + "playerpermurderer", 5));
       arena.setDetectives(plugin.getConfig().getInt(s + "playerperdetective", 7));
       List<Location> playerSpawnPoints = new ArrayList<>();

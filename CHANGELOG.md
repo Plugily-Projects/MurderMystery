@@ -5,6 +5,8 @@
 * Fixed division by null error
 * Fixed murderer can kill other murderer
 * Fixed bungeecord shutdown when game ends (Thanks to barpec12)
+* Added option to hide chances
+* Changed the setup radius of enchanting table and cauldron to 15
 
 ### 1.4.1 Release (05.12.2019 - 13.12.2019) (by Tigerpanzer)
 * Added a new MOTD Manager in the bungee.yml (Now you can define the states on yourself) 
