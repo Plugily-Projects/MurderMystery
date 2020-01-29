@@ -167,7 +167,7 @@ public class MiscComponents implements SetupComponent {
     }), 7, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.GOLD_NUGGET.parseItem())
-      .amount(config.getInt("instances." + arena.getId() + "." + "spawngoldtime"))
+      .amount(config.getInt("instances." + arena.getId() + "." + "spawngoldtime", 3))
       .name(ChatManager.colorRawMessage("&e&lSet gold spawn time in seconds"))
       .lore(ChatColor.GRAY + "LEFT click to decrease")
       .lore(ChatColor.GRAY + "RIGHT click to increase")
