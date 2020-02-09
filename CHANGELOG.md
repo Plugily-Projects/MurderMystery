@@ -1,14 +1,4 @@
-### 1.4.3 Release (09.02.2020)
-* PlaceholderAPI placeholders are no longer case sensitive
-* Added arena state placeholders for PlaceholderAPI:
-   * %murdermystery_{arena id}:{data}% where data types are:
-      * players - amount of players in arena
-      * max_players - max players in arena
-      * state - current state raw enum name eg. STARTING
-      * state_pretty - prettified name of enum eg. Waiting (instead WAITING_FOR_PLAYERS)
-      * mapname - name of arena map
-
-### 1.4.2 Release (20.12.2019 - XX.12.2019) (by Tigerpanzer)
+### 1.4.2 Release (20.12.2019 - 09.02.2020) (by Tigerpanzer)
 * Fixed spectator gui opened on physical actions
 * Added option to control the time between gold spawns
 * Added better option to allow only 1 murderer/detectives
@@ -17,6 +7,15 @@
 * Fixed bungeecord shutdown when game ends (Thanks to barpec12)
 * Added option to hide chances
 * Changed the setup radius of enchanting table and cauldron to 15
+* PlaceholderAPI placeholders are no longer case sensitive
+* Added arena state placeholders for PlaceholderAPI:
+   * %murdermystery_{arena id}:{data}% where data types are:
+      * players - amount of players in arena
+      * max_players - max players in arena
+      * state - current state raw enum name eg. STARTING
+      * state_pretty - prettified name of enum eg. Waiting (instead WAITING_FOR_PLAYERS)
+      * mapname - name of arena map
+* Fixed mysql database - Create a new one and your stats should be saved correctly (Thanks to add5tar)
 
 ### 1.4.1 Release (05.12.2019 - 13.12.2019) (by Tigerpanzer)
 * Added a new MOTD Manager in the bungee.yml (Now you can define the states on yourself) 
