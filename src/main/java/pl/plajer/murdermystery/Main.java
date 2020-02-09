@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,6 +60,8 @@ import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.handlers.PlaceholderManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItem;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
+import pl.plajer.murdermystery.handlers.party.PartyHandler;
+import pl.plajer.murdermystery.handlers.party.PartySupportInitializer;
 import pl.plajer.murdermystery.handlers.rewards.RewardsFactory;
 import pl.plajer.murdermystery.handlers.sign.ArenaSign;
 import pl.plajer.murdermystery.handlers.sign.SignManager;
@@ -91,6 +93,7 @@ public class Main extends JavaPlugin {
   private MysqlDatabase database;
   private SignManager signManager;
   private CorpseHandler corpseHandler;
+  private PartyHandler partyHandler;
   private ConfigPreferences configPreferences;
   private HookManager hookManager;
   private UserManager userManager;
@@ -232,6 +235,7 @@ public class Main extends JavaPlugin {
     rewardsHandler = new RewardsFactory(this);
     signManager = new SignManager(this);
     corpseHandler = new CorpseHandler(this);
+    partyHandler = new PartySupportInitializer().initialize();
     new BowTrailsHandler(this);
     MysteryPotionRegistry.init(this);
     PrayerRegistry.init(this);
@@ -321,6 +325,10 @@ public class Main extends JavaPlugin {
 
   public BungeeManager getBungeeManager() {
     return bungeeManager;
+  }
+
+  public PartyHandler getPartyHandler() {
+    return partyHandler;
   }
 
   public ConfigPreferences getConfigPreferences() {

@@ -4,7 +4,7 @@ authors: [Plajer, Tigerpanzer, montlikadani]
 version: ${project.version}
 api-version: 1.13
 depend: [HolographicDisplays]
-softdepend: [CorpseReborn, PlaceholderAPI, LeaderHeads]
+softdepend: [CorpseReborn, PlaceholderAPI, LeaderHeads, Parties]
 
 commands:
   MurderMystery:
