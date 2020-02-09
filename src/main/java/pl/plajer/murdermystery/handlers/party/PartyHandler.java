@@ -36,7 +36,7 @@ public interface PartyHandler {
   PartyPluginType getPartyPluginType();
 
   enum PartyPluginType {
-    PARTIES, NONE
+    PARTIES, PAF, NONE
   }
 
 }

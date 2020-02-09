@@ -88,6 +88,7 @@ public class ChatManager {
 
   private static String formatPlaceholders(String message, Arena arena) {
     String returnString = message;
+    returnString = StringUtils.replace(returnString, "%ARENANAME%", arena.getMapName());
     returnString = StringUtils.replace(returnString, "%TIME%", Integer.toString(arena.getTimer()));
     returnString = StringUtils.replace(returnString, "%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS((arena.getTimer())));
     returnString = StringUtils.replace(returnString, "%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));

@@ -16,6 +16,7 @@
       * state_pretty - prettified name of enum eg. Waiting (instead WAITING_FOR_PLAYERS)
       * mapname - name of arena map
 * Fixed mysql database - Create a new one and your stats should be saved correctly (Thanks to add5tar)
+* Added party dependency, you can join with more players to one arena
 
 ### 1.4.1 Release (05.12.2019 - 13.12.2019) (by Tigerpanzer)
 * Added a new MOTD Manager in the bungee.yml (Now you can define the states on yourself) 

@@ -47,6 +47,7 @@ import pl.plajer.murdermystery.handlers.ChatManager;
 import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItemManager;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
+import pl.plajer.murdermystery.handlers.party.GameParty;
 import pl.plajer.murdermystery.handlers.rewards.Reward;
 import pl.plajer.murdermystery.user.User;
 import pl.plajer.murdermystery.utils.Debugger;
@@ -79,6 +80,28 @@ public class ArenaManager {
   public static void joinAttempt(Player player, Arena arena) {
     Debugger.debug(Level.INFO, "[{0}] Initial join attempt for {1}", arena.getId(), player.getName());
     long start = System.currentTimeMillis();
+
+    //check if player is in party and send party members to the game
+    if (plugin.getPartyHandler().isPlayerInParty(player)) {
+      GameParty party = plugin.getPartyHandler().getParty(player);
+      if (party.getLeader().equals(player)) {
+        if (arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
+          for (Player partyPlayer : party.getPlayers()) {
+            if (ArenaRegistry.isInArena(partyPlayer)) {
+              if (ArenaRegistry.getArena(partyPlayer).getArenaState() == ArenaState.IN_GAME) {
+                continue;
+              }
+              leaveAttempt(partyPlayer, ArenaRegistry.getArena(partyPlayer));
+            }
+            partyPlayer.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Join-As-Party-Member"), partyPlayer));
+            joinAttempt(partyPlayer, arena);
+          }
+        } else {
+          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Not-Enough-Space-For-Party"), player));
+          return;
+        }
+      }
+    }
 
     MMGameJoinAttemptEvent gameJoinAttemptEvent = new MMGameJoinAttemptEvent(player, arena);
     Bukkit.getPluginManager().callEvent(gameJoinAttemptEvent);

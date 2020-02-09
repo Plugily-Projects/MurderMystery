@@ -31,7 +31,9 @@ public class PartySupportInitializer {
   public PartyHandler initialize() {
     PartyHandler partyHandler;
     if (Bukkit.getServer().getPluginManager().getPlugin("Parties") != null) {
-      partyHandler = new PartiesPartyHandlerImpl();
+     return new PartiesPartyHandlerImpl();
+    } else if (Bukkit.getServer().getPluginManager().getPlugin("Spigot-Party-API-PAF") != null) {
+      return new PAFPartyHandlerImpl();
     } else {
       partyHandler = new PartyHandler() {
         @Override
