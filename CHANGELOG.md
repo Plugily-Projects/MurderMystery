@@ -1,3 +1,13 @@
+### 1.4.3 Release (09.02.2020)
+* PlaceholderAPI placeholders are no longer case sensitive
+* Added arena state placeholders for PlaceholderAPI:
+   * %murdermystery_{arena id}:{data}% where data types are:
+      * players - amount of players in arena
+      * max_players - max players in arena
+      * state - current state raw enum name eg. STARTING
+      * state_pretty - prettified name of enum eg. Waiting (instead WAITING_FOR_PLAYERS)
+      * mapname - name of arena map
+
 ### 1.4.2 Release (20.12.2019 - XX.12.2019) (by Tigerpanzer)
 * Fixed spectator gui opened on physical actions
 * Added option to control the time between gold spawns
