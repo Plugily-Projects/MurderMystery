@@ -47,8 +47,10 @@ public class FileStats implements UserDatabase {
   }
 
   @Override
-  public void loadStatistic(User user, StatsStorage.StatisticType stat) {
-    user.setStat(stat, config.getInt(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), 0));
+  public void loadStatistics(User user) {
+    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+      user.setStat(stat, config.getInt(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), 0));
+    }
   }
 
 }
