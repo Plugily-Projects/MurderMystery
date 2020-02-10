@@ -189,6 +189,13 @@
             <systemPath>${project.basedir}/lib/CorpseReborn.jar</systemPath>
         </dependency>
         <dependency>
+            <groupId>de.simonsator</groupId>
+            <artifactId>partyandfriends</artifactId>
+            <version>1.0.52</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/PAFSpigot.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
             <version>3.0.2</version>

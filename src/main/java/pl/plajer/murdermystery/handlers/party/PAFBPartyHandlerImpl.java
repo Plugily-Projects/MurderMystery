@@ -34,7 +34,7 @@ import de.simonsator.partyandfriends.spigot.api.party.PlayerParty;
  * <p>
  * Created at 09.02.2020
  */
-public class PAFPartyHandlerImpl implements PartyHandler {
+public class PAFBPartyHandlerImpl implements PartyHandler {
 
   @Override
   public boolean isPlayerInParty(Player player) {
@@ -56,6 +56,6 @@ public class PAFPartyHandlerImpl implements PartyHandler {
 
   @Override
   public PartyPluginType getPartyPluginType() {
-    return PartyPluginType.PAF;
+    return PartyPluginType.PAFBungee;
   }
 }

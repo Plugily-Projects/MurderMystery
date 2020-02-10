@@ -18,25 +18,41 @@
 
 package pl.plajer.murdermystery.handlers.party;
 
+
+import java.util.stream.Collectors;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import de.simonsator.partyandfriends.api.party.PartyManager;
+import de.simonsator.partyandfriends.api.party.PlayerParty;
 
 /**
  * @author Plajer
  * <p>
  * Created at 09.02.2020
  */
-public interface PartyHandler {
+public class PAFSPartyHandlerImpl implements PartyHandler {
 
-  boolean isPlayerInParty(Player player);
-
-  GameParty getParty(Player player);
-
-  boolean partiesSupported();
-
-  PartyPluginType getPartyPluginType();
-
-  enum PartyPluginType {
-    PARTIES, PAFSpigot, PAFBungee, NONE
+  @Override
+  public boolean isPlayerInParty(Player player) {
+    return PartyManager.getInstance().getParty(player.getUniqueId()) != null;
   }
 
+  @Override
+  public GameParty getParty(Player player) {
+    PartyManager api = PartyManager.getInstance();
+    PlayerParty party = api.getParty(player.getUniqueId());
+    return new GameParty(party.getAllPlayers().stream().map(localPlayer -> Bukkit.getPlayer(localPlayer.getUniqueId())).collect(Collectors.toList()), Bukkit.getPlayer(party.getLeader().getUniqueId()));
+  }
+
+  @Override
+  public boolean partiesSupported() {
+    return true;
+  }
+
+  @Override
+  public PartyPluginType getPartyPluginType() {
+    return PartyPluginType.PAFSpigot;
+  }
 }
