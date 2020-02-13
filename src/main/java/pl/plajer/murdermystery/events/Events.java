@@ -162,6 +162,10 @@ public class Events implements Listener {
   }
 
   private void killBySword(Arena arena, User attackerUser, Player victim) {
+    //check if victim is murderer
+    if (Role.isRole(Role.MURDERER, victim)) {
+      return;
+    }
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
     victim.damage(100.0);
     victim.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"),

@@ -265,10 +265,10 @@ public class Arena extends BukkitRunnable {
           int maxdetectives = 1;
           Debugger.debug(Level.INFO, "Before: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
             getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
-          if (murderers != 1 && murderers != 0 && getPlayers().size() > murderers) {
+          if (murderers > 1 && getPlayers().size() > murderers) {
             maxmurderer = (getPlayers().size() / murderers);
           }
-          if (detectives != 1 && detectives != 0 && getPlayers().size() > detectives) {
+          if (detectives > 1 && getPlayers().size() > detectives) {
             maxdetectives = (getPlayers().size() / detectives);
           }
           if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {

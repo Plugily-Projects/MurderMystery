@@ -1,4 +1,4 @@
-### 1.4.2 Release (20.12.2019 - 09.02.2020) (by Tigerpanzer)
+### 1.4.2 Release (20.12.2019 - 13.02.2020) (by Tigerpanzer)
 * Fixed spectator gui opened on physical actions
 * Added option to control the time between gold spawns
 * Added better option to allow only 1 murderer/detectives
