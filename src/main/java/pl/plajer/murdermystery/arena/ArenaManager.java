@@ -80,6 +80,20 @@ public class ArenaManager {
   public static void joinAttempt(Player player, Arena arena) {
     Debugger.debug(Level.INFO, "[{0}] Initial join attempt for {1}", arena.getId(), player.getName());
     long start = System.currentTimeMillis();
+    MMGameJoinAttemptEvent gameJoinAttemptEvent = new MMGameJoinAttemptEvent(player, arena);
+    Bukkit.getPluginManager().callEvent(gameJoinAttemptEvent);
+    if (!arena.isReady()) {
+      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Arena-Not-Configured"));
+      return;
+    }
+    if (gameJoinAttemptEvent.isCancelled()) {
+      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-Cancelled-Via-API"));
+      return;
+    }
+    if (ArenaRegistry.isInArena(player)) {
+      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
+      return;
+    }
 
     //check if player is in party and send party members to the game
     if (plugin.getPartyHandler().isPlayerInParty(player)) {
@@ -103,20 +117,6 @@ public class ArenaManager {
       }
     }
 
-    MMGameJoinAttemptEvent gameJoinAttemptEvent = new MMGameJoinAttemptEvent(player, arena);
-    Bukkit.getPluginManager().callEvent(gameJoinAttemptEvent);
-    if (!arena.isReady()) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Arena-Not-Configured"));
-      return;
-    }
-    if (gameJoinAttemptEvent.isCancelled()) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-Cancelled-Via-API"));
-      return;
-    }
-    if (ArenaRegistry.isInArena(player)) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
-      return;
-    }
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       if (!player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
         || !player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId()))) {
