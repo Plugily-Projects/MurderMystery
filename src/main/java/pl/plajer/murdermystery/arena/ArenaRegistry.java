@@ -140,10 +140,10 @@ public class ArenaRegistry {
       arena.setMinimumPlayers(config.getInt(s + "minimumplayers", 2));
       arena.setMaximumPlayers(config.getInt(s + "maximumplayers", 4));
       arena.setMapName(config.getString(s + "mapname", "none"));
-      arena.setSpawnGoldTime(plugin.getConfig().getInt(s + "spawngoldtime", 5));
-      arena.setHideChances(plugin.getConfig().getBoolean(s + "hidechances", false));
-      arena.setMurderers(plugin.getConfig().getInt(s + "playerpermurderer", 5));
-      arena.setDetectives(plugin.getConfig().getInt(s + "playerperdetective", 7));
+      arena.setSpawnGoldTime(config.getInt(s + "spawngoldtime", 5));
+      arena.setHideChances(config.getBoolean(s + "hidechances", false));
+      arena.setMurderers(config.getInt(s + "playerpermurderer", 5));
+      arena.setDetectives(config.getInt(s + "playerperdetective", 7));
       List<Location> playerSpawnPoints = new ArrayList<>();
       for (String loc : config.getStringList(s + "playerspawnpoints")) {
         playerSpawnPoints.add(LocationSerializer.getLocation(loc));
