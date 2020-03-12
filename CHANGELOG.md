@@ -18,6 +18,7 @@
 * Fixed mysql database - Create a new one and your stats should be saved correctly (Thanks to add5tar)
 * Fixed loading arena values (Some values had a wrong file location)
 * Added party dependency, you can join with more players to one arena
+* Fixed murder gets sword as spectator
 
 ### 1.4.1 Release (05.12.2019 - 13.12.2019) (by Tigerpanzer)
 * Added a new MOTD Manager in the bungee.yml (Now you can define the states on yourself) 

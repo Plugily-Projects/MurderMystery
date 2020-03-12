@@ -341,6 +341,8 @@ public class Arena extends BukkitRunnable {
           }
           if (getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
             for (Player p : allMurderer) {
+              User murderer = plugin.getUserManager().getUser(p);
+              if (murderer.isSpectator()) continue;
               ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
               p.getInventory().setHeldItemSlot(0);
             }
