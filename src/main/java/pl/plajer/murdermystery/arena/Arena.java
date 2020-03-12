@@ -388,7 +388,8 @@ public class Arena extends BukkitRunnable {
             if (getPlayersLeft().size() == aliveMurderer() + 1) {
               for (Player p : allMurderer) {
                 if (isMurderAlive(p)) {
-                  p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0));
+                  //no potion because it adds particles which can be identified
+                  p.setWalkSpeed(0.3f);
                 }
               }
             }
@@ -425,6 +426,7 @@ public class Arena extends BukkitRunnable {
             for (PotionEffect effect : player.getActivePotionEffects()) {
               player.removePotionEffect(effect.getType());
             }
+            player.setWalkSpeed(0.2f);
             player.setFlying(false);
             player.setAllowFlight(false);
             player.getInventory().clear();
@@ -687,6 +689,7 @@ public class Arena extends BukkitRunnable {
     for (PotionEffect effect : player.getActivePotionEffects()) {
       player.removePotionEffect(effect.getType());
     }
+    player.setWalkSpeed(0.2f);
     Location location = getLobbyLocation();
     if (location == null) {
       System.out.print("LobbyLocation isn't intialized for arena " + getId());

@@ -321,6 +321,7 @@ public class ArenaManager {
     for (PotionEffect effect : player.getActivePotionEffects()) {
       player.removePotionEffect(effect.getType());
     }
+    player.setWalkSpeed(0.2f);
     player.setFireTicks(0);
     if (arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS && arena.getArenaState() != ArenaState.STARTING && arena.getPlayers().size() == 0) {
       arena.setArenaState(ArenaState.ENDING);
