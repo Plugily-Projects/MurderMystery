@@ -20,10 +20,13 @@ package pl.plajer.murdermystery.handlers.language;
 
 import java.io.File;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajer.murdermystery.Main;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
 
 /*
@@ -32,6 +35,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
 public class LanguageMigrator {
 
   public static final int CONFIG_FILE_VERSION = 10;
+  public static final int LANGUAGE_FILE_VERSION = 2;
   private Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -39,6 +43,7 @@ public class LanguageMigrator {
 
     //initializes migrator to update files with latest values
     configUpdate();
+    languageFileUpdate();
   }
 
   private void configUpdate() {
@@ -130,6 +135,38 @@ public class LanguageMigrator {
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Murder Mystery] [System notify] You're using latest config file version! Nice!");
   }
 
+  private void languageFileUpdate() {
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "language");
+    if (config.getString("File-Version-Do-Not-Edit", "").equals(String.valueOf(LANGUAGE_FILE_VERSION))) {
+      return;
+    }
+    Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Murder Mystery] [System notify] Your language file is outdated! Updating...");
+
+    int version = LANGUAGE_FILE_VERSION - 1;
+    if (NumberUtils.isNumber(config.getString("File-Version-Do-Not-Edit"))) {
+      version = Integer.parseInt(config.getString("File-Version-Do-Not-Edit"));
+    } else {
+      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] [System notify] Failed to parse language file version!");
+    }
+    updateLanguageVersionControl(version);
+
+    File file = new File(plugin.getDataFolder() + "/language.yml");
+
+    for (int i = version; i < LANGUAGE_FILE_VERSION; i++) {
+      switch (version) {
+        case 1:
+          MigratorUtils.insertAfterLine(file, "Lobby-Messages:", "Not-Enough-Space-For-Party: \"&cYour party is bigger than free places on the arena %ARENANAME%\"");
+          MigratorUtils.insertAfterLine(file, "In-Game:", "Join-As-Party-Member: \"&cYou joined %ARENANAME% because the party leader joined it!\"");
+          break;
+        default:
+          break;
+      }
+      version++;
+    }
+    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Murder Mystery] [System notify] Language file updated! Nice!");
+    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Murder Mystery] [System notify] You're using latest language file version! Nice!");
+  }
+
   private void updateConfigVersionControl(int oldVersion) {
     File file = new File(plugin.getDataFolder() + "/config.yml");
     MigratorUtils.removeLineFromFile(file, "# Don't modify");
@@ -138,4 +175,11 @@ public class LanguageMigrator {
     MigratorUtils.addNewLines(file, "# Don't modify\r\nVersion: " + CONFIG_FILE_VERSION + "\r\n# No way! You've reached the end! But... where's the dragon!?");
   }
 
+  private void updateLanguageVersionControl(int oldVersion) {
+    File file = new File(plugin.getDataFolder() + "/language.yml");
+    MigratorUtils.removeLineFromFile(file, "# Don't edit it. But who's stopping you? It's your server!");
+    MigratorUtils.removeLineFromFile(file, "# Really, don't edit ;p");
+    MigratorUtils.removeLineFromFile(file, "File-Version-Do-Not-Edit: " + oldVersion);
+    MigratorUtils.addNewLines(file, "# Don't edit it. But who's stopping you? It's your server!\r\n# Really, don't edit ;p\r\nFile-Version-Do-Not-Edit: " + LANGUAGE_FILE_VERSION + "\r\n");
+  }
 }
