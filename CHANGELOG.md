@@ -1,4 +1,4 @@
-### 1.4.2 Release (20.12.2019 - 13.02.2020) (by Tigerpanzer)
+### 1.5.0 Release (20.12.2019 - 17.03.2020) (by Tigerpanzer)
 * Fixed spectator gui opened on physical actions
 * Added option to control the time between gold spawns
 * Added better option to allow only 1 murderer/detectives
@@ -20,6 +20,8 @@
 * Added party dependency, you can join with more players to one arena
 * Fixed murder gets sword as spectator
 * Changed murder speed boost from potion to walkspeed to hide particles
+* Added Connect-To-Hub boolean to bungee.yml
+* Added End-Location-Hub boolean to bungee.yml
 
 ### 1.4.1 Release (05.12.2019 - 13.12.2019) (by Tigerpanzer)
 * Added a new MOTD Manager in the bungee.yml (Now you can define the states on yourself) 
