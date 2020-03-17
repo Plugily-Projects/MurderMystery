@@ -56,9 +56,7 @@ public class UserManager {
   private void loadStatsForPlayersOnline() {
     for (Player player : Bukkit.getServer().getOnlinePlayers()) {
       User user = getUser(player);
-      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        loadStatistic(user, stat);
-      }
+      loadStatistics(user);
     }
   }
 
@@ -91,11 +89,8 @@ public class UserManager {
     database.saveStatistic(user, stat);
   }
 
-  public void loadStatistic(User user, StatsStorage.StatisticType stat) {
-    if (!stat.isPersistent()) {
-      return;
-    }
-    database.loadStatistic(user, stat);
+  public void loadStatistics(User user) {
+    database.loadStatistics(user);
     //apply after load to override
     fixContirbutionStatistics(user);
   }

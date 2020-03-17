@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
 import pl.plajer.murdermystery.api.StatsStorage;
+import pl.plajer.murdermystery.arena.Arena;
+import pl.plajer.murdermystery.arena.ArenaRegistry;
 
 /**
  * @author Plajer
@@ -49,14 +51,14 @@ public class PlaceholderManager extends PlaceholderExpansion {
   }
 
   public String getVersion() {
-    return "1.0.0";
+    return "1.0.1";
   }
 
   public String onPlaceholderRequest(Player player, String id) {
     if (player == null) {
       return null;
     }
-    switch (id) {
+    switch (id.toLowerCase()) {
       case "kills":
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.KILLS));
       case "deaths":
@@ -70,7 +72,33 @@ public class PlaceholderManager extends PlaceholderExpansion {
       case "loses":
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOSES));
       default:
+        return handleArenaPlaceholderRequest(id);
+    }
+  }
+
+  private String handleArenaPlaceholderRequest(String id) {
+    if (!id.contains(":")) {
+      return null;
+    }
+    String[] data = id.split(":");
+    Arena arena = ArenaRegistry.getArena(data[0]);
+    if (arena == null) {
+      return null;
+    }
+    switch (data[1].toLowerCase()) {
+      case "players":
+        return String.valueOf(arena.getPlayers().size());
+      case "max_players":
+        return String.valueOf(arena.getMaximumPlayers());
+      case "state":
+        return String.valueOf(arena.getArenaState());
+      case "state_pretty":
+        return arena.getArenaState().getFormattedName();
+      case "mapname":
+        return arena.getMapName();
+      default:
         return null;
     }
   }
+
 }

@@ -66,10 +66,12 @@ public class ArenaUtils {
         ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.DETECTIVE_WIN_GAME, 0);
       }
     }
-    ArenaManager.stopGame(false, arena);
-    Player murderer = arena.getCharacter(Arena.CharacterType.MURDERER);
-    murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
-      ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
+    for (Player murderer : arena.getMurdererList()) {
+      murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
+        ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
+    }
+    //we must call it ticks later due to instant respawn bug
+    Bukkit.getScheduler().runTaskLater(plugin, () -> ArenaManager.stopGame(false, arena), 5);
   }
 
   public static void addScore(User user, ScoreAction action, int amount) {
@@ -96,6 +98,9 @@ public class ArenaUtils {
       return;
     }
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
+    if (action.getPoints() < 0){
+      msg = StringUtils.replace(msg, "+", "");
+    }
     msg = StringUtils.replace(msg, "%action%", action.getAction());
     user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + action.getPoints());
     user.getPlayer().sendMessage(msg);
@@ -107,7 +112,11 @@ public class ArenaUtils {
       ItemMeta innocentMeta = innocentLocator.getItemMeta();
       innocentMeta.setDisplayName(ChatManager.colorMessage("In-Game.Innocent-Locator-Item-Name"));
       innocentLocator.setItemMeta(innocentMeta);
-      ItemPosition.setItem(arena.getCharacter(Arena.CharacterType.MURDERER), ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
+      for (Player p : arena.getPlayersLeft()) {
+        if (arena.isMurderAlive(p)) {
+          ItemPosition.setItem(p, ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
+        }
+      }
       arena.setMurdererLocatorReceived(true);
 
       for (Player p : arena.getPlayersLeft()) {
@@ -121,7 +130,11 @@ public class ArenaUtils {
       if (Role.isRole(Role.MURDERER, p)) {
         continue;
       }
-      arena.getCharacter(Arena.CharacterType.MURDERER).setCompassTarget(p.getLocation());
+      for (Player murder : arena.getMurdererList()) {
+        if (arena.isMurderAlive(murder)) {
+          murder.setCompassTarget(p.getLocation());
+        }
+      }
       break;
     }
   }
@@ -168,7 +181,7 @@ public class ArenaUtils {
 
         arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, player);
         ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-        ItemPosition.setItem(player, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, 64));
+        ItemPosition.setItem(player, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
         ChatManager.broadcast(arena, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message"));
       }
     });

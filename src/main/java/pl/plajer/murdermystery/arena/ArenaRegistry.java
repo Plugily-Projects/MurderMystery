@@ -140,6 +140,10 @@ public class ArenaRegistry {
       arena.setMinimumPlayers(config.getInt(s + "minimumplayers", 2));
       arena.setMaximumPlayers(config.getInt(s + "maximumplayers", 4));
       arena.setMapName(config.getString(s + "mapname", "none"));
+      arena.setSpawnGoldTime(config.getInt(s + "spawngoldtime", 5));
+      arena.setHideChances(config.getBoolean(s + "hidechances", false));
+      arena.setMurderers(config.getInt(s + "playerpermurderer", 5));
+      arena.setDetectives(config.getInt(s + "playerperdetective", 7));
       List<Location> playerSpawnPoints = new ArrayList<>();
       for (String loc : config.getStringList(s + "playerspawnpoints")) {
         playerSpawnPoints.add(LocationSerializer.getLocation(loc));
@@ -152,13 +156,13 @@ public class ArenaRegistry {
       arena.setGoldSpawnPoints(goldSpawnPoints);
 
       List<SpecialBlock> specialBlocks = new ArrayList<>();
-      if (config.isSet("instances." + arena.getId() + ".mystery-cauldrons")) {
-        for (String loc : config.getStringList("instances." + arena.getId() + ".mystery-cauldrons")) {
+      if (config.isSet(s + ".mystery-cauldrons")) {
+        for (String loc : config.getStringList(s + ".mystery-cauldrons")) {
           specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
         }
       }
-      if (config.isSet("instances." + arena.getId() + ".confessionals")) {
-        for (String loc : config.getStringList("instances." + arena.getId() + ".confessionals")) {
+      if (config.isSet(s + ".confessionals")) {
+        for (String loc : config.getStringList(s + ".confessionals")) {
           specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
         }
       }

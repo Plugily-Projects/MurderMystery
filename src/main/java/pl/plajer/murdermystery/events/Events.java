@@ -19,7 +19,6 @@
 package pl.plajer.murdermystery.events;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
@@ -108,23 +107,23 @@ public class Events implements Listener {
     final Player attacker = e.getPlayer();
     final User attackerUser = plugin.getUserManager().getUser(attacker);
     //todo not hardcoded!
-    if (attacker.getInventory().getItemInMainHand().getType() != Material.IRON_SWORD) {
+    if (attacker.getInventory().getItemInMainHand().getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
       return;
     }
     if (attackerUser.getCooldown("sword_shoot") > 0) {
       return;
     }
-    attackerUser.setCooldown("sword_shoot", 5);
-    attacker.setCooldown(Material.IRON_SWORD, 20);
+    attackerUser.setCooldown("sword_shoot", plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5));
+    attacker.setCooldown(plugin.getConfigPreferences().getMurdererSword().getType(), 20 * (plugin.getConfig().getInt("Murderer-Sword-Attack-Cooldown", 1)));
     final ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(attacker.getLocation(), EntityType.ARMOR_STAND);
     stand.setVisible(false);
     stand.setInvulnerable(true);
-    stand.setItemInHand(new ItemStack(Material.IRON_SWORD, 1));
+    stand.setItemInHand(plugin.getConfigPreferences().getMurdererSword());
     stand.setRightArmPose(new EulerAngle(Math.toRadians(350.0), Math.toRadians(attacker.getLocation().getPitch() * -1.0), Math.toRadians(90.0)));
     stand.setCollidable(false);
     stand.setSilent(true);
     swordFlyTask(arena, attacker, attackerUser, stand);
-    Utils.applyActionBarCooldown(attacker, 5);
+    Utils.applyActionBarCooldown(attacker, plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5));
   }
 
   private void swordFlyTask(Arena arena, Player attacker, User attackerUser, ArmorStand stand) {
@@ -163,6 +162,10 @@ public class Events implements Listener {
   }
 
   private void killBySword(Arena arena, User attackerUser, Player victim) {
+    //check if victim is murderer
+    if (Role.isRole(Role.MURDERER, victim)) {
+      return;
+    }
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
     victim.damage(100.0);
     victim.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died"),
@@ -170,7 +173,7 @@ public class Events implements Listener {
     attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
     attackerUser.addStat(StatsStorage.StatisticType.KILLS, 1);
     ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
-    if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
+    if (Role.isRole(Role.ANY_DETECTIVE, victim) && arena.lastAliveDetective()) {
       if (Role.isRole(Role.FAKE_DETECTIVE, victim)) {
         arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
       }

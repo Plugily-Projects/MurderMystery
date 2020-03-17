@@ -128,6 +128,7 @@ In-Game:
   Only-Command-Ingame-Is-Leave: "&cYou have to leave the game first to perform commands. The only command that works is /mm leave!"
   # Join cancelled via external plugin that uses MM api.
   Join-Cancelled-Via-API: "&cYou can't join this game!"
+  Join-As-Party-Member: "&cYou joined %ARENANAME% because the party leader joined it!"
   Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
   Game-Chat-Format: "&7%player%: &f%message%"
   Cooldown-Format: "&8&l[%progress%&8&l] &6%time% seconds"
@@ -152,6 +153,7 @@ In-Game:
       Kicked-For-Premium-Slot: "&c%PLAYER% got removed from the game to make a place for premium players!"
       You-Were-Kicked-For-Premium-Slot: "&cYou got kicked out of the game to make a place for a premium player!"
       Role-Chances-Action-Bar: "&cMurderer Chance: %murderer_chance% &a- &bDetective Chance: %detective_chance%"
+      Not-Enough-Space-For-Party: "&cYour party is bigger than free places on the arena %ARENANAME%"
     Join: "&b%PLAYER%&7 joined the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
     Leave: "&b%PLAYER% &7left the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
     Death: "&b%PLAYER% &7died!"
@@ -284,4 +286,4 @@ Validator:
 
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p
-File-Version-Do-Not-Edit: 1
+File-Version-Do-Not-Edit: 2

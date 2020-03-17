@@ -48,6 +48,7 @@ public class ForceStartArgument {
         }
         Arena arena = ArenaRegistry.getArena((Player) sender);
         if (arena.getPlayers().size() < 2) {
+          ChatManager.broadcast(arena, ChatManager.formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), arena.getMinimumPlayers()));
           return;
         }
         if (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {

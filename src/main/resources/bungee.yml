@@ -5,8 +5,23 @@
 Hub: lobby
 
 # Should game server be closed after game?
-Shutdown-When-Game-Ends: false
+Shutdown-When-Game-Ends: true
+
+# Should the player connect to hub (e.g. Leave-Item)
+Connect-To-Hub: true
+
+# Should the End Location be the hub? (Players will be connected to hub at the End)
+End-Location-Hub: true
 
 # This is useful for bungee game systems.
-# Game state will be visible at MOTD.
-MOTD-manager: true
+# %state% - Game state will be visible at MOTD.
+MOTD:
+  Manager: false
+  Message: "The actual game state of mm is %state%"
+  Game-States:
+    Inactive: "&lInactive..."
+    In-Game: "&lIn-game"
+    Starting: "&e&lStarting"
+    Full-Game: "&4&lFULL"
+    Ending: "&lEnding"
+    Restarting: "&c&lRestarting"

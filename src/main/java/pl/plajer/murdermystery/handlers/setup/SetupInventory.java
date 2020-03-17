@@ -92,7 +92,7 @@ public class SetupInventory {
   }
 
   private void sendProTip(Player p) {
-    int rand = random.nextInt(8 + 1);
+    int rand = random.nextInt(16 + 1);
     switch (rand) {
       case 0:
         p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plajer.xyz"));

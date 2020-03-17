@@ -22,24 +22,29 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import pl.plajer.murdermystery.utils.Debugger;
 
 /**
  * Reporter service for reporting exceptions directly to website reporter panel
  */
 public class ReporterService {
 
-  private String plugin;
+  private JavaPlugin plugin;
+  private String pluginName;
   private String pluginVersion;
   private String serverVersion;
   private String error;
 
   //don't create it outside core
-  ReporterService(String plugin, String pluginVersion, String serverVersion, String error) {
+  ReporterService(JavaPlugin plugin, String pluginName, String pluginVersion, String serverVersion, String error) {
     this.plugin = plugin;
+    this.pluginName = pluginName;
     this.pluginVersion = pluginVersion;
     this.serverVersion = serverVersion;
     this.error = error;
@@ -56,12 +61,14 @@ public class ReporterService {
       conn.setDoOutput(true);
 
       OutputStream os = conn.getOutputStream();
-      os.write(("pass=servicereporter&type=" + plugin + "&pluginversion=" + pluginVersion + "&serverversion=" + serverVersion + "&error=" + error).getBytes(StandardCharsets.UTF_8));
+      os.write(("pass=servicereporter&type=" + pluginName + "&pluginversion=" + pluginVersion + "&serverversion=" + serverVersion + "&error=" + error).getBytes(StandardCharsets.UTF_8));
       os.flush();
       os.close();
 
-      Bukkit.getConsoleSender().sendMessage("[Reporter service] Error reported! Code: " + conn.getResponseCode() + " (" + conn.getResponseMessage() + ")");
-    } catch (IOException ignored) {/*cannot connect or there is a problem*/}
+      plugin.getLogger().log(Level.WARNING, "[Reporter service] Error reported!");
+      Debugger.debug(Level.INFO, "[Reporter service] Code: {0} ({1})", conn.getResponseCode(), conn.getResponseMessage());
+    } catch (IOException ignored) {/*cannot connect or there is a problem*/
+    }
   }
 
 }

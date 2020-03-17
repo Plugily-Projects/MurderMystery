@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,6 +60,8 @@ import pl.plajer.murdermystery.handlers.PermissionsManager;
 import pl.plajer.murdermystery.handlers.PlaceholderManager;
 import pl.plajer.murdermystery.handlers.items.SpecialItem;
 import pl.plajer.murdermystery.handlers.language.LanguageManager;
+import pl.plajer.murdermystery.handlers.party.PartyHandler;
+import pl.plajer.murdermystery.handlers.party.PartySupportInitializer;
 import pl.plajer.murdermystery.handlers.rewards.RewardsFactory;
 import pl.plajer.murdermystery.handlers.sign.ArenaSign;
 import pl.plajer.murdermystery.handlers.sign.SignManager;
@@ -91,6 +93,7 @@ public class Main extends JavaPlugin {
   private MysqlDatabase database;
   private SignManager signManager;
   private CorpseHandler corpseHandler;
+  private PartyHandler partyHandler;
   private ConfigPreferences configPreferences;
   private HookManager hookManager;
   private UserManager userManager;
@@ -102,10 +105,14 @@ public class Main extends JavaPlugin {
     }
 
     ServiceRegistry.registerService(this);
-    exceptionLogHandler = new ExceptionLogHandler();
+    exceptionLogHandler = new ExceptionLogHandler(this);
     LanguageManager.init(this);
     saveDefaultConfig();
-    Debugger.setEnabled(getConfig().getBoolean("Debug", false));
+    if (getDescription().getVersion().contains("b")){
+      Debugger.setEnabled(true);
+    } else {
+      Debugger.setEnabled(getConfig().getBoolean("Debug", false));
+    }
     Debugger.debug(Level.INFO, "[System] Initialization start");
     if (getConfig().getBoolean("Developer-Mode", false)) {
       Debugger.deepDebug(true);
@@ -137,7 +144,7 @@ public class Main extends JavaPlugin {
   private boolean validateIfPluginShouldStart() {
     version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
     if (!(version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
-      || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1"))) {
+      || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") || version.equalsIgnoreCase("v1_15_R1"))) {
       MessageUtils.thisVersionIsNotSupported();
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by Murder Mystery!");
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider changing your server version?");
@@ -190,6 +197,7 @@ public class Main extends JavaPlugin {
           for (PotionEffect pe : player.getActivePotionEffects()) {
             player.removePotionEffect(pe.getType());
           }
+          player.setWalkSpeed(0.2f);
         }
       }
       arena.teleportAllToEndLocation();
@@ -228,6 +236,7 @@ public class Main extends JavaPlugin {
     rewardsHandler = new RewardsFactory(this);
     signManager = new SignManager(this);
     corpseHandler = new CorpseHandler(this);
+    partyHandler = new PartySupportInitializer().initialize();
     new BowTrailsHandler(this);
     MysteryPotionRegistry.init(this);
     PrayerRegistry.init(this);
@@ -307,6 +316,9 @@ public class Main extends JavaPlugin {
   public boolean is1_14_R1() {
     return version.equalsIgnoreCase("v1_14_R1");
   }
+  public boolean is1_15_R1() {
+    return version.equalsIgnoreCase("v1_15_R1");
+  }
 
   public RewardsFactory getRewardsHandler() {
     return rewardsHandler;
@@ -314,6 +326,10 @@ public class Main extends JavaPlugin {
 
   public BungeeManager getBungeeManager() {
     return bungeeManager;
+  }
+
+  public PartyHandler getPartyHandler() {
+    return partyHandler;
   }
 
   public ConfigPreferences getConfigPreferences() {

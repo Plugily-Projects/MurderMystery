@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,31 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.murdermystery.user.data;
+package pl.plajer.murdermystery.handlers.party;
 
-import pl.plajer.murdermystery.api.StatsStorage;
-import pl.plajer.murdermystery.user.User;
+import org.bukkit.entity.Player;
 
 /**
  * @author Plajer
  * <p>
- * Created at 23.01.2019
+ * Created at 09.02.2020
  */
-public interface UserDatabase {
+public interface PartyHandler {
 
-  /**
-   * Saves player statistic into yaml or MySQL storage based on user choice
-   *
-   * @param user user to retrieve statistic from
-   * @param stat stat to save to storage
-   */
-  void saveStatistic(User user, StatsStorage.StatisticType stat);
+  boolean isPlayerInParty(Player player);
 
-  /**
-   * Loads player statistic from yaml or MySQL storage based on user choice
-   *
-   * @param user user to load statistic for
-   */
-  void loadStatistics(User user);
+  GameParty getParty(Player player);
+
+  boolean partiesSupported();
+
+  PartyPluginType getPartyPluginType();
+
+  enum PartyPluginType {
+    PARTIES, PAFSpigot, PAFBungee, NONE
+  }
 
 }

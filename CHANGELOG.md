@@ -1,4 +1,54 @@
-### 1.3.1 Release (11.10.2019 - 18.11.2019) (by Tigerpanzer)
+### 1.5.0 Release (20.12.2019 - 17.03.2020) (by Tigerpanzer)
+* Fixed spectator gui opened on physical actions
+* Added option to control the time between gold spawns
+* Added better option to allow only 1 murderer/detectives
+* Fixed division by null error
+* Fixed murderer can kill other murderer
+* Fixed bungeecord shutdown when game ends (Thanks to barpec12)
+* Added option to hide chances
+* Changed the setup radius of enchanting table and cauldron to 15
+* PlaceholderAPI placeholders are no longer case sensitive
+* Added arena state placeholders for PlaceholderAPI:
+   * %murdermystery_{arena id}:{data}% where data types are:
+      * players - amount of players in arena
+      * max_players - max players in arena
+      * state - current state raw enum name eg. STARTING
+      * state_pretty - prettified name of enum eg. Waiting (instead WAITING_FOR_PLAYERS)
+      * mapname - name of arena map
+* Fixed mysql database - Create a new one and your stats should be saved correctly (Thanks to add5tar)
+* Fixed loading arena values (Some values had a wrong file location)
+* Added party dependency, you can join with more players to one arena
+* Fixed murder gets sword as spectator
+* Changed murder speed boost from potion to walkspeed to hide particles
+* Added Connect-To-Hub boolean to bungee.yml
+* Added End-Location-Hub boolean to bungee.yml
+
+### 1.4.1 Release (05.12.2019 - 13.12.2019) (by Tigerpanzer)
+* Added a new MOTD Manager in the bungee.yml (Now you can define the states on yourself) 
+* Now the values in bungee.yml will work
+* Arena will not be stopped anymore on starting phase
+  when there are null players (only resetting it to waiting for players)
+* You can now activate short commands (/start and /leave)
+* Fixed incompatibility with chatcontrol
+* Minecraft 1.15 compatible
+* Fixed the murderer draw when murderer leaves ingame
+* Fixed SummaryMessage (murderer will now be strike out)
+
+### 1.4.0 Release (26.10.2019 - 16.11.2019) (by Tigerpanzer)
+* Fixed incompatibility with essentials respawn
+* You can now choose your own cooldown for sword attack/fly and bow shoot
+* Clearer way of error reporting
+* Added option to change murderer sword item
+* Added options to specify arrows amount
+* Added a way to configure how many murderers & detectives are selected for a game (definable per arena)
+* Changed the way of drop bow (The bow will be dropped if the last detective die)
+* Fixed scoreboard innocents count
+* Added compass distance to bow and player locator
+* Fixed the +- message for minus points in score messages
+* Fixed the exp and level save on InventoryManager
+* Fixed instant respawn bug on last murderer
+
+### 1.3.1 Release (11/18.10.2019) (by Tigerpanzer)
 * Fixed that you can sleep in beds
 * Fixed player spawning after a death in blocks
 * Fixed arena stop when it will be called due to reload, stop, delete

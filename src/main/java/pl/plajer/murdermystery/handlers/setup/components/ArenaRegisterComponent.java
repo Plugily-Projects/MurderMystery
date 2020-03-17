@@ -148,6 +148,7 @@ public class ArenaRegisterComponent implements SetupComponent {
       arena.setMapName(config.getString("instances." + arena.getId() + ".mapname"));
       arena.setLobbyLocation(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".lobbylocation")));
       arena.setEndLocation(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".Endlocation")));
+      config.set("instances." + arena.getId() + ".hidechances", false);
       ArenaRegistry.registerArena(arena);
       arena.start();
       for (Sign s : signsToUpdate) {

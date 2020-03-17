@@ -81,6 +81,7 @@ public class ReloadArgument {
               for (PotionEffect pe : player.getActivePotionEffects()) {
                 player.removePotionEffect(pe.getType());
               }
+              player.setWalkSpeed(0.2f);
             }
           }
           ArenaManager.stopGame(true, arena);

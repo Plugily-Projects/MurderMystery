@@ -35,10 +35,13 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
@@ -122,9 +125,9 @@ public class ArenaEvents implements Listener {
     }
     User user = plugin.getUserManager().getUser((Player) e.getEntity());
     if (user.getCooldown("bow_shot") == 0) {
-      user.setCooldown("bow_shot", 5);
+      user.setCooldown("bow_shot", plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
       Player player = (Player) e.getEntity();
-      Utils.applyActionBarCooldown(player, 5);
+      Utils.applyActionBarCooldown(player, plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
       e.getBow().setDurability((short) 0);
     } else {
       e.setCancelled(true);
@@ -170,6 +173,7 @@ public class ArenaEvents implements Listener {
     e.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Picked-Up-Gold"));
 
     if (Role.isRole(Role.ANY_DETECTIVE, e.getPlayer())) {
+      ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Gold-Pick-Up-Arrows", 3)));
       return;
     }
 
@@ -178,7 +182,7 @@ public class ArenaEvents implements Listener {
       e.getPlayer().sendTitle(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold"),
         ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle"), 5, 40, 5);
       ItemPosition.setItem(e.getPlayer(), ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-      ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, 1));
+      ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
       e.getPlayer().getInventory().setItem(/* same for all roles */ ItemPosition.GOLD_INGOTS.getOtherRolesItemPosition(), new ItemStack(Material.GOLD_INGOT, 0));
     }
   }
@@ -201,14 +205,19 @@ public class ArenaEvents implements Listener {
       return;
     }
 
+    //check if victim is murderer
+    if (Role.isRole(Role.MURDERER, victim)) {
+      return;
+    }
+
     //todo support for skins later
     //just don't kill user if item isn't murderer sword
-    if (attacker.getInventory().getItemInMainHand().getType() != Material.IRON_SWORD) {
+    if (attacker.getInventory().getItemInMainHand().getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
       return;
     }
 
     //check if sword has cooldown
-    if (attacker.hasCooldown(Material.IRON_SWORD)) {
+    if (attacker.hasCooldown(plugin.getConfigPreferences().getMurdererSword().getType())) {
       return;
     }
 
@@ -228,7 +237,7 @@ public class ArenaEvents implements Listener {
     ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
 
     Arena arena = ArenaRegistry.getArena(attacker);
-    if (Role.isRole(Role.ANY_DETECTIVE, victim)) {
+    if (Role.isRole(Role.ANY_DETECTIVE, victim) && arena.lastAliveDetective()) {
       //if already true, no effect is done :)
       arena.setDetectiveDead(true);
       if (Role.isRole(Role.FAKE_DETECTIVE, victim)) {
@@ -290,8 +299,7 @@ public class ArenaEvents implements Listener {
         attacker.damage(100.0);
         ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.INNOCENT_KILL, 0);
         plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.DETECTIVE_KILL);
-
-        if (Role.isRole(Role.ANY_DETECTIVE, attacker)) {
+        if (Role.isRole(Role.ANY_DETECTIVE, attacker) && arena.lastAliveDetective()) {
           arena.setDetectiveDead(true);
           if (Role.isRole(Role.FAKE_DETECTIVE, attacker)) {
             arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
@@ -324,10 +332,10 @@ public class ArenaEvents implements Listener {
       user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
       return;
     }
-    if (Role.isRole(Role.MURDERER, player)) {
+    if (Role.isRole(Role.MURDERER, player) && arena.lastAliveMurderer()) {
       ArenaUtils.onMurdererDeath(arena);
     }
-    if (Role.isRole(Role.ANY_DETECTIVE, player)) {
+    if (Role.isRole(Role.ANY_DETECTIVE, player) && arena.lastAliveDetective()) {
       arena.setDetectiveDead(true);
       if (Role.isRole(Role.FAKE_DETECTIVE, player)) {
         arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
@@ -344,17 +352,16 @@ public class ArenaEvents implements Listener {
     player.setFlying(true);
     player.getInventory().clear();
     ChatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
-
     //we must call it ticks later due to instant respawn bug
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       e.getEntity().spigot().respawn();
       player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
       player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
       player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
-    }, 10);
+    }, 5);
   }
 
-  @EventHandler
+  @EventHandler(priority = EventPriority.HIGH)
   public void onRespawn(PlayerRespawnEvent e) {
     Player player = e.getPlayer();
     Arena arena = ArenaRegistry.getArena(player);
@@ -389,6 +396,54 @@ public class ArenaEvents implements Listener {
     if (e.getWhoClicked() instanceof Player) {
       if (ArenaRegistry.getArena((Player) e.getWhoClicked()) != null) {
         e.setResult(Event.Result.DENY);
+      }
+    }
+  }
+
+  @EventHandler
+  public void playerCommandExecution(PlayerCommandPreprocessEvent e) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.ENABLE_SHORT_COMMANDS)) {
+      Player player = e.getPlayer();
+      if (e.getMessage().equalsIgnoreCase("/start")) {
+        player.performCommand("mma forcestart");
+        e.setCancelled(true);
+        return;
+      }
+      if (e.getMessage().equalsIgnoreCase("/leave")) {
+        player.performCommand("mm leave");
+        e.setCancelled(true);
+      }
+    }
+  }
+
+  @EventHandler
+  public void locatorDistanceUpdate(PlayerMoveEvent e) {
+    Player player = e.getPlayer();
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null) {
+      return;
+    }
+    if (arena.getArenaState() == ArenaState.IN_GAME) {
+      if (Role.isRole(Role.INNOCENT, player)) {
+        if (player.getInventory().getItem(ItemPosition.BOW_LOCATOR.getOtherRolesItemPosition()) != null) {
+          ItemStack bowLocator = new ItemStack(Material.COMPASS, 1);
+          ItemMeta bowMeta = bowLocator.getItemMeta();
+          bowMeta.setDisplayName(ChatManager.colorMessage("In-Game.Bow-Locator-Item-Name") + " §7| §a" + (int) Math.round(player.getLocation().distance(player.getCompassTarget())));
+          bowLocator.setItemMeta(bowMeta);
+          ItemPosition.setItem(player, ItemPosition.BOW_LOCATOR, bowLocator);
+          return;
+        }
+      }
+      if (arena.isMurdererLocatorReceived() && Role.isRole(Role.MURDERER, player) && arena.isMurderAlive(player)) {
+        ItemStack innocentLocator = new ItemStack(Material.COMPASS, 1);
+        ItemMeta innocentMeta = innocentLocator.getItemMeta();
+        for (Player p : arena.getPlayersLeft()) {
+          if (Role.isRole(Role.INNOCENT, p) || Role.isRole(Role.ANY_DETECTIVE, p)) {
+            innocentMeta.setDisplayName(ChatManager.colorMessage("In-Game.Innocent-Locator-Item-Name") + " §7| §a" + (int) Math.round(player.getLocation().distance(p.getLocation())));
+            innocentLocator.setItemMeta(innocentMeta);
+            ItemPosition.setItem(player, ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
+          }
+        }
       }
     }
   }

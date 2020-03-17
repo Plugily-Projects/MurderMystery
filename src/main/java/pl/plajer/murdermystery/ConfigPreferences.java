@@ -21,6 +21,12 @@ package pl.plajer.murdermystery;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
+
+import pl.plajer.murdermystery.utils.MessageUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+
 /**
  * @author Plajer
  * <p>
@@ -29,11 +35,24 @@ import java.util.Map;
 public class ConfigPreferences {
 
   private Main plugin;
+  private ItemStack murdererSword;
   private Map<Option, Boolean> options = new HashMap<>();
 
   public ConfigPreferences(Main plugin) {
     this.plugin = plugin;
     loadOptions();
+    loadMurdererSword();
+  }
+
+  private void loadMurdererSword() {
+    try {
+      murdererSword = XMaterial.fromString(plugin.getConfig().getString("Murderer-Sword-Material", "IRON_SWORD").toUpperCase()).parseItem();
+    } catch (Exception ex) {
+      MessageUtils.errorOccurred();
+      Bukkit.getConsoleSender().sendMessage("Can not found Material " + plugin.getConfig().getString("Murderer-Sword-Material", "IRON_SWORD"));
+      //Set the murdererSword to avoid errors
+      murdererSword = XMaterial.IRON_SWORD.parseItem();
+    }
   }
 
   /**
@@ -54,7 +73,8 @@ public class ConfigPreferences {
 
   public enum Option {
     BOSSBAR_ENABLED("Bossbar-Enabled", true), BUNGEE_ENABLED("BungeeActivated", false), CHAT_FORMAT_ENABLED("ChatFormat-Enabled", true),
-    DATABASE_ENABLED("DatabaseActivated", false), INVENTORY_MANAGER_ENABLED("InventoryManager", true), NAMETAGS_HIDDEN("Nametags-Hidden", true), DISABLE_FALL_DAMAGE("Disable-Fall-Damage", false);
+    DATABASE_ENABLED("DatabaseActivated", false), INVENTORY_MANAGER_ENABLED("InventoryManager", true), NAMETAGS_HIDDEN("Nametags-Hidden", true),
+    DISABLE_FALL_DAMAGE("Disable-Fall-Damage", false), ENABLE_SHORT_COMMANDS("Enable-Short-Commands", false);
 
     private String path;
     private boolean def;
@@ -76,4 +96,7 @@ public class ConfigPreferences {
     }
   }
 
+  public ItemStack getMurdererSword() {
+    return murdererSword;
+  }
 }

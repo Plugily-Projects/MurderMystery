@@ -57,10 +57,32 @@ ChatFormat-Enabled: true
 # WARNING: If disabled, two corpses will be spawned when player in-game dies
 Override-Corpses-Spawn: true
 
+# Which item should be your Murderer sword?
+Murderer-Sword-Material: IRON_SWORD
+
 # How many blocks per tick sword thrown by murderer should fly
 # Please avoid high values as it might look like the sword is
 # blinking each tick
 Murderer-Sword-Speed: 0.65
+
+#How long should be the sword attack after throw cooldown in seconds?
+#Its normal lower than Murderer-Sword-Fly-Cooldown!
+Murderer-Sword-Attack-Cooldown: 1
+
+#How long should be the sword fly cooldown in seconds?
+Murderer-Sword-Fly-Cooldown: 5
+
+#How much arrows should a player with bow gets when he pick up a gold ingot?
+Detective-Gold-Pick-Up-Arrows: 1
+
+#How much arrows should the detective gets on game start or when a player get a bow?
+Detective-Default-Arrows: 3
+
+#How much arrows should the player get when the prayer gives a bow to him?
+Detective-Prayer-Arrows: 2
+
+#How long should be the bow shoot cooldown in seconds?
+Detective-Bow-Cooldown: 5
 
 # Basic permissions for game, permissions explained here: https://wiki.plajer.xyz/minecraft/murdermystery/cmds_and_perms.php#basic-permissions
 Basic-Permissions:
@@ -68,6 +90,9 @@ Basic-Permissions:
   # <arena> represents arena name (NOT MAP NAME!), for example: 'murdermystery.join.MM02'
   # use 'murdermystery.join.*' to enable access to all arenas
   Join-Permission: "murdermystery.join.<arena>"
+
+# Should we enable short commands such as /start and /leave
+Enable-Short-Commands: false
 
 # Should /mm leave command be blocked?
 Disable-Leave-Command: false
@@ -110,6 +135,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 5
+Version: 10
 
 # No way! You've reached the end! But... where's the dragon!?
