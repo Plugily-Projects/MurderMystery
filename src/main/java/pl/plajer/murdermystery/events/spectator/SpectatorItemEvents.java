@@ -131,7 +131,7 @@ public class SpectatorItemEvents implements Listener {
       || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
       return;
     }
-    if (!e.getView().getTitle().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"))) {
+    if (!e.getView().getTitle().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name", p))) {
       return;
     }
     e.setCancelled(true);
@@ -143,7 +143,7 @@ public class SpectatorItemEvents implements Listener {
         p.closeInventory();
         return;
       }
-      p.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
+      p.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found", player));
     }
   }
 

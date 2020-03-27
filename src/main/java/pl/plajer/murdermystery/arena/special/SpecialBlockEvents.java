@@ -99,11 +99,11 @@ public class SpecialBlockEvents implements Listener {
     }
     User user = plugin.getUserManager().getUser(e.getPlayer());
     if (e.getPlayer().getInventory().getItem(/* same for all roles */ ItemPosition.POTION.getOtherRolesItemPosition()) != null) {
-      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Drink-Potion"));
+      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Drink-Potion", e.getPlayer()));
       return;
     }
     if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < 1) {
-      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold").replace("%amount%", String.valueOf(1)));
+      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold", e.getPlayer()).replace("%amount%", String.valueOf(1)));
       return;
     }
     e.getClickedBlock().getWorld().spawnParticle(Particle.FIREWORKS_SPARK, e.getClickedBlock().getLocation(), 10, 0.5, 0.5, 0.5);
@@ -122,10 +122,10 @@ public class SpecialBlockEvents implements Listener {
     e.setCancelled(true);
     User user = plugin.getUserManager().getUser(e.getPlayer());
     if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < 1) {
-      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold").replace("%amount%", String.valueOf(1)));
+      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold", e.getPlayer()).replace("%amount%", String.valueOf(1)));
       return;
     }
-    e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Prayed-Message"));
+    e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Prayed-Message", e.getPlayer()));
     user.setStat(StatsStorage.StatisticType.LOCAL_PRAISES, user.getStat(StatsStorage.StatisticType.LOCAL_PRAISES) + 1);
     e.getClickedBlock().getWorld().spawnParticle(Particle.FIREWORKS_SPARK, e.getClickedBlock().getLocation(), 10, 0.5, 0.5, 0.5, 1);
     user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) - 1);
@@ -135,7 +135,7 @@ public class SpecialBlockEvents implements Listener {
   private void onPrayLeverClick(PlayerInteractEvent e) {
     User user = plugin.getUserManager().getUser(e.getPlayer());
     if (user.getStat(StatsStorage.StatisticType.LOCAL_PRAISES) < 1) {
-      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.No-Money-No-Pray"));
+      e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.No-Money-No-Pray", e.getPlayer()));
       return;
     }
     PrayerRegistry.applyRandomPrayer(user);

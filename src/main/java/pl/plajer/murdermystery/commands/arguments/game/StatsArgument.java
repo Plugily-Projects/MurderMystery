@@ -46,17 +46,17 @@ public class StatsArgument {
         }
         User user = registry.getPlugin().getUserManager().getUser(player);
         if (player.equals(sender)) {
-          sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header"));
+          sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header", player));
         } else {
-          sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header-Other").replace("%player%", player.getName()));
+          sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Header-Other", player).replace("%player%", player.getName()));
         }
-        sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Kills") + user.getStat(StatsStorage.StatisticType.KILLS));
-        sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Deaths") + user.getStat(StatsStorage.StatisticType.DEATHS));
-        sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins") + user.getStat(StatsStorage.StatisticType.WINS));
-        sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses") + user.getStat(StatsStorage.StatisticType.LOSES));
-        sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played") + user.getStat(StatsStorage.StatisticType.GAMES_PLAYED));
-        sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Score") + user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE));
-        sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer"));
+        sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Kills", player) + user.getStat(StatsStorage.StatisticType.KILLS));
+        sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Deaths", player) + user.getStat(StatsStorage.StatisticType.DEATHS));
+        sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Wins", player) + user.getStat(StatsStorage.StatisticType.WINS));
+        sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Loses", player) + user.getStat(StatsStorage.StatisticType.LOSES));
+        sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Games-Played", player) + user.getStat(StatsStorage.StatisticType.GAMES_PLAYED));
+        sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Highest-Score", player) + user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE));
+        sender.sendMessage(ChatManager.colorMessage("Commands.Stats-Command.Footer", player));
       }
     });
   }

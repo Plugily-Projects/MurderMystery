@@ -38,7 +38,11 @@ public class PartiesPartyHandlerImpl implements PartyHandler {
   @Override
   public boolean isPlayerInParty(Player player) {
     PartiesAPI api = Parties.getApi();
-    return api.getPartyPlayer(player.getUniqueId()) != null;
+    PartyPlayer partyPlayer = api.getPartyPlayer(player.getUniqueId());
+    if (partyPlayer == null) return false;
+    Party party = api.getParty(partyPlayer.getPartyName());
+    if (party == null) return false;
+    return party.getMembers().size() > 1;
   }
 
   @Override

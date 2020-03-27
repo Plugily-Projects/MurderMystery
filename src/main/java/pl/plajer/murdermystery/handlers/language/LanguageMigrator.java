@@ -155,8 +155,8 @@ public class LanguageMigrator {
     for (int i = version; i < LANGUAGE_FILE_VERSION; i++) {
       switch (version) {
         case 1:
-          MigratorUtils.insertAfterLine(file, "Lobby-Messages:", "Not-Enough-Space-For-Party: \"&cYour party is bigger than free places on the arena %ARENANAME%\"");
-          MigratorUtils.insertAfterLine(file, "In-Game:", "Join-As-Party-Member: \"&cYou joined %ARENANAME% because the party leader joined it!\"");
+          MigratorUtils.insertAfterLine(file, "Lobby-Messages:", "      Not-Enough-Space-For-Party: \"&cYour party is bigger than free places on the arena %ARENANAME%\"");
+          MigratorUtils.insertAfterLine(file, "In-Game:", "  Join-As-Party-Member: \"&cYou joined %ARENANAME% because the party leader joined it!\"");
           break;
         default:
           break;

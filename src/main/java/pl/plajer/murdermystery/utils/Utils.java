@@ -97,7 +97,7 @@ public class Utils {
           this.cancel();
         }
         String progress = StringFormatUtils.getProgressBar(ticks, 5 * 20, 10, "■", ChatColor.COLOR_CHAR + "a", ChatColor.COLOR_CHAR + "c");
-        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatManager.colorMessage("In-Game.Cooldown-Format")
+        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatManager.colorMessage("In-Game.Cooldown-Format", p)
           .replace("%progress%", progress).replace("%time%", String.valueOf((double) (100 - ticks) / 20))));
         ticks += 10;
       }
@@ -122,7 +122,7 @@ public class Utils {
 
   public static boolean checkIsInGameInstance(Player player) {
     if (ArenaRegistry.getArena(player) == null) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Not-Playing"));
+      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Not-Playing", player));
       return false;
     }
     return true;

@@ -170,7 +170,7 @@ public class ArgumentsRegistry implements CommandExecutor {
   }
 
   private void sendHelpCommand(CommandSender sender) {
-    sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Header"));
+    sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Heads"));
     sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Description"));
     if (sender.hasPermission("murdermystery.admin")) {
       sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Admin-Bonus-Description"));
