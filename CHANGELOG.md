@@ -1,3 +1,6 @@
+### 1.5.2 Release 
+* Fixed Commands.Main-Command.Heads not found 
+
 ### 1.5.1 Release (20.03.2020) 
 * Fixed broken language
 * Added PlaceholderAPI for some per player messages
