@@ -184,18 +184,19 @@ public class ArenaManager {
       for (PotionEffect potionEffect : player.getActivePotionEffects()) {
         player.removePotionEffect(potionEffect.getType());
       }
+      player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
+      ArenaUtils.hidePlayer(player, arena);
 
+      user.setSpectator(true);
       player.setGameMode(GameMode.SURVIVAL);
       player.setAllowFlight(true);
       player.setFlying(true);
-      user.setSpectator(true);
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         if (!stat.isPersistent()) {
           user.setStat(stat, 0);
         }
       }
-      player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
-      ArenaUtils.hidePlayer(player, arena);
+
 
       for (Player spectator : arena.getPlayers()) {
         if (plugin.getUserManager().getUser(spectator).isSpectator()) {
