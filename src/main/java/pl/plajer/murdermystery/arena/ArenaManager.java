@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -183,18 +184,19 @@ public class ArenaManager {
       for (PotionEffect potionEffect : player.getActivePotionEffects()) {
         player.removePotionEffect(potionEffect.getType());
       }
+      player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
+      ArenaUtils.hidePlayer(player, arena);
 
+      user.setSpectator(true);
       player.setGameMode(GameMode.SURVIVAL);
       player.setAllowFlight(true);
       player.setFlying(true);
-      user.setSpectator(true);
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         if (!stat.isPersistent()) {
           user.setStat(stat, 0);
         }
       }
-      player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
-      ArenaUtils.hidePlayer(player, arena);
+
 
       for (Player spectator : arena.getPlayers()) {
         if (plugin.getUserManager().getUser(spectator).isSpectator()) {
@@ -276,15 +278,15 @@ public class ArenaManager {
           Player newMurderer = players.get(new Random().nextInt(players.size()));
           arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
           arena.addToMurdererList(newMurderer);
-          String title = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title").replace("%role%",
-            ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
-          String subtitle = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle").replace("%role%",
-            ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
+          String title = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title", player).replace("%role%",
+            ChatManager.colorMessage("Scoreboard.Roles.Murderer", player));
+          String subtitle = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle", player).replace("%role%",
+            ChatManager.colorMessage("Scoreboard.Roles.Murderer", player));
           for (Player gamePlayer : arena.getPlayers()) {
             gamePlayer.sendTitle(title, subtitle, 5, 40, 5);
           }
-          newMurderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
-            ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
+          newMurderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title", player),
+            ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle", player), 5, 40, 5);
           ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
           user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
         } else if (Role.isRole(Role.ANY_DETECTIVE, player) && arena.lastAliveDetective()) {
@@ -401,7 +403,7 @@ public class ArenaManager {
       player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
       if (!quickStop) {
         for (String msg : summaryMessages) {
-          MiscUtils.sendCenteredMessage(player, formatSummaryPlaceholders(msg, arena));
+          MiscUtils.sendCenteredMessage(player, formatSummaryPlaceholders(msg, arena, player));
         }
       }
       user.removeScoreboard();
@@ -422,7 +424,7 @@ public class ArenaManager {
     Debugger.debug(Level.INFO, "[{0}] Stop game event finished took{1}ms ", arena.getId(), System.currentTimeMillis() - start);
   }
 
-  private static String formatSummaryPlaceholders(String msg, Arena arena) {
+  private static String formatSummaryPlaceholders(String msg, Arena arena, Player player) {
     String formatted = msg;
     StringBuilder murders = new StringBuilder();
     StringBuilder detectives = new StringBuilder();
@@ -456,6 +458,9 @@ public class ArenaManager {
       String.valueOf(murdererKills));
     formatted = StringUtils.replace(formatted, "%hero%", arena.isCharacterSet(Arena.CharacterType.HERO)
       ? arena.getCharacter(Arena.CharacterType.HERO).getName() : ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody"));
+    if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+      formatted = PlaceholderAPI.setPlaceholders(player, formatted);
+    }
     return formatted;
   }
 

@@ -221,7 +221,7 @@ public class Main extends JavaPlugin {
     ArenaSign.init(this);
     SpecialItem.loadAll();
     PermissionsManager.init();
-    new ChatManager(ChatManager.colorMessage("In-Game.Plugin-Prefix"));
+    new ChatManager(ChatManager.colorMessage("In-Game.Plugin-Prefix"), this);
     new ArenaEvents(this);
     new SpectatorEvents(this);
     new QuitEvent(this);

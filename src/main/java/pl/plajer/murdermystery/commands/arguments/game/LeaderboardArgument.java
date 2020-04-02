@@ -61,7 +61,7 @@ public class LeaderboardArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
-          sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Statistics.Type-Name"));
+          sender.sendMessage(ChatManager.PLUGIN_PREFIX +  ChatManager.colorMessage("Commands.Statistics.Type-Name"));
           return;
         }
         try {

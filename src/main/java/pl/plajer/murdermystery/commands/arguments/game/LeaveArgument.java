@@ -49,7 +49,7 @@ public class LeaveArgument {
           if (!Utils.checkIsInGameInstance((Player) sender)) {
             return;
           }
-          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
+          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby", player));
           if (registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             registry.getPlugin().getBungeeManager().connectToHub(player);
             Debugger.debug(Level.INFO, "{0} was teleported to the Hub server", player.getName());

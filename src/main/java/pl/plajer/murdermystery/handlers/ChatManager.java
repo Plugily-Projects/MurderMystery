@@ -18,6 +18,7 @@
 
 package pl.plajer.murdermystery.handlers;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -40,9 +41,11 @@ import pl.plajerlair.commonsbox.string.StringFormatUtils;
 public class ChatManager {
 
   public static String PLUGIN_PREFIX;
+  private static Main plugin;
 
-  public ChatManager(String prefix) {
+  public ChatManager(String prefix, Main plugin) {
     PLUGIN_PREFIX = prefix;
+    ChatManager.plugin = plugin;
   }
 
   public static String colorRawMessage(String message) {
@@ -51,6 +54,14 @@ public class ChatManager {
 
   public static String colorMessage(String message) {
       return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage(message));
+  }
+
+  public static String colorMessage(String message, Player player) {
+    String returnString = LanguageManager.getLanguageMessage(message);
+    if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+      returnString = PlaceholderAPI.setPlaceholders(player, returnString);
+    }
+    return ChatColor.translateAlternateColorCodes('&', returnString);
   }
 
   public static void broadcast(Arena arena, String message) {
@@ -70,6 +81,9 @@ public class ChatManager {
     String returnString = message;
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
     returnString = colorRawMessage(formatPlaceholders(returnString, arena));
+    if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+      returnString = PlaceholderAPI.setPlaceholders(player, returnString);
+    }
     return returnString;
   }
 

@@ -53,10 +53,10 @@ public class ArenaUtils {
 
   public static void onMurdererDeath(Arena arena) {
     for (Player player : arena.getPlayers()) {
-      player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"),
-        ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
+      player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win", player),
+        ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", player), 5, 40, 5);
       if (Role.isRole(Role.MURDERER, player)) {
-        player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"), null, 5, 40, 5);
+        player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", player), null, 5, 40, 5);
       }
       User loopUser = plugin.getUserManager().getUser(player);
       if (Role.isRole(Role.INNOCENT, player)) {
@@ -67,8 +67,8 @@ public class ArenaUtils {
       }
     }
     for (Player murderer : arena.getMurdererList()) {
-      murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
-        ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped"), 5, 40, 5);
+      murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", murderer),
+        ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", murderer), 5, 40, 5);
     }
     //we must call it ticks later due to instant respawn bug
     Bukkit.getScheduler().runTaskLater(plugin, () -> ArenaManager.stopGame(false, arena), 5);
@@ -123,7 +123,7 @@ public class ArenaUtils {
         if (Role.isRole(Role.MURDERER, p)) {
           continue;
         }
-        p.sendTitle(ChatManager.colorMessage("In-Game.Watch-Out-Title"), ChatManager.colorMessage("In-Game.Watch-Out-Subtitle"), 5, 40, 5);
+        p.sendTitle(ChatManager.colorMessage("In-Game.Watch-Out-Title", p), ChatManager.colorMessage("In-Game.Watch-Out-Subtitle", p), 5, 40, 5);
       }
     }
     for (Player p : arena.getPlayersLeft()) {
@@ -155,10 +155,10 @@ public class ArenaUtils {
   public static void dropBowAndAnnounce(Arena arena, Player victim) {
     if (arena.getPlayersLeft().size() > 1) {
       for (Player p : arena.getPlayers()) {
-        p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title"), null, 5, 40, 5);
+        p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title", p), null, 5, 40, 5);
       }
       for (Player p : arena.getPlayersLeft()) {
-        p.sendTitle(null, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle"), 5, 40, 5);
+        p.sendTitle(null, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle", p), 5, 40, 5);
       }
     }
 
@@ -182,7 +182,7 @@ public class ArenaUtils {
         arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, player);
         ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
         ItemPosition.setItem(player, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
-        ChatManager.broadcast(arena, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message"));
+        ChatManager.broadcast(arena, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message", player));
       }
     });
     arena.setBowHologram(hologram);

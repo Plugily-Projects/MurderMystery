@@ -1,3 +1,12 @@
+### 1.5.2 Release 
+* Fixed Commands.Main-Command.Heads not found 
+
+### 1.5.1 Release (20.03.2020) 
+* Fixed broken language
+* Added PlaceholderAPI for some per player messages
+* Fixed Parties Integration 
+* Attempt to fix player respawn
+
 ### 1.5.0 Release (20.12.2019 - 17.03.2020) (by Tigerpanzer)
 * Fixed spectator gui opened on physical actions
 * Added option to control the time between gold spawns

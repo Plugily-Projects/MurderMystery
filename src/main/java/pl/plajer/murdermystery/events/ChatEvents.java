@@ -82,9 +82,6 @@ public class ChatEvents implements Listener {
         }
       }
       message = formatChatPlaceholders(LanguageManager.getLanguageMessage("In-Game.Game-Chat-Format"), plugin.getUserManager().getUser(event.getPlayer()), eventMessage);
-      if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-        message = PlaceholderAPI.setPlaceholders(event.getPlayer(), message);
-      }
       for (Player player : arena.getPlayers()) {
         if (dead && arena.getPlayersLeft().contains(player)) {
           continue;
@@ -103,6 +100,9 @@ public class ChatEvents implements Listener {
     formatted = ChatManager.colorRawMessage(formatted);
     formatted = StringUtils.replace(formatted, "%player%", user.getPlayer().getName());
     formatted = StringUtils.replace(formatted, "%message%", saidMessage);
+    if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+      formatted = PlaceholderAPI.setPlaceholders(user.getPlayer(), formatted);
+    }
     return formatted;
   }
 
