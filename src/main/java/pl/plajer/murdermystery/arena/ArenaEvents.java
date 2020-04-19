@@ -265,6 +265,11 @@ public class ArenaEvents implements Listener {
       e.setCancelled(true);
       return;
     }
+    //dont kill murderer on bow damage if attacker is murderer
+    if (Role.isRole(Role.MURDERER, attacker) && Role.isRole(Role.MURDERER, victim)) {
+      e.setCancelled(true);
+      return;
+    }
     Arena arena = ArenaRegistry.getArena(attacker);
     //we need to set it before the victim die, because of hero character
     if (Role.isRole(Role.MURDERER, victim)) {
