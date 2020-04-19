@@ -272,7 +272,7 @@ public class Arena extends BukkitRunnable {
             maxdetectives = (getPlayers().size() / detectives);
           }
           if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
-            ChatManager.broadcast(this, "Murderers and detectives amount was reduced due to invalid settings, contact ServerAdministrator");
+            ChatManager.broadcast(this, "Murderers and detectives amount was reduced because there are not enough players");
             //Make sure to have one innocent!
             if (maxdetectives > 1) {
               maxdetectives--;
@@ -307,6 +307,8 @@ public class Arena extends BukkitRunnable {
             ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
             ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
           }
+          Debugger.debug(Level.INFO, "Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Players: Detectives = {4}, Murders = {5}",
+            getId(), maxdetectives, maxmurderer, getPlayers().size(), allDetectives, allMurderer);
 
           for (Player p : playersToSet) {
             p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"),
