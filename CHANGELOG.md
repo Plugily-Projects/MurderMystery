@@ -1,3 +1,7 @@
+### 1.5.3 Release
+* Added a config value to disable detective killing on innocent kill
+* Trying to fix an 1.15.x reporter service plugin crash
+
 ### 1.5.2 Release 
 * Fixed Commands.Main-Command.Heads not found 
 

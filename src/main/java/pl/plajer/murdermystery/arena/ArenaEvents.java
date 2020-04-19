@@ -285,7 +285,7 @@ public class ArenaEvents implements Listener {
 
     if (Role.isRole(Role.MURDERER, victim)) {
       ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.KILL_MURDERER, 0);
-    } else if (Role.isRole(Role.INNOCENT, victim)) {
+    } else if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.ENABLE_KILL_DETECTIVE_IF_INNOCENT_KILLED) && Role.isRole(Role.INNOCENT, victim)) {
       if (Role.isRole(Role.MURDERER, attacker)) {
         victim.sendTitle(null, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You", victim), 5, 40, 5);
       } else {

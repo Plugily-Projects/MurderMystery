@@ -84,6 +84,9 @@ Detective-Prayer-Arrows: 2
 #How long should be the bow shoot cooldown in seconds?
 Detective-Bow-Cooldown: 5
 
+#Should Detectives be killed if they kill a innocent?
+Enable-Kill-Detective-If-Innocent-Killed: true
+
 # Basic permissions for game, permissions explained here: https://wiki.plajer.xyz/minecraft/murdermystery/cmds_and_perms.php#basic-permissions
 Basic-Permissions:
   Full-Games-Permission: "murdermystery.fullgames"
@@ -135,6 +138,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 10
+Version: 11
 
 # No way! You've reached the end! But... where's the dragon!?

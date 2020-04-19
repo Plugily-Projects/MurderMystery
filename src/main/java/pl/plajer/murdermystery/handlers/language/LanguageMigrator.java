@@ -34,7 +34,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 10;
+  public static final int CONFIG_FILE_VERSION = 11;
   public static final int LANGUAGE_FILE_VERSION = 2;
   private Main plugin;
 
@@ -124,6 +124,10 @@ public class LanguageMigrator {
             "# Should we enable short commands such as /start and /leave\r\n" +
             "Enable-Short-Commands: false\r\n");
           break;
+        case 10:
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "#Should Detectives be killed if they kill a innocent?\r\n" +
+            "Enable-Kill-Detective-If-Innocent-Killed: true\r\n");
         default:
           break;
       }
