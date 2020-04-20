@@ -2,6 +2,8 @@
 * Added a config value to disable detective killing on innocent kill
 * Trying to fix an 1.15.x reporter service plugin crash
 * Fixed murderer can kill other murderer with bow
+* Murderer speed can be disabled
+* Murderer speed multiplier can be changed
 
 ### 1.5.2 Release 
 * Fixed Commands.Main-Command.Heads not found 

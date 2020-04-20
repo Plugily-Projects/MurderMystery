@@ -34,7 +34,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 11;
+  public static final int CONFIG_FILE_VERSION = 12;
   public static final int LANGUAGE_FILE_VERSION = 2;
   private Main plugin;
 
@@ -128,6 +128,14 @@ public class LanguageMigrator {
           MigratorUtils.addNewLines(file, "\r\n" +
             "#Should Detectives be killed if they kill a innocent?\r\n" +
             "Enable-Kill-Detective-If-Innocent-Killed: true\r\n");
+          break;
+        case 11:
+          MigratorUtils.addNewLines(file, "#Should the murderer get speed effect?\r\n" +
+            "Speed-Effect-Murderer:\r\n" +
+            "  Enabled: true\r\n" +
+            "  #Enter a multiplier (min 2, max 10)\r\n" +
+            "  Speed: 3\r\n");
+          break;
         default:
           break;
       }

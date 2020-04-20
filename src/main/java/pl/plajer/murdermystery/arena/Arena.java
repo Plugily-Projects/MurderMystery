@@ -387,15 +387,19 @@ public class Arena extends BukkitRunnable {
             ArenaManager.stopGame(false, this);
           } else
             //murderer speed add
-            if (getPlayersLeft().size() == aliveMurderer() + 1) {
-              for (Player p : allMurderer) {
-                if (isMurderAlive(p)) {
-                  //no potion because it adds particles which can be identified
-                  p.setWalkSpeed(0.3f);
+            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.MURDERER_SPEED_ENABLED)) {
+              if (getPlayersLeft().size() == aliveMurderer() + 1) {
+                for (Player p : allMurderer) {
+                  if (isMurderAlive(p)) {
+                    //no potion because it adds particles which can be identified
+                    int multiplier = plugin.getConfig().getInt("Speed-Effect-Murderer.Speed", 3);
+                    if (multiplier > 1 && multiplier <= 10) {
+                      p.setWalkSpeed(0.1f * plugin.getConfig().getInt("Speed-Effect-Murderer.Speed", 3));
+                    }
+                  }
                 }
               }
             }
-
         //don't spawn it every time
         if (spawnGoldTimer == spawnGoldTime) {
           spawnSomeGold();

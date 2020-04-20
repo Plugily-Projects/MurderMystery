@@ -74,7 +74,8 @@ public class ConfigPreferences {
   public enum Option {
     BOSSBAR_ENABLED("Bossbar-Enabled", true), BUNGEE_ENABLED("BungeeActivated", false), CHAT_FORMAT_ENABLED("ChatFormat-Enabled", true),
     DATABASE_ENABLED("DatabaseActivated", false), INVENTORY_MANAGER_ENABLED("InventoryManager", true), NAMETAGS_HIDDEN("Nametags-Hidden", true),
-    DISABLE_FALL_DAMAGE("Disable-Fall-Damage", false), ENABLE_SHORT_COMMANDS("Enable-Short-Commands", false), ENABLE_KILL_DETECTIVE_IF_INNOCENT_KILLED("Enable-Kill-Detective-If-Innocent-Killed", true);
+    DISABLE_FALL_DAMAGE("Disable-Fall-Damage", false), ENABLE_SHORT_COMMANDS("Enable-Short-Commands", false), ENABLE_KILL_DETECTIVE_IF_INNOCENT_KILLED("Enable-Kill-Detective-If-Innocent-Killed", true),
+    MURDERER_SPEED_ENABLED("Speed-Effect-Murderer.Enabled", true);
 
     private String path;
     private boolean def;

@@ -87,6 +87,12 @@ Detective-Bow-Cooldown: 5
 #Should Detectives be killed if they kill a innocent?
 Enable-Kill-Detective-If-Innocent-Killed: true
 
+#Should the murderer get speed effect?
+Speed-Effect-Murderer:
+  Enabled: true
+  #Enter a multiplier (min 2, max 10)
+  Speed: 3
+
 # Basic permissions for game, permissions explained here: https://wiki.plajer.xyz/minecraft/murdermystery/cmds_and_perms.php#basic-permissions
 Basic-Permissions:
   Full-Games-Permission: "murdermystery.fullgames"
@@ -138,6 +144,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 11
+Version: 12
 
 # No way! You've reached the end! But... where's the dragon!?
