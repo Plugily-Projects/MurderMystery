@@ -130,7 +130,7 @@ public class LanguageMigrator {
             "Enable-Kill-Detective-If-Innocent-Killed: true\r\n");
           break;
         case 11:
-          MigratorUtils.addNewLines(file, "#Should the murderer get speed effect?\r\n" +
+          MigratorUtils.addNewLines(file, "\r\n#Should the murderer get speed effect?\r\n" +
             "Speed-Effect-Murderer:\r\n" +
             "  Enabled: true\r\n" +
             "  #Enter a multiplier (min 2, max 10)\r\n" +
