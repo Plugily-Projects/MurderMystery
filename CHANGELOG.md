@@ -4,6 +4,7 @@
 * Fixed murderer can kill other murderer with bow
 * Murderer speed can be disabled
 * Murderer speed multiplier can be changed
+* Changed default language value as there does not exist /mm admin
 
 ### 1.5.2 Release 
 * Fixed Commands.Main-Command.Heads not found 
