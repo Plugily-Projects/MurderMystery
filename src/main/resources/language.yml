@@ -52,7 +52,7 @@ Commands:
     &b/mm join <arena>: &7Joins specified arena!\n
     &b/mm top <statistic>: &7Shows top 10 players!\n
     &b/mm randomjoin: &7Join random arena!"
-    Admin-Bonus-Description: "\n&b/mm admin: &7Shows all the admin commands"
+    Admin-Bonus-Description: "\n&b/mma: &7Shows all the admin commands"
     Footer: "&6-------------------------------------------------"
 
 # In-game scoreboard messages.
