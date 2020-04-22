@@ -428,6 +428,10 @@ public class ArenaEvents implements Listener {
     if (arena == null) {
       return;
     }
+    //skip spectators
+    if (plugin.getUserManager().getUser(player).isSpectator()){
+      return;
+    }
     if (arena.getArenaState() == ArenaState.IN_GAME) {
       if (Role.isRole(Role.INNOCENT, player)) {
         if (player.getInventory().getItem(ItemPosition.BOW_LOCATOR.getOtherRolesItemPosition()) != null) {

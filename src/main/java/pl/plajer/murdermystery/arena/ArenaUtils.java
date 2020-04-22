@@ -145,10 +145,6 @@ public class ArenaUtils {
     bowMeta.setDisplayName(ChatManager.colorMessage("In-Game.Bow-Locator-Item-Name"));
     bowLocator.setItemMeta(bowMeta);
     for (Player p : arena.getPlayersLeft()) {
-      //skip spectators
-      if (plugin.getUserManager().getUser(p).isSpectator()){
-        continue;
-      }
       if (Role.isRole(Role.INNOCENT, p)) {
         ItemPosition.setItem(p, ItemPosition.BOW_LOCATOR, bowLocator);
         p.setCompassTarget(loc);
