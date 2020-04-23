@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -85,7 +85,7 @@ public class SpectatorSettingsMenu implements Listener {
   }
 
   private void initInventory() {
-    Inventory inv = Bukkit.createInventory(null, 9 * 4, inventoryName);
+    Inventory inv = Bukkit.createInventory(null, 9 * 3, inventoryName);
     inv.setItem(11, new ItemBuilder(Material.LEATHER_BOOTS)
       .name(color(speedOptionName + " I")).build());
     inv.setItem(12, new ItemBuilder(Material.CHAINMAIL_BOOTS)
