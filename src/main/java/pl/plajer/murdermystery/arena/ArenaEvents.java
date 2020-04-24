@@ -173,7 +173,7 @@ public class ArenaEvents implements Listener {
     e.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Picked-Up-Gold", e.getPlayer()));
 
     if (Role.isRole(Role.ANY_DETECTIVE, e.getPlayer())) {
-      ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Gold-Pick-Up-Arrows", 3)));
+      ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, e.getItem().getItemStack().getAmount() * plugin.getConfig().getInt("Detective-Gold-Pick-Up-Arrows", 3)));
       return;
     }
 

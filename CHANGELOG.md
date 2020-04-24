@@ -2,6 +2,7 @@
 * Added a config value to disable detective killing on innocent kill
 * Trying to fix an 1.15.x reporter service plugin crash
 * Fixed murderer can kill other murderer with bow
+* Fixed amount of arrows on gold pickup
 * Murderer speed can be disabled
 * Murderer speed multiplier can be changed
 * Changed default language value as there does not exist /mm admin
