@@ -72,6 +72,12 @@ Murderer-Sword-Attack-Cooldown: 1
 #How long should be the sword fly cooldown in seconds?
 Murderer-Sword-Fly-Cooldown: 5
 
+#Should we change spawner mode to spawn on all spawners instant of random one
+Change-Gold-Spawner-Mode-To-All: false
+
+#Should we disable the gold spawn limit (It does not spawn more gold than spawner locations)
+Disable-Gold-Limiter: false
+
 #How much arrows should a player with bow gets when he pick up a gold ingot?
 Detective-Gold-Pick-Up-Arrows: 1
 
@@ -144,6 +150,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 12
+Version: 13
 
 # No way! You've reached the end! But... where's the dragon!?

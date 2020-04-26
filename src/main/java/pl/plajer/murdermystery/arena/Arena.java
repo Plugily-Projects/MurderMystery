@@ -504,13 +504,23 @@ public class Arena extends BukkitRunnable {
   }
 
   private void spawnSomeGold() {
-    //do not exceed amount of gold per spawn
-    if (goldSpawned.size() >= goldSpawnPoints.size()) {
-      return;
+    //may users want to disable it and want much gold on there map xD
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_GOLD_LIMITER)) {
+      //do not exceed amount of gold per spawn
+      if (goldSpawned.size() >= goldSpawnPoints.size()) {
+        return;
+      }
     }
-    Location loc = goldSpawnPoints.get(random.nextInt(goldSpawnPoints.size()));
-    Item item = loc.getWorld().dropItem(loc, new ItemStack(Material.GOLD_INGOT, 1));
-    goldSpawned.add(item);
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SPAWN_GOLD_EVERY_SPAWNER_MODE)) {
+      for (Location location : goldSpawnPoints) {
+        Item item = location.getWorld().dropItem(location, new ItemStack(Material.GOLD_INGOT, 1));
+        goldSpawned.add(item);
+      }
+    } else {
+      Location loc = goldSpawnPoints.get(random.nextInt(goldSpawnPoints.size()));
+      Item item = loc.getWorld().dropItem(loc, new ItemStack(Material.GOLD_INGOT, 1));
+      goldSpawned.add(item);
+    }
   }
 
   public void setMurderers(int murderers) {
