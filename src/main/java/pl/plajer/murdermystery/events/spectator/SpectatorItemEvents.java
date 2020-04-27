@@ -103,7 +103,7 @@ public class SpectatorItemEvents implements Listener {
           meta.setOwningPlayer(player);
         }
         meta.setDisplayName(player.getName());
-        String role = ChatManager.colorMessage("In-Game.Spectator.Target-Player-Role");
+        String role = ChatManager.colorMessage("In-Game.Spectator.Target-Player-Role", p);
         if (Role.isRole(Role.MURDERER, player)) {
           role = StringUtils.replace(role, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
         } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {

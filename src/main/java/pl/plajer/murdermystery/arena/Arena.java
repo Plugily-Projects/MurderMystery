@@ -303,7 +303,7 @@ public class Arena extends BukkitRunnable {
             detective.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"),
               ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
             playersToSet.remove(detective);
-
+            detective.getInventory().setHeldItemSlot(0);
             ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
             ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
           }
@@ -345,8 +345,8 @@ public class Arena extends BukkitRunnable {
             for (Player p : allMurderer) {
               User murderer = plugin.getUserManager().getUser(p);
               if (murderer.isSpectator()) continue;
-              ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
               p.getInventory().setHeldItemSlot(0);
+              ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
             }
           }
         }
