@@ -34,7 +34,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 12;
+  public static final int CONFIG_FILE_VERSION = 13;
   public static final int LANGUAGE_FILE_VERSION = 2;
   private Main plugin;
 
@@ -135,6 +135,14 @@ public class LanguageMigrator {
             "  Enabled: true\r\n" +
             "  #Enter a multiplier (min 2, max 10)\r\n" +
             "  Speed: 3\r\n");
+          break;
+        case 12:
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "#Should we change spawner mode to spawn on all spawners instant of random one\r\n" +
+            "Change-Gold-Spawner-Mode-To-All: false\r\n");
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "#Should we disable the gold spawn limit (It does not spawn more gold than spawner locations)\r\n" +
+            "Disable-Gold-Limiter: false\r\n");
           break;
         default:
           break;
