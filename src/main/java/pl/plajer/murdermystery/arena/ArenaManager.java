@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import java.util.Random;
 import java.util.logging.Level;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -308,6 +309,8 @@ public class ArenaManager {
         ArenaManager.stopGame(false, arena);
       }
     }
+    //the default fly speed
+    player.setFlySpeed(0.1f);
     player.getInventory().clear();
     player.getInventory().setArmorContents(null);
     arena.removePlayer(player);
