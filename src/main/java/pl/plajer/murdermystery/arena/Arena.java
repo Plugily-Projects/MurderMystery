@@ -475,6 +475,12 @@ public class Arena extends BukkitRunnable {
         setTimer(getTimer() - 1);
         break;
       case RESTARTING:
+        for (Player statplayer : getPlayers()) {
+          for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+            final User user = plugin.getUserManager().getUser(statplayer);
+            plugin.getUserManager().saveStatistic(user, stat);
+          }
+        }
         getPlayers().clear();
         setArenaState(ArenaState.WAITING_FOR_PLAYERS);
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {

@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -29,6 +30,7 @@ import org.bukkit.entity.Player;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.user.User;
+import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 
@@ -71,8 +73,10 @@ public class MysqlManager implements UserDatabase {
 
   @Override
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
-    Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
-      database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+      database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+      Debugger.debug(Level.INFO, "Executed MySQL: " + "UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+      });
   }
 
   @Override

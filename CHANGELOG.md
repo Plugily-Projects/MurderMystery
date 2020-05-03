@@ -9,6 +9,10 @@
 * Murderer speed multiplier can be changed
 * Changed default language value as there does not exist /mm admin
 * Update setup tips Feedback page link
+* Optimzed sword fly 
+* Sword fly: Now you can change the hit range and max range of the flying sword
+* Stats will now get saved on restart stage
+
 
 ### 1.5.2 Release 
 * Fixed Commands.Main-Command.Heads not found 

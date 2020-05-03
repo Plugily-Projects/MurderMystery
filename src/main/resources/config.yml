@@ -65,6 +65,12 @@ Murderer-Sword-Material: IRON_SWORD
 # blinking each tick
 Murderer-Sword-Speed: 0.65
 
+# How many blocks should the sword fly
+Murderer-Sword-Fly-Range: 20
+
+# In what radius should we hit the players
+Murderer-Sword-Fly-Hit-Range: 0.5
+
 #How long should be the sword attack after throw cooldown in seconds?
 #Its normal lower than Murderer-Sword-Fly-Cooldown!
 Murderer-Sword-Attack-Cooldown: 1
@@ -150,6 +156,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 13
+Version: 14
 
 # No way! You've reached the end! But... where's the dragon!?

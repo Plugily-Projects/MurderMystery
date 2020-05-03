@@ -34,7 +34,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 13;
+  public static final int CONFIG_FILE_VERSION = 14;
   public static final int LANGUAGE_FILE_VERSION = 2;
   private Main plugin;
 
@@ -143,6 +143,13 @@ public class LanguageMigrator {
           MigratorUtils.addNewLines(file, "\r\n" +
             "#Should we disable the gold spawn limit (It does not spawn more gold than spawner locations)\r\n" +
             "Disable-Gold-Limiter: false\r\n");
+        case 13:
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "# How many blocks should the sword fly\r\n" +
+            "Murderer-Sword-Fly-Range: 20\r\n" +
+            "\r\n" +
+            "# In what radius should we hit the players\r\n" +
+            "Murderer-Sword-Fly-Hit-Range: 0.5\r\n");
           break;
         default:
           break;
