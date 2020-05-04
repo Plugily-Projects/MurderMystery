@@ -177,7 +177,7 @@ public class ArenaEvents implements Listener {
       return;
     }
 
-    if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) >= 10) {
+    if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) >= plugin.getConfig().getInt("Gold-For-Bow", 10)) {
       user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
       e.getPlayer().sendTitle(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold", e.getPlayer()),
         ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle", e.getPlayer()), 5, 40, 5);

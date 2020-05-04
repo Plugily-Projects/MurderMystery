@@ -87,6 +87,9 @@ Disable-Gold-Limiter: false
 #How much arrows should a player with bow gets when he pick up a gold ingot?
 Detective-Gold-Pick-Up-Arrows: 1
 
+#How much gold should a player need to get a bow
+Gold-For-Bow: 10
+
 #How much arrows should the detective gets on game start or when a player get a bow?
 Detective-Default-Arrows: 3
 
@@ -156,6 +159,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 14
+Version: 15
 
 # No way! You've reached the end! But... where's the dragon!?

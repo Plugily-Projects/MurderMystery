@@ -47,8 +47,10 @@ public class UserManager {
   public UserManager(Main plugin) {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       database = new MysqlManager(plugin);
+      Debugger.debug(Level.INFO, "MySQL Stats enabled");
     } else {
       database = new FileStats(plugin);
+      Debugger.debug(Level.INFO, "File Stats enabled");
     }
     loadStatsForPlayersOnline();
   }

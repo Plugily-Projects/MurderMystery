@@ -76,7 +76,7 @@ public class MysqlManager implements UserDatabase {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
       database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
       Debugger.debug(Level.INFO, "Executed MySQL: " + "UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
-      });
+    });
   }
 
   @Override
@@ -85,20 +85,26 @@ public class MysqlManager implements UserDatabase {
       String uuid = user.getPlayer().getUniqueId().toString();
       try (Connection connection = database.getConnection()) {
         Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT * from playerstats WHERE UUID='" + uuid + "'");
+        ResultSet rs = statement.executeQuery("SELECT * from playerstats WHERE UUID='" + uuid + "';");
         if (rs.next()) {
           //player already exists - get the stats
+          Debugger.debug(Level.INFO, "MySQL Stats | Player {0} already exist. Getting Stats...", user.getPlayer().getName());
           for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-            if (!stat.isPersistent()) continue;;
+            if (!stat.isPersistent()) continue;
             int val = rs.getInt(stat.getName());
             user.setStat(stat, val);
           }
         } else {
           //player doesn't exist - make a new record
-          statement.executeUpdate("INSERT INTO playerstats (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "')");
+          Debugger.debug(Level.INFO, "MySQL Stats | Player {0} does not exist. Creating new one...", user.getPlayer().getName());
+          statement.executeUpdate("INSERT INTO playerstats (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "');");
           for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-            if (!stat.isPersistent()) continue;;
-            user.setStat(stat, 0);
+            if (!stat.isPersistent()) continue;
+            if (stat == StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE || stat == StatsStorage.StatisticType.CONTRIBUTION_MURDERER) {
+              user.setStat(stat, 1);
+            } else {
+              user.setStat(stat, 0);
+            }
           }
         }
       } catch (SQLException e) {
