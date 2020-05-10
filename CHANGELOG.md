@@ -3,18 +3,18 @@
 * Added a config value to change the spawner mode
 * Added a way to disable gold spawn limit
 * Added a config value to change the get bow from gold value (default: 10)
-* Trying to fix an 1.15.x reporter service plugin crash
+* Added Murderer speed can be disabled
+* Added Murderer speed multiplier can be changed
+* Added Now you can change the hit range and max range of the flying sword
+* Fixed an 1.15.x reporter service plugin crash
 * Fixed murderer can kill other murderer with bow
 * Fixed amount of arrows on gold pickup
-* Murderer speed can be disabled
-* Murderer speed multiplier can be changed
 * Changed default language value as there does not exist /mm admin
-* Update setup tips Feedback page link
+* Updated setup tips Feedback page link
 * Optimized sword fly 
-* Sword fly: Now you can change the hit range and max range of the flying sword
-* Stats will now get saved on restart stage
+* Fixed Stats will now get saved on restart stage
 * Fixed stats were not loaded on bungee mode
-* Fixed chances are not displayed on new players for the first round (occuired for all who using mysql database)
+* Fixed chances are not displayed on new players for the first round (occurred for all who using mysql database)
 
 ### 1.5.2 Release 
 * Fixed Commands.Main-Command.Heads not found 
