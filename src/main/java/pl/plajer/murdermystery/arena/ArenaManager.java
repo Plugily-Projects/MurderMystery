@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import java.util.Random;
 import java.util.logging.Level;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -210,7 +211,7 @@ public class ArenaManager {
       return;
     }
     arena.teleportToLobby(player);
-    player.getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
+    player.getInventory().setArmorContents(new ItemStack[]{new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
     player.setFlying(false);
     player.setAllowFlight(false);
     player.getInventory().clear();
@@ -267,28 +268,33 @@ public class ArenaManager {
     if (arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {
       if (arena.getPlayersLeft().size() - 1 > 1) {
         if (Role.isRole(Role.MURDERER, player)) {
-          List<Player> players = new ArrayList<>();
-          for (Player gamePlayer : arena.getPlayersLeft()) {
-            if (Role.isRole(Role.ANY_DETECTIVE, gamePlayer) || Role.isRole(Role.MURDERER, gamePlayer)) {
-              continue;
-            }
-            players.add(gamePlayer);
-          }
           arena.removeFromMurdererList(player);
-          Player newMurderer = players.get(new Random().nextInt(players.size()));
-          arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
-          arena.addToMurdererList(newMurderer);
-          String title = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title", player).replace("%role%",
-            ChatManager.colorMessage("Scoreboard.Roles.Murderer", player));
-          String subtitle = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle", player).replace("%role%",
-            ChatManager.colorMessage("Scoreboard.Roles.Murderer", player));
-          for (Player gamePlayer : arena.getPlayers()) {
-            gamePlayer.sendTitle(title, subtitle, 5, 40, 5);
+          if (arena.getMurdererList().isEmpty()) {
+            List<Player> players = new ArrayList<>();
+            for (Player gamePlayer : arena.getPlayersLeft()) {
+              if (Role.isRole(Role.ANY_DETECTIVE, gamePlayer) || Role.isRole(Role.MURDERER, gamePlayer)) {
+                continue;
+              }
+              players.add(gamePlayer);
+            }
+            Player newMurderer = players.get(new Random().nextInt(players.size()));
+            Debugger.debug(Level.INFO, "A murderer left the game. New murderer: {0}", newMurderer.getName());
+            arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
+            arena.addToMurdererList(newMurderer);
+            String title = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title", player).replace("%role%",
+              ChatManager.colorMessage("Scoreboard.Roles.Murderer", player));
+            String subtitle = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle", player).replace("%role%",
+              ChatManager.colorMessage("Scoreboard.Roles.Murderer", player));
+            for (Player gamePlayer : arena.getPlayers()) {
+              gamePlayer.sendTitle(title, subtitle, 5, 40, 5);
+            }
+            newMurderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title", player),
+              ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle", player), 5, 40, 5);
+            ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
+            user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
+          } else {
+            Debugger.debug(Level.INFO, "No new murderer added as there are some");
           }
-          newMurderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title", player),
-            ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle", player), 5, 40, 5);
-          ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
-          user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
         } else if (Role.isRole(Role.ANY_DETECTIVE, player) && arena.lastAliveDetective()) {
           arena.setDetectiveDead(true);
           if (Role.isRole(Role.FAKE_DETECTIVE, player)) {
@@ -303,6 +309,8 @@ public class ArenaManager {
         ArenaManager.stopGame(false, arena);
       }
     }
+    //the default fly speed
+    player.setFlySpeed(0.1f);
     player.getInventory().clear();
     player.getInventory().setArmorContents(null);
     arena.removePlayer(player);

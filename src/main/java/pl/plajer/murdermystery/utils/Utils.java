@@ -32,6 +32,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import org.bukkit.util.Vector;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.ArenaState;
@@ -134,6 +135,26 @@ public class Utils {
     }
     sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands-No-Permission"));
     return false;
+  }
+
+
+  public static Vector rotateAroundAxisX(Vector v, double angle) {
+    angle = Math.toRadians(angle);
+    double cos = Math.cos(angle);
+    double sin = Math.sin(angle);
+    double y = v.getY() * cos - v.getZ() * sin;
+    double z = v.getY() * sin + v.getZ() * cos;
+    return v.setY(y).setZ(z);
+  }
+
+  public static Vector rotateAroundAxisY(Vector v, double angle) {
+    angle = -angle;
+    angle = Math.toRadians(angle);
+    double cos = Math.cos(angle);
+    double sin = Math.sin(angle);
+    double x = v.getX() * cos + v.getZ() * sin;
+    double z = v.getX() * -sin + v.getZ() * cos;
+    return v.setX(x).setZ(z);
   }
 
 }

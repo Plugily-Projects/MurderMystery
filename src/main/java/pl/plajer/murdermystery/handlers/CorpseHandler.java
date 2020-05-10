@@ -25,9 +25,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.util.EulerAngle;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
@@ -85,6 +91,24 @@ public class CorpseHandler implements Listener {
     if (!found) {
       hologram.appendTextLine(registeredLastWords.get("default"));
     }
+
+    /*
+
+    Maybe using this to have a nice head on the ground for people who don´t use CorpseReborn
+
+    ArmorStand stand = p.getLocation().getWorld().spawn(p.getLocation().add(0.0D, +1.5D, 0.0D), ArmorStand.class);
+    ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
+    SkullMeta meta = (SkullMeta)head.getItemMeta();
+    meta.setOwner(p.getName());
+    head.setItemMeta(meta);
+    stand.setVisible(false);
+    stand.setHelmet(head);
+    stand.setGravity(false);
+    stand.setCustomNameVisible(true);
+    stand.setCustomName(p.getName());
+    stand.setHeadPose(new EulerAngle(Math.toRadians(p.getLocation().getX()), Math.toRadians(p.getLocation().getPitch()), Math.toRadians(p.getLocation().getZ())));
+    */
+
     Corpses.CorpseData corpse = CorpseAPI.spawnCorpse(p, p.getLocation());
     lastSpawnedCorpse = corpse;
     arena.addCorpse(new Corpse(hologram, corpse));

@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,24 +68,29 @@ public class SpectatorSettingsMenu implements Listener {
     p.closeInventory();
     if (e.getCurrentItem().getType() == Material.LEATHER_BOOTS) {
       p.removePotionEffect(PotionEffectType.SPEED);
+      p.setFlySpeed(0.15f);
       p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false));
     } else if (e.getCurrentItem().getType() == Material.CHAINMAIL_BOOTS) {
       p.removePotionEffect(PotionEffectType.SPEED);
+      p.setFlySpeed(0.2f);
       p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1, false, false));
     } else if (e.getCurrentItem().getType() == Material.IRON_BOOTS) {
       p.removePotionEffect(PotionEffectType.SPEED);
+      p.setFlySpeed(0.25f);
       p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2, false, false));
     } else if (e.getCurrentItem().getType() == XMaterial.GOLDEN_BOOTS.parseMaterial()) {
       p.removePotionEffect(PotionEffectType.SPEED);
+      p.setFlySpeed(0.3f);
       p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 3, false, false));
     } else if (e.getCurrentItem().getType() == Material.DIAMOND_BOOTS) {
       p.removePotionEffect(PotionEffectType.SPEED);
+      p.setFlySpeed(0.35f);
       p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 4, false, false));
     }
   }
 
   private void initInventory() {
-    Inventory inv = Bukkit.createInventory(null, 9 * 4, inventoryName);
+    Inventory inv = Bukkit.createInventory(null, 9 * 3, inventoryName);
     inv.setItem(11, new ItemBuilder(Material.LEATHER_BOOTS)
       .name(color(speedOptionName + " I")).build());
     inv.setItem(12, new ItemBuilder(Material.CHAINMAIL_BOOTS)

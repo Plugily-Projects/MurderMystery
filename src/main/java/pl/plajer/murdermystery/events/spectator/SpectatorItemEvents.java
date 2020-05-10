@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -103,7 +103,7 @@ public class SpectatorItemEvents implements Listener {
           meta.setOwningPlayer(player);
         }
         meta.setDisplayName(player.getName());
-        String role = ChatManager.colorMessage("In-Game.Spectator.Target-Player-Role");
+        String role = ChatManager.colorMessage("In-Game.Spectator.Target-Player-Role", p);
         if (Role.isRole(Role.MURDERER, player)) {
           role = StringUtils.replace(role, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
         } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
@@ -143,8 +143,8 @@ public class SpectatorItemEvents implements Listener {
         p.closeInventory();
         return;
       }
-      p.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found", player));
     }
+    p.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
   }
 
 }

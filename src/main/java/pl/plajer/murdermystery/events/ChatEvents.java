@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -55,7 +56,7 @@ public class ChatEvents implements Listener {
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
-  @EventHandler(ignoreCancelled = true)
+  @EventHandler
   public void onChatIngame(AsyncPlayerChatEvent event) {
     Arena arena = ArenaRegistry.getArena(event.getPlayer());
     if (arena == null) {
@@ -99,7 +100,7 @@ public class ChatEvents implements Listener {
     String formatted = message;
     formatted = ChatManager.colorRawMessage(formatted);
     formatted = StringUtils.replace(formatted, "%player%", user.getPlayer().getName());
-    formatted = StringUtils.replace(formatted, "%message%", saidMessage);
+    formatted = StringUtils.replace(formatted, "%message%", ChatColor.stripColor(saidMessage));
     if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formatted = PlaceholderAPI.setPlaceholders(user.getPlayer(), formatted);
     }

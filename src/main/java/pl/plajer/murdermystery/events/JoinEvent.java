@@ -62,6 +62,9 @@ public class JoinEvent implements Listener {
 
   @EventHandler
   public void onJoin(PlayerJoinEvent event) {
+    //Load statistics first
+    plugin.getUserManager().loadStatistics(plugin.getUserManager().getUser(event.getPlayer()));
+    //Teleport to lobby on bungee mode
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
       return;
@@ -73,8 +76,6 @@ public class JoinEvent implements Listener {
       player.hidePlayer(event.getPlayer());
       event.getPlayer().hidePlayer(player);
     }
-    User user = plugin.getUserManager().getUser(event.getPlayer());
-    plugin.getUserManager().loadStatistics(user);
     //load player inventory in case of server crash, file is deleted once loaded so if file was already
     //deleted player won't receive his backup, in case of crash he will get it back
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {

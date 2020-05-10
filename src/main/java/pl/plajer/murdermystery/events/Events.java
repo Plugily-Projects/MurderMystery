@@ -104,8 +104,8 @@ public class Events implements Listener {
     if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
       return;
     }
-    final Player attacker = e.getPlayer();
-    final User attackerUser = plugin.getUserManager().getUser(attacker);
+    Player attacker = e.getPlayer();
+    User attackerUser = plugin.getUserManager().getUser(attacker);
     //todo not hardcoded!
     if (attacker.getInventory().getItemInMainHand().getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
       return;
@@ -115,45 +115,45 @@ public class Events implements Listener {
     }
     attackerUser.setCooldown("sword_shoot", plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5));
     attacker.setCooldown(plugin.getConfigPreferences().getMurdererSword().getType(), 20 * (plugin.getConfig().getInt("Murderer-Sword-Attack-Cooldown", 1)));
-    final ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(attacker.getLocation(), EntityType.ARMOR_STAND);
+    createFlyingSword(arena, attacker, attackerUser);
+    Utils.applyActionBarCooldown(attacker, plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5));
+  }
+
+  private void createFlyingSword(Arena arena, Player attacker, User attackerUser) {
+    Location loc = attacker.getLocation();
+    Vector vec = attacker.getLocation().getDirection();
+    vec.normalize().multiply(plugin.getConfig().getDouble("Murderer-Sword-Speed", 0.65));
+    Location standStart = Utils.rotateAroundAxisY(new Vector(1.0D, 0.0D, 0.0D), loc.getYaw()).toLocation(attacker.getWorld()).add(loc);
+    standStart.setYaw(loc.getYaw());
+    ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(standStart, EntityType.ARMOR_STAND);
     stand.setVisible(false);
     stand.setInvulnerable(true);
     stand.setItemInHand(plugin.getConfigPreferences().getMurdererSword());
     stand.setRightArmPose(new EulerAngle(Math.toRadians(350.0), Math.toRadians(attacker.getLocation().getPitch() * -1.0), Math.toRadians(90.0)));
     stand.setCollidable(false);
     stand.setSilent(true);
-    swordFlyTask(arena, attacker, attackerUser, stand);
-    Utils.applyActionBarCooldown(attacker, plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5));
-  }
-
-  private void swordFlyTask(Arena arena, Player attacker, User attackerUser, ArmorStand stand) {
+    stand.setGravity(false);
+    stand.setRemoveWhenFarAway(true);
+    stand.setMarker(true);
+    Location initialise = Utils.rotateAroundAxisY(new Vector(-0.8D, 1.45D, 0.0D), loc.getYaw()).toLocation(attacker.getWorld()).add(standStart).add(Utils.rotateAroundAxisY(Utils.rotateAroundAxisX(new Vector(0.0D, 0.0D, 1.0D), loc.getPitch()), loc.getYaw()));
+    int maxRange = plugin.getConfig().getInt("Murderer-Sword-Fly-Range", 20);
+    double maxHitRange = plugin.getConfig().getDouble("Murderer-Sword-Fly-Hit-Range", 0.5);
     new BukkitRunnable() {
-      double posModifier = 0;
-      Location loc = attacker.getLocation();
-      Vector direction = loc.getDirection().normalize();
-
       @Override
       public void run() {
-        posModifier += plugin.getConfig().getDouble("Murderer-Sword-Speed", 0.65);
-        double x = direction.getX() * posModifier;
-        double y = direction.getY() * posModifier + 0.65;
-        double z = direction.getZ() * posModifier;
-        loc.add(x, y, z);
-        stand.teleport(loc);
-        for (Entity en : loc.getChunk().getEntities()) {
-          if (!(en instanceof Player)) {
-            continue;
+        stand.teleport(standStart.add(vec));
+        initialise.add(vec);
+        initialise.getWorld().getNearbyEntities(initialise, maxHitRange, maxHitRange, maxHitRange).forEach(entity -> {
+          if (entity instanceof Player) {
+            Player victim = (Player) entity;
+            if (ArenaRegistry.isInArena(victim) && !plugin.getUserManager().getUser(victim).isSpectator()) {
+              if (!victim.equals(attacker)) {
+                killBySword(arena, attackerUser, victim);
+              }
+            }
           }
-          Player victim = (Player) en;
-          if (ArenaRegistry.isInArena(victim) && plugin.getUserManager().getUser(victim).isSpectator()) {
-            continue;
-          }
-          if (victim.getLocation().distance(loc) < 1.0 && !victim.equals(attacker)) {
-            killBySword(arena, attackerUser, victim);
-          }
-        }
-        loc.subtract(x, y, z);
-        if (posModifier > 20 || stand.getLocation().add(0, 1, 0).getBlock().getType().isSolid()) {
+        });
+        if (loc.distance(initialise) > maxRange || initialise.getBlock().getType().isSolid()) {
           this.cancel();
           stand.remove();
         }
@@ -300,7 +300,7 @@ public class Events implements Listener {
     if (!(e.getEntity() instanceof LivingEntity)) {
       return;
     }
-    final LivingEntity livingEntity = (LivingEntity) e.getEntity();
+    LivingEntity livingEntity = (LivingEntity) e.getEntity();
     if (!livingEntity.getType().equals(EntityType.ARMOR_STAND)) {
       return;
     }

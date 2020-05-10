@@ -24,7 +24,7 @@
 
     <groupId>pl.plajer</groupId>
     <artifactId>murdermystery</artifactId>
-    <version>1.5.2</version>
+    <version>1.5.3</version>
     <name>MurderMystery</name>
 
     <properties>
@@ -148,7 +148,7 @@
         <dependency>
             <groupId>com.github.stefvanschie.inventoryframework</groupId>
             <artifactId>IF</artifactId>
-            <version>0.5.4</version>
+            <version>0.5.19</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

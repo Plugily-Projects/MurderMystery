@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -29,6 +30,7 @@ import org.bukkit.entity.Player;
 import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.user.User;
+import pl.plajer.murdermystery.utils.Debugger;
 import pl.plajer.murdermystery.utils.MessageUtils;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 
@@ -71,8 +73,10 @@ public class MysqlManager implements UserDatabase {
 
   @Override
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
-    Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
-      database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+      database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+      Debugger.debug(Level.INFO, "Executed MySQL: " + "UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+    });
   }
 
   @Override
@@ -81,20 +85,26 @@ public class MysqlManager implements UserDatabase {
       String uuid = user.getPlayer().getUniqueId().toString();
       try (Connection connection = database.getConnection()) {
         Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT * from playerstats WHERE UUID='" + uuid + "'");
+        ResultSet rs = statement.executeQuery("SELECT * from playerstats WHERE UUID='" + uuid + "';");
         if (rs.next()) {
           //player already exists - get the stats
+          Debugger.debug(Level.INFO, "MySQL Stats | Player {0} already exist. Getting Stats...", user.getPlayer().getName());
           for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-            if (!stat.isPersistent()) continue;;
+            if (!stat.isPersistent()) continue;
             int val = rs.getInt(stat.getName());
             user.setStat(stat, val);
           }
         } else {
           //player doesn't exist - make a new record
-          statement.executeUpdate("INSERT INTO playerstats (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "')");
+          Debugger.debug(Level.INFO, "MySQL Stats | Player {0} does not exist. Creating new one...", user.getPlayer().getName());
+          statement.executeUpdate("INSERT INTO playerstats (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "');");
           for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-            if (!stat.isPersistent()) continue;;
-            user.setStat(stat, 0);
+            if (!stat.isPersistent()) continue;
+            if (stat == StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE || stat == StatsStorage.StatisticType.CONTRIBUTION_MURDERER) {
+              user.setStat(stat, 1);
+            } else {
+              user.setStat(stat, 0);
+            }
           }
         }
       } catch (SQLException e) {

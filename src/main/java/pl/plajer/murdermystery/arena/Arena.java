@@ -272,7 +272,7 @@ public class Arena extends BukkitRunnable {
             maxdetectives = (getPlayers().size() / detectives);
           }
           if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
-            ChatManager.broadcast(this, "Murderers and detectives amount was reduced due to invalid settings, contact ServerAdministrator");
+            ChatManager.broadcast(this, "Murderers and detectives amount was reduced because there are not enough players");
             //Make sure to have one innocent!
             if (maxdetectives > 1) {
               maxdetectives--;
@@ -303,10 +303,12 @@ public class Arena extends BukkitRunnable {
             detective.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"),
               ChatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
             playersToSet.remove(detective);
-
+            detective.getInventory().setHeldItemSlot(0);
             ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
             ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
           }
+          Debugger.debug(Level.INFO, "Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Players: Detectives = {4}, Murders = {5}",
+            getId(), maxdetectives, maxmurderer, getPlayers().size(), allDetectives, allMurderer);
 
           for (Player p : playersToSet) {
             p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"),
@@ -343,8 +345,8 @@ public class Arena extends BukkitRunnable {
             for (Player p : allMurderer) {
               User murderer = plugin.getUserManager().getUser(p);
               if (murderer.isSpectator()) continue;
-              ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
               p.getInventory().setHeldItemSlot(0);
+              ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
             }
           }
         }
@@ -385,15 +387,19 @@ public class Arena extends BukkitRunnable {
             ArenaManager.stopGame(false, this);
           } else
             //murderer speed add
-            if (getPlayersLeft().size() == aliveMurderer() + 1) {
-              for (Player p : allMurderer) {
-                if (isMurderAlive(p)) {
-                  //no potion because it adds particles which can be identified
-                  p.setWalkSpeed(0.3f);
+            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.MURDERER_SPEED_ENABLED)) {
+              if (getPlayersLeft().size() == aliveMurderer() + 1) {
+                for (Player p : allMurderer) {
+                  if (isMurderAlive(p)) {
+                    //no potion because it adds particles which can be identified
+                    int multiplier = plugin.getConfig().getInt("Speed-Effect-Murderer.Speed", 3);
+                    if (multiplier > 1 && multiplier <= 10) {
+                      p.setWalkSpeed(0.1f * plugin.getConfig().getInt("Speed-Effect-Murderer.Speed", 3));
+                    }
+                  }
                 }
               }
             }
-
         //don't spawn it every time
         if (spawnGoldTimer == spawnGoldTime) {
           spawnSomeGold();
@@ -448,11 +454,12 @@ public class Arena extends BukkitRunnable {
 
           for (User user : plugin.getUserManager().getUsers(this)) {
             user.setSpectator(false);
-
             for (StatsStorage.StatisticType statistic : StatsStorage.StatisticType.values()) {
               if (!statistic.isPersistent()) {
                 user.setStat(statistic, 0);
               }
+              //Save stats
+              plugin.getUserManager().saveStatistic(user, statistic);
             }
           }
           plugin.getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
@@ -498,13 +505,23 @@ public class Arena extends BukkitRunnable {
   }
 
   private void spawnSomeGold() {
-    //do not exceed amount of gold per spawn
-    if (goldSpawned.size() >= goldSpawnPoints.size()) {
-      return;
+    //may users want to disable it and want much gold on there map xD
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_GOLD_LIMITER)) {
+      //do not exceed amount of gold per spawn
+      if (goldSpawned.size() >= goldSpawnPoints.size()) {
+        return;
+      }
     }
-    Location loc = goldSpawnPoints.get(random.nextInt(goldSpawnPoints.size()));
-    Item item = loc.getWorld().dropItem(loc, new ItemStack(Material.GOLD_INGOT, 1));
-    goldSpawned.add(item);
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SPAWN_GOLD_EVERY_SPAWNER_MODE)) {
+      for (Location location : goldSpawnPoints) {
+        Item item = location.getWorld().dropItem(location, new ItemStack(Material.GOLD_INGOT, 1));
+        goldSpawned.add(item);
+      }
+    } else {
+      Location loc = goldSpawnPoints.get(random.nextInt(goldSpawnPoints.size()));
+      Item item = loc.getWorld().dropItem(loc, new ItemStack(Material.GOLD_INGOT, 1));
+      goldSpawned.add(item);
+    }
   }
 
   public void setMurderers(int murderers) {

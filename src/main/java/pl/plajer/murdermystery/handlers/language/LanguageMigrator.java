@@ -34,7 +34,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 10;
+  public static final int CONFIG_FILE_VERSION = 15;
   public static final int LANGUAGE_FILE_VERSION = 2;
   private Main plugin;
 
@@ -123,6 +123,39 @@ public class LanguageMigrator {
           MigratorUtils.addNewLines(file, "\r\n" +
             "# Should we enable short commands such as /start and /leave\r\n" +
             "Enable-Short-Commands: false\r\n");
+          break;
+        case 10:
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "#Should Detectives be killed if they kill a innocent?\r\n" +
+            "Enable-Kill-Detective-If-Innocent-Killed: true\r\n");
+          break;
+        case 11:
+          MigratorUtils.addNewLines(file, "\r\n#Should the murderer get speed effect?\r\n" +
+            "Speed-Effect-Murderer:\r\n" +
+            "  Enabled: true\r\n" +
+            "  #Enter a multiplier (min 2, max 10)\r\n" +
+            "  Speed: 3\r\n");
+          break;
+        case 12:
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "#Should we change spawner mode to spawn on all spawners instant of random one\r\n" +
+            "Change-Gold-Spawner-Mode-To-All: false\r\n");
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "#Should we disable the gold spawn limit (It does not spawn more gold than spawner locations)\r\n" +
+            "Disable-Gold-Limiter: false\r\n");
+          break;
+        case 13:
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "# How many blocks should the sword fly\r\n" +
+            "Murderer-Sword-Fly-Range: 20\r\n" +
+            "\r\n" +
+            "# In what radius should we hit the players\r\n" +
+            "Murderer-Sword-Fly-Hit-Range: 0.5\r\n");
+          break;
+        case 14:
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "#How much gold should a player need to get a bow\r\n" +
+            "Gold-For-Bow: 10\r\n");
           break;
         default:
           break;

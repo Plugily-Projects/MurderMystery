@@ -173,11 +173,11 @@ public class ArenaEvents implements Listener {
     e.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Picked-Up-Gold", e.getPlayer()));
 
     if (Role.isRole(Role.ANY_DETECTIVE, e.getPlayer())) {
-      ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Gold-Pick-Up-Arrows", 3)));
+      ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, e.getItem().getItemStack().getAmount() * plugin.getConfig().getInt("Detective-Gold-Pick-Up-Arrows", 3)));
       return;
     }
 
-    if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) >= 10) {
+    if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) >= plugin.getConfig().getInt("Gold-For-Bow", 10)) {
       user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
       e.getPlayer().sendTitle(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold", e.getPlayer()),
         ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle", e.getPlayer()), 5, 40, 5);
@@ -265,6 +265,11 @@ public class ArenaEvents implements Listener {
       e.setCancelled(true);
       return;
     }
+    //dont kill murderer on bow damage if attacker is murderer
+    if (Role.isRole(Role.MURDERER, attacker) && Role.isRole(Role.MURDERER, victim)) {
+      e.setCancelled(true);
+      return;
+    }
     Arena arena = ArenaRegistry.getArena(attacker);
     //we need to set it before the victim die, because of hero character
     if (Role.isRole(Role.MURDERER, victim)) {
@@ -285,7 +290,7 @@ public class ArenaEvents implements Listener {
 
     if (Role.isRole(Role.MURDERER, victim)) {
       ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.KILL_MURDERER, 0);
-    } else if (Role.isRole(Role.INNOCENT, victim)) {
+    } else if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.ENABLE_KILL_DETECTIVE_IF_INNOCENT_KILLED) && Role.isRole(Role.INNOCENT, victim)) {
       if (Role.isRole(Role.MURDERER, attacker)) {
         victim.sendTitle(null, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You", victim), 5, 40, 5);
       } else {
@@ -421,6 +426,10 @@ public class ArenaEvents implements Listener {
     Player player = e.getPlayer();
     Arena arena = ArenaRegistry.getArena(player);
     if (arena == null) {
+      return;
+    }
+    //skip spectators
+    if (plugin.getUserManager().getUser(player).isSpectator()){
       return;
     }
     if (arena.getArenaState() == ArenaState.IN_GAME) {
