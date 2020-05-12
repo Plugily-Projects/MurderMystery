@@ -90,8 +90,14 @@ Detective-Gold-Pick-Up-Arrows: 1
 #How much gold should a player need to get a bow
 Gold-For-Bow: 10
 
+#How much arrows should the player get? (Cause: Bow because enough gold collected)
+Gold-Bow-Arrows: 3
+
 #How much arrows should the detective gets on game start or when a player get a bow?
 Detective-Default-Arrows: 3
+
+#How much arrows should the fake detective get? (Cause: Player pick up bow after detective died)
+Detective-Fake-Arrows: 3
 
 #How much arrows should the player get when the prayer gives a bow to him?
 Detective-Prayer-Arrows: 2
@@ -159,6 +165,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 15
+Version: 16
 
 # No way! You've reached the end! But... where's the dragon!?

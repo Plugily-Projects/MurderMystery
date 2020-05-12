@@ -181,7 +181,7 @@ public class ArenaUtils {
 
         arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, player);
         ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-        ItemPosition.setItem(player, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
+        ItemPosition.setItem(player, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Fake-Arrows", 3)));
         ChatManager.broadcast(arena, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message", player));
       }
     });

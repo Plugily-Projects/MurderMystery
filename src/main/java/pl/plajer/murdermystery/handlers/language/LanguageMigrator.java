@@ -34,7 +34,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 15;
+  public static final int CONFIG_FILE_VERSION = 16;
   public static final int LANGUAGE_FILE_VERSION = 2;
   private Main plugin;
 
@@ -156,6 +156,14 @@ public class LanguageMigrator {
           MigratorUtils.addNewLines(file, "\r\n" +
             "#How much gold should a player need to get a bow\r\n" +
             "Gold-For-Bow: 10\r\n");
+          break;
+        case 15:
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "#How much arrows should the fake detective get? (Cause: Player pick up bow after detective died)\r\n" +
+            "Detective-Fake-Arrows: 3\r\n" +
+            "\r\n" +
+            "#How much arrows should the player get? (Cause: Bow because enough gold collected)\r\n" +
+            "Gold-Bow-Arrows: 3\r\n");
           break;
         default:
           break;
