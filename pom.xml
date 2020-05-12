@@ -24,7 +24,7 @@
 
     <groupId>pl.plajer</groupId>
     <artifactId>murdermystery</artifactId>
-    <version>1.5.3</version>
+    <version>1.5.4</version>
     <name>MurderMystery</name>
 
     <properties>
@@ -290,6 +290,7 @@
                                     <shadedPattern>pl.plajer.murdermystery.utils</shadedPattern>
                                 </relocation>
                             </relocations>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>
                     </execution>
                 </executions>

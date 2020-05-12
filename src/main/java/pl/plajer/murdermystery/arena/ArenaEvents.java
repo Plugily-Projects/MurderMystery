@@ -182,7 +182,7 @@ public class ArenaEvents implements Listener {
       e.getPlayer().sendTitle(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold", e.getPlayer()),
         ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle", e.getPlayer()), 5, 40, 5);
       ItemPosition.setItem(e.getPlayer(), ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-      ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
+      ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Gold-Bow-Arrows", 3)));
       e.getPlayer().getInventory().setItem(/* same for all roles */ ItemPosition.GOLD_INGOTS.getOtherRolesItemPosition(), new ItemStack(Material.GOLD_INGOT, 0));
     }
   }

@@ -1,3 +1,8 @@
+### 1.5.4 Release
+* Added new config values to change arrow amount of fake detective and bow on gold
+* Fixed properties getting on language list
+* Disabled creating of reducedDependencyPom
+
 ### 1.5.3 Release
 * Added a config value to disable detective killing on innocent kill
 * Added a config value to change the spawner mode
