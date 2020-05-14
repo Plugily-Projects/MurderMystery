@@ -95,6 +95,7 @@ public class Main extends JavaPlugin {
   private CorpseHandler corpseHandler;
   private PartyHandler partyHandler;
   private ConfigPreferences configPreferences;
+  private ArgumentsRegistry argumentsRegistry;
   private HookManager hookManager;
   private UserManager userManager;
 
@@ -216,7 +217,7 @@ public class Main extends JavaPlugin {
       FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
       database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
     }
-    new ArgumentsRegistry(this);
+    argumentsRegistry = new ArgumentsRegistry(this);
     userManager = new UserManager(this);
     Utils.init(this);
     ArenaSign.init(this);
@@ -347,6 +348,10 @@ public class Main extends JavaPlugin {
 
   public CorpseHandler getCorpseHandler() {
     return corpseHandler;
+  }
+
+  public ArgumentsRegistry getArgumentsRegistry() {
+    return argumentsRegistry;
   }
 
   public HookManager getHookManager() {
