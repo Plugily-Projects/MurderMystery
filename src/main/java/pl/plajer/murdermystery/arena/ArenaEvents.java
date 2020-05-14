@@ -350,6 +350,7 @@ public class ArenaEvents implements Listener {
     User user = plugin.getUserManager().getUser(player);
     user.addStat(StatsStorage.StatisticType.DEATHS, 1);
     user.setSpectator(true);
+    player.setCollidable(false);
     player.setGameMode(GameMode.SURVIVAL);
     user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
     ArenaUtils.hidePlayer(player, arena);
@@ -390,6 +391,7 @@ public class ArenaEvents implements Listener {
       player.setAllowFlight(true);
       player.setFlying(true);
       user.setSpectator(true);
+      player.setCollidable(false);
       player.setGameMode(GameMode.SURVIVAL);
       player.removePotionEffect(PotionEffectType.NIGHT_VISION);
       user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);

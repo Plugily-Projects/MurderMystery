@@ -454,6 +454,7 @@ public class Arena extends BukkitRunnable {
 
           for (User user : plugin.getUserManager().getUsers(this)) {
             user.setSpectator(false);
+            user.getPlayer().setCollidable(true);
             for (StatsStorage.StatisticType statistic : StatsStorage.StatisticType.values()) {
               if (!statistic.isPersistent()) {
                 user.setStat(statistic, 0);

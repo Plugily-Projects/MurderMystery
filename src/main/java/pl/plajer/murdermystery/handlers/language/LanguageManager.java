@@ -167,7 +167,7 @@ public class LanguageManager {
       //check normal language if nothing found in specific language
       return getStrings(path);
     }
-    return Arrays.asList(ChatManager.colorMessage(prop).split(";"));
+    return Arrays.asList(ChatManager.colorRawMessage(prop).split(";"));
   }
 
 

@@ -1,3 +1,9 @@
+### 1.5.6 Release
+* Fixed spectators will prevent arrows
+
+### 1.5.5 Hotfix
+* Fixed language list getting
+
 ### 1.5.4 Release
 * Added new config values to change arrow amount of fake detective and bow on gold
 * Fixed properties getting on language list

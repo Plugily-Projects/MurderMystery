@@ -189,6 +189,7 @@ public class ArenaManager {
       ArenaUtils.hidePlayer(player, arena);
 
       user.setSpectator(true);
+      player.setCollidable(false);
       player.setGameMode(GameMode.SURVIVAL);
       player.setAllowFlight(true);
       player.setFlying(true);
@@ -320,6 +321,7 @@ public class ArenaManager {
     }
     player.setGlowing(false);
     user.setSpectator(false);
+    player.setCollidable(true);
     user.removeScoreboard();
     arena.doBarAction(Arena.BarAction.REMOVE, player);
     player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
