@@ -24,7 +24,7 @@
 
     <groupId>pl.plajer</groupId>
     <artifactId>murdermystery</artifactId>
-    <version>1.5.6-pre</version>
+    <version>1.6.0-b</version>
     <name>MurderMystery</name>
 
     <properties>

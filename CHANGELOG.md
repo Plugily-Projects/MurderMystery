@@ -1,5 +1,5 @@
-### 1.5.6 Release
-* Fixed spectators will prevent arrows
+### 1.6.0 Release
+* Fixed spectators preventing arrows
 * Fixed editor value "spawn gold time"
 * Added option to disable separate chat
 * Added 1.16.x compatibility 
