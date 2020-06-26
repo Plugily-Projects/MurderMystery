@@ -4,6 +4,7 @@
 * Added option to disable separate chat
 * Added 1.16.x compatibility 
 * Added possibility to change table name of mysql database
+* Removed stats save on quitevent as it wasn't necessary
 
 ### 1.5.5 Hotfix
 * Fixed language list getting
