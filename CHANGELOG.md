@@ -5,6 +5,9 @@
 * Added 1.16.x compatibility 
 * Added possibility to change table name of mysql database
 * Removed stats save on quitevent as it wasn't necessary
+* Fixed different sword cooldown time than 5 seconds
+* Optimized murderer leave before they got the sword
+* Optimized the death respawn location 
 
 ### 1.5.5 Hotfix
 * Fixed language list getting

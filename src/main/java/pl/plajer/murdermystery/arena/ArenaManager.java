@@ -273,6 +273,7 @@ public class ArenaManager {
           if (arena.getMurdererList().isEmpty()) {
             List<Player> players = new ArrayList<>();
             for (Player gamePlayer : arena.getPlayersLeft()) {
+              if (gamePlayer == player) continue;
               if (Role.isRole(Role.ANY_DETECTIVE, gamePlayer) || Role.isRole(Role.MURDERER, gamePlayer)) {
                 continue;
               }
