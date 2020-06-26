@@ -190,7 +190,7 @@ public class MiscComponents implements SetupComponent {
         e.getInventory().getItem(e.getSlot()).setAmount(1);
       }
       config.set("instances." + arena.getId() + ".spawngoldtime", e.getCurrentItem().getAmount());
-      arena.setDetectives(e.getCurrentItem().getAmount());
+      arena.setSpawnGoldTime(e.getCurrentItem().getAmount());
       ConfigUtils.saveConfig(plugin, config, "arenas");
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
     }), 7, 1);
