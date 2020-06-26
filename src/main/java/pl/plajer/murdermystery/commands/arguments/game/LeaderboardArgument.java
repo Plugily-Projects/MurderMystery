@@ -37,6 +37,7 @@ import pl.plajer.murdermystery.commands.arguments.ArgumentsRegistry;
 import pl.plajer.murdermystery.commands.arguments.data.CommandArgument;
 import pl.plajer.murdermystery.commands.completion.CompletableArgument;
 import pl.plajer.murdermystery.handlers.ChatManager;
+import pl.plajer.murdermystery.user.data.MysqlManager;
 
 /**
  * @author Plajer
@@ -61,7 +62,7 @@ public class LeaderboardArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
-          sender.sendMessage(ChatManager.PLUGIN_PREFIX +  ChatManager.colorMessage("Commands.Statistics.Type-Name"));
+          sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Statistics.Type-Name"));
           return;
         }
         try {
@@ -94,7 +95,7 @@ public class LeaderboardArgument {
         if (registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
           try (Connection connection = registry.getPlugin().getMysqlDatabase().getConnection()) {
             Statement statement = connection.createStatement();
-            ResultSet set = statement.executeQuery("SELECT name FROM playerstats WHERE UUID='" + current.toString() + "'");
+            ResultSet set = statement.executeQuery("SELECT name FROM " + ((MysqlManager) registry.getPlugin().getUserManager().getDatabase()).getTableName() + " WHERE UUID='" + current.toString() + "'");
             if (set.next()) {
               sender.sendMessage(formatMessage(statistic, set.getString(1), i + 1, stats.get(current)));
               continue;
