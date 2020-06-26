@@ -51,6 +51,10 @@ InventoryManager: true
 # You can edit the formatting in language.yml
 ChatFormat-Enabled: true
 
+# Should we disable all chat related stuff?
+# It will disable the separated chat, for example
+Disable-Separate-Chat: false
+
 # Should we override corpses spawn from CorpsesReborn plugin?
 # When player will die outside game corpse won't be spawned!
 # Disable this if you don't want this!
@@ -165,6 +169,6 @@ Update-Notifier:
   Notify-Beta-Versions: true
 
 # Don't modify.
-Version: 16
+Version: 17
 
 # No way! You've reached the end! But... where's the dragon!?

@@ -34,7 +34,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 16;
+  public static final int CONFIG_FILE_VERSION = 17;
   public static final int LANGUAGE_FILE_VERSION = 2;
   private Main plugin;
 
@@ -164,6 +164,12 @@ public class LanguageMigrator {
             "\r\n" +
             "#How much arrows should the player get? (Cause: Bow because enough gold collected)\r\n" +
             "Gold-Bow-Arrows: 3\r\n");
+          break;
+        case 16:
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "# Should we disable all chat related stuff?\r\n" +
+            "# It will disable the separated chat, for example\r\n" +
+            "Disable-Separate-Chat: false\r\n");
           break;
         default:
           break;
