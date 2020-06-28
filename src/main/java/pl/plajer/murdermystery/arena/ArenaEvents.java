@@ -168,12 +168,12 @@ public class ArenaEvents implements Listener {
       stack.setAmount(3 * e.getItem().getItemStack().getAmount());
     }
     ItemPosition.addItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, stack);
-    user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, e.getItem().getItemStack().getAmount());
-    ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP, e.getItem().getItemStack().getAmount());
+    user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, stack.getAmount());
+    ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP, stack.getAmount());
     e.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Picked-Up-Gold", e.getPlayer()));
 
     if (Role.isRole(Role.ANY_DETECTIVE, e.getPlayer())) {
-      ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, e.getItem().getItemStack().getAmount() * plugin.getConfig().getInt("Detective-Gold-Pick-Up-Arrows", 3)));
+      ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, stack.getAmount() * plugin.getConfig().getInt("Detective-Gold-Pick-Up-Arrows", 3)));
       return;
     }
 
