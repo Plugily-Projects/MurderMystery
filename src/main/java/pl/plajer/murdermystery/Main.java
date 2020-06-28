@@ -144,7 +144,7 @@ public class Main extends JavaPlugin {
   private boolean validateIfPluginShouldStart() {
     version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
     if (!(version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
-      || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") || version.equalsIgnoreCase("v1_15_R1"))) {
+      || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") || version.equalsIgnoreCase("v1_15_R1") || version.equalsIgnoreCase("v1_16_R1"))) {
       MessageUtils.thisVersionIsNotSupported();
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by Murder Mystery!");
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider changing your server version?");
@@ -319,6 +319,10 @@ public class Main extends JavaPlugin {
   }
   public boolean is1_15_R1() {
     return version.equalsIgnoreCase("v1_15_R1");
+  }
+
+  public boolean is1_16_R1() {
+    return version.equalsIgnoreCase("v1_16_R1");
   }
 
   public RewardsFactory getRewardsHandler() {
