@@ -1,11 +1,13 @@
 ### 1.6.0 Release
 * Fixed spectators preventing arrows
 * Fixed editor value "spawn gold time"
+* Added bungeemode Arena shuffler
 * Added option to disable separate chat
 * Added 1.16.x compatibility 
 * Added possibility to change table name of mysql database
 * Removed stats save on quitevent as it wasn't necessary
 * Fixed different sword cooldown time than 5 seconds
+* Fixed bungeemanager enable null text error
 * Optimized murderer leave before they got the sword
 * Optimized the death respawn location 
 

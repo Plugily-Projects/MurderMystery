@@ -482,8 +482,9 @@ public class Arena extends BukkitRunnable {
         getPlayers().clear();
         setArenaState(ArenaState.WAITING_FOR_PLAYERS);
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+          ArenaRegistry.shuffleBungeeArena();
           for (Player player : Bukkit.getOnlinePlayers()) {
-            ArenaManager.joinAttempt(player, this);
+            ArenaManager.joinAttempt(player, ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
           }
         }
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
