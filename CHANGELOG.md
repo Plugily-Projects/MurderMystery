@@ -10,6 +10,7 @@
 * Fixed bungeemanager enable null text error
 * Optimized murderer leave before they got the sword
 * Optimized the death respawn location 
+* Fixed prayer multi gold
 
 ### 1.5.5 Hotfix
 * Fixed language list getting
