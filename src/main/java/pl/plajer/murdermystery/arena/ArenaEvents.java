@@ -391,6 +391,7 @@ public class ArenaEvents implements Listener {
       player.setAllowFlight(true);
       player.setFlying(true);
       user.setSpectator(true);
+      ArenaUtils.hidePlayer(player, arena);
       player.setCollidable(false);
       player.setGameMode(GameMode.SURVIVAL);
       player.removePotionEffect(PotionEffectType.NIGHT_VISION);
