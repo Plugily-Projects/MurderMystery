@@ -90,7 +90,7 @@ public class ChatEvents implements Listener {
         player.sendMessage(message);
       }
       Bukkit.getConsoleSender().sendMessage(message);
-    } else {
+    } else if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)){
       event.getRecipients().clear();
       event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
     }

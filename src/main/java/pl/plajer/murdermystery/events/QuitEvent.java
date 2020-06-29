@@ -48,10 +48,6 @@ public class QuitEvent implements Listener {
       ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArena(event.getPlayer()));
     }
     final User user = plugin.getUserManager().getUser(event.getPlayer());
-    //May stats update on quit will be removed in further release as we save it on ending stage now
-    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-      plugin.getUserManager().saveStatistic(user, stat);
-    }
     plugin.getUserManager().removeUser(user);
   }
 

@@ -52,12 +52,12 @@ public class BungeeManager implements Listener {
 
   public BungeeManager(Main plugin) {
     this.plugin = plugin;
-    gameStateToString.put(ArenaState.WAITING_FOR_PLAYERS, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Inactive")));
-    gameStateToString.put(ArenaState.STARTING, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Starting")));
-    gameStateToString.put(ArenaState.IN_GAME, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.In-Game")));
-    gameStateToString.put(ArenaState.ENDING, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Ending")));
-    gameStateToString.put(ArenaState.RESTARTING, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Restarting")));
-    MOTD = ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Message"));
+    gameStateToString.put(ArenaState.WAITING_FOR_PLAYERS, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Inactive", "Inactive")));
+    gameStateToString.put(ArenaState.STARTING, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Starting", "Starting")));
+    gameStateToString.put(ArenaState.IN_GAME, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.In-Game", "In-Game")));
+    gameStateToString.put(ArenaState.ENDING, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Ending", "Ending")));
+    gameStateToString.put(ArenaState.RESTARTING, ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Restarting", "Restarting")));
+    MOTD = ChatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Message", "The actual game state of mm is %state%"));
     plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
@@ -73,7 +73,7 @@ public class BungeeManager implements Listener {
   }
 
   private ArenaState getArenaState() {
-    Arena arena = ArenaRegistry.getArenas().get(0);
+    Arena arena = ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena());
     return arena.getArenaState();
   }
 
@@ -89,7 +89,7 @@ public class BungeeManager implements Listener {
     if (ArenaRegistry.getArenas().isEmpty()) {
       return;
     }
-    event.setMaxPlayers(ArenaRegistry.getArenas().get(0).getMaximumPlayers());
+    event.setMaxPlayers(ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()).getMaximumPlayers());
     event.setMotd(MOTD.replace("%state%", gameStateToString.get(getArenaState())));
   }
 
@@ -97,14 +97,14 @@ public class BungeeManager implements Listener {
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onJoin(final PlayerJoinEvent event) {
     event.setJoinMessage("");
-    plugin.getServer().getScheduler().runTaskLater(plugin, () -> ArenaManager.joinAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(0)), 1L);
+    plugin.getServer().getScheduler().runTaskLater(plugin, () -> ArenaManager.joinAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena())), 1L);
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onQuit(PlayerQuitEvent event) {
     event.setQuitMessage("");
     if (ArenaRegistry.getArena(event.getPlayer()) != null) {
-      ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(0));
+      ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
     }
   }
 

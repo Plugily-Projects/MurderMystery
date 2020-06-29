@@ -53,7 +53,7 @@ public class LobbyEvent implements Listener {
     }
     event.setCancelled(true);
     player.setFireTicks(0);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
   }
 
 }

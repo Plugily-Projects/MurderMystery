@@ -171,7 +171,7 @@ public class ArenaManager {
     arena.addPlayer(player);
     player.setLevel(0);
     player.setExp(1);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
     player.setFoodLevel(20);
     if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)) {
       arena.teleportToStartLocation(player);
@@ -189,6 +189,7 @@ public class ArenaManager {
       ArenaUtils.hidePlayer(player, arena);
 
       user.setSpectator(true);
+      player.setCollidable(false);
       player.setGameMode(GameMode.SURVIVAL);
       player.setAllowFlight(true);
       player.setFlying(true);
@@ -272,6 +273,7 @@ public class ArenaManager {
           if (arena.getMurdererList().isEmpty()) {
             List<Player> players = new ArrayList<>();
             for (Player gamePlayer : arena.getPlayersLeft()) {
+              if (gamePlayer == player) continue;
               if (Role.isRole(Role.ANY_DETECTIVE, gamePlayer) || Role.isRole(Role.MURDERER, gamePlayer)) {
                 continue;
               }
@@ -320,9 +322,10 @@ public class ArenaManager {
     }
     player.setGlowing(false);
     user.setSpectator(false);
+    player.setCollidable(true);
     user.removeScoreboard();
     arena.doBarAction(Arena.BarAction.REMOVE, player);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
     player.setFoodLevel(20);
     player.setLevel(0);
     player.setExp(0);

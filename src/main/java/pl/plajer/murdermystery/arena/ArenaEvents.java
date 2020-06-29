@@ -168,8 +168,8 @@ public class ArenaEvents implements Listener {
       stack.setAmount(3 * e.getItem().getItemStack().getAmount());
     }
     ItemPosition.addItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, stack);
-    user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, e.getItem().getItemStack().getAmount());
-    ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP, e.getItem().getItemStack().getAmount());
+    user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, stack.getAmount());
+    ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP, stack.getAmount());
     e.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Picked-Up-Gold", e.getPlayer()));
 
     if (Role.isRole(Role.ANY_DETECTIVE, e.getPlayer())) {
@@ -350,6 +350,7 @@ public class ArenaEvents implements Listener {
     User user = plugin.getUserManager().getUser(player);
     user.addStat(StatsStorage.StatisticType.DEATHS, 1);
     user.setSpectator(true);
+    player.setCollidable(false);
     player.setGameMode(GameMode.SURVIVAL);
     user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
     ArenaUtils.hidePlayer(player, arena);
@@ -382,7 +383,7 @@ public class ArenaEvents implements Listener {
     }
     if (arena.getPlayers().contains(player)) {
       User user = plugin.getUserManager().getUser(player);
-      if (player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.AIR && player.getLocation().getWorld() == arena.getPlayerSpawnPoints().get(0).getWorld()) {
+      if (player.getLocation().getWorld() == arena.getPlayerSpawnPoints().get(0).getWorld()) {
         e.setRespawnLocation(player.getLocation());
       } else {
         e.setRespawnLocation(arena.getPlayerSpawnPoints().get(0));
@@ -390,6 +391,8 @@ public class ArenaEvents implements Listener {
       player.setAllowFlight(true);
       player.setFlying(true);
       user.setSpectator(true);
+      ArenaUtils.hidePlayer(player, arena);
+      player.setCollidable(false);
       player.setGameMode(GameMode.SURVIVAL);
       player.removePotionEffect(PotionEffectType.NIGHT_VISION);
       user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);

@@ -95,6 +95,7 @@ public class Main extends JavaPlugin {
   private CorpseHandler corpseHandler;
   private PartyHandler partyHandler;
   private ConfigPreferences configPreferences;
+  private ArgumentsRegistry argumentsRegistry;
   private HookManager hookManager;
   private UserManager userManager;
 
@@ -108,7 +109,7 @@ public class Main extends JavaPlugin {
     exceptionLogHandler = new ExceptionLogHandler(this);
     LanguageManager.init(this);
     saveDefaultConfig();
-    if (getDescription().getVersion().contains("b")){
+    if (getDescription().getVersion().contains("b")) {
       Debugger.setEnabled(true);
     } else {
       Debugger.setEnabled(getConfig().getBoolean("Debug", false));
@@ -144,7 +145,7 @@ public class Main extends JavaPlugin {
   private boolean validateIfPluginShouldStart() {
     version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
     if (!(version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
-      || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") || version.equalsIgnoreCase("v1_15_R1"))) {
+      || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") || version.equalsIgnoreCase("v1_15_R1") || version.equalsIgnoreCase("v1_16_R1"))) {
       MessageUtils.thisVersionIsNotSupported();
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by Murder Mystery!");
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider changing your server version?");
@@ -216,7 +217,7 @@ public class Main extends JavaPlugin {
       FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
       database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
     }
-    new ArgumentsRegistry(this);
+    argumentsRegistry = new ArgumentsRegistry(this);
     userManager = new UserManager(this);
     Utils.init(this);
     ArenaSign.init(this);
@@ -317,8 +318,13 @@ public class Main extends JavaPlugin {
   public boolean is1_14_R1() {
     return version.equalsIgnoreCase("v1_14_R1");
   }
+
   public boolean is1_15_R1() {
     return version.equalsIgnoreCase("v1_15_R1");
+  }
+
+  public boolean is1_16_R1() {
+    return version.equalsIgnoreCase("v1_16_R1");
   }
 
   public RewardsFactory getRewardsHandler() {
@@ -349,6 +355,10 @@ public class Main extends JavaPlugin {
     return corpseHandler;
   }
 
+  public ArgumentsRegistry getArgumentsRegistry() {
+    return argumentsRegistry;
+  }
+
   public HookManager getHookManager() {
     return hookManager;
   }
@@ -367,8 +377,8 @@ public class Main extends JavaPlugin {
           continue;
         }
         if (userManager.getDatabase() instanceof MysqlManager) {
-          ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
-          Debugger.debug(Level.INFO, "Executed MySQL: " + "UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+          ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE " + ((MysqlManager) userManager.getDatabase()).getTableName() + " SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+          Debugger.debug(Level.INFO, "Executed MySQL: " + "UPDATE " + ((MysqlManager) userManager.getDatabase()).getTableName() + " " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
           continue;
         }
         userManager.getDatabase().saveStatistic(user, stat);

@@ -66,7 +66,7 @@ public class JoinEvent implements Listener {
     plugin.getUserManager().loadStatistics(plugin.getUserManager().getUser(event.getPlayer()));
     //Teleport to lobby on bungee mode
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-      ArenaRegistry.getArenas().get(0).teleportToLobby(event.getPlayer());
+      ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()).teleportToLobby(event.getPlayer());
       return;
     }
     for (Player player : plugin.getServer().getOnlinePlayers()) {

@@ -342,9 +342,11 @@ public class Arena extends BukkitRunnable {
             p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
           }
           if (getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
+            if (allMurderer.isEmpty()) ArenaManager.stopGame(false, this);
             for (Player p : allMurderer) {
               User murderer = plugin.getUserManager().getUser(p);
               if (murderer.isSpectator()) continue;
+              if (!p.isOnline() || murderer.getArena() != this) continue;
               p.getInventory().setHeldItemSlot(0);
               ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
             }
@@ -454,6 +456,7 @@ public class Arena extends BukkitRunnable {
 
           for (User user : plugin.getUserManager().getUsers(this)) {
             user.setSpectator(false);
+            user.getPlayer().setCollidable(true);
             for (StatsStorage.StatisticType statistic : StatsStorage.StatisticType.values()) {
               if (!statistic.isPersistent()) {
                 user.setStat(statistic, 0);
@@ -479,8 +482,9 @@ public class Arena extends BukkitRunnable {
         getPlayers().clear();
         setArenaState(ArenaState.WAITING_FOR_PLAYERS);
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+          ArenaRegistry.shuffleBungeeArena();
           for (Player player : Bukkit.getOnlinePlayers()) {
-            ArenaManager.joinAttempt(player, this);
+            ArenaManager.joinAttempt(player, ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
           }
         }
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {

@@ -97,9 +97,9 @@ public class Utils {
         if (ticks >= seconds * 20) {
           this.cancel();
         }
-        String progress = StringFormatUtils.getProgressBar(ticks, 5 * 20, 10, "■", ChatColor.COLOR_CHAR + "a", ChatColor.COLOR_CHAR + "c");
+        String progress = StringFormatUtils.getProgressBar(ticks, seconds * 20, 10, "■", ChatColor.COLOR_CHAR + "a", ChatColor.COLOR_CHAR + "c");
         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatManager.colorMessage("In-Game.Cooldown-Format", p)
-          .replace("%progress%", progress).replace("%time%", String.valueOf((double) (100 - ticks) / 20))));
+          .replace("%progress%", progress).replace("%time%", String.valueOf((double) ((seconds * 20) - ticks) / 20))));
         ticks += 10;
       }
     }.runTaskTimer(plugin, 0, 10);
