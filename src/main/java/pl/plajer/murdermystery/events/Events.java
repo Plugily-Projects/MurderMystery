@@ -190,8 +190,10 @@ public class Events implements Listener {
     if (!plugin.getConfig().getBoolean("Block-Commands-In-Game", true)) {
       return;
     }
+    String command = event.getMessage().substring(1);
+    command = (command.indexOf(' ') >= 0 ? command.substring(0, command.indexOf(' ')) : command);
     for (String msg : plugin.getConfig().getStringList("Whitelisted-Commands")) {
-      if (event.getMessage().contains(msg)) {
+      if (command.equalsIgnoreCase(msg)) {
         return;
       }
     }
