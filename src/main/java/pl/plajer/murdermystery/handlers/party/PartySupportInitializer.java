@@ -20,6 +20,8 @@ package pl.plajer.murdermystery.handlers.party;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import pl.plajer.murdermystery.ConfigPreferences;
+import pl.plajer.murdermystery.Main;
 
 /**
  * @author Plajer
@@ -28,37 +30,38 @@ import org.bukkit.entity.Player;
  */
 public class PartySupportInitializer {
 
-  public PartyHandler initialize() {
+  public PartyHandler initialize(Main plugin) {
     PartyHandler partyHandler;
-    if (Bukkit.getServer().getPluginManager().getPlugin("Parties") != null) {
-      return new PartiesPartyHandlerImpl();
-    } else if (Bukkit.getServer().getPluginManager().getPlugin("Spigot-Party-API-PAF") != null) {
-      return new PAFBPartyHandlerImpl();
-    } else if (Bukkit.getServer().getPluginManager().getPlugin("PartyAndFriends") != null) {
-      return new PAFSPartyHandlerImpl();
-    } else {
-      partyHandler = new PartyHandler() {
-        @Override
-        public boolean isPlayerInParty(Player player) {
-          return false;
-        }
-
-        @Override
-        public GameParty getParty(Player player) {
-          return null;
-        }
-
-        @Override
-        public boolean partiesSupported() {
-          return false;
-        }
-
-        @Override
-        public PartyPluginType getPartyPluginType() {
-          return PartyPluginType.NONE;
-        }
-      };
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_PARTIES)){
+      if (Bukkit.getServer().getPluginManager().getPlugin("Parties") != null) {
+        return new PartiesPartyHandlerImpl();
+      } else if (Bukkit.getServer().getPluginManager().getPlugin("Spigot-Party-API-PAF") != null) {
+        return new PAFBPartyHandlerImpl();
+      } else if (Bukkit.getServer().getPluginManager().getPlugin("PartyAndFriends") != null) {
+        return new PAFSPartyHandlerImpl();
+      }
     }
+    partyHandler = new PartyHandler() {
+      @Override
+      public boolean isPlayerInParty(Player player) {
+        return false;
+      }
+
+      @Override
+      public GameParty getParty(Player player) {
+        return null;
+      }
+
+      @Override
+      public boolean partiesSupported() {
+        return false;
+      }
+
+      @Override
+      public PartyPluginType getPartyPluginType() {
+        return PartyPluginType.NONE;
+      }
+    };
     return partyHandler;
   }
 

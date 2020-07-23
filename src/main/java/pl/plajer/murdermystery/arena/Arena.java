@@ -272,7 +272,7 @@ public class Arena extends BukkitRunnable {
             maxdetectives = (getPlayers().size() / detectives);
           }
           if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
-            ChatManager.broadcast(this, "Murderers and detectives amount was reduced because there are not enough players");
+            Debugger.debug(Level.INFO,"{0} Murderers and detectives amount was reduced because there are not enough players", this);
             //Make sure to have one innocent!
             if (maxdetectives > 1) {
               maxdetectives--;
@@ -457,13 +457,7 @@ public class Arena extends BukkitRunnable {
           for (User user : plugin.getUserManager().getUsers(this)) {
             user.setSpectator(false);
             user.getPlayer().setCollidable(true);
-            for (StatsStorage.StatisticType statistic : StatsStorage.StatisticType.values()) {
-              if (!statistic.isPersistent()) {
-                user.setStat(statistic, 0);
-              }
-              //Save stats
-              plugin.getUserManager().saveStatistic(user, statistic);
-            }
+            plugin.getUserManager().saveAllStatistic(user);
           }
           plugin.getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
           players.clear();

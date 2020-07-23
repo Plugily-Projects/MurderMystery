@@ -106,6 +106,10 @@ public class UserManager {
     }
   }
 
+  public void saveAllStatistic(User user) {
+    database.saveAllStatistic(user);
+  }
+
   public void removeUser(User user) {
     users.remove(user);
   }

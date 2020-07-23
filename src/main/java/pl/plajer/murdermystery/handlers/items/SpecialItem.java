@@ -66,7 +66,7 @@ public class SpecialItem {
       config.set(name + ".slot", slot);
     }
     ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "lobbyitems");
-    ItemStack stack = XMaterial.fromString(config.getString(name + ".material-name").toUpperCase()).parseItem();
+    ItemStack stack = XMaterial.matchXMaterial(config.getString(name + ".material-name", "STONE").toUpperCase()).get().parseItem();
     ItemMeta meta = stack.getItemMeta();
     meta.setDisplayName(ChatManager.colorRawMessage(config.getString(name + ".displayname")));
 

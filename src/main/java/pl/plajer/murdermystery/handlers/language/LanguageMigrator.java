@@ -34,7 +34,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 17;
+  public static final int CONFIG_FILE_VERSION = 18;
   public static final int LANGUAGE_FILE_VERSION = 2;
   private Main plugin;
 
@@ -170,6 +170,11 @@ public class LanguageMigrator {
             "# Should we disable all chat related stuff?\r\n" +
             "# It will disable the separated chat, for example\r\n" +
             "Disable-Separate-Chat: false\r\n");
+          break;
+        case 17:
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "#Disable Party features of external party plugins (such as PAF, Parties ...)\r\n" +
+            "Disable-Parties: true\r\n");
           break;
         default:
           break;

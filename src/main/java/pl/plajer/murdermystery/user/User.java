@@ -45,6 +45,7 @@ public class User {
   private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
   private Player player;
   private boolean spectator = false;
+  private boolean permanentSpectator = false;
   private Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
   private Map<String, Double> cooldowns = new HashMap<>();
 
@@ -68,8 +69,16 @@ public class User {
     return spectator;
   }
 
+  public boolean isPermanentSpectator() {
+    return permanentSpectator;
+  }
+
   public void setSpectator(boolean b) {
     spectator = b;
+  }
+
+  public void setPermanentSpectator(boolean permanentSpectator) {
+    this.permanentSpectator = permanentSpectator;
   }
 
   public int getStat(StatsStorage.StatisticType stat) {

@@ -82,6 +82,24 @@ public class MysqlManager implements UserDatabase {
   }
 
   @Override
+  public void saveAllStatistic(User user) {
+    StringBuilder update = new StringBuilder(" SET ");
+    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+      if (!stat.isPersistent()) {
+        user.setStat(stat, 0);
+      }
+      if (update.toString().equalsIgnoreCase(" SET ")){
+        update.append(stat.getName()).append("=").append(user.getStat(stat));
+      }
+      update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
+    }
+    String finalUpdate = update.toString();
+
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
+      database.executeUpdate("UPDATE "+getTableName()+ finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
+  }
+
+  @Override
   public void loadStatistics(User user) {
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
       String uuid = user.getPlayer().getUniqueId().toString();

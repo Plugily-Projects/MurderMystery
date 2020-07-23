@@ -168,7 +168,10 @@ Update-Notifier:
   # BETA IS NOT ALWAYS AS STABLE AS NORMAL RELEASE!
   Notify-Beta-Versions: true
 
+#Disable Party features of external party plugins (such as PAF, Parties ...)
+Disable-Parties: true
+
 # Don't modify.
-Version: 17
+Version: 18
 
 # No way! You've reached the end! But... where's the dragon!?

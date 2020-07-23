@@ -23,6 +23,8 @@ import org.bukkit.entity.Player;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 
+import java.util.Arrays;
+
 /**
  * @author Plajer
  * <p>
@@ -89,4 +91,17 @@ public enum Role {
     }
   }
 
+  /**
+   * Checks whether player is playing a role or not
+   *
+   * @param player player to check
+   * @return true if is playing one role, false otherwise
+   */
+  public static boolean isAnyRole(Player player){
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null) {
+      return false;
+    }
+    return Arrays.stream(Role.values()).anyMatch(role -> isRole(role, player));
+  }
 }

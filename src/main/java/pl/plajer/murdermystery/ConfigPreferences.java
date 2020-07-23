@@ -46,7 +46,7 @@ public class ConfigPreferences {
 
   private void loadMurdererSword() {
     try {
-      murdererSword = XMaterial.fromString(plugin.getConfig().getString("Murderer-Sword-Material", "IRON_SWORD").toUpperCase()).parseItem();
+      murdererSword = XMaterial.matchXMaterial(plugin.getConfig().getString("Murderer-Sword-Material", "IRON_SWORD").toUpperCase()).get().parseItem();
     } catch (Exception ex) {
       MessageUtils.errorOccurred();
       Bukkit.getConsoleSender().sendMessage("Can not found Material " + plugin.getConfig().getString("Murderer-Sword-Material", "IRON_SWORD"));
@@ -76,7 +76,7 @@ public class ConfigPreferences {
     DATABASE_ENABLED("DatabaseActivated", false), INVENTORY_MANAGER_ENABLED("InventoryManager", true), NAMETAGS_HIDDEN("Nametags-Hidden", true),
     DISABLE_FALL_DAMAGE("Disable-Fall-Damage", false), ENABLE_SHORT_COMMANDS("Enable-Short-Commands", false), ENABLE_KILL_DETECTIVE_IF_INNOCENT_KILLED("Enable-Kill-Detective-If-Innocent-Killed", true),
     MURDERER_SPEED_ENABLED("Speed-Effect-Murderer.Enabled", true), SPAWN_GOLD_EVERY_SPAWNER_MODE("Change-Gold-Spawner-Mode-To-All", false), DISABLE_GOLD_LIMITER("Disable-Gold-Limiter", false),
-    DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false);
+    DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false), DISABLE_PARTIES("Disable-Parties", true);
 
     private String path;
     private boolean def;

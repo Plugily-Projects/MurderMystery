@@ -1,3 +1,9 @@
+### 1.6.1 Release (01.07.2020 - 23.07.2020)
+* Added missing 1.14 & 1.15 & 1.16 Materials
+* Changed Reduce message will now only come on debug mode
+* Changed mysql updates to do only one instead of more than 10 (should improve performance)
+* Fixed spectators that wasn't ingame got rewards
+
 ### 1.6.0 Release
 * Fixed spectators preventing arrows
 * Fixed editor value "spawn gold time"
