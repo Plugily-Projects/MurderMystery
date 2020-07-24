@@ -44,7 +44,7 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
  */
 public class SetupInventory {
 
-  public static final String VIDEO_LINK = "https://tutorial.plajer.xyz";
+  public static final String VIDEO_LINK = "https://tutorial.plugily.xyz";
   private static Random random = new Random();
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
@@ -95,16 +95,16 @@ public class SetupInventory {
     int rand = random.nextInt(16 + 1);
     switch (rand) {
       case 0:
-        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plajer.xyz"));
+        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plugily.xyz"));
         break;
       case 1:
         p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7LeaderHeads leaderboard plugin is supported with our plugin! Check here: https://bit.ly/2IH5zkR"));
         break;
       case 2:
-        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Plajer-Lair/MurderMystery"));
+        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Plugily-Projects/MurderMystery"));
         break;
       case 3:
-        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7Need help? Check wiki &8https://wiki.plajer.xyz/minecraft/murdermystery &7or discord https://discord.gg/UXzUdTP"));
+        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7Need help? Check wiki &8https://wiki.plugily.xyz/minecraft/murdermystery &7or discord https://discord.gg/UXzUdTP"));
         break;
       case 4:
         p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7Suggest new ideas for the plugin or vote on current ones! https://app.feedbacky.net/b/MurderMystery"));
