@@ -190,18 +190,19 @@ public class Events implements Listener {
     if (!plugin.getConfig().getBoolean("Block-Commands-In-Game", true)) {
       return;
     }
-    String command = event.getMessage().toLowerCase();
+    String command = event.getMessage().substring(1);
+    command = (command.indexOf(' ') >= 0 ? command.substring(0, command.indexOf(' ')) : command);
     for (String msg : plugin.getConfig().getStringList("Whitelisted-Commands")) {
-      if (command.startsWith("/" + msg.toLowerCase())) {
+      if (command.equalsIgnoreCase(msg)) {
         return;
       }
     }
     if (event.getPlayer().isOp() || event.getPlayer().hasPermission("murdermystery.admin") || event.getPlayer().hasPermission("murdermystery.command.bypass")) {
       return;
     }
-    if (command.startsWith("/mm") || command.startsWith("/murdermystery")
-      || command.startsWith("/murdermysteryadmin") || command.contains("leave")
-      || command.contains("stats") || command.startsWith("/mma")) {
+    if (command.equalsIgnoreCase("mm") || command.equalsIgnoreCase("murdermystery")
+      || event.getMessage().contains("murdermysteryadmin") || event.getMessage().contains("leave")
+      || command.equalsIgnoreCase("stats") || command.equalsIgnoreCase("mma")) {
       return;
     }
     event.setCancelled(true);
