@@ -3,6 +3,7 @@
 * Changed Reduce message will now only come on debug mode
 * Changed mysql updates to do only one instead of more than 10 (should improve performance)
 * Fixed spectators that wasn't ingame got rewards
+* Fixed reset of contributions are not applied when leaving ingame
 
 ### 1.6.0 Release
 * Fixed spectators preventing arrows
