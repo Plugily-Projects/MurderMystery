@@ -348,6 +348,7 @@ public class ArenaManager {
       && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, player);
     }
+    plugin.getUserManager().saveAllStatistic(user);
     Debugger.debug(Level.INFO, "[{0}] Game leave finished for {1} took{2}ms ", arena.getId(), player.getName(), System.currentTimeMillis() - start);
   }
 
