@@ -46,6 +46,7 @@ import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -62,6 +63,7 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.api.events.game.MMGameStartEvent;
 import pl.plajer.murdermystery.api.events.game.MMGameStateChangeEvent;
 import pl.plajer.murdermystery.arena.corpse.Corpse;
+import pl.plajer.murdermystery.arena.corpse.Stand;
 import pl.plajer.murdermystery.arena.managers.ScoreboardManager;
 import pl.plajer.murdermystery.arena.options.ArenaOption;
 import pl.plajer.murdermystery.arena.role.Role;
@@ -87,6 +89,7 @@ public class Arena extends BukkitRunnable {
   private List<Item> goldSpawned = new ArrayList<>();
   private List<Location> playerSpawnPoints = new ArrayList<>();
   private List<Corpse> corpses = new ArrayList<>();
+  private List<Stand> stands = new ArrayList<>();
   private List<SpecialBlock> specialBlocks = new ArrayList<>();
   private List<Player> allMurderer = new ArrayList<>();
   private List<Player> allDetectives = new ArrayList<>();
@@ -140,6 +143,11 @@ public class Arena extends BukkitRunnable {
     }
     corpses.add(corpse);
   }
+
+  public void addHead(Stand stand) {
+    stands.add(stand);
+  }
+
 
   public void setBowHologram(Hologram bowHologram) {
     if (this.bowHologram != null && !this.bowHologram.isDeleted()) {
@@ -905,6 +913,15 @@ public class Arena extends BukkitRunnable {
 
   public void clearCorpses() {
     if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+      for (Stand stand : stands){
+        if (!stand.getHologram().isDeleted()) {
+          stand.getHologram().delete();
+        }
+        if (stand.getStand() != null) {
+          stand.getStand().remove();
+        }
+      }
+      stands.clear();
       return;
     }
     for (Corpse corpse : corpses) {

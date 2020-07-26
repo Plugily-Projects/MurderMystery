@@ -149,6 +149,8 @@ public class Events implements Listener {
             if (ArenaRegistry.isInArena(victim) && !plugin.getUserManager().getUser(victim).isSpectator()) {
               if (!victim.equals(attacker)) {
                 killBySword(arena, attackerUser, victim);
+                this.cancel();
+                stand.remove();
               }
             }
           }

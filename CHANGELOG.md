@@ -5,6 +5,8 @@
 * Fixed spectators that wasn't ingame got rewards
 * Fixed reset of contributions not applied when leaving ingame
 * Fixed in rare cases is the speed not the default one after changing it with spectator menu
+* Added simple head corpse when no CorpseReborn is installed
+* Fixed sword is flying further after player hit
 
 ### 1.6.0 Release
 * Fixed spectators preventing arrows

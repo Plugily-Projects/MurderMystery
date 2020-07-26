@@ -31,7 +31,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.util.EulerAngle;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
@@ -44,6 +43,8 @@ import pl.plajer.murdermystery.Main;
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
 import pl.plajer.murdermystery.arena.corpse.Corpse;
+import pl.plajer.murdermystery.arena.corpse.Stand;
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 
 /**
  * @author Plajer
@@ -76,8 +77,35 @@ public class CorpseHandler implements Listener {
 
   public void spawnCorpse(Player p, Arena arena) {
     if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+      ArmorStand stand = p.getLocation().getWorld().spawn(p.getLocation().add(0.0D, -1.25D, 0.0D), ArmorStand.class);
+      ItemStack head = XMaterial.PLAYER_HEAD.parseItem();
+      SkullMeta meta = (SkullMeta)head.getItemMeta();
+      meta.setOwner(p.getName());
+      head.setItemMeta(meta);
+      stand.setVisible(false);
+      stand.setHelmet(head);
+      stand.setGravity(false);
+      stand.setCustomNameVisible(false);
+      stand.setHeadPose(new EulerAngle(Math.toRadians(p.getLocation().getX()), Math.toRadians(p.getLocation().getPitch()), Math.toRadians(p.getLocation().getZ())));
+      Hologram hologram = getLastWordsHologram(p);
+      arena.addHead(new Stand(hologram, stand));
+      Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        hologram.delete();
+        Bukkit.getScheduler().runTaskLater(plugin, stand::remove, 20 * 20);
+      }, 15 * 20);
       return;
     }
+    Hologram hologram = getLastWordsHologram(p);
+    Corpses.CorpseData corpse = CorpseAPI.spawnCorpse(p, p.getLocation());
+    lastSpawnedCorpse = corpse;
+    arena.addCorpse(new Corpse(hologram, corpse));
+    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+      hologram.delete();
+      Bukkit.getScheduler().runTaskLater(plugin, corpse::destroyCorpseFromEveryone, 20 * 20);
+    }, 15 * 20);
+  }
+
+  private Hologram getLastWordsHologram(Player p) {
     Hologram hologram = HologramsAPI.createHologram(plugin, p.getLocation().clone().add(0, 1.7, 0));
     hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Corpse-Last-Words", p).replace("%player%", p.getName()));
     boolean found = false;
@@ -91,31 +119,7 @@ public class CorpseHandler implements Listener {
     if (!found) {
       hologram.appendTextLine(registeredLastWords.get("default"));
     }
-
-    /*
-
-    Maybe using this to have a nice head on the ground for people who don´t use CorpseReborn
-
-    ArmorStand stand = p.getLocation().getWorld().spawn(p.getLocation().add(0.0D, +1.5D, 0.0D), ArmorStand.class);
-    ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
-    SkullMeta meta = (SkullMeta)head.getItemMeta();
-    meta.setOwner(p.getName());
-    head.setItemMeta(meta);
-    stand.setVisible(false);
-    stand.setHelmet(head);
-    stand.setGravity(false);
-    stand.setCustomNameVisible(true);
-    stand.setCustomName(p.getName());
-    stand.setHeadPose(new EulerAngle(Math.toRadians(p.getLocation().getX()), Math.toRadians(p.getLocation().getPitch()), Math.toRadians(p.getLocation().getZ())));
-    */
-
-    Corpses.CorpseData corpse = CorpseAPI.spawnCorpse(p, p.getLocation());
-    lastSpawnedCorpse = corpse;
-    arena.addCorpse(new Corpse(hologram, corpse));
-    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      hologram.delete();
-      Bukkit.getScheduler().runTaskLater(plugin, corpse::destroyCorpseFromEveryone, 20 * 20);
-    }, 15 * 20);
+    return hologram;
   }
 
   @EventHandler
