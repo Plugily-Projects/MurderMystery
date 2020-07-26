@@ -259,6 +259,14 @@ public class ArenaManager {
       user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
     }
 
+    if (arena.getArenaState() == ArenaState.IN_GAME){
+      if (Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
+        Random rand = new Random();
+        user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, rand.nextInt(4) + 1);
+        user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, rand.nextInt(4) + 1);
+      }
+    }
+
     arena.getScoreboardManager().removeScoreboard(user);
     //-1 cause we didn't remove player yet
     if (arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {
