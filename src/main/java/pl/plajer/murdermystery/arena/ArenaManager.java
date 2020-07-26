@@ -410,6 +410,10 @@ public class ArenaManager {
           }
         }
       }
+      //the default walk & fly speed
+      player.setFlySpeed(0.1f);
+      player.setWalkSpeed(0.2f);
+
       player.getInventory().clear();
       player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
       if (!quickStop) {
