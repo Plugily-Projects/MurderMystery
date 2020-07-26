@@ -182,13 +182,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>me.robin</groupId>
-            <artifactId>leaderheads</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/CorpseReborn.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>de.simonsator</groupId>
             <artifactId>partyandfriends</artifactId>
             <version>1.0.52</version>
