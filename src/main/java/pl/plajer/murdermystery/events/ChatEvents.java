@@ -60,39 +60,41 @@ public class ChatEvents implements Listener {
   public void onChatIngame(AsyncPlayerChatEvent event) {
     Arena arena = ArenaRegistry.getArena(event.getPlayer());
     if (arena == null) {
+      if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
+        for (Arena loopArena : ArenaRegistry.getArenas()) {
+          for (Player player : loopArena.getPlayers()) {
+            event.getRecipients().remove(player);
+          }
+        }
+      }
       return;
     }
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CHAT_FORMAT_ENABLED)) {
-      event.setCancelled(true);
-      Iterator<Player> iterator = event.getRecipients().iterator();
-      List<Player> remove = new ArrayList<>();
-      while (iterator.hasNext()) {
-        Player player = iterator.next();
-        remove.add(player);
-      }
-      for (Player player : remove) {
-        event.getRecipients().remove(player);
-      }
-      remove.clear();
-      String message;
       String eventMessage = event.getMessage();
-      boolean dead = !arena.getPlayersLeft().contains(event.getPlayer());
       for (String regexChar : regexChars) {
         if (eventMessage.contains(regexChar)) {
           eventMessage = eventMessage.replaceAll(Pattern.quote(regexChar), "");
         }
       }
-      message = formatChatPlaceholders(LanguageManager.getLanguageMessage("In-Game.Game-Chat-Format"), plugin.getUserManager().getUser(event.getPlayer()), eventMessage);
-      for (Player player : arena.getPlayers()) {
-        if (dead && arena.getPlayersLeft().contains(player)) {
-          continue;
+      String message = formatChatPlaceholders(LanguageManager.getLanguageMessage("In-Game.Game-Chat-Format"), plugin.getUserManager().getUser(event.getPlayer()), eventMessage);
+      if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
+        event.setCancelled(true);
+        boolean dead = !arena.getPlayersLeft().contains(event.getPlayer());
+        for (Player player : arena.getPlayers()) {
+          if (dead && arena.getPlayersLeft().contains(player)) {
+            continue;
+          }
+          if (dead){
+            String prefix = "§7[§4☠§7] §r";
+            player.sendMessage(prefix + message);
+          } else {
+            player.sendMessage(message);
+          }
         }
-        player.sendMessage(message);
+        Bukkit.getConsoleSender().sendMessage(message);
+      } else {
+        event.setMessage(message);
       }
-      Bukkit.getConsoleSender().sendMessage(message);
-    } else if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)){
-      event.getRecipients().clear();
-      event.getRecipients().addAll(new ArrayList<>(arena.getPlayers()));
     }
   }
 
