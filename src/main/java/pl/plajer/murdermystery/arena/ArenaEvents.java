@@ -396,6 +396,7 @@ public class ArenaEvents implements Listener {
       player.setGameMode(GameMode.SURVIVAL);
       player.removePotionEffect(PotionEffectType.NIGHT_VISION);
       user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
+      plugin.getRewardsHandler().performReward(player, Reward.RewardType.DEATH);
     }
   }
 

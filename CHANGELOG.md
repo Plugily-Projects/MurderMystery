@@ -1,6 +1,7 @@
 ### 1.6.1 Release (01.07.2020 - 27.07.2020)
 * Added missing 1.14 & 1.15 & 1.16 Materials
 * Added simple head corpse when no CorpseReborn is installed
+* Added new reward event -> death
 * Changed Reduce message will now only come on debug mode
 * Changed mysql updates to do only one instead of more than 10 (should improve performance)
 * Fixed spectators that wasn't ingame got rewards
