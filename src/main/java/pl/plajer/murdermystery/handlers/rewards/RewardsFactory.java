@@ -18,10 +18,7 @@
 
 package pl.plajer.murdermystery.handlers.rewards;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
@@ -115,10 +112,12 @@ public class RewardsFactory {
 
     Map<Reward.RewardType, Integer> registeredRewards = new HashMap<>();
     for (Reward.RewardType rewardType : Reward.RewardType.values()) {
-      for (String reward : config.getStringList("rewards." + rewardType.getPath())) {
-        rewards.add(new Reward(rewardType, reward));
-        registeredRewards.put(rewardType, registeredRewards.getOrDefault(rewardType, 0) + 1);
-      }
+      try {
+        for (String reward : config.getStringList("rewards." + rewardType.getPath())) {
+          rewards.add(new Reward(rewardType, reward));
+          registeredRewards.put(rewardType, registeredRewards.getOrDefault(rewardType, 0) + 1);
+        }
+      } catch (Exception ignored) {/*ignored*/}
     }
     for (Reward.RewardType rewardType : registeredRewards.keySet()) {
       Debugger.debug(Level.INFO, "[RewardsFactory] Registered {0} {1} rewards!", registeredRewards.get(rewardType), rewardType.name());
