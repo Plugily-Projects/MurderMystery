@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,6 +46,7 @@ import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -62,6 +63,7 @@ import pl.plajer.murdermystery.api.StatsStorage;
 import pl.plajer.murdermystery.api.events.game.MMGameStartEvent;
 import pl.plajer.murdermystery.api.events.game.MMGameStateChangeEvent;
 import pl.plajer.murdermystery.arena.corpse.Corpse;
+import pl.plajer.murdermystery.arena.corpse.Stand;
 import pl.plajer.murdermystery.arena.managers.ScoreboardManager;
 import pl.plajer.murdermystery.arena.options.ArenaOption;
 import pl.plajer.murdermystery.arena.role.Role;
@@ -87,6 +89,7 @@ public class Arena extends BukkitRunnable {
   private List<Item> goldSpawned = new ArrayList<>();
   private List<Location> playerSpawnPoints = new ArrayList<>();
   private List<Corpse> corpses = new ArrayList<>();
+  private List<Stand> stands = new ArrayList<>();
   private List<SpecialBlock> specialBlocks = new ArrayList<>();
   private List<Player> allMurderer = new ArrayList<>();
   private List<Player> allDetectives = new ArrayList<>();
@@ -140,6 +143,11 @@ public class Arena extends BukkitRunnable {
     }
     corpses.add(corpse);
   }
+
+  public void addHead(Stand stand) {
+    stands.add(stand);
+  }
+
 
   public void setBowHologram(Hologram bowHologram) {
     if (this.bowHologram != null && !this.bowHologram.isDeleted()) {
@@ -272,7 +280,7 @@ public class Arena extends BukkitRunnable {
             maxdetectives = (getPlayers().size() / detectives);
           }
           if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
-            ChatManager.broadcast(this, "Murderers and detectives amount was reduced because there are not enough players");
+            Debugger.debug(Level.INFO,"{0} Murderers and detectives amount was reduced because there are not enough players", this);
             //Make sure to have one innocent!
             if (maxdetectives > 1) {
               maxdetectives--;
@@ -457,13 +465,7 @@ public class Arena extends BukkitRunnable {
           for (User user : plugin.getUserManager().getUsers(this)) {
             user.setSpectator(false);
             user.getPlayer().setCollidable(true);
-            for (StatsStorage.StatisticType statistic : StatsStorage.StatisticType.values()) {
-              if (!statistic.isPersistent()) {
-                user.setStat(statistic, 0);
-              }
-              //Save stats
-              plugin.getUserManager().saveStatistic(user, statistic);
-            }
+            plugin.getUserManager().saveAllStatistic(user);
           }
           plugin.getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
           players.clear();
@@ -911,6 +913,15 @@ public class Arena extends BukkitRunnable {
 
   public void clearCorpses() {
     if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+      for (Stand stand : stands){
+        if (!stand.getHologram().isDeleted()) {
+          stand.getHologram().delete();
+        }
+        if (stand.getStand() != null) {
+          stand.getStand().remove();
+        }
+      }
+      stands.clear();
       return;
     }
     for (Corpse corpse : corpses) {

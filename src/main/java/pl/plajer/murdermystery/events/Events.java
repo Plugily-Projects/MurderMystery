@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -149,6 +149,8 @@ public class Events implements Listener {
             if (ArenaRegistry.isInArena(victim) && !plugin.getUserManager().getUser(victim).isSpectator()) {
               if (!victim.equals(attacker)) {
                 killBySword(arena, attackerUser, victim);
+                this.cancel();
+                stand.remove();
               }
             }
           }
@@ -190,17 +192,19 @@ public class Events implements Listener {
     if (!plugin.getConfig().getBoolean("Block-Commands-In-Game", true)) {
       return;
     }
+    String command = event.getMessage().substring(1);
+    command = (command.indexOf(' ') >= 0 ? command.substring(0, command.indexOf(' ')) : command);
     for (String msg : plugin.getConfig().getStringList("Whitelisted-Commands")) {
-      if (event.getMessage().contains(msg)) {
+      if (command.equalsIgnoreCase(msg)) {
         return;
       }
     }
     if (event.getPlayer().isOp() || event.getPlayer().hasPermission("murdermystery.admin") || event.getPlayer().hasPermission("murdermystery.command.bypass")) {
       return;
     }
-    if (event.getMessage().startsWith("/mm") || event.getMessage().startsWith("/murdermystery")
-      || event.getMessage().startsWith("/murdermysteryadmin") || event.getMessage().contains("leave")
-      || event.getMessage().contains("stats") || event.getMessage().startsWith("/mma")) {
+    if (command.equalsIgnoreCase("mm") || command.equalsIgnoreCase("murdermystery")
+      || event.getMessage().contains("murdermysteryadmin") || event.getMessage().contains("leave")
+      || command.equalsIgnoreCase("stats") || command.equalsIgnoreCase("mma")) {
       return;
     }
     event.setCancelled(true);

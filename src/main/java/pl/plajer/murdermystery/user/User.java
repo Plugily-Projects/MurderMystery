@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,6 +45,7 @@ public class User {
   private ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
   private Player player;
   private boolean spectator = false;
+  private boolean permanentSpectator = false;
   private Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
   private Map<String, Double> cooldowns = new HashMap<>();
 
@@ -68,8 +69,16 @@ public class User {
     return spectator;
   }
 
+  public boolean isPermanentSpectator() {
+    return permanentSpectator;
+  }
+
   public void setSpectator(boolean b) {
     spectator = b;
+  }
+
+  public void setPermanentSpectator(boolean permanentSpectator) {
+    this.permanentSpectator = permanentSpectator;
   }
 
   public int getStat(StatsStorage.StatisticType stat) {

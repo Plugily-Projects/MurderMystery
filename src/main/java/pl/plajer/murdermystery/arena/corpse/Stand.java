@@ -16,40 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.plajer.murdermystery.api.events.game;
+package pl.plajer.murdermystery.arena.corpse;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-
-import pl.plajer.murdermystery.api.events.MurderMysteryEvent;
-import pl.plajer.murdermystery.arena.Arena;
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import org.bukkit.entity.ArmorStand;
+import org.golde.bukkit.corpsereborn.nms.Corpses;
 
 /**
  * @author Plajer
- * @since 0.0.3b
  * <p>
- * Called when player is attempting to leave arena.
+ * Created at 07.08.2018
  */
-public class MMGameLeaveAttemptEvent extends MurderMysteryEvent {
+public class Stand {
 
-  private static final HandlerList HANDLERS = new HandlerList();
-  private final Player player;
+  private Hologram hologram;
+  private ArmorStand stand;
 
-  public MMGameLeaveAttemptEvent(Player player, Arena targetArena) {
-    super(targetArena);
-    this.player = player;
+  public Stand(Hologram hologram, ArmorStand stand) {
+    this.hologram = hologram;
+    this.stand = stand;
   }
 
-  public static HandlerList getHandlerList() {
-    return HANDLERS;
+  public Hologram getHologram() {
+    return hologram;
   }
 
-  public Player getPlayer() {
-    return player;
+  public ArmorStand getStand() {
+    return stand;
   }
-
-  public HandlerList getHandlers() {
-    return HANDLERS;
-  }
-
 }

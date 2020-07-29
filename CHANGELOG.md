@@ -1,3 +1,15 @@
+### 1.6.1 Release (01.07.2020 - 27.07.2020)
+* Added missing 1.14 & 1.15 & 1.16 Materials
+* Added simple head corpse when no CorpseReborn is installed
+* Added new reward event -> death
+* Changed Reduce message will now only come on debug mode
+* Changed mysql updates to do only one instead of more than 10 (should improve performance)
+* Fixed spectators that wasn't ingame got rewards
+* Fixed reset of contributions not applied when leaving ingame
+* Fixed in rare cases is the speed not the default one after changing it with spectator menu
+* Fixed sword is flying further after player hit
+* Fixed separate chat (and prefix for death players)
+
 ### 1.6.0 Release
 * Fixed spectators preventing arrows
 * Fixed editor value "spawn gold time"

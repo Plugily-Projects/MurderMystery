@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2020  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -193,11 +193,6 @@ public class ArenaManager {
       player.setGameMode(GameMode.SURVIVAL);
       player.setAllowFlight(true);
       player.setFlying(true);
-      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        if (!stat.isPersistent()) {
-          user.setStat(stat, 0);
-        }
-      }
 
 
       for (Player spectator : arena.getPlayers()) {
@@ -262,6 +257,14 @@ public class ArenaManager {
     user.addStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, -detectiveDecrease);
     if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) <= 0) {
       user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
+    }
+
+    if (arena.getArenaState() == ArenaState.IN_GAME){
+      if (Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
+        Random rand = new Random();
+        user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, rand.nextInt(4) + 1);
+        user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, rand.nextInt(4) + 1);
+      }
     }
 
     arena.getScoreboardManager().removeScoreboard(user);
@@ -353,12 +356,7 @@ public class ArenaManager {
       && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, player);
     }
-    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-      if (!stat.isPersistent()) {
-        user.setStat(stat, 0);
-      }
-    }
-
+    plugin.getUserManager().saveAllStatistic(user);
     Debugger.debug(Level.INFO, "[{0}] Game leave finished for {1} took{2}ms ", arena.getId(), player.getName(), System.currentTimeMillis() - start);
   }
 
@@ -389,27 +387,33 @@ public class ArenaManager {
 
     for (final Player player : arena.getPlayers()) {
       User user = plugin.getUserManager().getUser(player);
-      if (Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
-        user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, rand.nextInt(4) + 1);
-        user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, rand.nextInt(4) + 1);
-      }
-      if (murderWon) {
-        if (Role.isRole(Role.MURDERER, player)) {
-          user.addStat(StatsStorage.StatisticType.WINS, 1);
-          plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
-        } else {
-          user.addStat(StatsStorage.StatisticType.LOSES, 1);
-          plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
+      if (Role.isAnyRole(player)){
+        if (Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
+          user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, rand.nextInt(4) + 1);
+          user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, rand.nextInt(4) + 1);
         }
-      } else {
-        if (!Role.isRole(Role.MURDERER, player)) {
-          user.addStat(StatsStorage.StatisticType.WINS, 1);
-          plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
+        if (murderWon) {
+          if (Role.isRole(Role.MURDERER, player)) {
+            user.addStat(StatsStorage.StatisticType.WINS, 1);
+            plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
+          } else {
+            user.addStat(StatsStorage.StatisticType.LOSES, 1);
+            plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
+          }
         } else {
-          user.addStat(StatsStorage.StatisticType.LOSES, 1);
-          plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
+          if (!Role.isRole(Role.MURDERER, player)) {
+            user.addStat(StatsStorage.StatisticType.WINS, 1);
+            plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
+          } else {
+            user.addStat(StatsStorage.StatisticType.LOSES, 1);
+            plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
+          }
         }
       }
+      //the default walk & fly speed
+      player.setFlySpeed(0.1f);
+      player.setWalkSpeed(0.2f);
+
       player.getInventory().clear();
       player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
       if (!quickStop) {

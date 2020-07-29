@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@ import org.bukkit.entity.Player;
 
 import pl.plajer.murdermystery.arena.Arena;
 import pl.plajer.murdermystery.arena.ArenaRegistry;
+
+import java.util.Arrays;
 
 /**
  * @author Plajer
@@ -89,4 +91,17 @@ public enum Role {
     }
   }
 
+  /**
+   * Checks whether player is playing a role or not
+   *
+   * @param player player to check
+   * @return true if is playing one role, false otherwise
+   */
+  public static boolean isAnyRole(Player player){
+    Arena arena = ArenaRegistry.getArena(player);
+    if (arena == null) {
+      return false;
+    }
+    return Arrays.stream(Role.values()).anyMatch(role -> isRole(role, player));
+  }
 }

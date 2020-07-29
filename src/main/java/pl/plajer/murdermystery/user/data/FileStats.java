@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,6 +43,17 @@ public class FileStats implements UserDatabase {
   @Override
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
     config.set(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
+    ConfigUtils.saveConfig(plugin, config, "stats");
+  }
+
+  @Override
+  public void saveAllStatistic(User user) {
+    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+      if (!stat.isPersistent()) {
+        user.setStat(stat, 0);
+      }
+      config.set(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
+    }
     ConfigUtils.saveConfig(plugin, config, "stats");
   }
 

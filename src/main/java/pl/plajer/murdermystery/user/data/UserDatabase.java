@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,13 @@ public interface UserDatabase {
    * @param stat stat to save to storage
    */
   void saveStatistic(User user, StatsStorage.StatisticType stat);
+
+  /**
+   * Saves player statistic into yaml or MySQL storage based on user choice
+   *
+   * @param user user to retrieve statistic from
+   */
+  void saveAllStatistic(User user);
 
   /**
    * Loads player statistic from yaml or MySQL storage based on user choice

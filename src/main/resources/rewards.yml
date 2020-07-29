@@ -53,4 +53,5 @@ rewards:
   # Commands executed when player loses the game
   lose:
     - say I lost the game!
-
+  death:
+    - say I died!

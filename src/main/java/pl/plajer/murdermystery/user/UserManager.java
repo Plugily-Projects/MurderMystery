@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -104,6 +104,10 @@ public class UserManager {
     if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) <= 0) {
       user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
     }
+  }
+
+  public void saveAllStatistic(User user) {
+    database.saveAllStatistic(user);
   }
 
   public void removeUser(User user) {

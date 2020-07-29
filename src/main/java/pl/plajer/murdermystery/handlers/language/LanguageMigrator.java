@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 17;
+  public static final int CONFIG_FILE_VERSION = 18;
   public static final int LANGUAGE_FILE_VERSION = 2;
   private Main plugin;
 
@@ -170,6 +170,11 @@ public class LanguageMigrator {
             "# Should we disable all chat related stuff?\r\n" +
             "# It will disable the separated chat, for example\r\n" +
             "Disable-Separate-Chat: false\r\n");
+          break;
+        case 17:
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "#Disable Party features of external party plugins (such as PAF, Parties ...)\r\n" +
+            "Disable-Parties: true\r\n");
           break;
         default:
           break;

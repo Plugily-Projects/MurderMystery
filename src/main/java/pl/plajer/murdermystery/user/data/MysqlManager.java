@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2019  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,6 +79,24 @@ public class MysqlManager implements UserDatabase {
       database.executeUpdate("UPDATE " + getTableName() + " SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
       Debugger.debug(Level.INFO, "Executed MySQL: " + "UPDATE " + getTableName() + " SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
     });
+  }
+
+  @Override
+  public void saveAllStatistic(User user) {
+    StringBuilder update = new StringBuilder(" SET ");
+    for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+      if (!stat.isPersistent()) {
+        user.setStat(stat, 0);
+      }
+      if (update.toString().equalsIgnoreCase(" SET ")){
+        update.append(stat.getName()).append("=").append(user.getStat(stat));
+      }
+      update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
+    }
+    String finalUpdate = update.toString();
+
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
+      database.executeUpdate("UPDATE "+getTableName()+ finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
   }
 
   @Override

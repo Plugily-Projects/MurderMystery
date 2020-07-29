@@ -79,7 +79,7 @@ Scoreboard:
       - ""
       - "&fScore: &e%SCORE%"
       - ""
-      - "&ewww.plajer.xyz"
+      - "&ewww.plugily.xyz"
     # Contents of scoreboard for murderer
     Playing-Murderer:
       - "&fRole: %ROLE%"
@@ -93,13 +93,13 @@ Scoreboard:
       - ""
       - "&fScore: &e%SCORE%"
       - ""
-      - "&ewww.plajer.xyz"
+      - "&ewww.plugily.xyz"
     Waiting:
       - "&fPlayers: &e%PLAYERS%"
       - ""
       - "&fMinimum Players: &e%MIN_PLAYERS%"
       - ""
-      - "&ewww.plajer.xyz"
+      - "&ewww.plugily.xyz"
     Starting:
       - "&fStarting In: &e%TIME%"
       - ""
@@ -107,15 +107,15 @@ Scoreboard:
       - ""
       - "&fMinimum Players: &e%MIN_PLAYERS%"
       - ""
-      - "&ewww.plajer.xyz"
+      - "&ewww.plugily.xyz"
 
 # Has usage only when bossbar is enabled in config.yml
 Bossbar:
-  Main-Title: "&a&lMurder Mystery &6- www.plajer.xyz"
+  Main-Title: "&a&lMurder Mystery &6- www.plugily.xyz"
   Starting-In: "&f&lStarting in: &e&l%time%"
   Waiting-For-Players: "&4&lWaiting for more players..."
-  In-Game-Info: "&e&lPlaying &f&lMURDER MYSTERY &e&lon &b&lPLAJER.XYZ"
-  Game-Ended: "&c&lGame has ended! You were playing on &b&lPLAJER.XYZ"
+  In-Game-Info: "&e&lPlaying &f&lMURDER MYSTERY &e&lon &b&lPLUGILY.XYZ"
+  Game-Ended: "&c&lGame has ended! You were playing on &b&lPLUGILY.XYZ"
 
 In-Game:
   #Used in most game messages.

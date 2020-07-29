@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2020  Plajer's Lair - maintained by Tigerpanzer_02, Plajer and contributors
+ * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -238,7 +238,7 @@ public class Main extends JavaPlugin {
     rewardsHandler = new RewardsFactory(this);
     signManager = new SignManager(this);
     corpseHandler = new CorpseHandler(this);
-    partyHandler = new PartySupportInitializer().initialize();
+    partyHandler = new PartySupportInitializer().initialize(this);
     new BowTrailsHandler(this);
     MysteryPotionRegistry.init(this);
     PrayerRegistry.init(this);
@@ -370,19 +370,23 @@ public class Main extends JavaPlugin {
   private void saveAllUserStatistics() {
     for (Player player : getServer().getOnlinePlayers()) {
       User user = userManager.getUser(player);
-
-      //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
+      StringBuilder update = new StringBuilder(" SET ");
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         if (!stat.isPersistent()) {
-          continue;
+          user.setStat(stat, 0);
         }
-        if (userManager.getDatabase() instanceof MysqlManager) {
-          ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE " + ((MysqlManager) userManager.getDatabase()).getTableName() + " SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
-          Debugger.debug(Level.INFO, "Executed MySQL: " + "UPDATE " + ((MysqlManager) userManager.getDatabase()).getTableName() + " " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
-          continue;
+        if (update.toString().equalsIgnoreCase(" SET ")){
+          update.append(stat.getName()).append("=").append(user.getStat(stat));
         }
-        userManager.getDatabase().saveStatistic(user, stat);
+        update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
       }
+      String finalUpdate = update.toString();
+      //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
+      if (userManager.getDatabase() instanceof MysqlManager) {
+        ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE "+((MysqlManager) getUserManager().getDatabase()).getTableName()+ finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+        continue;
+      }
+      userManager.getDatabase().saveAllStatistic(user);
     }
   }
 
