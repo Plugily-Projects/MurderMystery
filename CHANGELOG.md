@@ -1,5 +1,6 @@
 ### 1.6.2 Release (30.07.2020)
 * Fixed MYSQL stats can't update
+* (Developer Alert - Changed class names)
 
 ### 1.6.1 Release (01.07.2020 - 27.07.2020)
 * Added missing 1.14 & 1.15 & 1.16 Materials

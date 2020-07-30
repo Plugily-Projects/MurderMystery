@@ -24,7 +24,7 @@
 
     <groupId>pl.plajer</groupId>
     <artifactId>murdermystery</artifactId>
-    <version>1.6.1</version>
+    <version>1.6.2</version>
     <name>MurderMystery</name>
 
     <properties>
@@ -161,6 +161,7 @@
             <groupId>com.alessiodp.parties</groupId>
             <artifactId>parties-api</artifactId>
             <version>2.6.14</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.bstats.bStats-Metrics</groupId>
