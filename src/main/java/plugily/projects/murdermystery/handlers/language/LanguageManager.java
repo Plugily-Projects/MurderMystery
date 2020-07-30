@@ -27,13 +27,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.handlers.ChatManager;
+import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.services.ServiceRegistry;
 import plugily.projects.murdermystery.utils.services.locale.Locale;
 import plugily.projects.murdermystery.utils.services.locale.LocaleRegistry;
@@ -67,31 +67,33 @@ public class LanguageManager {
   }
 
   private static void registerLocales() {
-    LocaleRegistry.registerLocale(new Locale("Chinese (Simplified)", "简体中文", "zh_CN", "POEditor contributors", Arrays.asList("简体中文", "中文", "chinese", "chinese_simplified", "cn")));
-    LocaleRegistry.registerLocale(new Locale("Chinese (Traditional)", "繁體中文", "zh_TW", "POEditor contributors", Arrays.asList("中文(繁體)", "繁體中文", "chinese_traditional", "zh_tw")));
-    LocaleRegistry.registerLocale(new Locale("Czech", "Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")));
-    LocaleRegistry.registerLocale(new Locale("Dutch", "Nederlands", "nl_NL", "POEditor contributors", Arrays.asList("dutch", "nederlands", "nl")));
-    LocaleRegistry.registerLocale(new Locale("English", "English", "en_GB", "Plajer", Arrays.asList("default", "english", "en")));
-    LocaleRegistry.registerLocale(new Locale("French", "Français", "fr_FR", "POEditor contributors", Arrays.asList("french", "francais", "français", "fr")));
-    LocaleRegistry.registerLocale(new Locale("German", "Deutsch", "de_DE", "Tigerkatze and POEditor contributors", Arrays.asList("deutsch", "german", "de")));
-    LocaleRegistry.registerLocale(new Locale("Hungarian", "Magyar", "hu_HU", "POEditor contributors", Arrays.asList("hungarian", "magyar", "hu")));
-    LocaleRegistry.registerLocale(new Locale("Indonesian", "Indonesia", "id_ID", "POEditor contributors", Arrays.asList("indonesian", "indonesia", "id")));
-    LocaleRegistry.registerLocale(new Locale("Italian", "Italiano", "it_IT", "POEditor contributors", Arrays.asList("italian", "italiano", "it")));
-    LocaleRegistry.registerLocale(new Locale("Korean", "한국의", "ko_KR", "POEditor contributors", Arrays.asList("korean", "한국의", "kr")));
-    LocaleRegistry.registerLocale(new Locale("Polish", "Polski", "pl_PL", "Plajer", Arrays.asList("polish", "polski", "pl")));
-    LocaleRegistry.registerLocale(new Locale("Portuguese (BR)", "Português (Brasil)", "pt_BR", "POEditor contributors", Arrays.asList("portuguese br", "português br", "português brasil", "pt_br")));
-    LocaleRegistry.registerLocale(new Locale("Romanian", "Românesc", "ro_RO", "POEditor contributors", Arrays.asList("romanian", "romanesc", "românesc", "ro")));
-    LocaleRegistry.registerLocale(new Locale("Russian", "Pусский", "ru_RU", "POEditor contributors", Arrays.asList("russian", "pусский", "pyccknn", "russkiy", "ru")));
-    LocaleRegistry.registerLocale(new Locale("Slovak", "Slovenský", "sk_SK", "POEditor contributors", Arrays.asList("slovak", "slovenský", "slovensky", "sk")));
-    LocaleRegistry.registerLocale(new Locale("Spanish", "Español", "es_ES", "POEditor contributors", Arrays.asList("spanish", "espanol", "español", "es")));
-    LocaleRegistry.registerLocale(new Locale("Turkish", "Türkçe", "tr_TR", "POEditor contributors", Arrays.asList("turkish", "türkçe", "turkce", "tr")));
-    LocaleRegistry.registerLocale(new Locale("Vietnamese", "Việt", "vn_VN", "POEditor contributors", Arrays.asList("vietnamese", "viet", "việt", "vn")));
+    Stream.of(new Locale("Chinese (Simplified)", "简体中文", "zh_CN", "POEditor contributors", Arrays.asList("简体中文", "中文", "chinese", "chinese_simplified", "cn")),
+      new Locale("Chinese (Simplified)", "简体中文", "zh_CN", "POEditor contributors", Arrays.asList("简体中文", "中文", "chinese", "chinese_simplified", "cn")),
+      new Locale("Chinese (Traditional)", "繁體中文", "zh_TW", "POEditor contributors", Arrays.asList("中文(繁體)", "繁體中文", "chinese_traditional", "zh_tw")),
+      new Locale("Czech", "Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")),
+      new Locale("Dutch", "Nederlands", "nl_NL", "POEditor contributors", Arrays.asList("dutch", "nederlands", "nl")),
+      new Locale("English", "English", "en_GB", "Plajer", Arrays.asList("default", "english", "en")),
+      new Locale("French", "Français", "fr_FR", "POEditor contributors", Arrays.asList("french", "francais", "français", "fr")),
+      new Locale("German", "Deutsch", "de_DE", "Tigerkatze and POEditor contributors", Arrays.asList("deutsch", "german", "de")),
+      new Locale("Hungarian", "Magyar", "hu_HU", "POEditor contributors", Arrays.asList("hungarian", "magyar", "hu")),
+      new Locale("Indonesian", "Indonesia", "id_ID", "POEditor contributors", Arrays.asList("indonesian", "indonesia", "id")),
+      new Locale("Italian", "Italiano", "it_IT", "POEditor contributors", Arrays.asList("italian", "italiano", "it")),
+      new Locale("Korean", "한국의", "ko_KR", "POEditor contributors", Arrays.asList("korean", "한국의", "kr")),
+      new Locale("Polish", "Polski", "pl_PL", "Plajer", Arrays.asList("polish", "polski", "pl")),
+      new Locale("Portuguese (BR)", "Português (Brasil)", "pt_BR", "POEditor contributors", Arrays.asList("portuguese br", "português br", "português brasil", "pt_br")),
+      new Locale("Romanian", "Românesc", "ro_RO", "POEditor contributors", Arrays.asList("romanian", "romanesc", "românesc", "ro")),
+      new Locale("Russian", "Pусский", "ru_RU", "POEditor contributors", Arrays.asList("russian", "pусский", "pyccknn", "russkiy", "ru")),
+      new Locale("Slovak", "Slovenský", "sk_SK", "POEditor contributors", Arrays.asList("slovak", "slovenský", "slovensky", "sk")),
+      new Locale("Spanish", "Español", "es_ES", "POEditor contributors", Arrays.asList("spanish", "espanol", "español", "es")),
+      new Locale("Turkish", "Türkçe", "tr_TR", "POEditor contributors", Arrays.asList("turkish", "türkçe", "turkce", "tr")),
+      new Locale("Vietnamese", "Việt", "vn_VN", "POEditor contributors", Arrays.asList("vietnamese", "viet", "việt", "vn")))
+    .forEach(LocaleRegistry::registerLocale);
   }
 
   private static void loadProperties() {
     LocaleService service = ServiceRegistry.getLocaleService(plugin);
     if (service == null) {
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Locales cannot be downloaded because API website is unreachable, locales will be disabled.");
+      Debugger.sendConsoleMsg("&c[Murder Mystery] Locales cannot be downloaded because API website is unreachable, locales will be disabled.");
       pluginLocale = LocaleRegistry.getByName("English");
       return;
     }
@@ -99,16 +101,16 @@ public class LanguageManager {
       LocaleService.DownloadStatus status = service.demandLocaleDownload(pluginLocale);
       if (status == LocaleService.DownloadStatus.FAIL) {
         pluginLocale = LocaleRegistry.getByName("English");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Locale service couldn't download latest locale for plugin! English locale will be used instead!");
+        Debugger.sendConsoleMsg("&c[Murder Mystery] Locale service couldn't download latest locale for plugin! English locale will be used instead!");
         return;
       } else if (status == LocaleService.DownloadStatus.SUCCESS) {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Downloaded locale " + pluginLocale.getPrefix() + " properly!");
+        Debugger.sendConsoleMsg("&c[Murder Mystery] Downloaded locale " + pluginLocale.getPrefix() + " properly!");
       } else if (status == LocaleService.DownloadStatus.LATEST) {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Locale " + pluginLocale.getPrefix() + " is latest! Awesome!");
+        Debugger.sendConsoleMsg("&c[Murder Mystery] Locale " + pluginLocale.getPrefix() + " is latest! Awesome!");
       }
     } else {
       pluginLocale = LocaleRegistry.getByName("English");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Your plugin version is too old to use latest locale! Please update plugin to access latest updates of locale!");
+      Debugger.sendConsoleMsg("&c[Murder Mystery] Your plugin version is too old to use latest locale! Please update plugin to access latest updates of locale!");
       return;
     }
     try (InputStreamReader reader = new InputStreamReader(new FileInputStream(plugin.getDataFolder() + "/locales/"
@@ -134,10 +136,10 @@ public class LanguageManager {
       }
     }
     if (pluginLocale == null) {
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Plugin locale is invalid! Using default one...");
+      Debugger.sendConsoleMsg("&c[Murder Mystery] Plugin locale is invalid! Using default one...");
       pluginLocale = LocaleRegistry.getByName("English");
     }
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[Murder Mystery] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: "
+    Debugger.sendConsoleMsg("&a[Murder Mystery] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: "
       + pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
     loadProperties();
   }
@@ -151,10 +153,7 @@ public class LanguageManager {
       return getString(path);
     }
     String prop = properties.getProperty(path);
-    if (prop == null) {
-      return getString(path);
-    }
-    return prop;
+    return prop == null ? getString(path) : prop;
   }
 
   public static List<String> getLanguageList(String path) {
@@ -174,11 +173,11 @@ public class LanguageManager {
     //check normal language if nothing found in specific language
     if (!languageConfig.isSet(path)) {
       //send normal english message - User can change this translation on his own
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Game message not found in your locale! Added it to your language.yml");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Path: " + path + " | Language not found. Report it to the author on Discord!");
+      Debugger.sendConsoleMsg("&c[Murder Mystery] Game message not found in your locale! Added it to your language.yml");
+      Debugger.sendConsoleMsg("&c[Murder Mystery] Path: " + path + " | Language not found. Report it to the author on Discord!");
     }
     List<String> list = languageConfig.getStringList(path);
-    list = list.stream().map(string -> ChatColor.translateAlternateColorCodes('&', string)).collect(Collectors.toList());
+    list = list.stream().map(string -> org.bukkit.ChatColor.translateAlternateColorCodes('&', string)).collect(Collectors.toList());
     return list;
   }
 
@@ -187,8 +186,8 @@ public class LanguageManager {
     //check normal language if nothing found in specific language
     if (!languageConfig.isSet(path)) {
       //send normal english message - User can change this translation on his own
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Game message not found in your locale! Added it to your language.yml");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] Path: " + path + " | Language not found. Report it to the author on Discord!");
+      Debugger.sendConsoleMsg("&c[Murder Mystery] Game message not found in your locale! Added it to your language.yml");
+      Debugger.sendConsoleMsg("&c[Murder Mystery] Path: " + path + " | Language not found. Report it to the author on Discord!");
     }
     return languageConfig.getString(path);
   }

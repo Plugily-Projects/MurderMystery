@@ -20,7 +20,6 @@ package plugily.projects.murdermystery.handlers;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 import org.bukkit.Particle;
 import org.bukkit.entity.Arrow;
@@ -42,7 +41,7 @@ import plugily.projects.murdermystery.utils.Debugger;
 public class BowTrailsHandler implements Listener {
 
   private Main plugin;
-  private Map<String, Particle> registeredTrails = new HashMap<>();
+  private final Map<String, Particle> registeredTrails = new HashMap<>();
 
   public BowTrailsHandler(Main plugin) {
     this.plugin = plugin;
@@ -73,7 +72,7 @@ public class BowTrailsHandler implements Listener {
             if (e.getProjectile() == null || e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
               this.cancel();
             }
-            Debugger.debug(Level.INFO, "Spawned particle with perm {0} for player {1}", perm, e.getEntity().getName());
+            Debugger.debug("Spawned particle with perm {0} for player {1}", perm, e.getEntity().getName());
             e.getProjectile().getWorld().spawnParticle(registeredTrails.get(perm), e.getProjectile().getLocation(), 3, 0, 0, 0, 0);
           }
         }.runTaskTimer(plugin, 0, 0);

@@ -60,8 +60,8 @@ import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 public class SignManager implements Listener {
 
   private Main plugin;
-  private List<ArenaSign> arenaSigns = new ArrayList<>();
-  private Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
+  private final List<ArenaSign> arenaSigns = new ArrayList<>();
+  private final Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
   private List<String> signLines;
 
   public SignManager(Main plugin) {
@@ -173,7 +173,7 @@ public class SignManager implements Listener {
   }
 
   public void loadSigns() {
-    Debugger.debug(Level.INFO, "Signs load event started");
+    Debugger.debug("Signs load event started");
     long start = System.currentTimeMillis();
 
     arenaSigns.clear();
@@ -188,7 +188,7 @@ public class SignManager implements Listener {
         }
       }
     }
-    Debugger.debug(Level.INFO, "Sign load event finished took {0}ms", System.currentTimeMillis() - start);
+    Debugger.debug("Sign load event finished took {0}ms", System.currentTimeMillis() - start);
   }
 
   private void updateSignScheduler() {
@@ -203,39 +203,42 @@ public class SignManager implements Listener {
         }
         if (plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true) && arenaSign.getBehind() != null) {
           Block behind = arenaSign.getBehind();
-          switch (arenaSign.getArena().getArenaState()) {
-            case WAITING_FOR_PLAYERS:
-              behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
-              if (plugin.is1_12_R1()) {
-                behind.setData((byte) 0);
-              }
-              break;
-            case STARTING:
-              behind.setType(XMaterial.YELLOW_STAINED_GLASS.parseMaterial());
-              if (plugin.is1_12_R1()) {
-                behind.setData((byte) 4);
-              }
-              break;
-            case IN_GAME:
-              behind.setType(XMaterial.ORANGE_STAINED_GLASS.parseMaterial());
-              if (plugin.is1_12_R1()) {
-                behind.setData((byte) 1);
-              }
-              break;
-            case ENDING:
-              behind.setType(XMaterial.GRAY_STAINED_GLASS.parseMaterial());
-              if (plugin.is1_12_R1()) {
-                behind.setData((byte) 7);
-              }
-              break;
-            case RESTARTING:
-              behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
-              if (plugin.is1_12_R1()) {
-                behind.setData((byte) 15);
-              }
-              break;
-            default:
-              break;
+          try {
+            switch (arenaSign.getArena().getArenaState()) {
+              case WAITING_FOR_PLAYERS:
+                behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
+                if (plugin.is1_12_R1()) {
+                  Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 0);
+                }
+                break;
+              case STARTING:
+                behind.setType(XMaterial.YELLOW_STAINED_GLASS.parseMaterial());
+                if (plugin.is1_12_R1()) {
+                  Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 4);
+                }
+                break;
+              case IN_GAME:
+                behind.setType(XMaterial.ORANGE_STAINED_GLASS.parseMaterial());
+                if (plugin.is1_12_R1()) {
+                  Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 1);
+                }
+                break;
+              case ENDING:
+                behind.setType(XMaterial.GRAY_STAINED_GLASS.parseMaterial());
+                if (plugin.is1_12_R1()) {
+                  Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 7);
+                }
+                break;
+              case RESTARTING:
+                behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
+                if (plugin.is1_12_R1()) {
+                  Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 15);
+                }
+                break;
+              default:
+                break;
+            }
+          } catch (Exception e) {
           }
         }
         sign.update();

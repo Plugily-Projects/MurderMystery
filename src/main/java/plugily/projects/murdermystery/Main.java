@@ -30,7 +30,6 @@ import me.tigerhix.lib.scoreboard.ScoreboardLib;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -113,7 +112,7 @@ public class Main extends JavaPlugin {
 
     Debugger.setEnabled(getDescription().getVersion().contains("b") ? true : getConfig().getBoolean("Debug", false));
 
-    Debugger.debug(Level.INFO, "[System] Initialization start");
+    Debugger.debug("[System] Initialization start");
     if (getConfig().getBoolean("Developer-Mode", false)) {
       Debugger.deepDebug(true);
       Debugger.debug(Level.FINE, "Deep debug enabled");
@@ -126,9 +125,9 @@ public class Main extends JavaPlugin {
     setupFiles();
     initializeClasses();
     checkUpdate();
-    Debugger.debug(Level.INFO, "[System] Initialization finished took {0}ms", System.currentTimeMillis() - start);
+    Debugger.debug("[System] Initialization finished took {0}ms", System.currentTimeMillis() - start);
 
-    Debugger.debug(Level.INFO, "Plugin loaded! Hooking into soft-dependencies in a while!");
+    Debugger.debug("Plugin loaded! Hooking into soft-dependencies in a while!");
     //start hook manager later in order to allow soft-dependencies to fully load
     Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
     if (configPreferences.getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
@@ -145,8 +144,8 @@ public class Main extends JavaPlugin {
     if (!(version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
       || version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") || version.equalsIgnoreCase("v1_15_R1") || version.equalsIgnoreCase("v1_16_R1"))) {
       MessageUtils.thisVersionIsNotSupported();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by Murder Mystery!");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider changing your server version?");
+      Debugger.sendConsoleMsg("&cYour server version is not supported by Murder Mystery!");
+      Debugger.sendConsoleMsg("&cSadly, we must shut off. Maybe you consider changing your server version?");
       forceDisable = true;
       getServer().getPluginManager().disablePlugin(this);
       return false;
@@ -155,8 +154,8 @@ public class Main extends JavaPlugin {
       Class.forName("org.spigotmc.SpigotConfig");
     } catch (Exception e) {
       MessageUtils.thisVersionIsNotSupported();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server software is not supported by Murder Mystery!");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "We support only Spigot and Spigot forks only! Shutting off...");
+      Debugger.sendConsoleMsg("&cYour server software is not supported by Murder Mystery!");
+      Debugger.sendConsoleMsg("&cWe support only Spigot and Spigot forks only! Shutting off...");
       forceDisable = true;
       getServer().getPluginManager().disablePlugin(this);
       return false;
@@ -169,7 +168,7 @@ public class Main extends JavaPlugin {
     if (forceDisable) {
       return;
     }
-    Debugger.debug(Level.INFO, "System disable initialized");
+    Debugger.debug("System disable initialized");
     long start = System.currentTimeMillis();
 
     Bukkit.getLogger().removeHandler(exceptionLogHandler);
@@ -199,7 +198,7 @@ public class Main extends JavaPlugin {
       arena.teleportAllToEndLocation();
       arena.cleanUpArena();
     }
-    Debugger.debug(Level.INFO, "System disable finished took {0}ms", System.currentTimeMillis() - start);
+    Debugger.debug("System disable finished took {0}ms", System.currentTimeMillis() - start);
   }
 
   private void initializeClasses() {
@@ -240,15 +239,15 @@ public class Main extends JavaPlugin {
   }
 
   private void registerSoftDependenciesAndServices() {
-    Debugger.debug(Level.INFO, "Hooking into soft dependencies");
+    Debugger.debug("Hooking into soft dependencies");
     long start = System.currentTimeMillis();
 
     startPluginMetrics();
     if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      Debugger.debug(Level.INFO, "Hooking into PlaceholderAPI");
+      Debugger.debug("Hooking into PlaceholderAPI");
       new PlaceholderManager().register();
     }
-    Debugger.debug(Level.INFO, "Hooked into soft dependencies took {0}ms", System.currentTimeMillis() - start);
+    Debugger.debug("Hooked into soft dependencies took {0}ms", System.currentTimeMillis() - start);
   }
 
   private void startPluginMetrics() {
@@ -274,16 +273,16 @@ public class Main extends JavaPlugin {
       }
       if (result.getNewestVersion().contains("b")) {
         if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[MurderMystery] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-          Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[MurderMystery] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
+          Debugger.sendConsoleMsg("&c[MurderMystery] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
+          Debugger.sendConsoleMsg("&c[MurderMystery] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
             result.getNewestVersion()));
         }
         return;
       }
       MessageUtils.updateIsHere();
-      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Your MurderMystery plugin is outdated! Download it to keep with latest changes and fixes.");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Disable this option in config.yml if you wish.");
-      Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "Current version: " + ChatColor.RED + getDescription().getVersion() + ChatColor.YELLOW + " Latest version: " + ChatColor.GREEN + result.getNewestVersion());
+      Debugger.sendConsoleMsg("&aYour MurderMystery plugin is outdated! Download it to keep with latest changes and fixes.");
+      Debugger.sendConsoleMsg("&aDisable this option in config.yml if you wish.");
+      Debugger.sendConsoleMsg("&eCurrent version: &c" + getDescription().getVersion() + "&e Latest version: &a" + result.getNewestVersion());
     });
   }
 

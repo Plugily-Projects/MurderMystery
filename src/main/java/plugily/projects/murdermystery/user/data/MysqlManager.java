@@ -66,8 +66,8 @@ public class MysqlManager implements UserDatabase {
       } catch (SQLException e) {
         e.printStackTrace();
         MessageUtils.errorOccurred();
-        Bukkit.getConsoleSender().sendMessage("Cannot save contents to MySQL database!");
-        Bukkit.getConsoleSender().sendMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
+        Debugger.sendConsoleMsg("Cannot save contents to MySQL database!");
+        Debugger.sendConsoleMsg("Check configuration of mysql.yml file or disable mysql option in config.yml");
       }
     });
   }

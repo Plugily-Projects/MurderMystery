@@ -21,7 +21,6 @@ package plugily.projects.murdermystery.arena;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -100,17 +99,17 @@ public class ArenaRegistry {
   }
 
   public static void registerArena(Arena arena) {
-    Debugger.debug(Level.INFO, "Registering new game instance {0}", arena.getId());
+    Debugger.debug("Registering new game instance {0}", arena.getId());
     arenas.add(arena);
   }
 
   public static void unregisterArena(Arena arena) {
-    Debugger.debug(Level.INFO, "Unegistering game instance {0}", arena.getId());
+    Debugger.debug("Unegistering game instance {0}", arena.getId());
     arenas.remove(arena);
   }
 
   public static void registerArenas() {
-    Debugger.debug(Level.INFO, "Initial arenas registration");
+    Debugger.debug("Initial arenas registration");
     long start = System.currentTimeMillis();
     if (ArenaRegistry.getArenas().size() > 0) {
       for (Arena arena : ArenaRegistry.getArenas()) {
@@ -184,7 +183,7 @@ public class ArenaRegistry {
       arena.start();
       Bukkit.getConsoleSender().sendMessage(ChatManager.colorMessage("Validator.Instance-Started").replace("%arena%", id));
     }
-    Debugger.debug(Level.INFO, "Arenas registration completed, took {0}ms", System.currentTimeMillis() - start);
+    Debugger.debug("Arenas registration completed, took {0}ms", System.currentTimeMillis() - start);
   }
 
   public static List<Arena> getArenas() {

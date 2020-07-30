@@ -112,13 +112,7 @@
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <version>1.16.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -191,9 +185,10 @@
         </dependency>
         <dependency>
             <groupId>de.simonsator</groupId>
-            <artifactId>Party-and-Friends-MySQL-Edition-Spigot-API</artifactId>
-            <version>1.5.0</version>
-            <scope>provided</scope>
+            <artifactId>partyandfriends</artifactId>
+            <version>1.0.52</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/PAFSpigot.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>

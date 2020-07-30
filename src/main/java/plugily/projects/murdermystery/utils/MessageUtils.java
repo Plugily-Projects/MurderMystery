@@ -18,9 +18,6 @@
 
 package plugily.projects.murdermystery.utils;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-
 /**
  * @author Plajer
  * <p>
@@ -32,39 +29,39 @@ public class MessageUtils {
   }
 
   public static void thisVersionIsNotSupported() {
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "  _   _           _                                                    _                _ ");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " | \\ | |   ___   | |_     ___   _   _   _ __    _ __     ___    _ __  | |_    ___    __| |");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " |  \\| |  / _ \\  | __|   / __| | | | | | '_ \\  | '_ \\   / _ \\  | '__| | __|  / _ \\  / _` |");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " | |\\  | | (_) | | |_    \\__ \\ | |_| | | |_) | | |_) | | (_) | | |    | |_  |  __/ | (_| |");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " |_| \\_|  \\___/   \\__|   |___/  \\__,_| | .__/  | .__/   \\___/  |_|     \\__|  \\___|  \\__,_|");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "                                       |_|     |_|                                        ");
+    Debugger.sendConsoleMsg("&c  _   _           _                                                    _                _ ");
+    Debugger.sendConsoleMsg("&c | \\ | |   ___   | |_     ___   _   _   _ __    _ __     ___    _ __  | |_    ___    __| |");
+    Debugger.sendConsoleMsg("&c |  \\| |  / _ \\  | __|   / __| | | | | | '_ \\  | '_ \\   / _ \\  | '__| | __|  / _ \\  / _` |");
+    Debugger.sendConsoleMsg("&c | |\\  | | (_) | | |_    \\__ \\ | |_| | | |_) | | |_) | | (_) | | |    | |_  |  __/ | (_| |");
+    Debugger.sendConsoleMsg("&c |_| \\_|  \\___/   \\__|   |___/  \\__,_| | .__/  | .__/   \\___/  |_|     \\__|  \\___|  \\__,_|");
+    Debugger.sendConsoleMsg("&c                                       |_|     |_|                                        ");
   }
 
   public static void errorOccurred() {
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "  _____                                                                                  _   _ ");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " | ____|  _ __   _ __    ___    _ __      ___     ___    ___   _   _   _ __    ___    __| | | |");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " |  _|   | '__| | '__|  / _ \\  | '__|    / _ \\   / __|  / __| | | | | | '__|  / _ \\  / _` | | |");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " | |___  | |    | |    | (_) | | |      | (_) | | (__  | (__  | |_| | | |    |  __/ | (_| | |_|");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " |_____| |_|    |_|     \\___/  |_|       \\___/   \\___|  \\___|  \\__,_| |_|     \\___|  \\__,_| (_)");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "                                                                                               ");
+    Debugger.sendConsoleMsg("&c  _____                                                                                  _   _ ");
+    Debugger.sendConsoleMsg("&c | ____|  _ __   _ __    ___    _ __      ___     ___    ___   _   _   _ __    ___    __| | | |");
+    Debugger.sendConsoleMsg("&c |  _|   | '__| | '__|  / _ \\  | '__|    / _ \\   / __|  / __| | | | | | '__|  / _ \\  / _` | | |");
+    Debugger.sendConsoleMsg("&c | |___  | |    | |    | (_) | | |      | (_) | | (__  | (__  | |_| | | |    |  __/ | (_| | |_|");
+    Debugger.sendConsoleMsg("&c |_____| |_|    |_|     \\___/  |_|       \\___/   \\___|  \\___|  \\__,_| |_|     \\___|  \\__,_| (_)");
+    Debugger.sendConsoleMsg("&c                                                                                               ");
   }
 
   public static void updateIsHere() {
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "  _   _               _           _          ");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + " | | | |  _ __     __| |   __ _  | |_    ___ ");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + " | | | | | '_ \\   / _` |  / _` | | __|  / _ \\");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + " | |_| | | |_) | | (_| | | (_| | | |_  |  __/");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "  \\___/  | .__/   \\__,_|  \\__,_|  \\__|  \\___|");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "         |_|                                 ");
+    Debugger.sendConsoleMsg("&a  _   _               _           _          ");
+    Debugger.sendConsoleMsg("&a | | | |  _ __     __| |   __ _  | |_    ___ ");
+    Debugger.sendConsoleMsg("&a | | | | | '_ \\   / _` |  / _` | | __|  / _ \\");
+    Debugger.sendConsoleMsg("&a | |_| | | |_) | | (_| | | (_| | | |_  |  __/");
+    Debugger.sendConsoleMsg("&a  \\___/  | .__/   \\__,_|  \\__,_|  \\__|  \\___|");
+    Debugger.sendConsoleMsg("&a         |_|                                 ");
   }
 
   public static void info() {
-    Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "  _____        __        _ ");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + " |_   _|      / _|      | |");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "   | |  _ __ | |_ ___   | |");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "   | | | '_ \\|  _/ _ \\  | |");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "  _| |_| | | | || (_) | |_|");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + " |_____|_| |_|_| \\___/  (_)");
+    Debugger.sendConsoleMsg("&e  _____        __        _ ");
+    Debugger.sendConsoleMsg("&e |_   _|      / _|      | |");
+    Debugger.sendConsoleMsg("&e   | |  _ __ | |_ ___   | |");
+    Debugger.sendConsoleMsg("&e   | | | '_ \\|  _/ _ \\  | |");
+    Debugger.sendConsoleMsg("&e  _| |_| | | | || (_) | |_|");
+    Debugger.sendConsoleMsg("&e |_____|_| |_|_| \\___/  (_)");
   }
 
 }

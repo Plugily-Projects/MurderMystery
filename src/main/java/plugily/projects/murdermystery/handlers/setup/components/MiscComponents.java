@@ -71,7 +71,7 @@ public class MiscComponents implements SetupComponent {
     Main plugin = setupInventory.getPlugin();
     ItemStack bungeeItem;
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-      bungeeItem = new ItemBuilder(Material.SIGN)
+      bungeeItem = new ItemBuilder(Material.getMaterial("SIGN"))
         .name(ChatManager.colorRawMessage("&e&lAdd Game Sign"))
         .lore(ChatColor.GRAY + "Target a sign and click this.")
         .lore(ChatColor.DARK_GRAY + "(this will set target sign as game sign)")

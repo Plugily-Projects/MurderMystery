@@ -18,7 +18,6 @@
 
 package plugily.projects.murdermystery.handlers.party;
 
-
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;

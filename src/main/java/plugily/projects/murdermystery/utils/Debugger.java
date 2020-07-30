@@ -22,6 +22,10 @@ import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
+
+import plugily.projects.murdermystery.handlers.ChatManager;
+
 /**
  * @author Plajer
  * <p>
@@ -49,6 +53,14 @@ public class Debugger {
     listenedPerformance.add(task);
   }
 
+  public static void sendConsoleMsg(String msg) {
+    Bukkit.getConsoleSender().sendMessage(ChatManager.colorRawMessage(msg));
+  }
+
+  public static void debug(String msg) {
+    debug(Level.INFO, msg);
+  }
+
   /**
    * Prints debug message with selected log level.
    * Messages of level INFO or TASK won't be posted if
@@ -62,6 +74,10 @@ public class Debugger {
       return;
     }
     logger.log(level, "[MMDBG] " + msg);
+  }
+
+  public static void debug(String msg, Object... params) {
+    debug(Level.INFO, msg, params);
   }
 
   /**
@@ -85,10 +101,7 @@ public class Debugger {
    * @param msg debugged message
    */
   public static void performance(String monitorName, String msg, Object... params) {
-    if (!deep) {
-      return;
-    }
-    if (!listenedPerformance.contains(monitorName)) {
+    if (!deep || !listenedPerformance.contains(monitorName)) {
       return;
     }
     logger.log(Level.INFO, "[MMDBG] " + msg, params);

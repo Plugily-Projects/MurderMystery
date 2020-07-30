@@ -92,7 +92,7 @@ public class SpectatorItemEvents implements Listener {
       if (players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
         ItemStack skull;
         if (plugin.is1_12_R1()) {
-          skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+          skull = new ItemStack(Material.getMaterial("SKULL_ITEM"), 1, (short) 3);
         } else {
           skull = XMaterial.PLAYER_HEAD.parseItem();
         }

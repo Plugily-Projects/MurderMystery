@@ -20,7 +20,6 @@ package plugily.projects.murdermystery.user;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -43,24 +42,21 @@ import plugily.projects.murdermystery.utils.Debugger;
 public class UserManager {
 
   private UserDatabase database;
-  private List<User> users = new ArrayList<>();
+  private final List<User> users = new ArrayList<>();
 
   public UserManager(Main plugin) {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       database = new MysqlManager(plugin);
-      Debugger.debug(Level.INFO, "MySQL Stats enabled");
+      Debugger.debug("MySQL Stats enabled");
     } else {
       database = new FileStats(plugin);
-      Debugger.debug(Level.INFO, "File Stats enabled");
+      Debugger.debug("File Stats enabled");
     }
     loadStatsForPlayersOnline();
   }
 
   private void loadStatsForPlayersOnline() {
-    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-      User user = getUser(player);
-      loadStatistics(user);
-    }
+    Bukkit.getServer().getOnlinePlayers().stream().map(this::getUser).forEach(this::loadStatistics);
   }
 
   public User getUser(Player player) {
@@ -69,7 +65,7 @@ public class UserManager {
         return user;
       }
     }
-    Debugger.debug(Level.INFO, "Registering new user {0} ({1})", player.getUniqueId(), player.getName());
+    Debugger.debug("Registering new user {0} ({1})", player.getUniqueId(), player.getName());
     User user = new User(player);
     users.add(user);
     return user;

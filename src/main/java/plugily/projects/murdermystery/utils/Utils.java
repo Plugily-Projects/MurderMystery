@@ -20,6 +20,8 @@ package plugily.projects.murdermystery.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -33,6 +35,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import org.bukkit.util.Vector;
+
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.ArenaState;
@@ -148,6 +151,23 @@ public class Utils {
       x = v.getX() * cos + v.getZ() * sin,
       z = v.getX() * -sin + v.getZ() * cos;
     return v.setX(x).setZ(z);
+  }
+
+  public static String matchColorRegex(String s) {
+    String regex = "&?#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})";
+    Matcher matcher = Pattern.compile(regex).matcher(s);
+    while (matcher.find()) {
+      String group = matcher.group(0);
+      String group2 = matcher.group(1);
+
+      try {
+        s = s.replace(group, net.md_5.bungee.api.ChatColor.of("#" + group2) + "");
+      } catch (Exception e) {
+        Debugger.debug("Bad hex color match: " + group);
+      }
+    }
+
+    return s;
   }
 
 }

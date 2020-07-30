@@ -26,6 +26,7 @@ import org.bukkit.entity.Player;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
+import plugily.projects.murdermystery.utils.Utils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 
 /**
@@ -44,12 +45,16 @@ public class ChatManager {
     ChatManager.plugin = plugin;
   }
 
-  public static String colorRawMessage(String message) {
-    return ChatColor.translateAlternateColorCodes('&', message);
+  public static String colorMessage(String message) {
+      return colorRawMessage(LanguageManager.getLanguageMessage(message));
   }
 
-  public static String colorMessage(String message) {
-      return ChatColor.translateAlternateColorCodes('&', LanguageManager.getLanguageMessage(message));
+  public static String colorRawMessage(String message) {
+  if (message.contains("#") && plugin.is1_16_R1()) {
+    message = Utils.matchColorRegex(message);
+  }
+
+    return ChatColor.translateAlternateColorCodes('&', message);
   }
 
   public static String colorMessage(String message, Player player) {

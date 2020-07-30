@@ -50,7 +50,6 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 
@@ -82,15 +81,15 @@ public class Arena extends BukkitRunnable {
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
   private final String id;
 
-  private Set<Player> players = new HashSet<>();
+  private final Set<Player> players = new HashSet<>();
   private List<Location> goldSpawnPoints = new ArrayList<>();
-  private List<Item> goldSpawned = new ArrayList<>();
+  private final List<Item> goldSpawned = new ArrayList<>();
   private List<Location> playerSpawnPoints = new ArrayList<>();
-  private List<Corpse> corpses = new ArrayList<>();
-  private List<Stand> stands = new ArrayList<>();
-  private List<SpecialBlock> specialBlocks = new ArrayList<>();
-  private List<Player> allMurderer = new ArrayList<>();
-  private List<Player> allDetectives = new ArrayList<>();
+  private final List<Corpse> corpses = new ArrayList<>();
+  private final List<Stand> stands = new ArrayList<>();
+  private final List<SpecialBlock> specialBlocks = new ArrayList<>();
+  private final List<Player> allMurderer = new ArrayList<>();
+  private final List<Player> allDetectives = new ArrayList<>();
 
   private int murderers = 0;
   private int detectives = 0;
@@ -437,9 +436,7 @@ public class Arena extends BukkitRunnable {
                 players.showPlayer(player);
               }
             }
-            for (PotionEffect effect : player.getActivePotionEffects()) {
-              player.removePotionEffect(effect.getType());
-            }
+            player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
             player.setWalkSpeed(0.2f);
             player.setFlying(false);
             player.setAllowFlight(false);
@@ -703,9 +700,7 @@ public class Arena extends BukkitRunnable {
     player.setFoodLevel(20);
     player.setFlying(false);
     player.setAllowFlight(false);
-    for (PotionEffect effect : player.getActivePotionEffects()) {
-      player.removePotionEffect(effect.getType());
-    }
+    player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
     player.setWalkSpeed(0.2f);
     Location location = getLobbyLocation();
     if (location == null) {
@@ -901,11 +896,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void clearGold() {
-    for (Item item : goldSpawned) {
-      if (item != null) {
-        item.remove();
-      }
-    }
+    goldSpawned.stream().filter(item -> item != null).forEach(Item::remove);
     goldSpawned.clear();
   }
 
