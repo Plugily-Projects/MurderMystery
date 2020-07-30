@@ -336,8 +336,8 @@
         </repository>
         <site>
             <id>plugily-projects-java-docs</id>
-            <name>VillageDefense</name>
-            <url>sftp://167.86.90.57/home/maven-javadocs-mc/jd</url>
+            <name>MurderMystery</name>
+            <url>sftp://167.86.90.57/home/maven-javadocs-mc/jd/minecraft</url>
         </site>
     </distributionManagement>
 
