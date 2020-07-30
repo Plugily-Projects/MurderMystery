@@ -1,6 +1,6 @@
 name: MurderMystery
 main: plugily.projects.murdermystery.Main
-authors: [Plajer, Tigerpanzer, montlikadani]
+authors: [2Wild4You, Tigerpanzer, Plajer, montlikadani]
 version: ${project.version}
 api-version: 1.13
 depend: [HolographicDisplays]
