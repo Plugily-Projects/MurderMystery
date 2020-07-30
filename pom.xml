@@ -337,7 +337,7 @@
         <site>
             <id>plugily-projects-java-docs</id>
             <name>MurderMystery</name>
-            <url>sftp://167.86.90.57/home/maven-javadocs-mc/jd/minecraft</url>
+            <url>sftp://167.86.90.57/home/maven-javadocs-mc/jd/</url>
         </site>
     </distributionManagement>
 
