@@ -372,9 +372,7 @@ public class Main extends JavaPlugin {
       User user = userManager.getUser(player);
       StringBuilder update = new StringBuilder(" SET ");
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        if (!stat.isPersistent()) {
-          user.setStat(stat, 0);
-        }
+        if (!stat.isPersistent()) continue;
         if (update.toString().equalsIgnoreCase(" SET ")){
           update.append(stat.getName()).append("=").append(user.getStat(stat));
         }
