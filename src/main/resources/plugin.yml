@@ -1,5 +1,5 @@
 name: MurderMystery
-main: pl.plajer.murdermystery.Main
+main: plugily.projects.murdermystery.Main
 authors: [Plajer, Tigerpanzer, montlikadani]
 version: ${project.version}
 api-version: 1.13
