@@ -21,6 +21,7 @@ package plugily.projects.murdermystery.user;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -75,11 +76,7 @@ public class UserManager {
   }
 
   public List<User> getUsers(Arena arena) {
-    List<User> users = new ArrayList<>();
-    for (Player player : arena.getPlayers()) {
-      users.add(getUser(player));
-    }
-    return users;
+    return arena.getPlayers().stream().map(this::getUser).collect(Collectors.toList());
   }
 
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {

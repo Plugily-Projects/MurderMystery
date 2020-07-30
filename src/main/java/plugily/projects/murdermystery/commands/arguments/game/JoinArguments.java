@@ -20,7 +20,6 @@ package plugily.projects.murdermystery.commands.arguments.game;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.stream.Stream;
 
 import org.bukkit.command.CommandSender;
@@ -41,8 +40,6 @@ import plugily.projects.murdermystery.handlers.ChatManager;
  * Created at 18.05.2019
  */
 public class JoinArguments {
-
-  private Random random = new Random();
 
   public JoinArguments(ArgumentsRegistry registry) {
     //join argument

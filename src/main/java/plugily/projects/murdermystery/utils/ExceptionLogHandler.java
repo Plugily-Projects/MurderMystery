@@ -64,18 +64,11 @@ public class ExceptionLogHandler extends Handler {
         : !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")) {
       return;
     }*/
-    if (throwable.getStackTrace().length <= 0) {
+    if (throwable.getStackTrace().length <= 0 || throwable.getCause() != null && throwable.getCause().getStackTrace() != null &&
+          !throwable.getCause().getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")) {
       return;
     }
-    if (throwable.getCause() != null && throwable.getCause().getStackTrace() != null) {
-      if (!throwable.getCause().getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")) {
-        return;
-      }
-    }
-    if (!throwable.getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")) {
-      return;
-    }
-    if (containsBlacklistedClass(throwable)) {
+    if (!throwable.getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery") || containsBlacklistedClass(throwable)) {
       return;
     }
     new ReportedException(plugin, (Exception) throwable);

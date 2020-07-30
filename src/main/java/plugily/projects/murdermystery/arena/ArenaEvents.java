@@ -401,10 +401,8 @@ public class ArenaEvents implements Listener {
 
   @EventHandler
   public void onItemMove(InventoryClickEvent e) {
-    if (e.getWhoClicked() instanceof Player) {
-      if (ArenaRegistry.getArena((Player) e.getWhoClicked()) != null) {
-        e.setResult(Event.Result.DENY);
-      }
+    if (e.getWhoClicked() instanceof Player && ArenaRegistry.getArena((Player) e.getWhoClicked()) != null) {
+      e.setResult(Event.Result.DENY);
     }
   }
 

@@ -52,11 +52,8 @@ public class RewardsFactory {
   }
 
   public void performReward(Arena arena, Reward.RewardType type) {
-    if (!enabled) {
-      return;
-    }
-    for (Player p : arena.getPlayers()) {
-      performReward(p, type);
+    if (enabled) {
+      arena.getPlayers().forEach(p -> performReward(p, type));
     }
   }
 

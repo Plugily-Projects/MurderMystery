@@ -122,13 +122,12 @@ public class ArenaManager {
       }
     }
 
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-      if (!player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
+        && !player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
         || !player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId()))) {
-        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-No-Permission").replace("%permission%",
-          PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())));
-        return;
-      }
+      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-No-Permission").replace("%permission%",
+      PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())));
+      return;
     }
     if (arena.getArenaState() == ArenaState.RESTARTING) {
       return;
@@ -182,9 +181,7 @@ public class ArenaManager {
       player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
       player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
 
-      for (PotionEffect potionEffect : player.getActivePotionEffects()) {
-        player.removePotionEffect(potionEffect.getType());
-      }
+      player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
       player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
       ArenaUtils.hidePlayer(player, arena);
 
@@ -276,8 +273,7 @@ public class ArenaManager {
           if (arena.getMurdererList().isEmpty()) {
             List<Player> players = new ArrayList<>();
             for (Player gamePlayer : arena.getPlayersLeft()) {
-              if (gamePlayer == player) continue;
-              if (Role.isRole(Role.ANY_DETECTIVE, gamePlayer) || Role.isRole(Role.MURDERER, gamePlayer)) {
+              if (gamePlayer == player || Role.isRole(Role.ANY_DETECTIVE, gamePlayer) || Role.isRole(Role.MURDERER, gamePlayer)) {
                 continue;
               }
               players.add(gamePlayer);
@@ -334,9 +330,7 @@ public class ArenaManager {
     player.setExp(0);
     player.setFlying(false);
     player.setAllowFlight(false);
-    for (PotionEffect effect : player.getActivePotionEffects()) {
-      player.removePotionEffect(effect.getType());
-    }
+    player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
     player.setWalkSpeed(0.2f);
     player.setFireTicks(0);
     if (arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS && arena.getArenaState() != ArenaState.STARTING && arena.getPlayers().size() == 0) {
@@ -426,6 +420,7 @@ public class ArenaManager {
         new BukkitRunnable() {
           int i = 0;
 
+          @Override
           public void run() {
             if (i == 4 || !arena.getPlayers().contains(player)) {
               this.cancel();

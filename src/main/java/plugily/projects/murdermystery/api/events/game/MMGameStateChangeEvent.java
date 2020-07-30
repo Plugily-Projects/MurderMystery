@@ -44,6 +44,7 @@ public class MMGameStateChangeEvent extends MurderMysteryEvent {
     return HANDLERS;
   }
 
+  @Override
   public HandlerList getHandlers() {
     return HANDLERS;
   }

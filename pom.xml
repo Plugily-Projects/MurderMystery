@@ -191,10 +191,9 @@
         </dependency>
         <dependency>
             <groupId>de.simonsator</groupId>
-            <artifactId>partyandfriends</artifactId>
-            <version>1.0.52</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/PAFSpigot.jar</systemPath>
+            <artifactId>Party-and-Friends-MySQL-Edition-Spigot-API</artifactId>
+            <version>1.5.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>

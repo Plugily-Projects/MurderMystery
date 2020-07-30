@@ -99,9 +99,6 @@ public enum Role {
    */
   public static boolean isAnyRole(Player player){
     Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null) {
-      return false;
-    }
-    return Arrays.stream(Role.values()).anyMatch(role -> isRole(role, player));
+    return arena == null ? false : Arrays.stream(Role.values()).anyMatch(role -> isRole(role, player));
   }
 }

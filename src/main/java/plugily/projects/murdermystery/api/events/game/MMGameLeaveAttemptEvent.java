@@ -48,6 +48,7 @@ public class MMGameLeaveAttemptEvent extends MurderMysteryEvent {
     return player;
   }
 
+  @Override
   public HandlerList getHandlers() {
     return HANDLERS;
   }

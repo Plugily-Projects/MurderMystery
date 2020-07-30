@@ -151,10 +151,9 @@ public class SignManager implements Listener {
     ArenaSign arenaSign = getArenaSignByBlock(e.getClickedBlock());
     if (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().getState() instanceof Sign && arenaSign != null) {
       Arena arena = arenaSign.getArena();
-      if (arena == null) {
-        return;
+      if (arena != null) {
+        ArenaManager.joinAttempt(e.getPlayer(), arena);
       }
-      ArenaManager.joinAttempt(e.getPlayer(), arena);
     }
   }
 

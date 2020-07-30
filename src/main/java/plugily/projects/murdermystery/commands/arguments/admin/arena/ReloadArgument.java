@@ -25,7 +25,6 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
 
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.arena.Arena;
@@ -78,9 +77,7 @@ public class ReloadArgument {
             } else {
               player.getInventory().clear();
               player.getInventory().setArmorContents(null);
-              for (PotionEffect pe : player.getActivePotionEffects()) {
-                player.removePotionEffect(pe.getType());
-              }
+              player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
               player.setWalkSpeed(0.2f);
             }
           }

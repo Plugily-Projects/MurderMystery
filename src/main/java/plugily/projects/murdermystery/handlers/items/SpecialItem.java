@@ -18,9 +18,9 @@
 
 package plugily.projects.murdermystery.handlers.items;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -70,10 +70,8 @@ public class SpecialItem {
     ItemMeta meta = stack.getItemMeta();
     meta.setDisplayName(ChatManager.colorRawMessage(config.getString(name + ".displayname")));
 
-    List<String> colorizedLore = new ArrayList<>();
-    for (String str : config.getStringList(name + ".lore")) {
-      colorizedLore.add(ChatManager.colorRawMessage(str));
-    }
+    List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(str -> ChatManager.colorRawMessage(str))
+      .collect(Collectors.toList());
     meta.setLore(colorizedLore);
     stack.setItemMeta(meta);
 

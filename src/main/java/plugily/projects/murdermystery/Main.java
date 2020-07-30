@@ -34,7 +34,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
 
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.Arena;
@@ -105,15 +104,15 @@ public class Main extends JavaPlugin {
       return;
     }
 
+    long start = System.currentTimeMillis();
+
     ServiceRegistry.registerService(this);
     exceptionLogHandler = new ExceptionLogHandler(this);
     LanguageManager.init(this);
     saveDefaultConfig();
-    if (getDescription().getVersion().contains("b")) {
-      Debugger.setEnabled(true);
-    } else {
-      Debugger.setEnabled(getConfig().getBoolean("Debug", false));
-    }
+
+    Debugger.setEnabled(getDescription().getVersion().contains("b") ? true : getConfig().getBoolean("Debug", false));
+
     Debugger.debug(Level.INFO, "[System] Initialization start");
     if (getConfig().getBoolean("Developer-Mode", false)) {
       Debugger.deepDebug(true);
@@ -122,7 +121,6 @@ public class Main extends JavaPlugin {
         Debugger.monitorPerformance(listenable);
       }
     }
-    long start = System.currentTimeMillis();
 
     configPreferences = new ConfigPreferences(this);
     setupFiles();
@@ -177,9 +175,7 @@ public class Main extends JavaPlugin {
     Bukkit.getLogger().removeHandler(exceptionLogHandler);
     saveAllUserStatistics();
     if (hookManager != null && hookManager.isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
-      for (Hologram hologram : HologramsAPI.getHolograms(this)) {
-        hologram.delete();
-      }
+      HologramsAPI.getHolograms(this).forEach(Hologram::delete);
     }
     if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       getMysqlDatabase().shutdownConnPool();
@@ -196,9 +192,7 @@ public class Main extends JavaPlugin {
         } else {
           player.getInventory().clear();
           player.getInventory().setArmorContents(null);
-          for (PotionEffect pe : player.getActivePotionEffects()) {
-            player.removePotionEffect(pe.getType());
-          }
+          player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
           player.setWalkSpeed(0.2f);
         }
       }
@@ -264,18 +258,9 @@ public class Main extends JavaPlugin {
     metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> LanguageManager.getPluginLocale().getPrefix()));
     metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> {
       if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
-        if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          return "Enabled with beta notifier";
-        } else {
-          return "Enabled";
-        }
-      } else {
-        if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          return "Beta notifier only";
-        } else {
-          return "Disabled";
-        }
+        return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Enabled with beta notifier" : "Enabled";
       }
+      return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Beta notifier only" : "Disabled";
     }));
   }
 

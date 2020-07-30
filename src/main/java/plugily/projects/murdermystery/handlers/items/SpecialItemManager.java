@@ -36,10 +36,7 @@ public class SpecialItemManager {
   }
 
   public static SpecialItem getSpecialItem(String name) {
-    if (specialItems.containsKey(name)) {
-      return specialItems.get(name);
-    }
-    return null;
+    return specialItems.getOrDefault(name, null);
   }
 
   public static String getRelatedSpecialItem(ItemStack itemStack) {

@@ -125,7 +125,7 @@ public class ArgumentsRegistry implements CommandExecutor {
           if (argument.getArgumentName().equalsIgnoreCase(args[0])) {
             boolean hasPerm = false;
             for (String perm : argument.getPermissions()) {
-              if (perm.equals("") || sender.hasPermission(perm)) {
+              if (perm.isEmpty() || sender.hasPermission(perm)) {
                 hasPerm = true;
                 break;
               }

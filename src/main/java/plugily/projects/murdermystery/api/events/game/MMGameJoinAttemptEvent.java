@@ -47,10 +47,12 @@ public class MMGameJoinAttemptEvent extends MurderMysteryEvent implements Cancel
     return HANDLERS;
   }
 
+  @Override
   public boolean isCancelled() {
     return this.isCancelled;
   }
 
+  @Override
   public void setCancelled(boolean isCancelled) {
     this.isCancelled = isCancelled;
   }
@@ -59,6 +61,7 @@ public class MMGameJoinAttemptEvent extends MurderMysteryEvent implements Cancel
     return player;
   }
 
+  @Override
   public HandlerList getHandlers() {
     return HANDLERS;
   }

@@ -38,22 +38,27 @@ public class PlaceholderManager extends PlaceholderExpansion {
     return true;
   }
 
+  @Override
   public String getIdentifier() {
     return "murdermystery";
   }
 
+  @Override
   public String getPlugin() {
     return null;
   }
 
+  @Override
   public String getAuthor() {
     return "Plajer";
   }
 
+  @Override
   public String getVersion() {
     return "1.0.1";
   }
 
+  @Override
   public String onPlaceholderRequest(Player player, String id) {
     if (player == null) {
       return null;

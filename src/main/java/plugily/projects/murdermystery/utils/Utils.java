@@ -65,11 +65,7 @@ public class Utils {
    * @return serialized number
    */
   public static int serializeInt(Integer i) {
-    if ((i % 9) == 0) {
-      return i;
-    } else {
-      return (int) ((Math.ceil(i / 9) * 9) + 9);
-    }
+    return (i % 9) == 0 ? i : (int) ((Math.ceil(i / 9) * 9) + 9);
   }
 
   /**
@@ -79,10 +75,7 @@ public class Utils {
    * @return true if named, false otherwise
    */
   public static boolean isNamed(ItemStack stack) {
-    if (stack == null) {
-      return false;
-    }
-    return stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
+    return stack == null ? false : stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
   }
 
   public static void applyActionBarCooldown(Player p, int seconds) {
@@ -140,20 +133,20 @@ public class Utils {
 
   public static Vector rotateAroundAxisX(Vector v, double angle) {
     angle = Math.toRadians(angle);
-    double cos = Math.cos(angle);
-    double sin = Math.sin(angle);
-    double y = v.getY() * cos - v.getZ() * sin;
-    double z = v.getY() * sin + v.getZ() * cos;
+    double cos = Math.cos(angle),
+      sin = Math.sin(angle),
+      y = v.getY() * cos - v.getZ() * sin,
+      z = v.getY() * sin + v.getZ() * cos;
     return v.setY(y).setZ(z);
   }
 
   public static Vector rotateAroundAxisY(Vector v, double angle) {
     angle = -angle;
     angle = Math.toRadians(angle);
-    double cos = Math.cos(angle);
-    double sin = Math.sin(angle);
-    double x = v.getX() * cos + v.getZ() * sin;
-    double z = v.getX() * -sin + v.getZ() * cos;
+    double cos = Math.cos(angle),
+      sin = Math.sin(angle),
+      x = v.getX() * cos + v.getZ() * sin,
+      z = v.getX() * -sin + v.getZ() * cos;
     return v.setX(x).setZ(z);
   }
 

@@ -123,10 +123,7 @@ public class CorpseHandler implements Listener {
 
   @EventHandler
   public void onCorpseSpawn(CorpseSpawnEvent e) {
-    if (!plugin.getConfig().getBoolean("Override-Corpses-Spawn", true)) {
-      return;
-    }
-    if (lastSpawnedCorpse == null) {
+    if (!plugin.getConfig().getBoolean("Override-Corpses-Spawn", true) || lastSpawnedCorpse == null) {
       return;
     }
     if (!e.getCorpse().equals(lastSpawnedCorpse)) {

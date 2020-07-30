@@ -120,10 +120,7 @@ public class User {
   }
 
   public double getCooldown(String s) {
-    if (!cooldowns.containsKey(s) || cooldowns.get(s) <= cooldownCounter) {
-      return 0;
-    }
-    return cooldowns.get(s) - cooldownCounter;
+    return (!cooldowns.containsKey(s) || cooldowns.get(s) <= cooldownCounter) ? 0 : cooldowns.get(s) - cooldownCounter;
   }
 
 }

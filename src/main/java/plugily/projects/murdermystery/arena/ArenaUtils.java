@@ -190,10 +190,8 @@ public class ArenaUtils {
   }
 
   public static boolean areInSameArena(Player one, Player two) {
-    if (ArenaRegistry.getArena(one) == null || ArenaRegistry.getArena(two) == null) {
-      return false;
-    }
-    return ArenaRegistry.getArena(one).equals(ArenaRegistry.getArena(two));
+    return (ArenaRegistry.getArena(one) == null || ArenaRegistry.getArena(two) == null) ?
+      false : ArenaRegistry.getArena(one).equals(ArenaRegistry.getArena(two));
   }
 
   public static void hidePlayer(Player p, Arena arena) {
@@ -238,9 +236,8 @@ public class ArenaUtils {
       team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
       if (arena.getArenaState() == ArenaState.IN_GAME) {
         team.addEntry(p.getName());
-      } else if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
-        team.removeEntry(p.getName());
-      } else if (arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
+      } else if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS
+            || arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
         team.removeEntry(p.getName());
       }
       players.setScoreboard(scoreboard);

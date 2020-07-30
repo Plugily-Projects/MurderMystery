@@ -108,11 +108,9 @@ public class ArenaRegisterComponent implements SetupComponent {
       List<Sign> signsToUpdate = new ArrayList<>();
       ArenaRegistry.unregisterArena(setupInventory.getArena());
 
-      for (ArenaSign arenaSign : plugin.getSignManager().getArenaSigns()) {
-        if (arenaSign.getArena().equals(setupInventory.getArena())) {
-          signsToUpdate.add(arenaSign.getSign());
-        }
-      }
+      plugin.getSignManager().getArenaSigns().stream().filter(arenaSign -> arenaSign.getArena().equals(setupInventory.getArena()))
+        .forEach(arenaSign -> signsToUpdate.add(arenaSign.getSign()));
+
       arena = new Arena(setupInventory.getArena().getId());
       arena.setReady(true);
       List<Location> playerSpawnPoints = new ArrayList<>();
@@ -138,10 +136,9 @@ public class ArenaRegisterComponent implements SetupComponent {
         }
       }
       for (SpecialBlock specialBlock : specialBlocks) {
-        if (arena.getSpecialBlocks().contains(specialBlock)) {
-          continue;
+        if (!arena.getSpecialBlocks().contains(specialBlock)) {
+          arena.loadSpecialBlock(specialBlock);
         }
-        arena.loadSpecialBlock(specialBlock);
       }
       arena.setMinimumPlayers(config.getInt("instances." + arena.getId() + ".minimumplayers"));
       arena.setMaximumPlayers(config.getInt("instances." + arena.getId() + ".maximumplayers"));

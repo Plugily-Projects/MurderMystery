@@ -83,10 +83,7 @@ public class BungeeManager implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onServerListPing(ServerListPingEvent event) {
-    if (!ConfigUtils.getConfig(plugin, "bungee").getBoolean("MOTD.Manager", false)) {
-      return;
-    }
-    if (ArenaRegistry.getArenas().isEmpty()) {
+    if (!ConfigUtils.getConfig(plugin, "bungee").getBoolean("MOTD.Manager", false) || ArenaRegistry.getArenas().isEmpty()) {
       return;
     }
     event.setMaxPlayers(ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()).getMaximumPlayers());

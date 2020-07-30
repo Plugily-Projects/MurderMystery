@@ -180,10 +180,8 @@ public class MiscComponents implements SetupComponent {
       if (e.getClick().isRightClick()) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
       }
-      if (e.getClick().isLeftClick()) {
-        if (e.getCurrentItem().getAmount() > 1) {
-          e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
-        }
+      if (e.getClick().isLeftClick() && e.getCurrentItem().getAmount() > 1) {
+        e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
       }
       if (e.getInventory().getItem(e.getSlot()).getAmount() < 1) {
         e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 1! Game is not designed without gold!"));
