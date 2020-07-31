@@ -98,7 +98,7 @@ public class ArenaEvents implements Listener {
     if (arena == null) {
       return;
     }
-    if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
+    if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
       if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
         if (e.getDamage() >= 20.0) {
           //kill the player for suicidal death, else do not
@@ -108,7 +108,7 @@ public class ArenaEvents implements Listener {
       e.setCancelled(true);
     }
     //kill the player and move to the spawn point
-    if (e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
+    if (e.getCause() == EntityDamageEvent.DamageCause.VOID) {
       victim.damage(1000.0);
       victim.teleport(arena.getPlayerSpawnPoints().get(0));
     }

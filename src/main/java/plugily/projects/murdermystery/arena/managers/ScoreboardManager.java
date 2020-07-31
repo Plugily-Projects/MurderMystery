@@ -51,7 +51,7 @@ public class ScoreboardManager {
 
   private static Main plugin = JavaPlugin.getPlugin(Main.class);
   private static String boardTitle = ChatManager.colorMessage("Scoreboard.Title");
-  private List<Scoreboard> scoreboards = new ArrayList<>();
+  private final List<Scoreboard> scoreboards = new ArrayList<>();
   private Arena arena;
 
   public ScoreboardManager(Arena arena) {

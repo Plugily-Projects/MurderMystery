@@ -112,12 +112,9 @@ public class ArenaRegistry {
     Debugger.debug("Initial arenas registration");
     long start = System.currentTimeMillis();
     if (ArenaRegistry.getArenas().size() > 0) {
-      for (Arena arena : ArenaRegistry.getArenas()) {
-        arena.cleanUpArena();
-      }
-      for (Arena arena : new ArrayList<>(ArenaRegistry.getArenas())) {
-        unregisterArena(arena);
-      }
+      ArenaRegistry.getArenas().forEach(Arena::cleanUpArena);
+
+      new ArrayList<>(ArenaRegistry.getArenas()).forEach(ArenaRegistry::unregisterArena);
     }
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 

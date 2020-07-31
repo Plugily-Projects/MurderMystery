@@ -22,11 +22,7 @@ public class SpectateArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
        User user = registry.getPlugin().getUserManager().getUser((Player) sender);
-        if (user.isPermanentSpectator()) {
-          user.setPermanentSpectator(false);
-        }else{
-          user.setPermanentSpectator(true);
-        }
+       user.setPermanentSpectator(!user.isPermanentSpectator());
       }
     });
   }

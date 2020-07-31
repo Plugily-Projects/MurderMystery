@@ -66,7 +66,7 @@ public class ArgumentsRegistry implements CommandExecutor {
 
   private Main plugin;
   private TabCompletion tabCompletion;
-  private Map<String, List<CommandArgument>> mappedArguments = new HashMap<>();
+  private final Map<String, List<CommandArgument>> mappedArguments = new HashMap<>();
 
   public ArgumentsRegistry(Main plugin) {
     this.plugin = plugin;

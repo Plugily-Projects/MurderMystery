@@ -287,7 +287,7 @@ public class Arena extends BukkitRunnable {
           }
           Debugger.debug(Level.INFO, "After: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
             getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
-          for (int i = 0; i < (maxmurderer); i++) {
+          for (int i = 0; i < maxmurderer; i++) {
             Player murderer = ((User) sortedMurderer.keySet().toArray()[i]).getPlayer();
             setCharacter(CharacterType.MURDERER, murderer);
             allMurderer.add(murderer);
@@ -300,7 +300,7 @@ public class Arena extends BukkitRunnable {
 
           Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
             Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-          for (int i = 0; i < (maxdetectives); i++) {
+          for (int i = 0; i < maxdetectives; i++) {
             Player detective = ((User) sortedDetective.keySet().toArray()[i]).getPlayer();
             setCharacter(CharacterType.DETECTIVE, detective);
             allDetectives.add(detective);
@@ -330,11 +330,7 @@ public class Arena extends BukkitRunnable {
         break;
       case IN_GAME:
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-          if (getMaximumPlayers() <= getPlayers().size()) {
-            plugin.getServer().setWhitelist(true);
-          } else {
-            plugin.getServer().setWhitelist(false);
-          }
+          plugin.getServer().setWhitelist(getMaximumPlayers() <= getPlayers().size() ? true : false);
         }
         if (getTimer() <= 0) {
           ArenaManager.stopGame(false, this);
@@ -466,10 +462,9 @@ public class Arena extends BukkitRunnable {
           players.clear();
 
           cleanUpArena();
-          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-            if (ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
+          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
+                && ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
               plugin.getServer().shutdown();
-            }
           }
           setArenaState(ArenaState.RESTARTING);
         }
