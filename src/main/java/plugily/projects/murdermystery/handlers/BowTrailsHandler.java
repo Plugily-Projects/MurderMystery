@@ -68,7 +68,6 @@ public class BowTrailsHandler implements Listener {
         new BukkitRunnable() {
           @Override
           public void run() {
-            e.getProjectile();
             if (e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
               this.cancel();
             }

@@ -61,8 +61,6 @@ public class SpecialBlockEvents implements Listener {
     Arena arena = ArenaRegistry.getArena(e.getPlayer());
     if (arena == null || e.getClickedBlock() == null) {
       return;
-    } else {
-      e.getClickedBlock().getType();
     }
     if (arena.getArenaState() != ArenaState.IN_GAME || plugin.getUserManager().getUser(e.getPlayer()).isSpectator()) {
       return;
