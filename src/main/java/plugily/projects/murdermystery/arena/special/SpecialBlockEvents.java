@@ -98,6 +98,7 @@ public class SpecialBlockEvents implements Listener {
     }
     User user = plugin.getUserManager().getUser(e.getPlayer());
     if (e.getPlayer().getInventory().getItem(/* same for all roles */ ItemPosition.POTION.getOtherRolesItemPosition()) != null) {
+      Bukkit.getLogger().info(e.getPlayer().getInventory().getItem(/* same for all roles */ ItemPosition.POTION.getOtherRolesItemPosition()).toString());
       e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Drink-Potion", e.getPlayer()));
       return;
     }

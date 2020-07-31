@@ -65,7 +65,7 @@ public class Utils {
    * @return serialized number
    */
   public static int serializeInt(Integer i) {
-    return (i % 9) == 0 ? i : (int) ((Math.ceil(i / 9.0) * 9) + 9);
+    return (i % 9) == 0 ? i : (int) ((Math.ceil(i / 9) * 9) + 9);
   }
 
   /**
