@@ -36,7 +36,7 @@ public class ExceptionLogHandler extends Handler {
 
   //these classes if found in stacktraces won't be reported
   //to the Error Service
-  private final List<String> blacklistedClasses = Arrays.asList("pl.plajer.murdermystery.user.data.MysqlManager", "pl.plajer.murdermystery.plajerlair.commonsbox.database.MysqlDatabase");
+  private final List<String> blacklistedClasses = Arrays.asList("plugily.projects.murdermystery.user.data.MysqlManager", "plugily.projects.murdermystery.plajerlair.commonsbox.database.MysqlDatabase");
   private final Main plugin;
 
   public ExceptionLogHandler(Main plugin) {
@@ -64,10 +64,10 @@ public class ExceptionLogHandler extends Handler {
       return;
     }*/
     if (throwable.getStackTrace().length <= 0 || throwable.getCause() != null && throwable.getCause().getStackTrace() != null &&
-      !throwable.getCause().getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")) {
+      !throwable.getCause().getStackTrace()[0].getClassName().contains("plugily.projects.murdermystery")) {
       return;
     }
-    if (!throwable.getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery") || containsBlacklistedClass(throwable)) {
+    if (!throwable.getStackTrace()[0].getClassName().contains("plugily.projects.murdermystery") || containsBlacklistedClass(throwable)) {
       return;
     }
     new ReportedException(plugin, (Exception) throwable);
