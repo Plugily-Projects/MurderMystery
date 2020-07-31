@@ -18,14 +18,10 @@
 
 package plugily.projects.murdermystery.commands.arguments.admin.arena;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaManager;
@@ -37,7 +33,10 @@ import plugily.projects.murdermystery.commands.arguments.data.LabeledCommandArgu
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.utils.Debugger;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -46,7 +45,7 @@ import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
  */
 public class ReloadArgument {
 
-  private Set<CommandSender> confirmations = new HashSet<>();
+  private final Set<CommandSender> confirmations = new HashSet<>();
 
   public ReloadArgument(ArgumentsRegistry registry) {
     registry.mapArgument("murdermysteryadmin", new LabeledCommandArgument("reload", "murdermystery.admin.reload", CommandArgument.ExecutorType.BOTH,

@@ -18,11 +18,8 @@
 
 package plugily.projects.murdermystery.commands.arguments.game;
 
-import java.util.logging.Level;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaManager;
@@ -32,6 +29,8 @@ import plugily.projects.murdermystery.commands.arguments.data.CommandArgument;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.Utils;
+
+import java.util.logging.Level;
 
 /**
  * @author Plajer

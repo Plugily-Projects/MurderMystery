@@ -21,7 +21,6 @@ package plugily.projects.murdermystery.arena;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -33,7 +32,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
@@ -49,7 +47,7 @@ import plugily.projects.murdermystery.utils.ItemPosition;
  */
 public class ArenaUtils {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   public static void onMurdererDeath(Arena arena) {
     for (Player player : arena.getPlayers()) {
@@ -98,7 +96,7 @@ public class ArenaUtils {
       return;
     }
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
-    if (action.getPoints() < 0){
+    if (action.getPoints() < 0) {
       msg = StringUtils.replace(msg, "+", "");
     }
     msg = StringUtils.replace(msg, "%action%", action.getAction());
@@ -190,8 +188,7 @@ public class ArenaUtils {
   }
 
   public static boolean areInSameArena(Player one, Player two) {
-    return (ArenaRegistry.getArena(one) == null || ArenaRegistry.getArena(two) == null) ?
-      false : ArenaRegistry.getArena(one).equals(ArenaRegistry.getArena(two));
+    return ArenaRegistry.getArena(one) != null && ArenaRegistry.getArena(two) != null && ArenaRegistry.getArena(one).equals(ArenaRegistry.getArena(two));
   }
 
   public static void hidePlayer(Player p, Arena arena) {
@@ -237,7 +234,7 @@ public class ArenaUtils {
       if (arena.getArenaState() == ArenaState.IN_GAME) {
         team.addEntry(p.getName());
       } else if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS
-            || arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
+        || arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
         team.removeEntry(p.getName());
       }
       players.setScoreboard(scoreboard);

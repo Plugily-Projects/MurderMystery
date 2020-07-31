@@ -18,18 +18,13 @@
 
 package plugily.projects.murdermystery.arena.special.pray;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.Arena;
@@ -39,7 +34,11 @@ import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.ItemPosition;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -49,7 +48,7 @@ import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 public class PrayerRegistry {
 
   private static Main plugin;
-  private static List<Prayer> prayers = new ArrayList<>();
+  private static final List<Prayer> prayers = new ArrayList<>();
   private static Random rand;
 
   private PrayerRegistry() {

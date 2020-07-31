@@ -20,10 +20,9 @@ package plugily.projects.murdermystery.handlers.setup;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.handlers.ChatManager;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 
 /**
  * @author Plajer
@@ -32,8 +31,8 @@ import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
  */
 public class SetupUtilities {
 
-  private FileConfiguration config;
-  private Arena arena;
+  private final FileConfiguration config;
+  private final Arena arena;
 
   SetupUtilities(FileConfiguration config, Arena arena) {
     this.config = config;

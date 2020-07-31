@@ -19,7 +19,6 @@
 package plugily.projects.murdermystery.api.events;
 
 import org.bukkit.event.Event;
-
 import plugily.projects.murdermystery.arena.Arena;
 
 /**

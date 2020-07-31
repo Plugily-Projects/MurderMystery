@@ -25,9 +25,9 @@ package plugily.projects.murdermystery.arena.special.pray;
  */
 public class Prayer {
 
-  private PrayerType prayerType;
-  private boolean goodPray;
-  private String prayerDescription;
+  private final PrayerType prayerType;
+  private final boolean goodPray;
+  private final String prayerDescription;
 
   public Prayer(PrayerType prayerType, boolean goodPray, String prayerDescription) {
     this.prayerType = prayerType;

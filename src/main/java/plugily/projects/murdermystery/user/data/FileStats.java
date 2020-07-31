@@ -19,11 +19,10 @@
 package plugily.projects.murdermystery.user.data;
 
 import org.bukkit.configuration.file.FileConfiguration;
-
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.user.User;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 
 /**
  * @author Plajer
@@ -32,8 +31,8 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
  */
 public class FileStats implements UserDatabase {
 
-  private Main plugin;
-  private FileConfiguration config;
+  private final Main plugin;
+  private final FileConfiguration config;
 
   public FileStats(Main plugin) {
     this.plugin = plugin;

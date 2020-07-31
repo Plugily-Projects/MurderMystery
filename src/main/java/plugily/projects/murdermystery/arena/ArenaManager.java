@@ -18,13 +18,7 @@
 
 package plugily.projects.murdermystery.arena;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.logging.Level;
-
 import me.clip.placeholderapi.PlaceholderAPI;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -37,7 +31,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
@@ -54,10 +51,11 @@ import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.ItemPosition;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -66,7 +64,7 @@ import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
  */
 public class ArenaManager {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   private ArenaManager() {
   }
@@ -123,10 +121,10 @@ public class ArenaManager {
     }
 
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-        && !player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
-        || !player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId()))) {
+      && !player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
+      || !player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId()))) {
       player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-No-Permission").replace("%permission%",
-      PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())));
+        PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())));
       return;
     }
     if (arena.getArenaState() == ArenaState.RESTARTING) {
@@ -256,7 +254,7 @@ public class ArenaManager {
       user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
     }
 
-    if (arena.getArenaState() == ArenaState.IN_GAME){
+    if (arena.getArenaState() == ArenaState.IN_GAME) {
       if (Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
         Random rand = new Random();
         user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, rand.nextInt(4) + 1);
@@ -381,7 +379,7 @@ public class ArenaManager {
 
     for (final Player player : arena.getPlayers()) {
       User user = plugin.getUserManager().getUser(player);
-      if (Role.isAnyRole(player)){
+      if (Role.isAnyRole(player)) {
         if (Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
           user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, rand.nextInt(4) + 1);
           user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, rand.nextInt(4) + 1);

@@ -18,14 +18,8 @@
 
 package plugily.projects.murdermystery.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -33,14 +27,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import org.bukkit.util.Vector;
-
+import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.ArenaState;
 import plugily.projects.murdermystery.handlers.ChatManager;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Plajer
@@ -68,7 +65,7 @@ public class Utils {
    * @return serialized number
    */
   public static int serializeInt(Integer i) {
-    return (i % 9) == 0 ? i : (int) ((Math.ceil(i / 9) * 9) + 9);
+    return (i % 9) == 0 ? i : (int) ((Math.ceil(i / 9.0) * 9) + 9);
   }
 
   /**
@@ -78,7 +75,7 @@ public class Utils {
    * @return true if named, false otherwise
    */
   public static boolean isNamed(ItemStack stack) {
-    return stack == null ? false : stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
+    return stack != null && stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
   }
 
   public static void applyActionBarCooldown(Player p, int seconds) {

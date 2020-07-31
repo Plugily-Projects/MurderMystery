@@ -18,17 +18,16 @@
 
 package plugily.projects.murdermystery.arena.special.mysterypotion;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.handlers.ChatManager;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * @author Plajer
@@ -37,7 +36,7 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
  */
 public class MysteryPotionRegistry {
 
-  private static List<MysteryPotion> mysteryPotions = new ArrayList<>();
+  private static final List<MysteryPotion> mysteryPotions = new ArrayList<>();
   private static Random rand;
 
   public static void init(Main plugin) {

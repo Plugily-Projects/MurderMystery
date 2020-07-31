@@ -19,7 +19,6 @@
 package plugily.projects.murdermystery.arena.role;
 
 import org.bukkit.entity.Player;
-
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 
@@ -97,8 +96,8 @@ public enum Role {
    * @param player player to check
    * @return true if is playing one role, false otherwise
    */
-  public static boolean isAnyRole(Player player){
+  public static boolean isAnyRole(Player player) {
     Arena arena = ArenaRegistry.getArena(player);
-    return arena == null ? false : Arrays.stream(Role.values()).anyMatch(role -> isRole(role, player));
+    return arena != null && Arrays.stream(Role.values()).anyMatch(role -> isRole(role, player));
   }
 }

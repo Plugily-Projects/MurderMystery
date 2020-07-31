@@ -18,28 +18,26 @@
 
 package plugily.projects.murdermystery.utils.services.exception;
 
+import org.bukkit.plugin.java.JavaPlugin;
+import plugily.projects.murdermystery.utils.Debugger;
+
+import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import org.bukkit.plugin.java.JavaPlugin;
-
-import plugily.projects.murdermystery.utils.Debugger;
-
 /**
  * Reporter service for reporting exceptions directly to website reporter panel
  */
 public class ReporterService {
 
-  private JavaPlugin plugin;
-  private String pluginName;
-  private String pluginVersion;
-  private String serverVersion;
-  private String error;
+  private final JavaPlugin plugin;
+  private final String pluginName;
+  private final String pluginVersion;
+  private final String serverVersion;
+  private final String error;
 
   //don't create it outside core
   ReporterService(JavaPlugin plugin, String pluginName, String pluginVersion, String serverVersion, String error) {

@@ -27,7 +27,7 @@ import plugily.projects.murdermystery.handlers.ChatManager;
  */
 public class LabelData {
 
-  private String text;
+  private final String text;
   private String command;
   private String description;
 

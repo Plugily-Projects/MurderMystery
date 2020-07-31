@@ -50,7 +50,6 @@ package plugily.projects.murdermystery.api.events.player;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.api.events.MurderMysteryEvent;
 import plugily.projects.murdermystery.arena.Arena;
@@ -65,9 +64,9 @@ import plugily.projects.murdermystery.arena.Arena;
 public class MMPlayerStatisticChangeEvent extends MurderMysteryEvent {
 
   private static final HandlerList HANDLERS = new HandlerList();
-  private Player player;
-  private StatsStorage.StatisticType statisticType;
-  private int number;
+  private final Player player;
+  private final StatsStorage.StatisticType statisticType;
+  private final int number;
 
   public MMPlayerStatisticChangeEvent(Arena eventArena, Player player, StatsStorage.StatisticType statisticType, int number) {
     super(eventArena);

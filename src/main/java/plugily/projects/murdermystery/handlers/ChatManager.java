@@ -22,12 +22,11 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-
+import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.utils.Utils;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
 
 /**
  * @author Plajer
@@ -46,13 +45,13 @@ public class ChatManager {
   }
 
   public static String colorMessage(String message) {
-      return colorRawMessage(LanguageManager.getLanguageMessage(message));
+    return colorRawMessage(LanguageManager.getLanguageMessage(message));
   }
 
   public static String colorRawMessage(String message) {
-  if (message.contains("#") && plugin.is1_16_R1()) {
-    message = Utils.matchColorRegex(message);
-  }
+    if (message.contains("#") && plugin.is1_16_R1()) {
+      message = Utils.matchColorRegex(message);
+    }
 
     return ChatColor.translateAlternateColorCodes('&', message);
   }

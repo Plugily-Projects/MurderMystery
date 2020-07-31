@@ -18,12 +18,11 @@
 
 package plugily.projects.murdermystery;
 
+import org.bukkit.Bukkit;
+import plugily.projects.murdermystery.utils.Debugger;
+
 import java.util.EnumMap;
 import java.util.Map;
-
-import org.bukkit.Bukkit;
-
-import plugily.projects.murdermystery.utils.Debugger;
 
 /**
  * @author Plajer
@@ -32,7 +31,7 @@ import plugily.projects.murdermystery.utils.Debugger;
  */
 public class HookManager {
 
-  private Map<HookFeature, Boolean> hooks = new EnumMap<>(HookFeature.class);
+  private final Map<HookFeature, Boolean> hooks = new EnumMap<>(HookFeature.class);
 
   public HookManager() {
     enableHooks();
@@ -65,7 +64,7 @@ public class HookManager {
     //todo hidden name tags hook
     CORPSES(Hook.CORPSE_REBORN, Hook.HOLOGRAPHIC_DISPLAYS);
 
-    private Hook[] requiredHooks;
+    private final Hook[] requiredHooks;
 
     HookFeature(Hook... requiredHooks) {
       this.requiredHooks = requiredHooks;
@@ -79,7 +78,7 @@ public class HookManager {
   public enum Hook {
     CORPSE_REBORN("CorpseReborn"), HOLOGRAPHIC_DISPLAYS("HolographicDisplays");
 
-    private String pluginName;
+    private final String pluginName;
 
     Hook(String pluginName) {
       this.pluginName = pluginName;

@@ -32,7 +32,7 @@ public class PartySupportInitializer {
 
   public PartyHandler initialize(Main plugin) {
     PartyHandler partyHandler;
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_PARTIES)){
+    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_PARTIES)) {
       if (Bukkit.getServer().getPluginManager().getPlugin("Parties") != null) {
         return new PartiesPartyHandlerImpl();
       } else if (Bukkit.getServer().getPluginManager().getPlugin("Spigot-Party-API-PAF") != null) {

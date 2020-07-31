@@ -18,21 +18,20 @@
 
 package plugily.projects.murdermystery.handlers.items;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import plugily.projects.murdermystery.Main;
-import plugily.projects.murdermystery.handlers.ChatManager;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.murdermystery.Main;
+import plugily.projects.murdermystery.handlers.ChatManager;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -43,14 +42,14 @@ public class SpecialItem {
 
   private ItemStack itemStack;
   private int slot;
-  private String name;
+  private final String name;
 
   public SpecialItem(String name) {
     this.name = name;
   }
 
   public static void loadAll() {
-    new SpecialItem("Leave").load(ChatColor.RED + "Leave", new String[] {
+    new SpecialItem("Leave").load(ChatColor.RED + "Leave", new String[]{
       ChatColor.GRAY + "Click to teleport to hub"
     }, XMaterial.WHITE_BED.parseMaterial(), 8);
   }

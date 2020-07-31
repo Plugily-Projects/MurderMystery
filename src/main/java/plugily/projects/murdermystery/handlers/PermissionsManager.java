@@ -18,12 +18,11 @@
 
 package plugily.projects.murdermystery.handlers;
 
-import java.util.logging.Level;
-
 import org.bukkit.plugin.java.JavaPlugin;
-
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.utils.Debugger;
+
+import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -32,7 +31,7 @@ import plugily.projects.murdermystery.utils.Debugger;
  */
 public class PermissionsManager {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
   private static String joinFullPerm = "murdermystery.fullgames";
   private static String joinPerm = "murdermystery.join.<arena>";
 

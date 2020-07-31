@@ -21,7 +21,6 @@ package plugily.projects.murdermystery.commands.arguments.game;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
 import plugily.projects.murdermystery.commands.arguments.data.CommandArgument;

@@ -21,7 +21,6 @@ package plugily.projects.murdermystery.events;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
-
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaManager;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
@@ -34,7 +33,7 @@ import plugily.projects.murdermystery.user.User;
  */
 public class QuitEvent implements Listener {
 
-  private Main plugin;
+  private final Main plugin;
 
   public QuitEvent(Main plugin) {
     this.plugin = plugin;

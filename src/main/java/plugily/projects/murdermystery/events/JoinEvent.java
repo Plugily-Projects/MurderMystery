@@ -25,13 +25,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
-
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.handlers.PermissionsManager;
 import plugily.projects.murdermystery.utils.UpdateChecker;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 
 /**
  * @author Plajer
@@ -40,7 +39,7 @@ import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
  */
 public class JoinEvent implements Listener {
 
-  private Main plugin;
+  private final Main plugin;
 
   public JoinEvent(Main plugin) {
     this.plugin = plugin;

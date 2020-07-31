@@ -27,7 +27,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.Arena;
@@ -40,8 +41,6 @@ import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.ItemPosition;
 import plugily.projects.murdermystery.utils.Utils;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
 /**
  * @author Plajer
@@ -50,7 +49,7 @@ import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
  */
 public class SpecialBlockEvents implements Listener {
 
-  private Main plugin;
+  private final Main plugin;
 
   public SpecialBlockEvents(Main plugin) {
     this.plugin = plugin;
@@ -60,8 +59,10 @@ public class SpecialBlockEvents implements Listener {
   @EventHandler
   public void onSpecialBlockClick(PlayerInteractEvent e) {
     Arena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena == null || e.getClickedBlock() == null || e.getClickedBlock().getType() == null) {
+    if (arena == null || e.getClickedBlock() == null) {
       return;
+    } else {
+      e.getClickedBlock().getType();
     }
     if (arena.getArenaState() != ArenaState.IN_GAME || plugin.getUserManager().getUser(e.getPlayer()).isSpectator()) {
       return;

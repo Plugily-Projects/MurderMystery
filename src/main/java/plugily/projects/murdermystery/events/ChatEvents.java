@@ -18,10 +18,7 @@
 
 package plugily.projects.murdermystery.events;
 
-import java.util.regex.Pattern;
-
 import me.clip.placeholderapi.PlaceholderAPI;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,7 +26,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
@@ -38,6 +34,8 @@ import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.user.User;
 
+import java.util.regex.Pattern;
+
 /**
  * @author Plajer
  * <p>
@@ -45,8 +43,8 @@ import plugily.projects.murdermystery.user.User;
  */
 public class ChatEvents implements Listener {
 
-  private Main plugin;
-  private String[] regexChars = new String[] {"$", "\\"};
+  private final Main plugin;
+  private final String[] regexChars = new String[]{"$", "\\"};
 
   public ChatEvents(Main plugin) {
     this.plugin = plugin;
@@ -81,7 +79,7 @@ public class ChatEvents implements Listener {
           if (dead && arena.getPlayersLeft().contains(player)) {
             continue;
           }
-          if (dead){
+          if (dead) {
             String prefix = "§7[§4☠§7] §r";
             player.sendMessage(prefix + message);
           } else {

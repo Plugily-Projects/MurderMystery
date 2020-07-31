@@ -18,13 +18,12 @@
 
 package plugily.projects.murdermystery.utils;
 
+import org.bukkit.Bukkit;
+import plugily.projects.murdermystery.handlers.ChatManager;
+
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.bukkit.Bukkit;
-
-import plugily.projects.murdermystery.handlers.ChatManager;
 
 /**
  * @author Plajer
@@ -33,10 +32,10 @@ import plugily.projects.murdermystery.handlers.ChatManager;
  */
 public class Debugger {
 
-  private static HashSet<String> listenedPerformance = new HashSet<>();
+  private static final HashSet<String> listenedPerformance = new HashSet<>();
   private static boolean enabled = false;
   private static boolean deep = false;
-  private static Logger logger = Logger.getLogger("Murder Mystery");
+  private static final Logger logger = Logger.getLogger("Murder Mystery");
 
   private Debugger() {
   }

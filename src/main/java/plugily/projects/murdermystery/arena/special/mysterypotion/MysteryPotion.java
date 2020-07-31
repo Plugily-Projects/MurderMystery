@@ -27,9 +27,9 @@ import org.bukkit.potion.PotionEffect;
  */
 public class MysteryPotion {
 
-  private String name;
-  private String subtitle;
-  private PotionEffect potionEffect;
+  private final String name;
+  private final String subtitle;
+  private final PotionEffect potionEffect;
 
   public MysteryPotion(String name, String subtitle, PotionEffect potionEffect) {
     this.name = name;

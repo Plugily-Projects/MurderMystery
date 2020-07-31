@@ -18,15 +18,14 @@
 
 package plugily.projects.murdermystery.handlers.party;
 
-import java.util.stream.Collectors;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 import de.simonsator.partyandfriends.spigot.api.pafplayers.PAFPlayer;
 import de.simonsator.partyandfriends.spigot.api.pafplayers.PAFPlayerManager;
 import de.simonsator.partyandfriends.spigot.api.party.PartyManager;
 import de.simonsator.partyandfriends.spigot.api.party.PlayerParty;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer

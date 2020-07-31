@@ -18,14 +18,6 @@
 
 package plugily.projects.murdermystery.handlers.sign;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -39,7 +31,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaManager;
@@ -48,9 +42,13 @@ import plugily.projects.murdermystery.arena.ArenaState;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.utils.Debugger;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -59,10 +57,10 @@ import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
  */
 public class SignManager implements Listener {
 
-  private Main plugin;
   private final List<ArenaSign> arenaSigns = new ArrayList<>();
   private final Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
-  private List<String> signLines;
+  private final Main plugin;
+  private final List<String> signLines;
 
   public SignManager(Main plugin) {
     this.plugin = plugin;
@@ -238,7 +236,7 @@ public class SignManager implements Listener {
               default:
                 break;
             }
-          } catch (Exception e) {
+          } catch (Exception ignored) {
           }
         }
         sign.update();

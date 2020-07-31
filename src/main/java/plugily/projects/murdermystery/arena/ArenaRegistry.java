@@ -18,31 +18,30 @@
 
 package plugily.projects.murdermystery.arena;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.utils.Debugger;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Tom on 27/07/2014.
  */
 public class ArenaRegistry {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
-  private static List<Arena> arenas = new ArrayList<>();
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final List<Arena> arenas = new ArrayList<>();
   private static int bungeeArena = -999;
 
   /**

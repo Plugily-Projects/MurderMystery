@@ -18,6 +18,17 @@
 
 package plugily.projects.murdermystery.commands.arguments.game;
 
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import plugily.projects.murdermystery.ConfigPreferences;
+import plugily.projects.murdermystery.api.StatsStorage;
+import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
+import plugily.projects.murdermystery.commands.arguments.data.CommandArgument;
+import plugily.projects.murdermystery.commands.completion.CompletableArgument;
+import plugily.projects.murdermystery.handlers.ChatManager;
+import plugily.projects.murdermystery.user.data.MysqlManager;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,18 +38,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-
-import plugily.projects.murdermystery.ConfigPreferences;
-import plugily.projects.murdermystery.api.StatsStorage;
-import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
-import plugily.projects.murdermystery.commands.arguments.data.CommandArgument;
-import plugily.projects.murdermystery.commands.completion.CompletableArgument;
-import plugily.projects.murdermystery.handlers.ChatManager;
-import plugily.projects.murdermystery.user.data.MysqlManager;
-
 /**
  * @author Plajer
  * <p>
@@ -46,7 +45,7 @@ import plugily.projects.murdermystery.user.data.MysqlManager;
  */
 public class LeaderboardArgument {
 
-  private ArgumentsRegistry registry;
+  private final ArgumentsRegistry registry;
 
   public LeaderboardArgument(ArgumentsRegistry registry) {
     this.registry = registry;

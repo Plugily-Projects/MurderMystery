@@ -21,7 +21,6 @@ package plugily.projects.murdermystery.utils;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
 import plugily.projects.murdermystery.arena.role.Role;
 
 /**
@@ -34,8 +33,8 @@ public enum ItemPosition {
   ARROWS(2, 2), BOW(0, 1), BOW_LOCATOR(-1, 4), MURDERER_SWORD(1, -1), INNOCENTS_LOCATOR(4, -1), INFINITE_ARROWS(9, 9), GOLD_INGOTS(8, 8),
   POTION(3, 3);
 
-  private int murdererItemPosition;
-  private int otherRolesItemPosition;
+  private final int murdererItemPosition;
+  private final int otherRolesItemPosition;
 
   ItemPosition(int murdererItemPosition, int otherRolesItemPosition) {
     this.murdererItemPosition = murdererItemPosition;

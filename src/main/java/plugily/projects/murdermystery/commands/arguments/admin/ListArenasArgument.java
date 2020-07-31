@@ -19,7 +19,6 @@
 package plugily.projects.murdermystery.commands.arguments.admin;
 
 import org.bukkit.command.CommandSender;
-
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;

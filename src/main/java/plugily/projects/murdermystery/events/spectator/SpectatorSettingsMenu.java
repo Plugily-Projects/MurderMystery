@@ -29,7 +29,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 
@@ -41,8 +40,8 @@ import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 @Deprecated //api subject to merge
 public class SpectatorSettingsMenu implements Listener {
 
-  private String inventoryName;
-  private String speedOptionName;
+  private final String inventoryName;
+  private final String speedOptionName;
   private Inventory inv;
 
   public SpectatorSettingsMenu(JavaPlugin plugin, String inventoryName, String speedOptionName) {
@@ -58,7 +57,8 @@ public class SpectatorSettingsMenu implements Listener {
 
   @EventHandler
   public void onSpectatorMenuClick(InventoryClickEvent e) {
-    if (e.getInventory() == null || !e.getView().getTitle().equals(color(inventoryName))) {
+    e.getInventory();
+    if (!e.getView().getTitle().equals(color(inventoryName))) {
       return;
     }
     if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {

@@ -18,18 +18,16 @@
 
 package plugily.projects.murdermystery.handlers.sign;
 
-import java.lang.reflect.InvocationTargetException;
-
-import javax.annotation.Nullable;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
+
+import javax.annotation.Nullable;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created for 1.14 compatibility purposes, it will cache block behind sign that will be
@@ -38,9 +36,9 @@ import plugily.projects.murdermystery.arena.Arena;
 public class ArenaSign {
 
   private static Main plugin;
-  private Sign sign;
+  private final Sign sign;
   private Block behind;
-  private Arena arena;
+  private final Arena arena;
 
   public ArenaSign(Sign sign, Arena arena) {
     this.sign = sign;

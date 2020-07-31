@@ -20,10 +20,6 @@ package plugily.projects.murdermystery.handlers;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -36,14 +32,16 @@ import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
-
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import plugily.projects.murdermystery.HookManager;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.corpse.Corpse;
 import plugily.projects.murdermystery.arena.corpse.Stand;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Plajer
@@ -52,9 +50,9 @@ import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
  */
 public class CorpseHandler implements Listener {
 
-  private Main plugin;
+  private final Main plugin;
   private Corpses.CorpseData lastSpawnedCorpse;
-  private Map<String, String> registeredLastWords = new HashMap<>();
+  private final Map<String, String> registeredLastWords = new HashMap<>();
 
   public CorpseHandler(Main plugin) {
     this.plugin = plugin;
@@ -78,7 +76,7 @@ public class CorpseHandler implements Listener {
     if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
       ArmorStand stand = p.getLocation().getWorld().spawn(p.getLocation().add(0.0D, -1.25D, 0.0D), ArmorStand.class);
       ItemStack head = XMaterial.PLAYER_HEAD.parseItem();
-      SkullMeta meta = (SkullMeta)head.getItemMeta();
+      SkullMeta meta = (SkullMeta) head.getItemMeta();
       meta.setOwner(p.getName());
       head.setItemMeta(meta);
       stand.setVisible(false);

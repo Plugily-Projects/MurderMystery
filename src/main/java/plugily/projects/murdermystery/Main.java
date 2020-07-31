@@ -20,20 +20,15 @@ package plugily.projects.murdermystery;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.logging.Level;
-
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
-
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
+import pl.plajerlair.commonsbox.database.MysqlDatabase;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaEvents;
@@ -43,19 +38,10 @@ import plugily.projects.murdermystery.arena.special.SpecialBlockEvents;
 import plugily.projects.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
 import plugily.projects.murdermystery.arena.special.pray.PrayerRegistry;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
-import plugily.projects.murdermystery.events.ChatEvents;
-import plugily.projects.murdermystery.events.Events;
-import plugily.projects.murdermystery.events.JoinEvent;
-import plugily.projects.murdermystery.events.LobbyEvent;
-import plugily.projects.murdermystery.events.QuitEvent;
+import plugily.projects.murdermystery.events.*;
 import plugily.projects.murdermystery.events.spectator.SpectatorEvents;
 import plugily.projects.murdermystery.events.spectator.SpectatorItemEvents;
-import plugily.projects.murdermystery.handlers.BowTrailsHandler;
-import plugily.projects.murdermystery.handlers.BungeeManager;
-import plugily.projects.murdermystery.handlers.ChatManager;
-import plugily.projects.murdermystery.handlers.CorpseHandler;
-import plugily.projects.murdermystery.handlers.PermissionsManager;
-import plugily.projects.murdermystery.handlers.PlaceholderManager;
+import plugily.projects.murdermystery.handlers.*;
 import plugily.projects.murdermystery.handlers.items.SpecialItem;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.handlers.party.PartyHandler;
@@ -66,15 +52,13 @@ import plugily.projects.murdermystery.handlers.sign.SignManager;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.user.UserManager;
 import plugily.projects.murdermystery.user.data.MysqlManager;
-import plugily.projects.murdermystery.utils.Debugger;
-import plugily.projects.murdermystery.utils.ExceptionLogHandler;
-import plugily.projects.murdermystery.utils.MessageUtils;
-import plugily.projects.murdermystery.utils.UpdateChecker;
-import plugily.projects.murdermystery.utils.Utils;
+import plugily.projects.murdermystery.utils.*;
 import plugily.projects.murdermystery.utils.services.ServiceRegistry;
-import pl.plajerlair.commonsbox.database.MysqlDatabase;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -110,7 +94,7 @@ public class Main extends JavaPlugin {
     LanguageManager.init(this);
     saveDefaultConfig();
 
-    Debugger.setEnabled(getDescription().getVersion().contains("b") ? true : getConfig().getBoolean("Debug", false));
+    Debugger.setEnabled(getDescription().getVersion().contains("b") || getConfig().getBoolean("Debug", false));
 
     Debugger.debug("[System] Initialization start");
     if (getConfig().getBoolean("Developer-Mode", false)) {
@@ -357,7 +341,7 @@ public class Main extends JavaPlugin {
       StringBuilder update = new StringBuilder(" SET ");
       for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         if (!stat.isPersistent()) continue;
-        if (update.toString().equalsIgnoreCase(" SET ")){
+        if (update.toString().equalsIgnoreCase(" SET ")) {
           update.append(stat.getName()).append("=").append(user.getStat(stat));
         }
         update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
@@ -365,7 +349,7 @@ public class Main extends JavaPlugin {
       String finalUpdate = update.toString();
       //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
       if (userManager.getDatabase() instanceof MysqlManager) {
-        ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE "+((MysqlManager) getUserManager().getDatabase()).getTableName()+ finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+        ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE " + ((MysqlManager) getUserManager().getDatabase()).getTableName() + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
         continue;
       }
       userManager.getDatabase().saveAllStatistic(user);

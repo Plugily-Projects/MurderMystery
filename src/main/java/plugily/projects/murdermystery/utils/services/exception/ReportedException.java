@@ -18,12 +18,11 @@
 
 package plugily.projects.murdermystery.utils.services.exception;
 
-import java.util.logging.Level;
-
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import plugily.projects.murdermystery.utils.services.ServiceRegistry;
+
+import java.util.logging.Level;
 
 /**
  * Create reported exception with data sent to plajer.xyz reporter service
@@ -49,7 +48,7 @@ public class ReportedException {
     plugin.getLogger().log(Level.WARNING, "[Reporter service] <<------------------------------[END]------------------------------>>");
 
     if (!ServiceRegistry.isServiceEnabled() || System.currentTimeMillis() - ServiceRegistry.getServiceCooldown() < 900000
-        || plugin.getDescription().getVersion().contains("b")) {
+      || plugin.getDescription().getVersion().contains("b")) {
       return;
     }
     ServiceRegistry.setServiceCooldown(System.currentTimeMillis());

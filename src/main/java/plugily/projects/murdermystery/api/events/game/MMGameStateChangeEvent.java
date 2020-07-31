@@ -19,7 +19,6 @@
 package plugily.projects.murdermystery.api.events.game;
 
 import org.bukkit.event.HandlerList;
-
 import plugily.projects.murdermystery.api.events.MurderMysteryEvent;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaState;
@@ -33,7 +32,7 @@ import plugily.projects.murdermystery.arena.ArenaState;
 public class MMGameStateChangeEvent extends MurderMysteryEvent {
 
   private static final HandlerList HANDLERS = new HandlerList();
-  private ArenaState arenaState;
+  private final ArenaState arenaState;
 
   public MMGameStateChangeEvent(Arena eventArena, ArenaState arenaState) {
     super(eventArena);

@@ -18,24 +18,17 @@
 
 package plugily.projects.murdermystery.commands.arguments;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-
+import pl.plajerlair.commonsbox.string.StringMatcher;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.commands.arguments.admin.ListArenasArgument;
@@ -46,16 +39,17 @@ import plugily.projects.murdermystery.commands.arguments.admin.arena.StopArgumen
 import plugily.projects.murdermystery.commands.arguments.data.CommandArgument;
 import plugily.projects.murdermystery.commands.arguments.data.LabelData;
 import plugily.projects.murdermystery.commands.arguments.data.LabeledCommandArgument;
-import plugily.projects.murdermystery.commands.arguments.game.CreateArgument;
-import plugily.projects.murdermystery.commands.arguments.game.JoinArguments;
-import plugily.projects.murdermystery.commands.arguments.game.LeaderboardArgument;
-import plugily.projects.murdermystery.commands.arguments.game.LeaveArgument;
-import plugily.projects.murdermystery.commands.arguments.game.StatsArgument;
+import plugily.projects.murdermystery.commands.arguments.game.*;
 import plugily.projects.murdermystery.commands.completion.TabCompletion;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.setup.SetupInventory;
 import plugily.projects.murdermystery.utils.Utils;
-import pl.plajerlair.commonsbox.string.StringMatcher;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -64,9 +58,9 @@ import pl.plajerlair.commonsbox.string.StringMatcher;
  */
 public class ArgumentsRegistry implements CommandExecutor {
 
-  private Main plugin;
-  private TabCompletion tabCompletion;
   private final Map<String, List<CommandArgument>> mappedArguments = new HashMap<>();
+  private final Main plugin;
+  private final TabCompletion tabCompletion;
 
   public ArgumentsRegistry(Main plugin) {
     this.plugin = plugin;

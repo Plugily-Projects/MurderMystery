@@ -19,7 +19,6 @@
 package plugily.projects.murdermystery.arena.corpse;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
-
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 
 /**
@@ -29,8 +28,8 @@ import org.golde.bukkit.corpsereborn.nms.Corpses;
  */
 public class Corpse {
 
-  private Hologram hologram;
-  private Corpses.CorpseData corpseData;
+  private final Hologram hologram;
+  private final Corpses.CorpseData corpseData;
 
   public Corpse(Hologram hologram, Corpses.CorpseData corpseData) {
     this.hologram = hologram;

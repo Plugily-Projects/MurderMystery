@@ -18,20 +18,19 @@
 
 package plugily.projects.murdermystery.user;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.ScoreboardManager;
-
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.api.events.player.MMPlayerStatisticChangeEvent;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
+
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Plajer
@@ -40,14 +39,14 @@ import plugily.projects.murdermystery.arena.ArenaRegistry;
  */
 public class User {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
   private static long cooldownCounter = 0;
   private final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
-  private Player player;
-  private boolean spectator = false;
-  private boolean permanentSpectator = false;
   private final Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
   private final Map<String, Double> cooldowns = new HashMap<>();
+  private final Player player;
+  private boolean spectator = false;
+  private boolean permanentSpectator = false;
 
   public User(Player player) {
     this.player = player;
@@ -69,12 +68,12 @@ public class User {
     return spectator;
   }
 
-  public boolean isPermanentSpectator() {
-    return permanentSpectator;
-  }
-
   public void setSpectator(boolean b) {
     spectator = b;
+  }
+
+  public boolean isPermanentSpectator() {
+    return permanentSpectator;
   }
 
   public void setPermanentSpectator(boolean permanentSpectator) {

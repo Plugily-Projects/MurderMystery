@@ -18,15 +18,8 @@
 
 package plugily.projects.murdermystery.events.spectator;
 
-import java.util.Collections;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.SkullType;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,14 +30,16 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.utils.Utils;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author Plajer
@@ -53,9 +48,9 @@ import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
  */
 public class SpectatorItemEvents implements Listener {
 
-  private Main plugin;
-  private SpectatorSettingsMenu spectatorSettingsMenu;
-  private boolean usesPaperSpigot = Bukkit.getServer().getVersion().contains("Paper");
+  private final Main plugin;
+  private final SpectatorSettingsMenu spectatorSettingsMenu;
+  private final boolean usesPaperSpigot = Bukkit.getServer().getVersion().contains("Paper");
 
   public SpectatorItemEvents(Main plugin) {
     this.plugin = plugin;
@@ -71,7 +66,7 @@ public class SpectatorItemEvents implements Listener {
         return;
       }
       ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
-      if (stack == null || !stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
+      if (!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
         return;
       }
       if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {

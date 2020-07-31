@@ -18,14 +18,13 @@
 
 package plugily.projects.murdermystery;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.inventory.ItemStack;
-
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.MessageUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Plajer
@@ -34,9 +33,9 @@ import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
  */
 public class ConfigPreferences {
 
-  private Main plugin;
+  private final Main plugin;
   private ItemStack murdererSword;
-  private Map<Option, Boolean> options = new HashMap<>();
+  private final Map<Option, Boolean> options = new HashMap<>();
 
   public ConfigPreferences(Main plugin) {
     this.plugin = plugin;
@@ -71,6 +70,10 @@ public class ConfigPreferences {
     }
   }
 
+  public ItemStack getMurdererSword() {
+    return murdererSword;
+  }
+
   public enum Option {
     BOSSBAR_ENABLED("Bossbar-Enabled", true), BUNGEE_ENABLED("BungeeActivated", false), CHAT_FORMAT_ENABLED("ChatFormat-Enabled", true),
     DATABASE_ENABLED("DatabaseActivated", false), INVENTORY_MANAGER_ENABLED("InventoryManager", true), NAMETAGS_HIDDEN("Nametags-Hidden", true),
@@ -78,8 +81,8 @@ public class ConfigPreferences {
     MURDERER_SPEED_ENABLED("Speed-Effect-Murderer.Enabled", true), SPAWN_GOLD_EVERY_SPAWNER_MODE("Change-Gold-Spawner-Mode-To-All", false), DISABLE_GOLD_LIMITER("Disable-Gold-Limiter", false),
     DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false), DISABLE_PARTIES("Disable-Parties", true);
 
-    private String path;
-    private boolean def;
+    private final String path;
+    private final boolean def;
 
     Option(String path, boolean def) {
       this.path = path;
@@ -96,9 +99,5 @@ public class ConfigPreferences {
     public boolean getDefault() {
       return def;
     }
-  }
-
-  public ItemStack getMurdererSword() {
-    return murdererSword;
   }
 }

@@ -18,21 +18,23 @@
 
 package plugily.projects.murdermystery.handlers.rewards;
 
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.logging.Level;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.engine.ScriptEngine;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.utils.Debugger;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.engine.ScriptEngine;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -41,9 +43,9 @@ import pl.plajerlair.commonsbox.minecraft.engine.ScriptEngine;
  */
 public class RewardsFactory {
 
-  private Set<Reward> rewards = new HashSet<>();
-  private FileConfiguration config;
-  private boolean enabled;
+  private final Set<Reward> rewards = new HashSet<>();
+  private final FileConfiguration config;
+  private final boolean enabled;
 
   public RewardsFactory(Main plugin) {
     enabled = plugin.getConfig().getBoolean("Rewards-Enabled");

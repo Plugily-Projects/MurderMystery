@@ -18,16 +18,14 @@
 
 package plugily.projects.murdermystery.utils.services;
 
+import org.bukkit.plugin.java.JavaPlugin;
+import plugily.projects.murdermystery.utils.services.locale.LocaleService;
+import plugily.projects.murdermystery.utils.services.metrics.MetricsService;
+
+import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import org.bukkit.plugin.java.JavaPlugin;
-
-import plugily.projects.murdermystery.utils.services.locale.LocaleService;
-import plugily.projects.murdermystery.utils.services.metrics.MetricsService;
 
 /**
  * Class for registering new services

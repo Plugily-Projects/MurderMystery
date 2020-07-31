@@ -18,20 +18,19 @@
 
 package plugily.projects.murdermystery.commands.completion;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
 import plugily.projects.murdermystery.commands.arguments.data.CommandArgument;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -40,8 +39,8 @@ import plugily.projects.murdermystery.commands.arguments.data.CommandArgument;
  */
 public class TabCompletion implements TabCompleter {
 
-  private List<CompletableArgument> registeredCompletions = new ArrayList<>();
-  private ArgumentsRegistry registry;
+  private final List<CompletableArgument> registeredCompletions = new ArrayList<>();
+  private final ArgumentsRegistry registry;
 
   public TabCompletion(ArgumentsRegistry registry) {
     this.registry = registry;

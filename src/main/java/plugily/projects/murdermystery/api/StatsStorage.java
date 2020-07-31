@@ -18,31 +18,24 @@
 
 package plugily.projects.murdermystery.api;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.UUID;
-import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.user.data.MysqlManager;
 import plugily.projects.murdermystery.utils.MessageUtils;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.*;
+import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -52,7 +45,7 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
  */
 public class StatsStorage {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   private static Map sortByValue(Map<?, ?> unsortMap) {
     List list = new LinkedList<>(unsortMap.entrySet());
@@ -119,14 +112,14 @@ public class StatsStorage {
    */
   public enum StatisticType {
     @Deprecated //subject to remove and merge with randomized game points
-      CONTRIBUTION_DETECTIVE("contribdetective", true),
+    CONTRIBUTION_DETECTIVE("contribdetective", true),
     @Deprecated //subject to remove and merge with randomized game points
-      CONTRIBUTION_MURDERER("contribmurderer", true), DEATHS("deaths", true), GAMES_PLAYED("gamesplayed", true), HIGHEST_SCORE("highestscore", true),
+    CONTRIBUTION_MURDERER("contribmurderer", true), DEATHS("deaths", true), GAMES_PLAYED("gamesplayed", true), HIGHEST_SCORE("highestscore", true),
     KILLS("kills", true), LOSES("loses", true), WINS("wins", true), LOCAL_CURRENT_PRAY("local_pray", false), LOCAL_GOLD("gold", false), LOCAL_KILLS("local_kills", false),
     LOCAL_PRAISES("local_praises", false), LOCAL_SCORE("local_score", false);
 
-    private String name;
-    private boolean persistent;
+    private final String name;
+    private final boolean persistent;
 
     StatisticType(String name, boolean persistent) {
       this.name = name;

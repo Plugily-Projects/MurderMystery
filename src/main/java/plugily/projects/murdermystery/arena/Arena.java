@@ -20,29 +20,10 @@ package plugily.projects.murdermystery.arena;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
-
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -52,7 +33,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
-
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+import pl.plajerlair.commonsbox.number.NumberUtils;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.HookManager;
 import plugily.projects.murdermystery.Main;
@@ -71,9 +54,10 @@ import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.ItemPosition;
 import plugily.projects.murdermystery.utils.Utils;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
-import pl.plajerlair.commonsbox.number.NumberUtils;
+
+import java.util.*;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class Arena extends BukkitRunnable {
 
@@ -82,26 +66,25 @@ public class Arena extends BukkitRunnable {
   private final String id;
 
   private final Set<Player> players = new HashSet<>();
-  private List<Location> goldSpawnPoints = new ArrayList<>();
   private final List<Item> goldSpawned = new ArrayList<>();
-  private List<Location> playerSpawnPoints = new ArrayList<>();
   private final List<Corpse> corpses = new ArrayList<>();
   private final List<Stand> stands = new ArrayList<>();
   private final List<SpecialBlock> specialBlocks = new ArrayList<>();
   private final List<Player> allMurderer = new ArrayList<>();
   private final List<Player> allDetectives = new ArrayList<>();
-
+  private List<Location> goldSpawnPoints = new ArrayList<>();
+  private List<Location> playerSpawnPoints = new ArrayList<>();
   private int murderers = 0;
   private int detectives = 0;
   private int spawnGoldTimer = 0;
   private int spawnGoldTime = 0;
 
   //contains murderer, detective, fake detective and hero
-  private Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
+  private final Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
   //all arena values that are integers, contains constant and floating values
-  private Map<ArenaOption, Integer> arenaOptions = new EnumMap<>(ArenaOption.class);
+  private final Map<ArenaOption, Integer> arenaOptions = new EnumMap<>(ArenaOption.class);
   //instead of 3 location fields we use map with GameLocation enum
-  private Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
+  private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
 
   private Hologram bowHologram;
   private boolean detectiveDead;
@@ -110,7 +93,7 @@ public class Arena extends BukkitRunnable {
 
   private ArenaState arenaState = ArenaState.WAITING_FOR_PLAYERS;
   private BossBar gameBar;
-  private ScoreboardManager scoreboardManager;
+  private final ScoreboardManager scoreboardManager;
   private String mapName = "";
   private boolean ready = true;
   private boolean forceStart = false;
@@ -277,7 +260,7 @@ public class Arena extends BukkitRunnable {
             maxdetectives = (getPlayers().size() / detectives);
           }
           if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
-            Debugger.debug(Level.INFO,"{0} Murderers and detectives amount was reduced because there are not enough players", this);
+            Debugger.debug(Level.INFO, "{0} Murderers and detectives amount was reduced because there are not enough players", this);
             //Make sure to have one innocent!
             if (maxdetectives > 1) {
               maxdetectives--;
@@ -330,7 +313,7 @@ public class Arena extends BukkitRunnable {
         break;
       case IN_GAME:
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
-          plugin.getServer().setWhitelist(getMaximumPlayers() <= getPlayers().size() ? true : false);
+          plugin.getServer().setWhitelist(getMaximumPlayers() <= getPlayers().size());
         }
         if (getTimer() <= 0) {
           ArenaManager.stopGame(false, this);
@@ -463,8 +446,8 @@ public class Arena extends BukkitRunnable {
 
           cleanUpArena();
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-                && ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
-              plugin.getServer().shutdown();
+            && ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
+            plugin.getServer().shutdown();
           }
           setArenaState(ArenaState.RESTARTING);
         }
@@ -897,7 +880,7 @@ public class Arena extends BukkitRunnable {
 
   public void clearCorpses() {
     if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
-      for (Stand stand : stands){
+      for (Stand stand : stands) {
         if (!stand.getHologram().isDeleted()) {
           stand.getHologram().delete();
         }

@@ -27,9 +27,9 @@ import java.util.List;
  */
 public class CompletableArgument {
 
-  private String mainCommand;
-  private String argument;
-  private List<String> completions;
+  private final String mainCommand;
+  private final String argument;
+  private final List<String> completions;
 
   public CompletableArgument(String mainCommand, String argument, List<String> completions) {
     this.mainCommand = mainCommand;

@@ -18,13 +18,12 @@
 
 package plugily.projects.murdermystery.handlers.party;
 
-import java.util.stream.Collectors;
-
+import de.simonsator.partyandfriends.api.party.PartyManager;
+import de.simonsator.partyandfriends.api.party.PlayerParty;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import de.simonsator.partyandfriends.api.party.PartyManager;
-import de.simonsator.partyandfriends.api.party.PlayerParty;
+import java.util.stream.Collectors;
 
 /**
  * @author Plajer

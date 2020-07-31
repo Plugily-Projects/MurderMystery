@@ -18,16 +18,14 @@
 
 package plugily.projects.murdermystery.commands.arguments.game;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
@@ -37,8 +35,9 @@ import plugily.projects.murdermystery.commands.arguments.data.LabelData;
 import plugily.projects.murdermystery.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.setup.SetupInventory;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Plajer
@@ -47,7 +46,7 @@ import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
  */
 public class CreateArgument {
 
-  private ArgumentsRegistry registry;
+  private final ArgumentsRegistry registry;
 
   public CreateArgument(ArgumentsRegistry registry) {
     this.registry = registry;

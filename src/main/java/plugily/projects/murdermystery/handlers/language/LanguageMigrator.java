@@ -18,16 +18,15 @@
 
 package plugily.projects.murdermystery.handlers.language;
 
-import java.io.File;
-
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-
 import org.bukkit.configuration.file.FileConfiguration;
-import plugily.projects.murdermystery.Main;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
+import plugily.projects.murdermystery.Main;
+
+import java.io.File;
 
 /*
   NOTE FOR CONTRIBUTORS - Please do not touch this class if you don't now how it works! You can break migrator modyfing these values!
@@ -36,7 +35,7 @@ public class LanguageMigrator {
 
   public static final int CONFIG_FILE_VERSION = 18;
   public static final int LANGUAGE_FILE_VERSION = 2;
-  private Main plugin;
+  private final Main plugin;
 
   public LanguageMigrator(Main plugin) {
     this.plugin = plugin;

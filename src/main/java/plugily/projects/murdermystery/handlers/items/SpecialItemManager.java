@@ -18,9 +18,9 @@
 
 package plugily.projects.murdermystery.handlers.items;
 
-import java.util.HashMap;
-
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
 
 /**
  * @author Plajer
@@ -29,7 +29,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class SpecialItemManager {
 
-  private static HashMap<String, SpecialItem> specialItems = new HashMap<>();
+  private static final HashMap<String, SpecialItem> specialItems = new HashMap<>();
 
   public static void addItem(String name, SpecialItem entityItem) {
     specialItems.put(name, entityItem);

@@ -18,20 +18,16 @@
 
 package plugily.projects.murdermystery.arena.managers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import me.tigerhix.lib.scoreboard.common.EntryBuilder;
 import me.tigerhix.lib.scoreboard.type.Entry;
 import me.tigerhix.lib.scoreboard.type.Scoreboard;
 import me.tigerhix.lib.scoreboard.type.ScoreboardHandler;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
+import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.Arena;
@@ -40,7 +36,9 @@ import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.user.User;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Plajer
@@ -49,10 +47,10 @@ import pl.plajerlair.commonsbox.string.StringFormatUtils;
  */
 public class ScoreboardManager {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
-  private static String boardTitle = ChatManager.colorMessage("Scoreboard.Title");
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final String boardTitle = ChatManager.colorMessage("Scoreboard.Title");
   private final List<Scoreboard> scoreboards = new ArrayList<>();
-  private Arena arena;
+  private final Arena arena;
 
   public ScoreboardManager(Arena arena) {
     this.arena = arena;

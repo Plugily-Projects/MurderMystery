@@ -18,9 +18,9 @@
 
 package plugily.projects.murdermystery.handlers.party;
 
-import java.util.List;
-
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 /**
  * @author Plajer
@@ -29,8 +29,8 @@ import org.bukkit.entity.Player;
  */
 public class GameParty {
 
-  private List<Player> players;
-  private Player leader;
+  private final List<Player> players;
+  private final Player leader;
 
   public GameParty(List<Player> players, Player leader) {
     this.players = players;

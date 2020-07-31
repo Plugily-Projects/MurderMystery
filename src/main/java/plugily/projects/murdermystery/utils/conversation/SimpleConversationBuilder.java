@@ -23,7 +23,6 @@ import org.bukkit.conversations.Conversable;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.handlers.ChatManager;
 
@@ -34,8 +33,8 @@ import plugily.projects.murdermystery.handlers.ChatManager;
  */
 public class SimpleConversationBuilder {
 
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
-  private ConversationFactory conversationFactory;
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private final ConversationFactory conversationFactory;
 
   public SimpleConversationBuilder() {
     conversationFactory = new ConversationFactory(plugin)

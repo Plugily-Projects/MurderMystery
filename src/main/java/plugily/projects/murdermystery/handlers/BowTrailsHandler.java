@@ -18,9 +18,6 @@
 
 package plugily.projects.murdermystery.handlers;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Particle;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -28,10 +25,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.utils.Debugger;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Plajer
@@ -40,8 +39,8 @@ import plugily.projects.murdermystery.utils.Debugger;
  */
 public class BowTrailsHandler implements Listener {
 
-  private Main plugin;
   private final Map<String, Particle> registeredTrails = new HashMap<>();
+  private final Main plugin;
 
   public BowTrailsHandler(Main plugin) {
     this.plugin = plugin;
@@ -61,7 +60,7 @@ public class BowTrailsHandler implements Listener {
     if (!(e.getEntity() instanceof Player && e.getProjectile() instanceof Arrow)) {
       return;
     }
-    if (!ArenaRegistry.isInArena((Player) e.getEntity()) || e.getProjectile() == null || e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
+    if (!ArenaRegistry.isInArena((Player) e.getEntity()) || e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
       return;
     }
     for (String perm : registeredTrails.keySet()) {
@@ -69,7 +68,8 @@ public class BowTrailsHandler implements Listener {
         new BukkitRunnable() {
           @Override
           public void run() {
-            if (e.getProjectile() == null || e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
+            e.getProjectile();
+            if (e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
               this.cancel();
             }
             Debugger.debug("Spawned particle with perm {0} for player {1}", perm, e.getEntity().getName());

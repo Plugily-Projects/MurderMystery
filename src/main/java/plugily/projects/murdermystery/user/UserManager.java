@@ -18,13 +18,8 @@
 
 package plugily.projects.murdermystery.user;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
@@ -34,6 +29,10 @@ import plugily.projects.murdermystery.user.data.MysqlManager;
 import plugily.projects.murdermystery.user.data.UserDatabase;
 import plugily.projects.murdermystery.utils.Debugger;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author Plajer
  * <p>
@@ -41,8 +40,8 @@ import plugily.projects.murdermystery.utils.Debugger;
  */
 public class UserManager {
 
-  private UserDatabase database;
   private final List<User> users = new ArrayList<>();
+  private final UserDatabase database;
 
   public UserManager(Main plugin) {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {

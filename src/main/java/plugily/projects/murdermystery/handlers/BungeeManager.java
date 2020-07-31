@@ -20,10 +20,6 @@ package plugily.projects.murdermystery.handlers;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-
-import java.util.EnumMap;
-import java.util.Map;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,13 +27,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
-
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaManager;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.ArenaState;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * @author Plajer
@@ -46,9 +44,9 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
  */
 public class BungeeManager implements Listener {
 
-  private Main plugin;
-  private Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
-  private String MOTD;
+  private final Main plugin;
+  private final Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
+  private final String MOTD;
 
   public BungeeManager(Main plugin) {
     this.plugin = plugin;

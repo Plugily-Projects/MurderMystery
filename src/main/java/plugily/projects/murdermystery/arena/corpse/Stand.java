@@ -28,8 +28,8 @@ import org.bukkit.entity.ArmorStand;
  */
 public class Stand {
 
-  private Hologram hologram;
-  private ArmorStand stand;
+  private final Hologram hologram;
+  private final ArmorStand stand;
 
   public Stand(Hologram hologram, ArmorStand stand) {
     this.hologram = hologram;

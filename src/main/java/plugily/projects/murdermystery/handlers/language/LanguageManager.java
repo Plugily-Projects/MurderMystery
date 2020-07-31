@@ -18,6 +18,16 @@
 
 package plugily.projects.murdermystery.handlers.language;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.murdermystery.Main;
+import plugily.projects.murdermystery.handlers.ChatManager;
+import plugily.projects.murdermystery.utils.Debugger;
+import plugily.projects.murdermystery.utils.services.ServiceRegistry;
+import plugily.projects.murdermystery.utils.services.locale.Locale;
+import plugily.projects.murdermystery.utils.services.locale.LocaleRegistry;
+import plugily.projects.murdermystery.utils.services.locale.LocaleService;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,17 +39,6 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
-import plugily.projects.murdermystery.Main;
-import plugily.projects.murdermystery.handlers.ChatManager;
-import plugily.projects.murdermystery.utils.Debugger;
-import plugily.projects.murdermystery.utils.services.ServiceRegistry;
-import plugily.projects.murdermystery.utils.services.locale.Locale;
-import plugily.projects.murdermystery.utils.services.locale.LocaleRegistry;
-import plugily.projects.murdermystery.utils.services.locale.LocaleService;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-
 /**
  * @author Plajer
  * <p>
@@ -49,7 +48,7 @@ public class LanguageManager {
 
   private static Main plugin;
   private static Locale pluginLocale;
-  private static Properties properties = new Properties();
+  private static final Properties properties = new Properties();
   private static FileConfiguration languageConfig;
 
   private LanguageManager() {
@@ -87,7 +86,7 @@ public class LanguageManager {
       new Locale("Spanish", "Español", "es_ES", "POEditor contributors", Arrays.asList("spanish", "espanol", "español", "es")),
       new Locale("Turkish", "Türkçe", "tr_TR", "POEditor contributors", Arrays.asList("turkish", "türkçe", "turkce", "tr")),
       new Locale("Vietnamese", "Việt", "vn_VN", "POEditor contributors", Arrays.asList("vietnamese", "viet", "việt", "vn")))
-    .forEach(LocaleRegistry::registerLocale);
+      .forEach(LocaleRegistry::registerLocale);
   }
 
   private static void loadProperties() {

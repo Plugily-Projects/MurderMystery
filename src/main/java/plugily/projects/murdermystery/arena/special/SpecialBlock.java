@@ -27,8 +27,8 @@ import org.bukkit.Location;
  */
 public class SpecialBlock {
 
-  private Location location;
-  private SpecialBlockType specialBlockType;
+  private final Location location;
+  private final SpecialBlockType specialBlockType;
 
   public SpecialBlock(Location location, SpecialBlockType specialBlockType) {
     this.location = location;

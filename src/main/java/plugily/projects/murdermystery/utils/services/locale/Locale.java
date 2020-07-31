@@ -27,11 +27,11 @@ import java.util.List;
  */
 public class Locale {
 
-  private String name;
-  private String originalName;
-  private String prefix;
-  private String author;
-  private List<String> aliases;
+  private final String name;
+  private final String originalName;
+  private final String prefix;
+  private final String author;
+  private final List<String> aliases;
 
   public Locale(String name, String originalName, String prefix, String author, List<String> aliases) {
     this.prefix = prefix;

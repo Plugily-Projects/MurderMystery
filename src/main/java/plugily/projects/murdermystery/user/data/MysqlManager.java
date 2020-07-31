@@ -18,22 +18,21 @@
 
 package plugily.projects.murdermystery.user.data;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-
+import pl.plajerlair.commonsbox.database.MysqlDatabase;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.MessageUtils;
-import pl.plajerlair.commonsbox.database.MysqlDatabase;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -42,8 +41,8 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
  */
 public class MysqlManager implements UserDatabase {
 
-  private Main plugin;
-  private MysqlDatabase database;
+  private final Main plugin;
+  private final MysqlDatabase database;
 
   public MysqlManager(Main plugin) {
     this.plugin = plugin;
@@ -85,7 +84,7 @@ public class MysqlManager implements UserDatabase {
     StringBuilder update = new StringBuilder(" SET ");
     for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
       if (!stat.isPersistent()) continue;
-      if (update.toString().equalsIgnoreCase(" SET ")){
+      if (update.toString().equalsIgnoreCase(" SET ")) {
         update.append(stat.getName()).append("=").append(user.getStat(stat));
       }
       update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
@@ -93,7 +92,7 @@ public class MysqlManager implements UserDatabase {
     String finalUpdate = update.toString();
 
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
-      database.executeUpdate("UPDATE "+getTableName()+ finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
+      database.executeUpdate("UPDATE " + getTableName() + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';"));
   }
 
   @Override

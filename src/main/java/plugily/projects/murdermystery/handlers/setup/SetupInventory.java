@@ -20,22 +20,16 @@ package plugily.projects.murdermystery.handlers.setup;
 
 import com.github.stefvanschie.inventoryframework.Gui;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-
-import java.util.Random;
-
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.handlers.ChatManager;
-import plugily.projects.murdermystery.handlers.setup.components.ArenaRegisterComponent;
-import plugily.projects.murdermystery.handlers.setup.components.MiscComponents;
-import plugily.projects.murdermystery.handlers.setup.components.PlayerAmountComponents;
-import plugily.projects.murdermystery.handlers.setup.components.SpawnComponents;
-import plugily.projects.murdermystery.handlers.setup.components.SpecialBlocksComponents;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.murdermystery.handlers.setup.components.*;
+
+import java.util.Random;
 
 /**
  * @author Plajer
@@ -45,13 +39,13 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 public class SetupInventory {
 
   public static final String VIDEO_LINK = "https://tutorial.plugily.xyz";
-  private static Random random = new Random();
-  private static Main plugin = JavaPlugin.getPlugin(Main.class);
-  private FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-  private Arena arena;
-  private Player player;
+  private static final Random random = new Random();
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+  private final Arena arena;
+  private final Player player;
   private Gui gui;
-  private SetupUtilities setupUtilities;
+  private final SetupUtilities setupUtilities;
 
   public SetupInventory(Arena arena, Player player) {
     this.arena = arena;

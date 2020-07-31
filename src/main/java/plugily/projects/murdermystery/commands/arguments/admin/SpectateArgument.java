@@ -21,8 +21,8 @@ public class SpectateArgument {
       new LabelData("/mma spectate", "/mma spectate", "&7Enable/Disable permanent spectator mode\n&6Permission: &7murdermystery.admin.spectate")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-       User user = registry.getPlugin().getUserManager().getUser((Player) sender);
-       user.setPermanentSpectator(!user.isPermanentSpectator());
+        User user = registry.getPlugin().getUserManager().getUser((Player) sender);
+        user.setPermanentSpectator(!user.isPermanentSpectator());
       }
     });
   }

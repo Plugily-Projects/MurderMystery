@@ -21,7 +21,6 @@ package plugily.projects.murdermystery.api.events.game;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
-
 import plugily.projects.murdermystery.api.events.MurderMysteryEvent;
 import plugily.projects.murdermystery.arena.Arena;
 
