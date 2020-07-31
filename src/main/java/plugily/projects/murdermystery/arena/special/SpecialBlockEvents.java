@@ -26,6 +26,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
@@ -59,7 +60,7 @@ public class SpecialBlockEvents implements Listener {
   @EventHandler
   public void onSpecialBlockClick(PlayerInteractEvent e) {
     Arena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena == null || e.getClickedBlock() == null) {
+    if (arena == null || e.getHand() == EquipmentSlot.OFF_HAND || e.getClickedBlock() == null) {
       return;
     }
     if (arena.getArenaState() != ArenaState.IN_GAME || plugin.getUserManager().getUser(e.getPlayer()).isSpectator()) {
@@ -98,7 +99,6 @@ public class SpecialBlockEvents implements Listener {
     }
     User user = plugin.getUserManager().getUser(e.getPlayer());
     if (e.getPlayer().getInventory().getItem(/* same for all roles */ ItemPosition.POTION.getOtherRolesItemPosition()) != null) {
-      Bukkit.getLogger().info(e.getPlayer().getInventory().getItem(/* same for all roles */ ItemPosition.POTION.getOtherRolesItemPosition()).toString());
       e.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Drink-Potion", e.getPlayer()));
       return;
     }
