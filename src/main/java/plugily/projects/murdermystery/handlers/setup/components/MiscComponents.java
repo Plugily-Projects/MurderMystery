@@ -37,6 +37,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
+import org.jetbrains.annotations.NotNull;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
@@ -118,12 +119,12 @@ public class MiscComponents implements SetupComponent {
       e.getWhoClicked().closeInventory();
       new SimpleConversationBuilder().withPrompt(new StringPrompt() {
         @Override
-        public String getPromptText(ConversationContext context) {
+        public String getPromptText(@NotNull ConversationContext context) {
           return ChatManager.colorRawMessage(ChatManager.PLUGIN_PREFIX + "&ePlease type in chat arena name! You can use color codes.");
         }
 
         @Override
-        public Prompt acceptInput(ConversationContext context, String input) {
+        public Prompt acceptInput(@NotNull ConversationContext context, String input) {
           String name = ChatManager.colorRawMessage(input);
           player.sendRawMessage(ChatManager.colorRawMessage("&e✔ Completed | &aName of arena " + arena.getId() + " set to " + name));
           arena.setMapName(name);
