@@ -54,8 +54,7 @@ import plugily.projects.murdermystery.utils.ItemPosition;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.logging.Level;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Plajer
@@ -78,7 +77,7 @@ public class ArenaManager {
    * @see MMGameJoinAttemptEvent
    */
   public static void joinAttempt(Player player, Arena arena) {
-    Debugger.debug(Level.INFO, "[{0}] Initial join attempt for {1}", arena.getId(), player.getName());
+    Debugger.debug("[{0}] Initial join attempt for {1}", arena.getId(), player.getName());
     long start = System.currentTimeMillis();
     MMGameJoinAttemptEvent gameJoinAttemptEvent = new MMGameJoinAttemptEvent(player, arena);
     Bukkit.getPluginManager().callEvent(gameJoinAttemptEvent);
@@ -151,7 +150,7 @@ public class ArenaManager {
         return;
       }
     }
-    Debugger.debug(Level.INFO, "[{0}] Checked join attempt for {1} initialized", arena.getId(), player.getName());
+    Debugger.debug("[{0}] Checked join attempt for {1} initialized", arena.getId(), player.getName());
     User user = plugin.getUserManager().getUser(player);
     arena.getScoreboardManager().createScoreboard(user);
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
@@ -198,7 +197,7 @@ public class ArenaManager {
         }
       }
       ArenaUtils.hidePlayersOutsideTheGame(player, arena);
-      Debugger.debug(Level.INFO, "[{0}] Join attempt as spectator finished for {1} took {2}ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);
+      Debugger.debug("[{0}] Join attempt as spectator finished for {1} took {2}ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);
       return;
     }
     arena.teleportToLobby(player);
@@ -219,7 +218,7 @@ public class ArenaManager {
     }
     arena.showPlayers();
     ArenaUtils.updateNameTagsVisibility(player);
-    Debugger.debug(Level.INFO, "[{0}] Join attempt as player for {1} took {2}ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);
+    Debugger.debug("[{0}] Join attempt as player for {1} took {2}ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);
   }
 
   /**
@@ -230,7 +229,7 @@ public class ArenaManager {
    * @see MMGameLeaveAttemptEvent
    */
   public static void leaveAttempt(Player player, Arena arena) {
-    Debugger.debug(Level.INFO, "[{0}] Initial leave attempt for {1}", arena.getId(), player.getName());
+    Debugger.debug("[{0}] Initial leave attempt for {1}", arena.getId(), player.getName());
     long start = System.currentTimeMillis();
 
     MMGameLeaveAttemptEvent event = new MMGameLeaveAttemptEvent(player, arena);
@@ -256,9 +255,8 @@ public class ArenaManager {
 
     if (arena.getArenaState() == ArenaState.IN_GAME) {
       if (Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
-        Random rand = new Random();
-        user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, rand.nextInt(4) + 1);
-        user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, rand.nextInt(4) + 1);
+        user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, ThreadLocalRandom.current().nextInt(4) + 1);
+        user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, ThreadLocalRandom.current().nextInt(4) + 1);
       }
     }
 
@@ -276,8 +274,8 @@ public class ArenaManager {
               }
               players.add(gamePlayer);
             }
-            Player newMurderer = players.get(new Random().nextInt(players.size()));
-            Debugger.debug(Level.INFO, "A murderer left the game. New murderer: {0}", newMurderer.getName());
+            Player newMurderer = players.get(ThreadLocalRandom.current().nextInt(players.size()));
+            Debugger.debug("A murderer left the game. New murderer: {0}", newMurderer.getName());
             arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
             arena.addToMurdererList(newMurderer);
             String title = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title", player).replace("%role%",
@@ -292,7 +290,7 @@ public class ArenaManager {
             ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
           } else {
-            Debugger.debug(Level.INFO, "No new murderer added as there are some");
+            Debugger.debug("No new murderer added as there are some");
           }
         } else if (Role.isRole(Role.ANY_DETECTIVE, player) && arena.lastAliveDetective()) {
           arena.setDetectiveDead(true);
@@ -349,7 +347,7 @@ public class ArenaManager {
       InventorySerializer.loadInventory(plugin, player);
     }
     plugin.getUserManager().saveAllStatistic(user);
-    Debugger.debug(Level.INFO, "[{0}] Game leave finished for {1} took{2}ms ", arena.getId(), player.getName(), System.currentTimeMillis() - start);
+    Debugger.debug("[{0}] Game leave finished for {1} took{2}ms ", arena.getId(), player.getName(), System.currentTimeMillis() - start);
   }
 
   /**
@@ -359,7 +357,7 @@ public class ArenaManager {
    * @see MMGameStopEvent
    */
   public static void stopGame(boolean quickStop, Arena arena) {
-    Debugger.debug(Level.INFO, "[{0}] Stop game event initialized with quickStop {1}", arena.getId(), quickStop);
+    Debugger.debug("[{0}] Stop game event initialized with quickStop {1}", arena.getId(), quickStop);
     long start = System.currentTimeMillis();
 
     MMGameStopEvent gameStopEvent = new MMGameStopEvent(arena);
@@ -371,9 +369,9 @@ public class ArenaManager {
     } else {
       arena.setTimer(10);
     }
+
     List<String> summaryMessages = LanguageManager.getLanguageList("In-Game.Messages.Game-End-Messages.Summary-Message");
     arena.getScoreboardManager().stopAllScoreboards();
-    Random rand = new Random();
 
     boolean murderWon = arena.getPlayersLeft().size() == arena.aliveMurderer();
 
@@ -381,8 +379,8 @@ public class ArenaManager {
       User user = plugin.getUserManager().getUser(player);
       if (Role.isAnyRole(player)) {
         if (Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
-          user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, rand.nextInt(4) + 1);
-          user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, rand.nextInt(4) + 1);
+          user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, ThreadLocalRandom.current().nextInt(4) + 1);
+          user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, ThreadLocalRandom.current().nextInt(4) + 1);
         }
         if (murderWon) {
           if (Role.isRole(Role.MURDERER, player)) {
@@ -429,7 +427,7 @@ public class ArenaManager {
         }.runTaskTimer(plugin, 30, 30);
       }
     }
-    Debugger.debug(Level.INFO, "[{0}] Stop game event finished took{1}ms ", arena.getId(), System.currentTimeMillis() - start);
+    Debugger.debug("[{0}] Stop game event finished took{1}ms ", arena.getId(), System.currentTimeMillis() - start);
   }
 
   private static String formatSummaryPlaceholders(String msg, Arena arena, Player player) {

@@ -83,10 +83,7 @@ public class ServiceRegistry {
   }
 
   public static LocaleService getLocaleService(JavaPlugin plugin) {
-    if (!serviceEnabled || registeredService == null || !registeredService.equals(plugin)) {
-      return null;
-    }
-    return localeService;
+    return (!serviceEnabled || registeredService == null || !registeredService.equals(plugin)) ? null : localeService;
   }
 
   public static boolean isServiceEnabled() {

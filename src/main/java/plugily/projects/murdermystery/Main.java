@@ -115,11 +115,8 @@ public class Main extends JavaPlugin {
     //start hook manager later in order to allow soft-dependencies to fully load
     Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
     if (configPreferences.getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
-      Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-          ArenaUtils.updateNameTagsVisibility(player);
-        }
-      }, 60, 140);
+      Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () ->
+        Bukkit.getOnlinePlayers().forEach(ArenaUtils::updateNameTagsVisibility), 60, 140);
     }
   }
 
@@ -236,6 +233,9 @@ public class Main extends JavaPlugin {
 
   private void startPluginMetrics() {
     Metrics metrics = new Metrics(this);
+    if (!metrics.isEnabled())
+      return;
+
     metrics.addCustomChart(new Metrics.SimplePie("database_enabled", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED))));
     metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
     metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> LanguageManager.getPluginLocale().getPrefix()));

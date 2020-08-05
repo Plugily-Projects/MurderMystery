@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
 public class ChatEvents implements Listener {
 
   private final Main plugin;
-  private final String[] regexChars = new String[]{"$", "\\"};
+  private final String[] regexChars = {"$", "\\"};
 
   public ChatEvents(Main plugin) {
     this.plugin = plugin;

@@ -69,8 +69,7 @@ public class ArenaEvents implements Listener {
 
   @EventHandler
   public void onArmorStandEject(EntityDismountEvent e) {
-    if (!(e.getEntity() instanceof ArmorStand) || e.getEntity().getCustomName() == null
-      || !e.getEntity().getCustomName().equals("MurderMysteryArmorStand")) {
+    if (!(e.getEntity() instanceof ArmorStand) || !"MurderMysteryArmorStand".equals(e.getEntity().getCustomName())) {
       return;
     }
     if (!(e.getDismounted() instanceof Player)) {

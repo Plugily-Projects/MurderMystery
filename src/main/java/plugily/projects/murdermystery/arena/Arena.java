@@ -251,7 +251,7 @@ public class Arena extends BukkitRunnable {
           Set<Player> playersToSet = new HashSet<>(getPlayers());
           int maxmurderer = 1;
           int maxdetectives = 1;
-          Debugger.debug(Level.INFO, "Before: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
+          Debugger.debug("Before: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
             getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
           if (murderers > 1 && getPlayers().size() > murderers) {
             maxmurderer = (getPlayers().size() / murderers);
@@ -260,7 +260,7 @@ public class Arena extends BukkitRunnable {
             maxdetectives = (getPlayers().size() / detectives);
           }
           if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
-            Debugger.debug(Level.INFO, "{0} Murderers and detectives amount was reduced because there are not enough players", this);
+            Debugger.debug("{0} Murderers and detectives amount was reduced because there are not enough players", this);
             //Make sure to have one innocent!
             if (maxdetectives > 1) {
               maxdetectives--;
@@ -268,7 +268,7 @@ public class Arena extends BukkitRunnable {
               maxmurderer--;
             }
           }
-          Debugger.debug(Level.INFO, "After: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
+          Debugger.debug("After: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
             getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
           for (int i = 0; i < maxmurderer; i++) {
             Player murderer = ((User) sortedMurderer.keySet().toArray()[i]).getPlayer();
@@ -295,7 +295,7 @@ public class Arena extends BukkitRunnable {
             ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
             ItemPosition.setItem(detective, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
           }
-          Debugger.debug(Level.INFO, "Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Players: Detectives = {4}, Murders = {5}",
+          Debugger.debug("Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Players: Detectives = {4}, Murders = {5}",
             getId(), maxdetectives, maxmurderer, getPlayers().size(), allDetectives, allMurderer);
 
           for (Player p : playersToSet) {
@@ -741,9 +741,7 @@ public class Arena extends BukkitRunnable {
   public void teleportAllToEndLocation() {
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
       && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
-      for (Player player : getPlayers()) {
-        plugin.getBungeeManager().connectToHub(player);
-      }
+      getPlayers().forEach(plugin.getBungeeManager()::connectToHub);
       return;
     }
     Location location = getEndLocation();
@@ -765,8 +763,8 @@ public class Arena extends BukkitRunnable {
     }
     Location location = getEndLocation();
     if (location == null) {
-      location = getLobbyLocation();
       System.out.print("EndLocation for arena " + getId() + " isn't intialized!");
+      location = getLobbyLocation();
     }
 
     player.teleport(location);
@@ -825,7 +823,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void start() {
-    Debugger.debug(Level.INFO, "[{0}] Game instance started", getId());
+    Debugger.debug("[{0}] Game instance started", getId());
     this.runTaskTimer(plugin, 20L, 20L);
     this.setArenaState(ArenaState.RESTARTING);
   }
@@ -835,20 +833,13 @@ public class Arena extends BukkitRunnable {
   }
 
   void removePlayer(Player player) {
-    if (player == null) {
-      return;
+    if (player != null) {
+      players.remove(player);
     }
-    players.remove(player);
   }
 
   public List<Player> getPlayersLeft() {
-    List<Player> players = new ArrayList<>();
-    for (User user : plugin.getUserManager().getUsers(this)) {
-      if (!user.isSpectator()) {
-        players.add(user.getPlayer());
-      }
-    }
-    return players;
+    return plugin.getUserManager().getUsers(this).stream().filter(user -> !user.isSpectator()).map(User::getPlayer).collect(Collectors.toList());
   }
 
   void showPlayers() {
@@ -905,7 +896,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public boolean isCharacterSet(CharacterType type) {
-    return gameCharacters.get(type) != null;
+    return gameCharacters.containsKey(type);
   }
 
   public void setCharacter(CharacterType type, Player player) {
