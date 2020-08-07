@@ -33,6 +33,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import pl.plajerlair.commonsbox.number.NumberUtils;
@@ -130,9 +133,14 @@ public class Arena extends BukkitRunnable {
 
 
   public void setBowHologram(Hologram bowHologram) {
+    if (bowHologram == null) {
+      return;
+    }
+
     if (this.bowHologram != null && !this.bowHologram.isDeleted()) {
       this.bowHologram.delete();
     }
+
     this.bowHologram = bowHologram;
   }
 
@@ -543,15 +551,17 @@ public class Arena extends BukkitRunnable {
     return scoreboardManager;
   }
 
+  @NotNull
   public List<Item> getGoldSpawned() {
     return goldSpawned;
   }
 
+  @NotNull
   public List<Location> getGoldSpawnPoints() {
     return goldSpawnPoints;
   }
 
-  public void setGoldSpawnPoints(List<Location> goldSpawnPoints) {
+  public void setGoldSpawnPoints(@NotNull List<Location> goldSpawnPoints) {
     this.goldSpawnPoints = goldSpawnPoints;
   }
 
@@ -594,6 +604,7 @@ public class Arena extends BukkitRunnable {
    * @return arena map name, it's not arena id
    * @see #getId()
    */
+  @NotNull
   public String getMapName() {
     return mapName;
   }
@@ -603,7 +614,7 @@ public class Arena extends BukkitRunnable {
    *
    * @param mapname new map name, it's not arena id
    */
-  public void setMapName(String mapname) {
+  public void setMapName(@NotNull String mapname) {
     this.mapName = mapname;
   }
 
@@ -649,6 +660,7 @@ public class Arena extends BukkitRunnable {
    * @return game state of arena
    * @see ArenaState
    */
+  @NotNull
   public ArenaState getArenaState() {
     return arenaState;
   }
@@ -659,8 +671,9 @@ public class Arena extends BukkitRunnable {
    * @param arenaState new game state of arena
    * @see ArenaState
    */
-  public void setArenaState(ArenaState arenaState) {
+  public void setArenaState(@NotNull ArenaState arenaState) {
     this.arenaState = arenaState;
+
     MMGameStateChangeEvent gameStateChangeEvent = new MMGameStateChangeEvent(this, getArenaState());
     Bukkit.getPluginManager().callEvent(gameStateChangeEvent);
   }
@@ -670,6 +683,7 @@ public class Arena extends BukkitRunnable {
    *
    * @return set of players in arena
    */
+  @NotNull
   public Set<Player> getPlayers() {
     return players;
   }
@@ -715,6 +729,7 @@ public class Arena extends BukkitRunnable {
    *
    * @return lobby location of arena
    */
+  @Nullable
   public Location getLobbyLocation() {
     return gameLocations.get(GameLocation.LOBBY);
   }
@@ -767,14 +782,16 @@ public class Arena extends BukkitRunnable {
       location = getLobbyLocation();
     }
 
-    player.teleport(location);
+    if (location != null) {
+      player.teleport(location);
+    }
   }
 
   public List<Location> getPlayerSpawnPoints() {
     return playerSpawnPoints;
   }
 
-  public void setPlayerSpawnPoints(List<Location> playerSpawnPoints) {
+  public void setPlayerSpawnPoints(@NotNull List<Location> playerSpawnPoints) {
     this.playerSpawnPoints = playerSpawnPoints;
   }
 
@@ -783,6 +800,7 @@ public class Arena extends BukkitRunnable {
    *
    * @return end location of arena
    */
+  @Nullable
   public Location getEndLocation() {
     return gameLocations.get(GameLocation.END);
   }
@@ -903,6 +921,7 @@ public class Arena extends BukkitRunnable {
     gameCharacters.put(type, player);
   }
 
+  @Nullable
   public Player getCharacter(CharacterType type) {
     return gameCharacters.get(type);
   }
@@ -974,7 +993,8 @@ public class Arena extends BukkitRunnable {
     return allMurderer;
   }
 
-  public int getOption(ArenaOption option) {
+  @Nullable
+  public int getOption(@NotNull ArenaOption option) {
     return arenaOptions.get(option);
   }
 

@@ -86,14 +86,13 @@ public class ArenaRegistry {
    * @return Arena or null if not found
    */
   public static Arena getArena(String id) {
-    Arena arena = null;
     for (Arena loopArena : arenas) {
       if (loopArena.getId().equalsIgnoreCase(id)) {
-        arena = loopArena;
-        break;
+        return loopArena;
       }
     }
-    return arena;
+
+    return null;
   }
 
   public static void registerArena(Arena arena) {

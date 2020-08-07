@@ -63,7 +63,7 @@ public class ExceptionLogHandler extends Handler {
         : !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")) {
       return;
     }*/
-    if (throwable.getStackTrace().length <= 0 || throwable.getCause() != null && throwable.getCause().getStackTrace() != null &&
+    if (throwable.getStackTrace().length <= 0 || throwable.getCause() != null &&
       !throwable.getCause().getStackTrace()[0].getClassName().contains("plugily.projects.murdermystery")) {
       return;
     }

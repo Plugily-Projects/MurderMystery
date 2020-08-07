@@ -376,7 +376,7 @@ public class ArenaEvents implements Listener {
     }
     if (arena.getPlayers().contains(player)) {
       User user = plugin.getUserManager().getUser(player);
-      if (player.getLocation().getWorld() == arena.getPlayerSpawnPoints().get(0).getWorld()) {
+      if (player.getLocation().getWorld().equals(arena.getPlayerSpawnPoints().get(0).getWorld())) {
         e.setRespawnLocation(player.getLocation());
       } else {
         e.setRespawnLocation(arena.getPlayerSpawnPoints().get(0));
