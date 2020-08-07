@@ -338,21 +338,24 @@ public class Main extends JavaPlugin {
   private void saveAllUserStatistics() {
     for (Player player : getServer().getOnlinePlayers()) {
       User user = userManager.getUser(player);
-      StringBuilder update = new StringBuilder(" SET ");
-      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-        if (!stat.isPersistent()) continue;
-        if (update.toString().equalsIgnoreCase(" SET ")) {
-          update.append(stat.getName()).append("=").append(user.getStat(stat));
-        }
-        update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
-      }
-      String finalUpdate = update.toString();
-      //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
       if (userManager.getDatabase() instanceof MysqlManager) {
-        ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE " + ((MysqlManager) getUserManager().getDatabase()).getTableName() + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+        StringBuilder update = new StringBuilder(" SET ");
+        for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+          if (!stat.isPersistent()) continue;
+          if (update.toString().equalsIgnoreCase(" SET ")) {
+            update.append(stat.getName()).append("=").append(user.getStat(stat));
+          }
+          update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
+        }
+        String finalUpdate = update.toString();
+        //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
+        ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE " + ((MysqlManager) getUserManager().getDatabase()).getTableName()
+          + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
         continue;
       }
-      userManager.getDatabase().saveAllStatistic(user);
+      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+        userManager.getDatabase().saveStatistic(user, stat);
+      }
     }
   }
 
