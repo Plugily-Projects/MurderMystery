@@ -166,15 +166,10 @@ public class SpectatorEvents implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGH)
-  public void onPickup(PlayerPickupItemEvent event) {
-    if (plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
-      event.setCancelled(true);
-    }
-  }
+  public void onPickup(EntityPickupItemEvent event) {
+    if (!(event.getEntity() instanceof Player)) return;
 
-  @EventHandler
-  public void onSpectate(PlayerPickupItemEvent event) {
-    if (plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
+    if (plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
       event.setCancelled(true);
     }
   }
