@@ -29,7 +29,7 @@ import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.utils.Debugger;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class BowTrailsHandler implements Listener {
 
-  private final Map<String, Particle> registeredTrails = new HashMap<>();
+  private final Map<String, Particle> registeredTrails = new LinkedHashMap<>();
   private final Main plugin;
 
   public BowTrailsHandler(Main plugin) {
@@ -63,6 +63,7 @@ public class BowTrailsHandler implements Listener {
     if (!ArenaRegistry.isInArena((Player) e.getEntity()) || e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
       return;
     }
+
     for (String perm : registeredTrails.keySet()) {
       if (e.getEntity().hasPermission(perm)) {
         new BukkitRunnable() {
