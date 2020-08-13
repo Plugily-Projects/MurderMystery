@@ -166,35 +166,10 @@ public class SpectatorEvents implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGH)
-  public void onPickup(PlayerPickupItemEvent event) {
-    if (plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
-      event.setCancelled(true);
-    }
-  }
+  public void onPickup(EntityPickupItemEvent event) {
+    if (!(event.getEntity() instanceof Player)) return;
 
-  @EventHandler
-  public void onSpectate(PlayerPickupItemEvent event) {
-    if (plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
-      event.setCancelled(true);
-    }
-  }
-
-  @EventHandler
-  public void onSpectate(PlayerDropItemEvent event) {
-    Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    if (arena == null) {
-      return;
-    }
-    if (arena.getArenaState() != ArenaState.IN_GAME
-      || plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
-      event.setCancelled(true);
-    }
-  }
-
-  @EventHandler
-  public void onInteractEntityInteract(PlayerInteractEntityEvent event) {
-    User user = plugin.getUserManager().getUser(event.getPlayer());
-    if (user.isSpectator()) {
+    if (plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
       event.setCancelled(true);
     }
   }

@@ -4,6 +4,7 @@
 * Added support for 1.16 hex colors
 * Fixed special blocks registering click twice
 * Fixed IllegalPluginAccessException on plugin disable
+* Fixed wrong order in trails
 
 ### 1.6.1 Release (01.07.2020 - 27.07.2020)
 * Added missing 1.14 & 1.15 & 1.16 Materials
