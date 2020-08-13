@@ -76,6 +76,7 @@ public class ArgumentsRegistry implements CommandExecutor {
     new LeaveArgument(this);
     new StatsArgument(this);
     new LeaderboardArgument(this);
+    new ArenaSelectorArgument(this);
 
     //register admin related arguments
     new ListArenasArgument(this);

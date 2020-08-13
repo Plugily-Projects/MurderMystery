@@ -3,7 +3,7 @@
 #
 #              Use \n to make new line
 #        Some messages like kit and kit items
-#        descriptions dont't support new lines
+#        descriptions don't support new lines
 # they are wrapped every 40 characters automatically
 #
 #     Some messages support their own placeholders
@@ -266,6 +266,15 @@ Signs:
     - "%state%"
     - "%mapname%"
     - "&5[%playersize%/%maxplayers%]"
+
+Arena-Selector:
+  Inv-Title: "Arena selector"
+  Item:
+    Lore:
+      - "&4&lMurder Mystery"
+      - "%state%"
+      - "%mapname%"
+      - "&5[%playersize%/%maxplayers%]"
 
 Leaderheads:
   #top command from leaderheads ex. mmtopkills
