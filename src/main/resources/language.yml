@@ -271,9 +271,9 @@ Arena-Selector:
   Inv-Title: "Arena selector"
   Item:
     Lore:
-      - "&4&lMurder Mystery"
-      - "%state%"
-      - "%mapname%"
+      - "&4Murder Mystery"
+      - "&7%state%"
+      - "&c%mapname%"
       - "&5[%playersize%/%maxplayers%]"
 
 Leaderheads:
@@ -295,4 +295,4 @@ Validator:
 
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p
-File-Version-Do-Not-Edit: 2
+File-Version-Do-Not-Edit: 3

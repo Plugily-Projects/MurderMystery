@@ -34,7 +34,7 @@ import java.io.File;
 public class LanguageMigrator {
 
   public static final int CONFIG_FILE_VERSION = 18;
-  public static final int LANGUAGE_FILE_VERSION = 2;
+  public static final int LANGUAGE_FILE_VERSION = 3;
   private final Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -208,6 +208,16 @@ public class LanguageMigrator {
         case 1:
           MigratorUtils.insertAfterLine(file, "Lobby-Messages:", "      Not-Enough-Space-For-Party: \"&cYour party is bigger than free places on the arena %ARENANAME%\"");
           MigratorUtils.insertAfterLine(file, "In-Game:", "  Join-As-Party-Member: \"&cYou joined %ARENANAME% because the party leader joined it!\"");
+          break;
+        case 2:
+          MigratorUtils.addNewLines(file, "Arena-Selector:\r\n" +
+            "  Inv-Title: \"Arena selector\"\r\n" +
+            "  Item:\r\n" +
+            "    Lore:\r\n" +
+            "      - \"&4Murder Mystery\"\r\n" +
+            "      - \"&7%state%\"\r\n" +
+            "      - \"&c%mapname%\"\r\n" +
+            "      - \"&5[%playersize%/%maxplayers%]\"");
           break;
         default:
           break;

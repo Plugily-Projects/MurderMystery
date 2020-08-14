@@ -52,9 +52,8 @@ public class ArenaSelectorArgument implements Listener {
 
   public ArenaSelectorArgument(ArgumentsRegistry registry) {
     registry.getPlugin().getServer().getPluginManager().registerEvents(this, registry.getPlugin());
-  /*  registry.mapArgument("murdermystery", new LabeledCommandArgument("list", "murdermystery.list", CommandArgument.ExecutorType.PLAYER,
-      new LabelData("/mm list", "/mm list", "&7Select an arena\n&6Permission: &7murdermystery.list")) { */
-    registry.mapArgument("murdermystery", new CommandArgument("list", "murdermystery.list", CommandArgument.ExecutorType.PLAYER) {
+    registry.mapArgument("murdermystery", new LabeledCommandArgument("arenas", "murdermystery.arenas", CommandArgument.ExecutorType.PLAYER,
+      new LabelData("/mm arenas", "/mm arenas", "&7Select an arena\n&6Permission: &7murdermystery.arenas")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
@@ -88,6 +87,7 @@ public class ArenaSelectorArgument implements Listener {
           itemStack.setItemMeta(itemMeta);
           inventory.addItem(itemStack);
         }
+        player.openInventory(inventory);
       }
     });
 
@@ -108,7 +108,7 @@ public class ArenaSelectorArgument implements Listener {
   }
 
   @EventHandler
-  public void onSpectatorMenuClick(InventoryClickEvent e) {
+  public void onArenaSelectorMenuClick(InventoryClickEvent e) {
     if (!e.getView().getTitle().equals(ChatManager.colorMessage("Arena-Selector.Inv-Title"))) {
       return;
     }
