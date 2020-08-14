@@ -60,11 +60,7 @@ public class TabCompletion implements TabCompleter {
     }
     if (cmd.getName().equalsIgnoreCase("murdermystery")) {
       if (args.length == 2 && args[0].equalsIgnoreCase("join")) {
-        List<String> arenaIds = new ArrayList<>();
-        for (Arena arena : ArenaRegistry.getArenas()) {
-          arenaIds.add(arena.getId());
-        }
-        return arenaIds;
+        return ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList());
       }
       if (args.length == 1) {
         return registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName).collect(Collectors.toList());

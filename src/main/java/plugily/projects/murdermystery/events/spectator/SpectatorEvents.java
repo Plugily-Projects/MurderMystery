@@ -29,8 +29,6 @@ import org.bukkit.event.player.*;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
-import plugily.projects.murdermystery.arena.ArenaState;
-import plugily.projects.murdermystery.user.User;
 
 /**
  * @author Plajer

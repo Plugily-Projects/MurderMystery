@@ -73,8 +73,14 @@ public class ArenaUtils {
   }
 
   public static void addScore(User user, ScoreAction action, int amount) {
+    String s = plugin.getConfig().getString("AddScore-Sound", "");
+    if (!s.isEmpty()) {
+      user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.valueOf(s.toUpperCase()), 1F, 2F);
+    }
+
     String msg = ChatManager.colorMessage("In-Game.Messages.Bonus-Score");
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
+
     if (action == ScoreAction.GOLD_PICKUP && amount > 1) {
       msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints() * amount));
       msg = StringUtils.replace(msg, "%action%", action.getAction());
@@ -82,6 +88,7 @@ public class ArenaUtils {
       user.getPlayer().sendMessage(msg);
       return;
     }
+
     if (action == ScoreAction.DETECTIVE_WIN_GAME) {
       int innocents = 0;
       for (Player p : user.getArena().getPlayersLeft()) {
@@ -89,17 +96,22 @@ public class ArenaUtils {
           innocents++;
         }
       }
+
       user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + (100 * innocents));
       msg = StringUtils.replace(msg, "%score%", String.valueOf(100 * innocents));
       msg = StringUtils.replace(msg, "%action%", action.getAction().replace("%amount%", String.valueOf(innocents)));
       user.getPlayer().sendMessage(msg);
       return;
     }
+
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
+
     if (action.getPoints() < 0) {
       msg = StringUtils.replace(msg, "+", "");
     }
+
     msg = StringUtils.replace(msg, "%action%", action.getAction());
+
     user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + action.getPoints());
     user.getPlayer().sendMessage(msg);
   }
