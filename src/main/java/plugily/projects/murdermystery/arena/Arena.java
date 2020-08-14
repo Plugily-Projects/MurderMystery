@@ -759,14 +759,17 @@ public class Arena extends BukkitRunnable {
       getPlayers().forEach(plugin.getBungeeManager()::connectToHub);
       return;
     }
-    Location location = getEndLocation();
 
+    Location location = getEndLocation();
     if (location == null) {
       location = getLobbyLocation();
       System.out.print("EndLocation for arena " + getId() + " isn't intialized!");
     }
-    for (Player player : getPlayers()) {
-      player.teleport(location);
+
+    if (location != null) {
+      for (Player player : getPlayers()) {
+        player.teleport(location);
+      }
     }
   }
 
@@ -776,6 +779,7 @@ public class Arena extends BukkitRunnable {
       plugin.getBungeeManager().connectToHub(player);
       return;
     }
+
     Location location = getEndLocation();
     if (location == null) {
       System.out.print("EndLocation for arena " + getId() + " isn't intialized!");
@@ -816,6 +820,7 @@ public class Arena extends BukkitRunnable {
 
   public void loadSpecialBlock(SpecialBlock block) {
     specialBlocks.add(block);
+
     Hologram holo;
     switch (block.getSpecialBlockType()) {
       case MYSTERY_CAULDRON:

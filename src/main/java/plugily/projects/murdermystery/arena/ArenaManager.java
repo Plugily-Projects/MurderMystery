@@ -432,41 +432,41 @@ public class ArenaManager {
 
   private static String formatSummaryPlaceholders(String msg, Arena arena, Player player) {
     String formatted = msg;
-    StringBuilder murders = new StringBuilder();
-    StringBuilder detectives = new StringBuilder();
+
+    StringBuilder murders = new StringBuilder(), detectives = new StringBuilder();
     int murdererKills = 0;
+
     for (Player p : arena.getMurdererList()) {
       murders.append(p.getName()).append(" (").append(plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS)).append("), ");
-      murdererKills = murdererKills + plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS);
+      murdererKills += plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS);
     }
+
     murders.deleteCharAt(murders.length() - 2);
 
     for (Player p : arena.getDetectiveList()) {
       detectives.append(p.getName()).append(", ");
     }
+
     detectives.deleteCharAt(detectives.length() - 2);
+
     if (arena.getPlayersLeft().size() == arena.aliveMurderer()) {
       formatted = StringUtils.replace(formatted, "%winner%", ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Murderer"));
     } else {
       formatted = StringUtils.replace(formatted, "%winner%", ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Players"));
     }
-    if (arena.isDetectiveDead()) {
-      formatted = StringUtils.replace(formatted, "%detective%", ChatColor.STRIKETHROUGH + detectives.toString());
-    } else {
-      formatted = StringUtils.replace(formatted, "%detective%", detectives.toString());
-    }
-    if (arena.lastAliveMurderer()) {
-      formatted = StringUtils.replace(formatted, "%murderer%", murders.toString());
-    } else {
-      formatted = StringUtils.replace(formatted, "%murderer%", ChatColor.STRIKETHROUGH + murders.toString());
-    }
-    formatted = StringUtils.replace(formatted, "%murderer_kills%",
-      String.valueOf(murdererKills));
+
+    formatted = StringUtils.replace(formatted, "%detective%", (arena.isDetectiveDead() ? ChatColor.STRIKETHROUGH : "") + detectives.toString());
+
+    formatted = StringUtils.replace(formatted, "%murderer%", (arena.lastAliveMurderer() ? "" : ChatColor.STRIKETHROUGH) + murders.toString());
+
+    formatted = StringUtils.replace(formatted, "%murderer_kills%", String.valueOf(murdererKills));
     formatted = StringUtils.replace(formatted, "%hero%", arena.isCharacterSet(Arena.CharacterType.HERO)
       ? arena.getCharacter(Arena.CharacterType.HERO).getName() : ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody"));
+
     if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formatted = PlaceholderAPI.setPlaceholders(player, formatted);
     }
+
     return formatted;
   }
 

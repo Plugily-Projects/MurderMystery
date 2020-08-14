@@ -5,6 +5,8 @@
 * Fixed special blocks registering click twice
 * Fixed IllegalPluginAccessException on plugin disable
 * Fixed wrong order in trails
+* Added config option to play sound when adding score to user
+* Fix NPE when trying to teleport players to lobby location
 
 ### 1.6.1 Release (01.07.2020 - 27.07.2020)
 * Added missing 1.14 & 1.15 & 1.16 Materials

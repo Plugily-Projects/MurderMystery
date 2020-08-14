@@ -115,16 +115,12 @@ public class ArenaRegistry {
     }
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
-    if (!config.contains("instances")) {
+    if (!config.isConfigurationSection("instances")) {
       Debugger.sendConsoleMsg(ChatManager.colorMessage("Validator.No-Instances-Created"));
       return;
     }
 
     ConfigurationSection section = config.getConfigurationSection("instances");
-    if (section == null) {
-      Debugger.sendConsoleMsg(ChatManager.colorMessage("Validator.No-Instances-Created"));
-      return;
-    }
     for (String id : section.getKeys(false)) {
       Arena arena;
       String s = "instances." + id + ".";
@@ -161,9 +157,9 @@ public class ArenaRegistry {
           specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
         }
       }
-      for (SpecialBlock block : specialBlocks) {
-        arena.loadSpecialBlock(block);
-      }
+
+      specialBlocks.forEach(arena::loadSpecialBlock);
+
       arena.setLobbyLocation(LocationSerializer.getLocation(config.getString(s + "lobbylocation", "world,364.0,63.0,-72.0,0.0,0.0")));
       arena.setEndLocation(LocationSerializer.getLocation(config.getString(s + "Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
 
