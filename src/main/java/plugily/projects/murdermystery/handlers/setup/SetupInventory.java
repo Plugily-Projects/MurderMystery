@@ -50,7 +50,7 @@ public class SetupInventory {
   public SetupInventory(Arena arena, Player player) {
     this.arena = arena;
     this.player = player;
-    this.setupUtilities = new SetupUtilities(config, arena);
+    this.setupUtilities = new SetupUtilities(config, arena, plugin.getChatManager());
     prepareGui();
   }
 
@@ -86,22 +86,24 @@ public class SetupInventory {
   }
 
   private void sendProTip(Player p) {
+    ChatManager chatManager = plugin.getChatManager();
+
     int rand = random.nextInt(16 + 1);
     switch (rand) {
       case 0:
-        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plugily.xyz"));
+        p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plugily.xyz"));
         break;
       case 1:
-        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7LeaderHeads leaderboard plugin is supported with our plugin! Check here: https://bit.ly/2IH5zkR"));
+        p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7LeaderHeads leaderboard plugin is supported with our plugin! Check here: https://bit.ly/2IH5zkR"));
         break;
       case 2:
-        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Plugily-Projects/MurderMystery"));
+        p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Plugily-Projects/MurderMystery"));
         break;
       case 3:
-        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7Need help? Check wiki &8https://wiki.plugily.xyz/minecraft/murdermystery &7or discord https://discord.gg/UXzUdTP"));
+        p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Need help? Check wiki &8https://wiki.plugily.xyz/minecraft/murdermystery &7or discord https://discord.gg/UXzUdTP"));
         break;
       case 4:
-        p.sendMessage(ChatManager.colorRawMessage("&e&lTIP: &7Suggest new ideas for the plugin or vote on current ones! https://app.feedbacky.net/b/MurderMystery"));
+        p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Suggest new ideas for the plugin or vote on current ones! https://app.feedbacky.net/b/MurderMystery"));
         break;
       default:
         break;

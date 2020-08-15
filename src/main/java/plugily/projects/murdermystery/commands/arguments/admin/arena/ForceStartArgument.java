@@ -37,7 +37,7 @@ import plugily.projects.murdermystery.utils.Utils;
  */
 public class ForceStartArgument {
 
-  public ForceStartArgument(ArgumentsRegistry registry) {
+  public ForceStartArgument(ArgumentsRegistry registry, ChatManager chatManager) {
     registry.mapArgument("murdermysteryadmin", new LabeledCommandArgument("forcestart", "murdermystery.admin.forcestart", CommandArgument.ExecutorType.PLAYER,
       new LabelData("/mma forcestart", "/mma forcestart", "&7Force starts arena you're in\n&6Permission: &7murdermystery.admin.forcestart")) {
       @Override
@@ -45,9 +45,10 @@ public class ForceStartArgument {
         if (!Utils.checkIsInGameInstance((Player) sender)) {
           return;
         }
+
         Arena arena = ArenaRegistry.getArena((Player) sender);
         if (arena.getPlayers().size() < 2) {
-          ChatManager.broadcast(arena, ChatManager.formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), arena.getMinimumPlayers()));
+          chatManager.broadcast(arena, chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), arena.getMinimumPlayers()));
           return;
         }
         if (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
@@ -55,7 +56,7 @@ public class ForceStartArgument {
           arena.setForceStart(true);
           arena.setTimer(0);
           for (Player player : ArenaRegistry.getArena((Player) sender).getPlayers()) {
-            player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
+            player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
           }
         }
       }

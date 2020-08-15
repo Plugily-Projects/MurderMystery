@@ -19,6 +19,9 @@
 package plugily.projects.murdermystery.utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.plugin.java.JavaPlugin;
+import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.handlers.ChatManager;
 
 import java.util.HashSet;
@@ -36,9 +39,7 @@ public class Debugger {
   private static boolean enabled = false;
   private static boolean deep = false;
   private static final Logger logger = Logger.getLogger("Murder Mystery");
-
-  private Debugger() {
-  }
+  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   public static void setEnabled(boolean enabled) {
     Debugger.enabled = enabled;
@@ -53,7 +54,11 @@ public class Debugger {
   }
 
   public static void sendConsoleMsg(String msg) {
-    Bukkit.getConsoleSender().sendMessage(ChatManager.colorRawMessage(msg));
+    if (msg.contains("#") && plugin.is1_16_R1()) {
+      msg = Utils.matchColorRegex(msg);
+    }
+
+    Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
   }
 
   public static void debug(String msg) {

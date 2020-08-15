@@ -64,6 +64,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ArenaManager {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final ChatManager chatManager = plugin.getChatManager();
 
   private ArenaManager() {
   }
@@ -81,16 +82,17 @@ public class ArenaManager {
     long start = System.currentTimeMillis();
     MMGameJoinAttemptEvent gameJoinAttemptEvent = new MMGameJoinAttemptEvent(player, arena);
     Bukkit.getPluginManager().callEvent(gameJoinAttemptEvent);
+
     if (!arena.isReady()) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Arena-Not-Configured"));
+      player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Arena-Not-Configured"));
       return;
     }
     if (gameJoinAttemptEvent.isCancelled()) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-Cancelled-Via-API"));
+      player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Join-Cancelled-Via-API"));
       return;
     }
     if (ArenaRegistry.isInArena(player)) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Already-Playing"));
+      player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Already-Playing"));
       return;
     }
 
@@ -109,11 +111,11 @@ public class ArenaManager {
               }
               leaveAttempt(partyPlayer, ArenaRegistry.getArena(partyPlayer));
             }
-            partyPlayer.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.formatMessage(arena, ChatManager.colorMessage("In-Game.Join-As-Party-Member"), partyPlayer));
+            partyPlayer.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Join-As-Party-Member"), partyPlayer));
             joinAttempt(partyPlayer, arena);
           }
         } else {
-          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Not-Enough-Space-For-Party"), player));
+          player.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Not-Enough-Space-For-Party"), player));
           return;
         }
       }
@@ -122,7 +124,7 @@ public class ArenaManager {
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
       && !player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
       || !player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId()))) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Join-No-Permission").replace("%permission%",
+      player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Join-No-Permission").replace("%permission%",
         PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())));
       return;
     }
@@ -131,7 +133,7 @@ public class ArenaManager {
     }
     if (arena.getPlayers().size() >= arena.getMaximumPlayers() && arena.getArenaState() == ArenaState.STARTING) {
       if (!player.hasPermission(PermissionsManager.getJoinFullGames())) {
-        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Full-Game-No-Permission"));
+        player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Full-Game-No-Permission"));
         return;
       }
       boolean foundSlot = false;
@@ -140,13 +142,13 @@ public class ArenaManager {
           continue;
         }
         ArenaManager.leaveAttempt(loopPlayer, arena);
-        loopPlayer.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
-        ChatManager.broadcast(arena, ChatManager.formatMessage(arena, ChatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), loopPlayer));
+        loopPlayer.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
+        chatManager.broadcast(arena, chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), loopPlayer));
         foundSlot = true;
         break;
       }
       if (!foundSlot) {
-        player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.No-Slots-For-Premium"));
+        player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.No-Slots-For-Premium"));
         return;
       }
     }
@@ -171,11 +173,11 @@ public class ArenaManager {
     player.setFoodLevel(20);
     if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)) {
       arena.teleportToStartLocation(player);
-      player.sendMessage(ChatManager.colorMessage("In-Game.You-Are-Spectator"));
+      player.sendMessage(chatManager.colorMessage("In-Game.You-Are-Spectator"));
       player.getInventory().clear();
 
-      player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
-      player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
+      player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
+      player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
       player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
 
       player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
@@ -207,7 +209,7 @@ public class ArenaManager {
     player.getInventory().clear();
     arena.doBarAction(Arena.BarAction.ADD, player);
     if (!plugin.getUserManager().getUser(player).isSpectator()) {
-      ChatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
+      chatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
     }
     if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
@@ -278,15 +280,15 @@ public class ArenaManager {
             Debugger.debug("A murderer left the game. New murderer: {0}", newMurderer.getName());
             arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
             arena.addToMurdererList(newMurderer);
-            String title = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title", player).replace("%role%",
-              ChatManager.colorMessage("Scoreboard.Roles.Murderer", player));
-            String subtitle = ChatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle", player).replace("%role%",
-              ChatManager.colorMessage("Scoreboard.Roles.Murderer", player));
+            String title = chatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title", player).replace("%role%",
+              chatManager.colorMessage("Scoreboard.Roles.Murderer", player));
+            String subtitle = chatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle", player).replace("%role%",
+              chatManager.colorMessage("Scoreboard.Roles.Murderer", player));
             for (Player gamePlayer : arena.getPlayers()) {
               gamePlayer.sendTitle(title, subtitle, 5, 40, 5);
             }
-            newMurderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title", player),
-              ChatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle", player), 5, 40, 5);
+            newMurderer.sendTitle(chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title", player),
+              chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle", player), 5, 40, 5);
             ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
           } else {
@@ -313,7 +315,7 @@ public class ArenaManager {
     arena.removePlayer(player);
     arena.teleportToEndLocation(player);
     if (!user.isSpectator()) {
-      ChatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
+      chatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
     }
     player.setGlowing(false);
     user.setSpectator(false);
@@ -365,7 +367,7 @@ public class ArenaManager {
     arena.setArenaState(ArenaState.ENDING);
     if (quickStop) {
       arena.setTimer(2);
-      ChatManager.broadcast(arena, ChatManager.colorRawMessage("&cThe game has been force stopped by command"));
+      chatManager.broadcast(arena, chatManager.colorRawMessage("&cThe game has been force stopped by command"));
     } else {
       arena.setTimer(10);
     }
@@ -450,9 +452,9 @@ public class ArenaManager {
     detectives.deleteCharAt(detectives.length() - 2);
 
     if (arena.getPlayersLeft().size() == arena.aliveMurderer()) {
-      formatted = StringUtils.replace(formatted, "%winner%", ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Murderer"));
+      formatted = StringUtils.replace(formatted, "%winner%", chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Murderer"));
     } else {
-      formatted = StringUtils.replace(formatted, "%winner%", ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Players"));
+      formatted = StringUtils.replace(formatted, "%winner%", chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Players"));
     }
 
     formatted = StringUtils.replace(formatted, "%detective%", (arena.isDetectiveDead() ? ChatColor.STRIKETHROUGH : "") + detectives.toString());
@@ -461,7 +463,7 @@ public class ArenaManager {
 
     formatted = StringUtils.replace(formatted, "%murderer_kills%", String.valueOf(murdererKills));
     formatted = StringUtils.replace(formatted, "%hero%", arena.isCharacterSet(Arena.CharacterType.HERO)
-      ? arena.getCharacter(Arena.CharacterType.HERO).getName() : ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody"));
+      ? arena.getCharacter(Arena.CharacterType.HERO).getName() : chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody"));
 
     if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formatted = PlaceholderAPI.setPlaceholders(player, formatted);

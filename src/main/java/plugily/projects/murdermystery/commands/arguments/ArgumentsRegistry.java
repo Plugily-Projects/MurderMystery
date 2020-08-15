@@ -60,10 +60,12 @@ public class ArgumentsRegistry implements CommandExecutor {
 
   private final Map<String, List<CommandArgument>> mappedArguments = new HashMap<>();
   private final Main plugin;
+  private final ChatManager chatManager;
   private final TabCompletion tabCompletion;
 
   public ArgumentsRegistry(Main plugin) {
     this.plugin = plugin;
+    chatManager = plugin.getChatManager();
     tabCompletion = new TabCompletion(this);
     plugin.getCommand("murdermystery").setExecutor(this);
     plugin.getCommand("murdermystery").setTabCompleter(tabCompletion);
@@ -71,19 +73,19 @@ public class ArgumentsRegistry implements CommandExecutor {
     plugin.getCommand("murdermysteryadmin").setTabCompleter(tabCompletion);
 
     //register basic arugments
-    new CreateArgument(this);
-    new JoinArguments(this);
-    new LeaveArgument(this);
-    new StatsArgument(this);
-    new LeaderboardArgument(this);
-    new ArenaSelectorArgument(this);
+    new ArenaSelectorArgument(this, chatManager);
+    new CreateArgument(this, chatManager);
+    new JoinArguments(this, chatManager);
+    new LeaderboardArgument(this, chatManager);
+    new LeaveArgument(this, chatManager);
+    new StatsArgument(this, chatManager);
 
     //register admin related arguments
-    new ListArenasArgument(this);
-    new DeleteArgument(this);
-    new ForceStartArgument(this);
+    new DeleteArgument(this, chatManager);
+    new ForceStartArgument(this, chatManager);
+    new ListArenasArgument(this, chatManager);
+    new ReloadArgument(this, chatManager);
     new StopArgument(this);
-    new ReloadArgument(this);
   }
 
   @Override
@@ -101,7 +103,7 @@ public class ArgumentsRegistry implements CommandExecutor {
               return true;
             }
             if (ArenaRegistry.getArena(args[0]) == null) {
-              sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+              sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Arena-Like-That"));
               return true;
             }
 
@@ -139,7 +141,7 @@ public class ArgumentsRegistry implements CommandExecutor {
         //sending did you mean help
         List<StringMatcher.Match> matches = StringMatcher.match(args[0], mappedArguments.get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName).collect(Collectors.toList()));
         if (!matches.isEmpty()) {
-          sender.sendMessage(ChatManager.colorMessage("Commands.Did-You-Mean").replace("%command%", label + " " + matches.get(0).getMatch()));
+          sender.sendMessage(chatManager.colorMessage("Commands.Did-You-Mean").replace("%command%", label + " " + matches.get(0).getMatch()));
           return true;
         }
       }
@@ -157,7 +159,7 @@ public class ArgumentsRegistry implements CommandExecutor {
         if (sender instanceof Player) {
           return true;
         }
-        sender.sendMessage(ChatManager.colorMessage("Commands.Only-By-Player"));
+        sender.sendMessage(chatManager.colorMessage("Commands.Only-By-Player"));
         return false;
       default:
         return false;
@@ -165,12 +167,12 @@ public class ArgumentsRegistry implements CommandExecutor {
   }
 
   private void sendHelpCommand(CommandSender sender) {
-    sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Header"));
-    sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Description"));
+    sender.sendMessage(chatManager.colorMessage("Commands.Main-Command.Header"));
+    sender.sendMessage(chatManager.colorMessage("Commands.Main-Command.Description"));
     if (sender.hasPermission("murdermystery.admin")) {
-      sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Admin-Bonus-Description"));
+      sender.sendMessage(chatManager.colorMessage("Commands.Main-Command.Admin-Bonus-Description"));
     }
-    sender.sendMessage(ChatManager.colorMessage("Commands.Main-Command.Footer"));
+    sender.sendMessage(chatManager.colorMessage("Commands.Main-Command.Footer"));
   }
 
   private void sendAdminHelpCommand(CommandSender sender) {

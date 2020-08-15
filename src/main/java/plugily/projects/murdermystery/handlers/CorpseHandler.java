@@ -51,15 +51,17 @@ import java.util.Map;
 public class CorpseHandler implements Listener {
 
   private final Main plugin;
+  private final ChatManager chatManager;
   private Corpses.CorpseData lastSpawnedCorpse;
   private final Map<String, String> registeredLastWords = new HashMap<>();
 
   public CorpseHandler(Main plugin) {
     this.plugin = plugin;
-    registerLastWord("murdermystery.lastwords.meme", ChatManager.colorMessage("In-Game.Messages.Last-Words.Meme"));
-    registerLastWord("murdermystery.lastwords.rage", ChatManager.colorMessage("In-Game.Messages.Last-Words.Rage"));
-    registerLastWord("murdermystery.lastwords.pro", ChatManager.colorMessage("In-Game.Messages.Last-Words.Pro"));
-    registerLastWord("default", ChatManager.colorMessage("In-Game.Messages.Last-Words.Default"));
+    chatManager = plugin.getChatManager();
+    registerLastWord("murdermystery.lastwords.meme", chatManager.colorMessage("In-Game.Messages.Last-Words.Meme"));
+    registerLastWord("murdermystery.lastwords.rage", chatManager.colorMessage("In-Game.Messages.Last-Words.Rage"));
+    registerLastWord("murdermystery.lastwords.pro", chatManager.colorMessage("In-Game.Messages.Last-Words.Pro"));
+    registerLastWord("default", chatManager.colorMessage("In-Game.Messages.Last-Words.Default"));
     //run bit later than hook manager to ensure it's not null
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       if (plugin.getHookManager() != null && plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
@@ -104,7 +106,7 @@ public class CorpseHandler implements Listener {
 
   private Hologram getLastWordsHologram(Player p) {
     Hologram hologram = HologramsAPI.createHologram(plugin, p.getLocation().clone().add(0, 1.7, 0));
-    hologram.appendTextLine(ChatManager.colorMessage("In-Game.Messages.Corpse-Last-Words", p).replace("%player%", p.getName()));
+    hologram.appendTextLine(chatManager.colorMessage("In-Game.Messages.Corpse-Last-Words", p).replace("%player%", p.getName()));
     boolean found = false;
     for (String perm : registeredLastWords.keySet()) {
       if (p.hasPermission(perm)) {

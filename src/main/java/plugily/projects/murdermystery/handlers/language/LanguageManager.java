@@ -21,7 +21,6 @@ package plugily.projects.murdermystery.handlers.language;
 import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
-import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.services.ServiceRegistry;
 import plugily.projects.murdermystery.utils.services.locale.Locale;
@@ -46,9 +45,9 @@ import java.util.stream.Stream;
  */
 public class LanguageManager {
 
+  private static final Properties properties = new Properties();
   private static Main plugin;
   private static Locale pluginLocale;
-  private static final Properties properties = new Properties();
   private static FileConfiguration languageConfig;
 
   private LanguageManager() {
@@ -164,7 +163,7 @@ public class LanguageManager {
       //check normal language if nothing found in specific language
       return getStrings(path);
     }
-    return Arrays.asList(ChatManager.colorRawMessage(prop).split(";"));
+    return Arrays.asList(plugin.getChatManager().colorRawMessage(prop).split(";"));
   }
 
 

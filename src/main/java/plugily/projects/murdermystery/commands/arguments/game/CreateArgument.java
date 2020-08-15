@@ -48,14 +48,14 @@ public class CreateArgument {
 
   private final ArgumentsRegistry registry;
 
-  public CreateArgument(ArgumentsRegistry registry) {
+  public CreateArgument(ArgumentsRegistry registry, ChatManager chatManager) {
     this.registry = registry;
     registry.mapArgument("murdermystery", new LabeledCommandArgument("create", "murdermystery.admin.create", CommandArgument.ExecutorType.PLAYER,
       new LabelData("/mm create &6<arena>", "/mm create <arena>", "&7Create new arena\n&6Permission: &7murdermystery.admin.create")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
-          sender.sendMessage(ChatManager.colorMessage("Commands.Type-Arena-Name"));
+          sender.sendMessage(chatManager.colorMessage("Commands.Type-Arena-Name"));
           return;
         }
         Player player = (Player) sender;

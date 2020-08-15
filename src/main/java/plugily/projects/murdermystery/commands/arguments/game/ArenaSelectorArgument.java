@@ -50,18 +50,21 @@ import java.util.ArrayList;
  */
 public class ArenaSelectorArgument implements Listener {
 
-  public ArenaSelectorArgument(ArgumentsRegistry registry) {
+  private final ChatManager chatManager;
+
+  public ArenaSelectorArgument(ArgumentsRegistry registry, ChatManager chatManager) {
+    this.chatManager = chatManager;
     registry.getPlugin().getServer().getPluginManager().registerEvents(this, registry.getPlugin());
     registry.mapArgument("murdermystery", new LabeledCommandArgument("arenas", "murdermystery.arenas", CommandArgument.ExecutorType.PLAYER,
       new LabelData("/mm arenas", "/mm arenas", "&7Select an arena\n&6Permission: &7murdermystery.arenas")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
-        if (ArenaRegistry.getArenas().size() == 0){
-          player.sendMessage(ChatManager.colorMessage("Validator.No-Instances-Created"));
+        if (ArenaRegistry.getArenas().size() == 0) {
+          player.sendMessage(chatManager.colorMessage("Validator.No-Instances-Created"));
           return;
         }
-        Inventory inventory = Bukkit.createInventory(player, Utils.serializeInt(ArenaRegistry.getArenas().size()), ChatManager.colorMessage("Arena-Selector.Inv-Title"));
+        Inventory inventory = Bukkit.createInventory(player, Utils.serializeInt(ArenaRegistry.getArenas().size()), chatManager.colorMessage("Arena-Selector.Inv-Title"));
         for (Arena arena : ArenaRegistry.getArenas()) {
           ItemStack itemStack;
           switch (arena.getArenaState()) {
@@ -97,19 +100,19 @@ public class ArenaSelectorArgument implements Listener {
     String formatted = string;
     formatted = StringUtils.replace(formatted, "%mapname%", arena.getMapName());
     if (arena.getPlayers().size() >= arena.getMaximumPlayers()) {
-      formatted = StringUtils.replace(formatted, "%state%", ChatManager.colorMessage("Signs.Game-States.Full-Game"));
+      formatted = StringUtils.replace(formatted, "%state%", chatManager.colorMessage("Signs.Game-States.Full-Game"));
     } else {
       formatted = StringUtils.replace(formatted, "%state%", plugin.getSignManager().getGameStateToString().get(arena.getArenaState()));
     }
     formatted = StringUtils.replace(formatted, "%playersize%", String.valueOf(arena.getPlayers().size()));
     formatted = StringUtils.replace(formatted, "%maxplayers%", String.valueOf(arena.getMaximumPlayers()));
-    formatted = ChatManager.colorRawMessage(formatted);
+    formatted = chatManager.colorRawMessage(formatted);
     return formatted;
   }
 
   @EventHandler
   public void onArenaSelectorMenuClick(InventoryClickEvent e) {
-    if (!e.getView().getTitle().equals(ChatManager.colorMessage("Arena-Selector.Inv-Title"))) {
+    if (!e.getView().getTitle().equals(chatManager.colorMessage("Arena-Selector.Inv-Title"))) {
       return;
     }
     if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
@@ -122,7 +125,7 @@ public class ArenaSelectorArgument implements Listener {
     if (arena != null) {
       ArenaManager.joinAttempt(player, arena);
     } else {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+      player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Arena-Like-That"));
     }
   }
 

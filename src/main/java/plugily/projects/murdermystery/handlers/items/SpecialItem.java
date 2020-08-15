@@ -43,6 +43,7 @@ public class SpecialItem {
   private ItemStack itemStack;
   private int slot;
   private final String name;
+  private final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   public SpecialItem(String name) {
     this.name = name;
@@ -56,6 +57,7 @@ public class SpecialItem {
 
   public void load(String displayName, String[] lore, Material material, int slot) {
     FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "lobbyitems");
+    ChatManager chatManager = plugin.getChatManager();
 
     if (!config.contains(name)) {
       config.set(name + ".data", 0);
@@ -67,9 +69,9 @@ public class SpecialItem {
     ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "lobbyitems");
     ItemStack stack = XMaterial.matchXMaterial(config.getString(name + ".material-name", "STONE").toUpperCase()).get().parseItem();
     ItemMeta meta = stack.getItemMeta();
-    meta.setDisplayName(ChatManager.colorRawMessage(config.getString(name + ".displayname")));
+    meta.setDisplayName(chatManager.colorRawMessage(config.getString(name + ".displayname")));
 
-    List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(str -> ChatManager.colorRawMessage(str))
+    List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(chatManager::colorRawMessage)
       .collect(Collectors.toList());
     meta.setLore(colorizedLore);
     stack.setItemMeta(meta);

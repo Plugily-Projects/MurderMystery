@@ -47,7 +47,7 @@ public class ReloadArgument {
 
   private final Set<CommandSender> confirmations = new HashSet<>();
 
-  public ReloadArgument(ArgumentsRegistry registry) {
+  public ReloadArgument(ArgumentsRegistry registry, ChatManager chatManager) {
     registry.mapArgument("murdermysteryadmin", new LabeledCommandArgument("reload", "murdermystery.admin.reload", CommandArgument.ExecutorType.BOTH,
       new LabelData("/mma reload", "/mma reload", "&7Reload all game arenas and configurations\n&7&lArenas will be stopped!\n&6Permission: &7murdermystery.admin.reload")) {
       @Override
@@ -55,7 +55,7 @@ public class ReloadArgument {
         if (!confirmations.contains(sender)) {
           confirmations.add(sender);
           Bukkit.getScheduler().runTaskLater(registry.getPlugin(), () -> confirmations.remove(sender), 20 * 10);
-          sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorRawMessage("&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"));
+          sender.sendMessage(chatManager.getPrefix() + chatManager.colorRawMessage("&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"));
           return;
         }
         confirmations.remove(sender);
@@ -84,7 +84,7 @@ public class ReloadArgument {
           Debugger.debug(Level.INFO, "[Reloader] Instance {0} stopped took {1}ms", arena.getId(), System.currentTimeMillis() - stopTime);
         }
         ArenaRegistry.registerArenas();
-        sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Admin-Commands.Success-Reload"));
+        sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Admin-Commands.Success-Reload"));
         Debugger.debug(Level.INFO, "[Reloader] Finished reloading took {0}ms", System.currentTimeMillis() - start);
       }
     });

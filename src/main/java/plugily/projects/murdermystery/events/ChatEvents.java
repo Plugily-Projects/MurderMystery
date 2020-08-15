@@ -44,10 +44,12 @@ import java.util.regex.Pattern;
 public class ChatEvents implements Listener {
 
   private final Main plugin;
+  private final ChatManager chatManager;
   private final String[] regexChars = {"$", "\\"};
 
   public ChatEvents(Main plugin) {
     this.plugin = plugin;
+    chatManager = plugin.getChatManager();
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
@@ -95,7 +97,7 @@ public class ChatEvents implements Listener {
 
   private String formatChatPlaceholders(String message, User user, String saidMessage) {
     String formatted = message;
-    formatted = ChatManager.colorRawMessage(formatted);
+    formatted = chatManager.colorRawMessage(formatted);
     formatted = StringUtils.replace(formatted, "%player%", user.getPlayer().getName());
     formatted = StringUtils.replace(formatted, "%message%", ChatColor.stripColor(saidMessage));
     if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {

@@ -46,9 +46,12 @@ import java.util.UUID;
 public class LeaderboardArgument {
 
   private final ArgumentsRegistry registry;
+  private final ChatManager chatManager;
 
-  public LeaderboardArgument(ArgumentsRegistry registry) {
+  public LeaderboardArgument(ArgumentsRegistry registry, ChatManager chatManager) {
     this.registry = registry;
+    this.chatManager = chatManager;
+
     List<String> stats = new ArrayList<>();
     for (StatsStorage.StatisticType value : StatsStorage.StatisticType.values()) {
       if (!value.isPersistent()) {
@@ -61,18 +64,18 @@ public class LeaderboardArgument {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
-          sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Statistics.Type-Name"));
+          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Statistics.Type-Name"));
           return;
         }
         try {
           StatsStorage.StatisticType statisticType = StatsStorage.StatisticType.valueOf(args[1].toUpperCase());
           if (!statisticType.isPersistent()) {
-            sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Statistics.Invalid-Name"));
+            sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Statistics.Invalid-Name"));
             return;
           }
           printLeaderboard(sender, statisticType);
         } catch (IllegalArgumentException e) {
-          sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Statistics.Invalid-Name"));
+          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Statistics.Invalid-Name"));
         }
       }
     });
@@ -80,7 +83,7 @@ public class LeaderboardArgument {
 
   private void printLeaderboard(CommandSender sender, StatsStorage.StatisticType statisticType) {
     LinkedHashMap<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
-    sender.sendMessage(ChatManager.colorMessage("Commands.Statistics.Header"));
+    sender.sendMessage(chatManager.colorMessage("Commands.Statistics.Header"));
     String statistic = StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "));
     for (int i = 0; i < 10; i++) {
       try {
@@ -109,7 +112,7 @@ public class LeaderboardArgument {
   }
 
   private String formatMessage(String statisticName, String playerName, int position, int value) {
-    String message = ChatManager.colorMessage("Commands.Statistics.Format");
+    String message = chatManager.colorMessage("Commands.Statistics.Format");
     message = StringUtils.replace(message, "%position%", String.valueOf(position));
     message = StringUtils.replace(message, "%name%", playerName);
     message = StringUtils.replace(message, "%value%", String.valueOf(value));

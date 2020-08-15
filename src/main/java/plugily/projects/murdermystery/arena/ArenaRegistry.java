@@ -40,6 +40,7 @@ import java.util.Random;
 public class ArenaRegistry {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final ChatManager chatManager = plugin.getChatManager();
   private static final List<Arena> arenas = new ArrayList<>();
   private static int bungeeArena = -999;
 
@@ -116,7 +117,7 @@ public class ArenaRegistry {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
     if (!config.isConfigurationSection("instances")) {
-      Debugger.sendConsoleMsg(ChatManager.colorMessage("Validator.No-Instances-Created"));
+      Debugger.sendConsoleMsg(chatManager.colorMessage("Validator.No-Instances-Created"));
       return;
     }
 
@@ -164,14 +165,14 @@ public class ArenaRegistry {
       arena.setEndLocation(LocationSerializer.getLocation(config.getString(s + "Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
 
       if (!config.getBoolean(s + "isdone", false)) {
-        Debugger.sendConsoleMsg(ChatManager.colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
+        Debugger.sendConsoleMsg(chatManager.colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
         arena.setReady(false);
         ArenaRegistry.registerArena(arena);
         continue;
       }
       ArenaRegistry.registerArena(arena);
       arena.start();
-      Debugger.sendConsoleMsg(ChatManager.colorMessage("Validator.Instance-Started").replace("%arena%", id));
+      Debugger.sendConsoleMsg(chatManager.colorMessage("Validator.Instance-Started").replace("%arena%", id));
     }
     Debugger.debug("Arenas registration completed, took {0}ms", System.currentTimeMillis() - start);
   }

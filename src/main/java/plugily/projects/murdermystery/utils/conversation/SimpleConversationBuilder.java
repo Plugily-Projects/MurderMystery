@@ -34,6 +34,7 @@ import plugily.projects.murdermystery.handlers.ChatManager;
 public class SimpleConversationBuilder {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private final ChatManager chatManager = plugin.getChatManager();
   private final ConversationFactory conversationFactory;
 
   public SimpleConversationBuilder() {
@@ -46,7 +47,7 @@ public class SimpleConversationBuilder {
         if (listener.gracefulExit()) {
           return;
         }
-        listener.getContext().getForWhom().sendRawMessage(ChatManager.colorRawMessage("&7Operation cancelled!"));
+        listener.getContext().getForWhom().sendRawMessage(chatManager.colorRawMessage("&7Operation cancelled!"));
       })
       .thatExcludesNonPlayersWithMessage(ChatColor.RED + "Only by players!");
   }

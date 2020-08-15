@@ -39,7 +39,7 @@ import java.util.logging.Level;
  */
 public class LeaveArgument {
 
-  public LeaveArgument(ArgumentsRegistry registry) {
+  public LeaveArgument(ArgumentsRegistry registry, ChatManager chatManager) {
     registry.mapArgument("murdermystery", new CommandArgument("leave", "", CommandArgument.ExecutorType.PLAYER) {
       @Override
       public void execute(CommandSender sender, String[] args) {
@@ -48,7 +48,7 @@ public class LeaveArgument {
           if (!Utils.checkIsInGameInstance((Player) sender)) {
             return;
           }
-          player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Teleported-To-The-Lobby", player));
+          player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Teleported-To-The-Lobby", player));
           if (registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
             registry.getPlugin().getBungeeManager().connectToHub(player);
             Debugger.debug(Level.INFO, "{0} was teleported to the Hub server", player.getName());

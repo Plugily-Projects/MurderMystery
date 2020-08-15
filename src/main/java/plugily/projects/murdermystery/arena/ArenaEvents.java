@@ -61,9 +61,11 @@ import plugily.projects.murdermystery.utils.Utils;
 public class ArenaEvents implements Listener {
 
   private final Main plugin;
+  private final ChatManager chatManager;
 
   public ArenaEvents(Main plugin) {
     this.plugin = plugin;
+    chatManager = plugin.getChatManager();
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
@@ -163,7 +165,7 @@ public class ArenaEvents implements Listener {
     ItemPosition.addItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, stack);
     user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, stack.getAmount());
     ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP, stack.getAmount());
-    e.getPlayer().sendMessage(ChatManager.colorMessage("In-Game.Messages.Picked-Up-Gold", e.getPlayer()));
+    e.getPlayer().sendMessage(chatManager.colorMessage("In-Game.Messages.Picked-Up-Gold", e.getPlayer()));
 
     if (Role.isRole(Role.ANY_DETECTIVE, e.getPlayer())) {
       ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, e.getItem().getItemStack().getAmount() * plugin.getConfig().getInt("Detective-Gold-Pick-Up-Arrows", 3)));
@@ -172,8 +174,8 @@ public class ArenaEvents implements Listener {
 
     if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) >= plugin.getConfig().getInt("Gold-For-Bow", 10)) {
       user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
-      e.getPlayer().sendTitle(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold", e.getPlayer()),
-        ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle", e.getPlayer()), 5, 40, 5);
+      e.getPlayer().sendTitle(chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold", e.getPlayer()),
+        chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle", e.getPlayer()), 5, 40, 5);
       ItemPosition.setItem(e.getPlayer(), ItemPosition.BOW, new ItemStack(Material.BOW, 1));
       ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Gold-Bow-Arrows", 3)));
       e.getPlayer().getInventory().setItem(/* same for all roles */ ItemPosition.GOLD_INGOTS.getOtherRolesItemPosition(), new ItemStack(Material.GOLD_INGOT, 0));
@@ -279,21 +281,21 @@ public class ArenaEvents implements Listener {
       ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
     }
 
-    victim.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", victim), null, 5, 40, 50);
+    victim.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", victim), null, 5, 40, 50);
 
     if (Role.isRole(Role.MURDERER, victim)) {
       ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.KILL_MURDERER, 0);
     } else if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.ENABLE_KILL_DETECTIVE_IF_INNOCENT_KILLED) && Role.isRole(Role.INNOCENT, victim)) {
       if (Role.isRole(Role.MURDERER, attacker)) {
-        victim.sendTitle(null, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You", victim), 5, 40, 5);
+        victim.sendTitle(null, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You", victim), 5, 40, 5);
       } else {
-        victim.sendTitle(null, ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Player-Killed-You", victim), 5, 40, 5);
+        victim.sendTitle(null, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Player-Killed-You", victim), 5, 40, 5);
       }
 
       //if else, murderer killed, so don't kill him :)
       if (Role.isRole(Role.ANY_DETECTIVE, attacker) || Role.isRole(Role.INNOCENT, attacker)) {
-        attacker.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", attacker),
-          ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Killed-Innocent", attacker), 5, 40, 5);
+        attacker.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", attacker),
+          chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Killed-Innocent", attacker), 5, 40, 5);
         attacker.damage(100.0);
         ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.INNOCENT_KILL, 0);
         plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.DETECTIVE_KILL);
@@ -350,12 +352,12 @@ public class ArenaEvents implements Listener {
     player.setAllowFlight(true);
     player.setFlying(true);
     player.getInventory().clear();
-    ChatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
+    chatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
     //we must call it ticks later due to instant respawn bug
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       e.getEntity().spigot().respawn();
-      player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name", player)).build());
-      player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name", player)).build());
+      player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name", player)).build());
+      player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name", player)).build());
       player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
     }, 5);
   }
@@ -432,7 +434,7 @@ public class ArenaEvents implements Listener {
         if (player.getInventory().getItem(ItemPosition.BOW_LOCATOR.getOtherRolesItemPosition()) != null) {
           ItemStack bowLocator = new ItemStack(Material.COMPASS, 1);
           ItemMeta bowMeta = bowLocator.getItemMeta();
-          bowMeta.setDisplayName(ChatManager.colorMessage("In-Game.Bow-Locator-Item-Name", player) + " §7| §a" + (int) Math.round(player.getLocation().distance(player.getCompassTarget())));
+          bowMeta.setDisplayName(chatManager.colorMessage("In-Game.Bow-Locator-Item-Name", player) + " §7| §a" + (int) Math.round(player.getLocation().distance(player.getCompassTarget())));
           bowLocator.setItemMeta(bowMeta);
           ItemPosition.setItem(player, ItemPosition.BOW_LOCATOR, bowLocator);
           return;
@@ -443,7 +445,7 @@ public class ArenaEvents implements Listener {
         ItemMeta innocentMeta = innocentLocator.getItemMeta();
         for (Player p : arena.getPlayersLeft()) {
           if (Role.isRole(Role.INNOCENT, p) || Role.isRole(Role.ANY_DETECTIVE, p)) {
-            innocentMeta.setDisplayName(ChatManager.colorMessage("In-Game.Innocent-Locator-Item-Name", player) + " §7| §a" + (int) Math.round(player.getLocation().distance(p.getLocation())));
+            innocentMeta.setDisplayName(chatManager.colorMessage("In-Game.Innocent-Locator-Item-Name", player) + " §7| §a" + (int) Math.round(player.getLocation().distance(p.getLocation())));
             innocentLocator.setItemMeta(innocentMeta);
             ItemPosition.setItem(player, ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
           }

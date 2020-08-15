@@ -58,15 +58,16 @@ public class SpecialBlocksComponents implements SetupComponent {
     FileConfiguration config = setupInventory.getConfig();
     Arena arena = setupInventory.getArena();
     Main plugin = setupInventory.getPlugin();
+    ChatManager chatManager = plugin.getChatManager();
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.PAPER.parseItem())
-      .name(ChatManager.colorRawMessage("&6&lSpecial Blocks Section"))
+      .name(chatManager.colorRawMessage("&6&lSpecial Blocks Section"))
       .lore(ChatColor.GRAY + "Items on the right will allow")
       .lore(ChatColor.GRAY + "you to add special game blocks!")
       .build()), 0, 3);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ENDER_CHEST.parseItem())
-      .name(ChatManager.colorRawMessage("&e&lAdd Mystery Cauldron"))
+      .name(chatManager.colorRawMessage("&e&lAdd Mystery Cauldron"))
       .lore(ChatColor.GRAY + "Target a cauldron and add it to the game")
       .lore(ChatColor.GRAY + "it will cost 1 gold per potion!")
       .lore(ChatColor.GRAY + "Configure cauldron potions in specialblocks.yml file!")
@@ -83,12 +84,12 @@ public class SpecialBlocksComponents implements SetupComponent {
       List<String> cauldrons = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".mystery-cauldrons"));
       cauldrons.add(LocationSerializer.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
       config.set("instances." + arena.getId() + ".mystery-cauldrons", cauldrons);
-      player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aAdded Cauldron special block!"));
+      player.sendMessage(chatManager.colorRawMessage("&e✔ Completed | &aAdded Cauldron special block!"));
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 1, 3);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ENCHANTING_TABLE.parseItem())
-      .name(ChatManager.colorRawMessage("&e&lAdd Confessional"))
+      .name(chatManager.colorRawMessage("&e&lAdd Confessional"))
       .lore(ChatColor.GRAY + "Target enchanting table and")
       .lore(ChatColor.GRAY + "add praise to the developer")
       .lore(ChatColor.GRAY + "confessional, gift for")
@@ -111,8 +112,8 @@ public class SpecialBlocksComponents implements SetupComponent {
       List<String> confessionals = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".confessionals"));
       confessionals.add(LocationSerializer.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
       config.set("instances." + arena.getId() + ".confessionals", confessionals);
-      player.sendMessage(ChatManager.colorRawMessage("&e✔ Completed | &aAdded Confessional special block!"));
-      player.sendMessage(ChatManager.colorRawMessage("&eInfo | &aRemember to place any lever in radius of 3 near enchant table!"));
+      player.sendMessage(chatManager.colorRawMessage("&e✔ Completed | &aAdded Confessional special block!"));
+      player.sendMessage(chatManager.colorRawMessage("&eInfo | &aRemember to place any lever in radius of 3 near enchant table!"));
       ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 2, 3);
   }

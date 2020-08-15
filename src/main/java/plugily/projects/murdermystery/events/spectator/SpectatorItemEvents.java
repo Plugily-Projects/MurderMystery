@@ -49,14 +49,16 @@ import java.util.Set;
 public class SpectatorItemEvents implements Listener {
 
   private final Main plugin;
+  private final ChatManager chatManager;
   private final SpectatorSettingsMenu spectatorSettingsMenu;
   private final boolean usesPaperSpigot = Bukkit.getServer().getVersion().contains("Paper");
 
   public SpectatorItemEvents(Main plugin) {
     this.plugin = plugin;
+    chatManager = plugin.getChatManager();
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    spectatorSettingsMenu = new SpectatorSettingsMenu(plugin, ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Inventory-Name"),
-      ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Speed-Name"));
+    spectatorSettingsMenu = new SpectatorSettingsMenu(plugin, chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Inventory-Name"),
+      chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Speed-Name"));
   }
 
   @EventHandler
@@ -69,10 +71,10 @@ public class SpectatorItemEvents implements Listener {
       if (!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
         return;
       }
-      if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
+      if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
         e.setCancelled(true);
         openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
-      } else if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
+      } else if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
         e.setCancelled(true);
         spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
       }
@@ -81,7 +83,7 @@ public class SpectatorItemEvents implements Listener {
 
   private void openSpectatorMenu(World world, Player p) {
     Inventory inventory = plugin.getServer().createInventory(null, Utils.serializeInt(ArenaRegistry.getArena(p).getPlayers().size()),
-      ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
+      chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
     Set<Player> players = ArenaRegistry.getArena(p).getPlayers();
     for (Player player : world.getPlayers()) {
       if (players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
@@ -98,13 +100,13 @@ public class SpectatorItemEvents implements Listener {
           meta.setOwningPlayer(player);
         }
         meta.setDisplayName(player.getName());
-        String role = ChatManager.colorMessage("In-Game.Spectator.Target-Player-Role", p);
+        String role = chatManager.colorMessage("In-Game.Spectator.Target-Player-Role", p);
         if (Role.isRole(Role.MURDERER, player)) {
-          role = StringUtils.replace(role, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Murderer"));
+          role = StringUtils.replace(role, "%ROLE%", chatManager.colorMessage("Scoreboard.Roles.Murderer"));
         } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
-          role = StringUtils.replace(role, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Detective"));
+          role = StringUtils.replace(role, "%ROLE%", chatManager.colorMessage("Scoreboard.Roles.Detective"));
         } else {
-          role = StringUtils.replace(role, "%ROLE%", ChatManager.colorMessage("Scoreboard.Roles.Innocent"));
+          role = StringUtils.replace(role, "%ROLE%", chatManager.colorMessage("Scoreboard.Roles.Innocent"));
         }
         meta.setLore(Collections.singletonList(role));
         skull.setDurability((short) SkullType.PLAYER.ordinal());
@@ -126,20 +128,20 @@ public class SpectatorItemEvents implements Listener {
       || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
       return;
     }
-    if (!e.getView().getTitle().equalsIgnoreCase(ChatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name", p))) {
+    if (!e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name", p))) {
       return;
     }
     e.setCancelled(true);
     ItemMeta meta = e.getCurrentItem().getItemMeta();
     for (Player player : arena.getPlayers()) {
       if (player.getName().equalsIgnoreCase(meta.getDisplayName()) || ChatColor.stripColor(meta.getDisplayName()).contains(player.getName())) {
-        p.sendMessage(ChatManager.formatMessage(arena, ChatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), player));
+        p.sendMessage(chatManager.formatMessage(arena, chatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), player));
         p.teleport(player);
         p.closeInventory();
         return;
       }
     }
-    p.sendMessage(ChatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
+    p.sendMessage(chatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
   }
 
 }

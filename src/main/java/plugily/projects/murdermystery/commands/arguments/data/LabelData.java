@@ -18,6 +18,8 @@
 
 package plugily.projects.murdermystery.commands.arguments.data;
 
+import org.bukkit.plugin.java.JavaPlugin;
+import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.handlers.ChatManager;
 
 /**
@@ -32,9 +34,10 @@ public class LabelData {
   private String description;
 
   public LabelData(String text, String command, String description) {
-    this.text = ChatManager.colorRawMessage(text);
+    ChatManager chatManager = JavaPlugin.getPlugin(Main.class).getChatManager();
+    this.text = chatManager.colorRawMessage(text);
     this.command = command;
-    this.description = ChatManager.colorRawMessage(description);
+    this.description = chatManager.colorRawMessage(description);
   }
 
   public String getText() {

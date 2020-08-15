@@ -57,9 +57,11 @@ import plugily.projects.murdermystery.utils.Utils;
 public class Events implements Listener {
 
   private final Main plugin;
+  private final ChatManager chatManager;
 
   public Events(Main plugin) {
     this.plugin = plugin;
+    chatManager = plugin.getChatManager();
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
@@ -157,8 +159,8 @@ public class Events implements Listener {
     }
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
     victim.damage(100.0);
-    victim.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", victim),
-      ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You", victim), 5, 40, 5);
+    victim.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", victim),
+      chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You", victim), 5, 40, 5);
     attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
     attackerUser.addStat(StatsStorage.StatisticType.KILLS, 1);
     ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
@@ -195,7 +197,7 @@ public class Events implements Listener {
       return;
     }
     event.setCancelled(true);
-    event.getPlayer().sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
+    event.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
   }
 
   @EventHandler

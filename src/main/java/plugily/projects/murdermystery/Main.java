@@ -80,6 +80,7 @@ public class Main extends JavaPlugin {
   private ArgumentsRegistry argumentsRegistry;
   private HookManager hookManager;
   private UserManager userManager;
+  private ChatManager chatManager;
 
   @Override
   public void onEnable() {
@@ -183,6 +184,7 @@ public class Main extends JavaPlugin {
   }
 
   private void initializeClasses() {
+    chatManager = new ChatManager(this);
     ScoreboardLib.setPluginInstance(this);
     if (getConfig().getBoolean("BungeeActivated", false)) {
       bungeeManager = new BungeeManager(this);
@@ -197,7 +199,6 @@ public class Main extends JavaPlugin {
     ArenaSign.init(this);
     SpecialItem.loadAll();
     PermissionsManager.init();
-    new ChatManager(ChatManager.colorMessage("In-Game.Plugin-Prefix"), this);
     new ArenaEvents(this);
     new SpectatorEvents(this);
     new QuitEvent(this);
@@ -305,6 +306,10 @@ public class Main extends JavaPlugin {
 
   public PartyHandler getPartyHandler() {
     return partyHandler;
+  }
+
+  public ChatManager getChatManager() {
+    return chatManager;
   }
 
   public ConfigPreferences getConfigPreferences() {

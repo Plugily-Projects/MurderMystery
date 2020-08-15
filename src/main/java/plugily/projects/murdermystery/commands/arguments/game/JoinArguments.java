@@ -40,13 +40,13 @@ import java.util.stream.Stream;
  */
 public class JoinArguments {
 
-  public JoinArguments(ArgumentsRegistry registry) {
+  public JoinArguments(ArgumentsRegistry registry, ChatManager chatManager) {
     //join argument
     registry.mapArgument("murdermystery", new CommandArgument("join", "", CommandArgument.ExecutorType.PLAYER) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
-          sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Type-Arena-Name"));
+          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Type-Arena-Name"));
           return;
         }
         for (Arena arena : ArenaRegistry.getArenas()) {
@@ -55,7 +55,7 @@ public class JoinArguments {
             return;
           }
         }
-        sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Arena-Like-That"));
+        sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Arena-Like-That"));
       }
     });
 
@@ -88,7 +88,7 @@ public class JoinArguments {
               return;
             }
           }
-          sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.No-Free-Arenas"));
+          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Free-Arenas"));
         }
       });
     }

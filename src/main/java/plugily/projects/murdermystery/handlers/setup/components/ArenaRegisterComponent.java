@@ -20,10 +20,6 @@ package plugily.projects.murdermystery.handlers.setup.components;
 
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -31,7 +27,10 @@ import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
-
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
@@ -39,10 +38,9 @@ import plugily.projects.murdermystery.arena.special.SpecialBlock;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.setup.SetupInventory;
 import plugily.projects.murdermystery.handlers.sign.ArenaSign;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Plajer
@@ -62,16 +60,17 @@ public class ArenaRegisterComponent implements SetupComponent {
   public void injectComponents(StaticPane pane) {
     FileConfiguration config = setupInventory.getConfig();
     Main plugin = setupInventory.getPlugin();
+    ChatManager chatManager = plugin.getChatManager();
     ItemStack registeredItem;
     if (!setupInventory.getArena().isReady()) {
       registeredItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseItem())
-        .name(ChatManager.colorRawMessage("&e&lRegister Arena - Finish Setup"))
+        .name(chatManager.colorRawMessage("&e&lRegister Arena - Finish Setup"))
         .lore(ChatColor.GRAY + "Click this when you're done with configuration.")
         .lore(ChatColor.GRAY + "It will validate and register arena.")
         .build();
     } else {
       registeredItem = new ItemBuilder(Material.BARRIER)
-        .name(ChatManager.colorRawMessage("&a&lArena Registered - Congratulations"))
+        .name(chatManager.colorRawMessage("&a&lArena Registered - Congratulations"))
         .lore(ChatColor.GRAY + "This arena is already registered!")
         .lore(ChatColor.GRAY + "Good job, you went through whole setup!")
         .lore(ChatColor.GRAY + "You can play on this arena now!")
@@ -84,25 +83,25 @@ public class ArenaRegisterComponent implements SetupComponent {
       }
       e.getWhoClicked().closeInventory();
       if (ArenaRegistry.getArena(setupInventory.getArena().getId()).isReady()) {
-        e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&a&l✔ &aThis arena was already validated and is ready to use!"));
+        e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&a&l✔ &aThis arena was already validated and is ready to use!"));
         return;
       }
-      String[] locations = new String[] {"lobbylocation", "Endlocation"};
-      String[] spawns = new String[] {"goldspawnpoints", "playerspawnpoints"};
+      String[] locations = new String[]{"lobbylocation", "Endlocation"};
+      String[] spawns = new String[]{"goldspawnpoints", "playerspawnpoints"};
       FileConfiguration arenasConfig = ConfigUtils.getConfig(plugin, "arenas");
       for (String s : locations) {
         if (!arenasConfig.isSet("instances." + arena.getId() + "." + s) || arenasConfig.getString("instances." + arena.getId() + "." + s).equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
-          e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&c&l✘ &cArena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)"));
+          e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&c&l✘ &cArena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)"));
           return;
         }
       }
       for (String s : spawns) {
         if (!arenasConfig.isSet("instances." + arena.getId() + "." + s) || arenasConfig.getStringList("instances." + arena.getId() + "." + s).size() < 4) {
-          e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&c&l✘ &cArena validation failed! Please configure following spawns properly: " + s + " (must be minimum 4 spawns)"));
+          e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&c&l✘ &cArena validation failed! Please configure following spawns properly: " + s + " (must be minimum 4 spawns)"));
           return;
         }
       }
-      e.getWhoClicked().sendMessage(ChatManager.colorRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + arena.getId()));
+      e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + arena.getId()));
       config.set("instances." + arena.getId() + ".isdone", true);
       ConfigUtils.saveConfig(plugin, config, "arenas");
       List<Sign> signsToUpdate = new ArrayList<>();

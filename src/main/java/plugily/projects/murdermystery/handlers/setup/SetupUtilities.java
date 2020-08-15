@@ -33,37 +33,39 @@ public class SetupUtilities {
 
   private final FileConfiguration config;
   private final Arena arena;
+  private final ChatManager chatManager;
 
-  SetupUtilities(FileConfiguration config, Arena arena) {
+  SetupUtilities(FileConfiguration config, Arena arena, ChatManager chatManager) {
     this.config = config;
     this.arena = arena;
+    this.chatManager = chatManager;
   }
 
   public String isOptionDone(String path) {
     if (config.isSet(path)) {
-      return ChatManager.colorRawMessage("&a&l✔ Completed &7(value: &8" + config.getString(path) + "&7)");
+      return chatManager.colorRawMessage("&a&l✔ Completed &7(value: &8" + config.getString(path) + "&7)");
     }
-    return ChatManager.colorRawMessage("&c&l✘ Not Completed");
+    return chatManager.colorRawMessage("&c&l✘ Not Completed");
   }
 
   public String isOptionDoneList(String path, int minimum) {
     if (config.isSet(path)) {
       if (config.getStringList(path).size() < minimum) {
-        return ChatManager.colorRawMessage("&c&l✘ Not Completed | &cPlease add more spawns");
+        return chatManager.colorRawMessage("&c&l✘ Not Completed | &cPlease add more spawns");
       }
-      return ChatManager.colorRawMessage("&a&l✔ Completed &7(value: &8" + config.getStringList(path).size() + "&7)");
+      return chatManager.colorRawMessage("&a&l✔ Completed &7(value: &8" + config.getStringList(path).size() + "&7)");
     }
-    return ChatManager.colorRawMessage("&c&l✘ Not Completed");
+    return chatManager.colorRawMessage("&c&l✘ Not Completed");
   }
 
   public String isOptionDoneBool(String path) {
     if (config.isSet(path)) {
       if (Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(LocationSerializer.getLocation(config.getString(path)))) {
-        return ChatManager.colorRawMessage("&c&l✘ Not Completed");
+        return chatManager.colorRawMessage("&c&l✘ Not Completed");
       }
-      return ChatManager.colorRawMessage("&a&l✔ Completed");
+      return chatManager.colorRawMessage("&a&l✔ Completed");
     }
-    return ChatManager.colorRawMessage("&c&l✘ Not Completed");
+    return chatManager.colorRawMessage("&c&l✘ Not Completed");
   }
 
   public int getMinimumValueHigherThanZero(String path) {

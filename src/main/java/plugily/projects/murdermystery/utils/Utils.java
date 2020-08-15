@@ -47,12 +47,14 @@ import java.util.regex.Pattern;
 public class Utils {
 
   private static Main plugin;
+  private static ChatManager chatManager;
 
   private Utils() {
   }
 
   public static void init(Main plugin) {
     Utils.plugin = plugin;
+    Utils.chatManager = plugin.getChatManager();
   }
 
   /**
@@ -92,7 +94,7 @@ public class Utils {
           this.cancel();
         }
         String progress = StringFormatUtils.getProgressBar(ticks, seconds * 20, 10, "■", ChatColor.COLOR_CHAR + "a", ChatColor.COLOR_CHAR + "c");
-        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatManager.colorMessage("In-Game.Cooldown-Format", p)
+        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(chatManager.colorMessage("In-Game.Cooldown-Format", p)
           .replace("%progress%", progress).replace("%time%", String.valueOf((double) ((seconds * 20) - ticks) / 20))));
         ticks += 10;
       }
@@ -117,7 +119,7 @@ public class Utils {
 
   public static boolean checkIsInGameInstance(Player player) {
     if (ArenaRegistry.getArena(player) == null) {
-      player.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands.Not-Playing", player));
+      player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Not-Playing", player));
       return false;
     }
     return true;
@@ -127,7 +129,7 @@ public class Utils {
     if (sender.hasPermission(perm)) {
       return true;
     }
-    sender.sendMessage(ChatManager.PLUGIN_PREFIX + ChatManager.colorMessage("Commands-No-Permission"));
+    sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands-No-Permission"));
     return false;
   }
 

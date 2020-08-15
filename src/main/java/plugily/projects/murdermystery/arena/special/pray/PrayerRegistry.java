@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 public class PrayerRegistry {
 
   private static Main plugin;
+  private static ChatManager chatManager;
   private static final List<Prayer> prayers = new ArrayList<>();
   private static Random rand;
 
@@ -56,17 +57,18 @@ public class PrayerRegistry {
 
   public static void init(Main plugin) {
     PrayerRegistry.plugin = plugin;
+    chatManager = plugin.getChatManager();
     //good prayers
-    prayers.add(new Prayer(Prayer.PrayerType.DETECTIVE_REVELATION, true, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Detective-Revelation")));
-    prayers.add(new Prayer(Prayer.PrayerType.GOLD_RUSH, true, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Gold-Rush")));
-    prayers.add(new Prayer(Prayer.PrayerType.SINGLE_COMPENSATION, true, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Single-Compensation")));
-    prayers.add(new Prayer(Prayer.PrayerType.BOW_TIME, true, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Bow-Time")));
+    prayers.add(new Prayer(Prayer.PrayerType.DETECTIVE_REVELATION, true, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Detective-Revelation")));
+    prayers.add(new Prayer(Prayer.PrayerType.GOLD_RUSH, true, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Gold-Rush")));
+    prayers.add(new Prayer(Prayer.PrayerType.SINGLE_COMPENSATION, true, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Single-Compensation")));
+    prayers.add(new Prayer(Prayer.PrayerType.BOW_TIME, true, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Bow-Time")));
 
     //bad prayers
-    prayers.add(new Prayer(Prayer.PrayerType.SLOWNESS_CURSE, false, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Slowness-Curse")));
-    prayers.add(new Prayer(Prayer.PrayerType.BLINDNESS_CURSE, false, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Blindness-Curse")));
-    prayers.add(new Prayer(Prayer.PrayerType.GOLD_BAN, false, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Gold-Ban")));
-    prayers.add(new Prayer(Prayer.PrayerType.INCOMING_DEATH, false, ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Incoming-Death")));
+    prayers.add(new Prayer(Prayer.PrayerType.SLOWNESS_CURSE, false, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Slowness-Curse")));
+    prayers.add(new Prayer(Prayer.PrayerType.BLINDNESS_CURSE, false, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Blindness-Curse")));
+    prayers.add(new Prayer(Prayer.PrayerType.GOLD_BAN, false, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Gold-Ban")));
+    prayers.add(new Prayer(Prayer.PrayerType.INCOMING_DEATH, false, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Incoming-Death")));
     rand = new Random();
   }
 
@@ -85,9 +87,9 @@ public class PrayerRegistry {
     Arena arena = ArenaRegistry.getArena(user.getPlayer());
     List<String> prayMessage = LanguageManager.getLanguageList("In-Game.Messages.Special-Blocks.Praises.Message");
     if (prayer.isGoodPray()) {
-      prayMessage = prayMessage.stream().map(msg -> msg.replace("%feeling%", ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings.Blessed", player))).collect(Collectors.toList());
+      prayMessage = prayMessage.stream().map(msg -> msg.replace("%feeling%", chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings.Blessed", player))).collect(Collectors.toList());
     } else {
-      prayMessage = prayMessage.stream().map(msg -> msg.replace("%feeling%", ChatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings.Cursed", player))).collect(Collectors.toList());
+      prayMessage = prayMessage.stream().map(msg -> msg.replace("%feeling%", chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings.Cursed", player))).collect(Collectors.toList());
     }
     prayMessage = prayMessage.stream().map(msg -> msg.replace("%praise%", prayer.getPrayerDescription())).collect(Collectors.toList());
     switch (prayer.getPrayerType()) {

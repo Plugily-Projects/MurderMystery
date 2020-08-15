@@ -48,13 +48,14 @@ import plugily.projects.murdermystery.utils.ItemPosition;
 public class ArenaUtils {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+  private static final ChatManager chatManager = plugin.getChatManager();
 
   public static void onMurdererDeath(Arena arena) {
     for (Player player : arena.getPlayers()) {
-      player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win", player),
-        ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", player), 5, 40, 5);
+      player.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win", player),
+        chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", player), 5, 40, 5);
       if (Role.isRole(Role.MURDERER, player)) {
-        player.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", player), null, 5, 40, 5);
+        player.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", player), null, 5, 40, 5);
       }
       User loopUser = plugin.getUserManager().getUser(player);
       if (Role.isRole(Role.INNOCENT, player)) {
@@ -65,8 +66,8 @@ public class ArenaUtils {
       }
     }
     for (Player murderer : arena.getMurdererList()) {
-      murderer.sendTitle(ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", murderer),
-        ChatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", murderer), 5, 40, 5);
+      murderer.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", murderer),
+        chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", murderer), 5, 40, 5);
     }
     //we must call it ticks later due to instant respawn bug
     Bukkit.getScheduler().runTaskLater(plugin, () -> ArenaManager.stopGame(false, arena), 10);
@@ -78,7 +79,7 @@ public class ArenaUtils {
       user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.valueOf(s.toUpperCase()), 1F, 2F);
     }
 
-    String msg = ChatManager.colorMessage("In-Game.Messages.Bonus-Score");
+    String msg = chatManager.colorMessage("In-Game.Messages.Bonus-Score");
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
 
     if (action == ScoreAction.GOLD_PICKUP && amount > 1) {
@@ -120,7 +121,7 @@ public class ArenaUtils {
     if (!arena.isMurdererLocatorReceived()) {
       ItemStack innocentLocator = new ItemStack(Material.COMPASS, 1);
       ItemMeta innocentMeta = innocentLocator.getItemMeta();
-      innocentMeta.setDisplayName(ChatManager.colorMessage("In-Game.Innocent-Locator-Item-Name"));
+      innocentMeta.setDisplayName(chatManager.colorMessage("In-Game.Innocent-Locator-Item-Name"));
       innocentLocator.setItemMeta(innocentMeta);
       for (Player p : arena.getPlayersLeft()) {
         if (arena.isMurderAlive(p)) {
@@ -133,7 +134,7 @@ public class ArenaUtils {
         if (Role.isRole(Role.MURDERER, p)) {
           continue;
         }
-        p.sendTitle(ChatManager.colorMessage("In-Game.Watch-Out-Title", p), ChatManager.colorMessage("In-Game.Watch-Out-Subtitle", p), 5, 40, 5);
+        p.sendTitle(chatManager.colorMessage("In-Game.Watch-Out-Title", p), chatManager.colorMessage("In-Game.Watch-Out-Subtitle", p), 5, 40, 5);
       }
     }
     for (Player p : arena.getPlayersLeft()) {
@@ -152,7 +153,7 @@ public class ArenaUtils {
   private static void addBowLocator(Arena arena, Location loc) {
     ItemStack bowLocator = new ItemStack(Material.COMPASS, 1);
     ItemMeta bowMeta = bowLocator.getItemMeta();
-    bowMeta.setDisplayName(ChatManager.colorMessage("In-Game.Bow-Locator-Item-Name"));
+    bowMeta.setDisplayName(chatManager.colorMessage("In-Game.Bow-Locator-Item-Name"));
     bowLocator.setItemMeta(bowMeta);
     for (Player p : arena.getPlayersLeft()) {
       if (Role.isRole(Role.INNOCENT, p)) {
@@ -165,10 +166,10 @@ public class ArenaUtils {
   public static void dropBowAndAnnounce(Arena arena, Player victim) {
     if (arena.getPlayersLeft().size() > 1) {
       for (Player p : arena.getPlayers()) {
-        p.sendTitle(ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title", p), null, 5, 40, 5);
+        p.sendTitle(chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title", p), null, 5, 40, 5);
       }
       for (Player p : arena.getPlayersLeft()) {
-        p.sendTitle(null, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle", p), 5, 40, 5);
+        p.sendTitle(null, chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle", p), 5, 40, 5);
       }
     }
 
@@ -192,7 +193,7 @@ public class ArenaUtils {
         arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, player);
         ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
         ItemPosition.setItem(player, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Fake-Arrows", 3)));
-        ChatManager.broadcast(arena, ChatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message", player));
+        chatManager.broadcast(arena, chatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message", player));
       }
     });
     arena.setBowHologram(hologram);
@@ -254,10 +255,10 @@ public class ArenaUtils {
   }
 
   public enum ScoreAction {
-    KILL_PLAYER(100, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Kill-Player")), KILL_MURDERER(200, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Kill-Murderer")),
-    GOLD_PICKUP(15, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Gold-Pickup")), SURVIVE_TIME(150, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Survive")),
-    SURVIVE_GAME(200, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Survive-Till-End")), WIN_GAME(100, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Win-Game")),
-    DETECTIVE_WIN_GAME(0, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Detective-Reward")), INNOCENT_KILL(-100, ChatManager.colorMessage("In-Game.Messages.Score-Actions.Innocent-Kill"));
+    KILL_PLAYER(100, chatManager.colorMessage("In-Game.Messages.Score-Actions.Kill-Player")), KILL_MURDERER(200, chatManager.colorMessage("In-Game.Messages.Score-Actions.Kill-Murderer")),
+    GOLD_PICKUP(15, chatManager.colorMessage("In-Game.Messages.Score-Actions.Gold-Pickup")), SURVIVE_TIME(150, chatManager.colorMessage("In-Game.Messages.Score-Actions.Survive")),
+    SURVIVE_GAME(200, chatManager.colorMessage("In-Game.Messages.Score-Actions.Survive-Till-End")), WIN_GAME(100, chatManager.colorMessage("In-Game.Messages.Score-Actions.Win-Game")),
+    DETECTIVE_WIN_GAME(0, chatManager.colorMessage("In-Game.Messages.Score-Actions.Detective-Reward")), INNOCENT_KILL(-100, chatManager.colorMessage("In-Game.Messages.Score-Actions.Innocent-Kill"));
 
     int points;
     String action;

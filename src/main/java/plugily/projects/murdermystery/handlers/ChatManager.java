@@ -33,22 +33,28 @@ import plugily.projects.murdermystery.utils.Utils;
  * <p>
  * Created at 03.08.2018
  */
-@Deprecated //remove static usage
 public class ChatManager {
 
-  public static String PLUGIN_PREFIX;
-  private static Main plugin;
+  private final String PLUGIN_PREFIX;
+  private final Main plugin;
 
-  public ChatManager(String prefix, Main plugin) {
-    PLUGIN_PREFIX = prefix;
-    ChatManager.plugin = plugin;
+  public ChatManager(Main plugin) {
+    this.plugin = plugin;
+    PLUGIN_PREFIX = colorMessage("In-Game.Plugin-Prefix");
   }
 
-  public static String colorMessage(String message) {
+  /**
+   * @return game prefix
+   */
+  public String getPrefix() {
+    return PLUGIN_PREFIX;
+  }
+
+  public String colorMessage(String message) {
     return colorRawMessage(LanguageManager.getLanguageMessage(message));
   }
 
-  public static String colorRawMessage(String message) {
+  public String colorRawMessage(String message) {
     if (message.contains("#") && plugin.is1_16_R1()) {
       message = Utils.matchColorRegex(message);
     }
@@ -56,7 +62,7 @@ public class ChatManager {
     return ChatColor.translateAlternateColorCodes('&', message);
   }
 
-  public static String colorMessage(String message, Player player) {
+  public String colorMessage(String message, Player player) {
     String returnString = LanguageManager.getLanguageMessage(message);
     if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       returnString = PlaceholderAPI.setPlaceholders(player, returnString);
@@ -64,20 +70,20 @@ public class ChatManager {
     return ChatColor.translateAlternateColorCodes('&', returnString);
   }
 
-  public static void broadcast(Arena arena, String message) {
+  public void broadcast(Arena arena, String message) {
     for (Player p : arena.getPlayers()) {
       p.sendMessage(PLUGIN_PREFIX + message);
     }
   }
 
-  public static String formatMessage(Arena arena, String message, int integer) {
+  public String formatMessage(Arena arena, String message, int integer) {
     String returnString = message;
     returnString = StringUtils.replace(returnString, "%NUMBER%", Integer.toString(integer));
     returnString = colorRawMessage(formatPlaceholders(returnString, arena));
     return returnString;
   }
 
-  public static String formatMessage(Arena arena, String message, Player player) {
+  public String formatMessage(Arena arena, String message, Player player) {
     String returnString = message;
     returnString = StringUtils.replace(returnString, "%PLAYER%", player.getName());
     returnString = colorRawMessage(formatPlaceholders(returnString, arena));
@@ -87,7 +93,7 @@ public class ChatManager {
     return returnString;
   }
 
-  private static String formatPlaceholders(String message, Arena arena) {
+  private String formatPlaceholders(String message, Arena arena) {
     String returnString = message;
     returnString = StringUtils.replace(returnString, "%ARENANAME%", arena.getMapName());
     returnString = StringUtils.replace(returnString, "%TIME%", Integer.toString(arena.getTimer()));
@@ -98,17 +104,17 @@ public class ChatManager {
     return returnString;
   }
 
-  public static void broadcastAction(Arena a, Player p, ActionType action) {
+  public void broadcastAction(Arena a, Player p, ActionType action) {
     String message;
     switch (action) {
       case JOIN:
-        message = formatMessage(a, ChatManager.colorMessage("In-Game.Messages.Join"), p);
+        message = formatMessage(a, colorMessage("In-Game.Messages.Join"), p);
         break;
       case LEAVE:
-        message = formatMessage(a, ChatManager.colorMessage("In-Game.Messages.Leave"), p);
+        message = formatMessage(a, colorMessage("In-Game.Messages.Leave"), p);
         break;
       case DEATH:
-        message = formatMessage(a, ChatManager.colorMessage("In-Game.Messages.Death"), p);
+        message = formatMessage(a, colorMessage("In-Game.Messages.Death"), p);
         break;
       default:
         return; //likely won't ever happen
