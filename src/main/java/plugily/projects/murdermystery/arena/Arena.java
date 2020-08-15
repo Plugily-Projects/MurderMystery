@@ -35,7 +35,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import pl.plajerlair.commonsbox.number.NumberUtils;
@@ -75,12 +74,6 @@ public class Arena extends BukkitRunnable {
   private final List<SpecialBlock> specialBlocks = new ArrayList<>();
   private final List<Player> allMurderer = new ArrayList<>();
   private final List<Player> allDetectives = new ArrayList<>();
-  private List<Location> goldSpawnPoints = new ArrayList<>();
-  private List<Location> playerSpawnPoints = new ArrayList<>();
-  private int murderers = 0;
-  private int detectives = 0;
-  private int spawnGoldTimer = 0;
-  private int spawnGoldTime = 0;
 
   //contains murderer, detective, fake detective and hero
   private final Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
@@ -89,14 +82,21 @@ public class Arena extends BukkitRunnable {
   //instead of 3 location fields we use map with GameLocation enum
   private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
 
+  private final ScoreboardManager scoreboardManager;
+  private List<Location> goldSpawnPoints = new ArrayList<>();
+  private List<Location> playerSpawnPoints = new ArrayList<>();
+
+  private int murderers = 0;
+  private int detectives = 0;
+  private int spawnGoldTimer = 0;
+  private int spawnGoldTime = 0;
+
   private Hologram bowHologram;
   private boolean detectiveDead;
   private boolean murdererLocatorReceived;
   private boolean hideChances;
-
   private ArenaState arenaState = ArenaState.WAITING_FOR_PLAYERS;
   private BossBar gameBar;
-  private final ScoreboardManager scoreboardManager;
   private String mapName = "";
   private boolean ready = true;
   private boolean forceStart = false;
@@ -889,7 +889,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void clearGold() {
-    goldSpawned.stream().filter(item -> item != null).forEach(Item::remove);
+    goldSpawned.stream().filter(Objects::nonNull).forEach(Item::remove);
     goldSpawned.clear();
   }
 
@@ -998,7 +998,6 @@ public class Arena extends BukkitRunnable {
     return allMurderer;
   }
 
-  @Nullable
   public int getOption(@NotNull ArenaOption option) {
     return arenaOptions.get(option);
   }
