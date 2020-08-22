@@ -9,6 +9,7 @@
 * Fix NPE when trying to teleport players to lobby location
 * Added ArenaSelector
 * Reworked version checker
+* Changed message delay of "Waiting for players" from 15 to 45 seconds 
 
 ### 1.6.1 Release (01.07.2020 - 27.07.2020)
 * Added missing 1.14 & 1.15 & 1.16 Materials

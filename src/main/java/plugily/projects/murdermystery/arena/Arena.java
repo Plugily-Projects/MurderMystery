@@ -161,7 +161,7 @@ public class Arena extends BukkitRunnable {
         }
         if (getPlayers().size() < getMinimumPlayers()) {
           if (getTimer() <= 0) {
-            setTimer(15);
+            setTimer(45);
             chatManager.broadcast(this, chatManager.formatMessage(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), getMinimumPlayers()));
             break;
           }
