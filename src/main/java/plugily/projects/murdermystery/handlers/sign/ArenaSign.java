@@ -23,7 +23,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.utils.ServerVersion;
 
@@ -36,7 +35,6 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class ArenaSign {
 
-  private static Main plugin;
   private final Sign sign;
   private Block behind;
   private final Arena arena;
@@ -45,10 +43,6 @@ public class ArenaSign {
     this.sign = sign;
     this.arena = arena;
     setBehindBlock();
-  }
-
-  public static void init(Main plugin) {
-    ArenaSign.plugin = plugin;
   }
 
   private void setBehindBlock() {

@@ -20,9 +20,6 @@ package plugily.projects.murdermystery.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.plugin.java.JavaPlugin;
-import plugily.projects.murdermystery.Main;
-import plugily.projects.murdermystery.handlers.ChatManager;
 
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -39,7 +36,6 @@ public class Debugger {
   private static boolean enabled = false;
   private static boolean deep = false;
   private static final Logger logger = Logger.getLogger("Murder Mystery");
-  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   public static void setEnabled(boolean enabled) {
     Debugger.enabled = enabled;

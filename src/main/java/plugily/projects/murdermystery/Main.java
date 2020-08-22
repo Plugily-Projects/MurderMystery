@@ -47,7 +47,6 @@ import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.handlers.party.PartyHandler;
 import plugily.projects.murdermystery.handlers.party.PartySupportInitializer;
 import plugily.projects.murdermystery.handlers.rewards.RewardsFactory;
-import plugily.projects.murdermystery.handlers.sign.ArenaSign;
 import plugily.projects.murdermystery.handlers.sign.SignManager;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.user.UserManager;
@@ -68,7 +67,6 @@ import java.util.logging.Level;
 public class Main extends JavaPlugin {
 
   private ExceptionLogHandler exceptionLogHandler;
-  private String version;
   private boolean forceDisable = false;
   private BungeeManager bungeeManager;
   private RewardsFactory rewardsHandler;
@@ -122,7 +120,6 @@ public class Main extends JavaPlugin {
   }
 
   private boolean validateIfPluginShouldStart() {
-    version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
     if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_12_R1)) {
       MessageUtils.thisVersionIsNotSupported();
       Debugger.sendConsoleMsg("&cYour server version is not supported by Murder Mystery!");
@@ -195,7 +192,6 @@ public class Main extends JavaPlugin {
     argumentsRegistry = new ArgumentsRegistry(this);
     userManager = new UserManager(this);
     Utils.init(this);
-    ArenaSign.init(this);
     SpecialItem.loadAll();
     PermissionsManager.init();
     new ArenaEvents(this);
