@@ -60,6 +60,9 @@ public class ArenaSelectorArgument implements Listener {
       @Override
       public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
+        if (!Utils.hasPermission(player, "murdermystery.arenas")){
+          return;
+        }
         if (ArenaRegistry.getArenas().size() == 0) {
           player.sendMessage(chatManager.colorMessage("Validator.No-Instances-Created"));
           return;

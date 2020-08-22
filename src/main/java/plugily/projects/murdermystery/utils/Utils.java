@@ -129,7 +129,7 @@ public class Utils {
     if (sender.hasPermission(perm)) {
       return true;
     }
-    sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands-No-Permission"));
+    sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Permission"));
     return false;
   }
 
