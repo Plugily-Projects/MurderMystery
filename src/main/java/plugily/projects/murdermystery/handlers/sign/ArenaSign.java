@@ -25,6 +25,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
+import plugily.projects.murdermystery.utils.ServerVersion;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
@@ -53,7 +54,7 @@ public class ArenaSign {
   private void setBehindBlock() {
     this.behind = null;
     if (sign.getBlock().getType() == Material.getMaterial("WALL_SIGN")) {
-      this.behind = (plugin.is1_14_R1() || plugin.is1_15_R1() || plugin.is1_16_R1()) ? getBlockBehind() : getBlockBehindLegacy();
+      this.behind = ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_14_R1) ? getBlockBehind() : getBlockBehindLegacy();
     }
   }
 

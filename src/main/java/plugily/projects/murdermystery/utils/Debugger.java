@@ -54,7 +54,7 @@ public class Debugger {
   }
 
   public static void sendConsoleMsg(String msg) {
-    if (msg.contains("#") && plugin.is1_16_R1()) {
+    if (msg.contains("#") && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
       msg = Utils.matchColorRegex(msg);
     }
 

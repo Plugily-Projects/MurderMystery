@@ -26,6 +26,7 @@ import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
+import plugily.projects.murdermystery.utils.ServerVersion;
 import plugily.projects.murdermystery.utils.Utils;
 
 /**
@@ -55,7 +56,7 @@ public class ChatManager {
   }
 
   public String colorRawMessage(String message) {
-    if (message.contains("#") && plugin.is1_16_R1()) {
+    if (message.contains("#") && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
       message = Utils.matchColorRegex(message);
     }
 

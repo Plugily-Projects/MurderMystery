@@ -42,6 +42,7 @@ import plugily.projects.murdermystery.arena.ArenaState;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.utils.Debugger;
+import plugily.projects.murdermystery.utils.ServerVersion;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -207,31 +208,31 @@ public class SignManager implements Listener {
             switch (arenaSign.getArena().getArenaState()) {
               case WAITING_FOR_PLAYERS:
                 behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
-                if (plugin.is1_12_R1()) {
+                if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_13_R1)) {
                   Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 0);
                 }
                 break;
               case STARTING:
                 behind.setType(XMaterial.YELLOW_STAINED_GLASS.parseMaterial());
-                if (plugin.is1_12_R1()) {
+                if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_13_R1)) {
                   Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 4);
                 }
                 break;
               case IN_GAME:
                 behind.setType(XMaterial.ORANGE_STAINED_GLASS.parseMaterial());
-                if (plugin.is1_12_R1()) {
+                if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_13_R1)) {
                   Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 1);
                 }
                 break;
               case ENDING:
                 behind.setType(XMaterial.GRAY_STAINED_GLASS.parseMaterial());
-                if (plugin.is1_12_R1()) {
+                if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_13_R1)) {
                   Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 7);
                 }
                 break;
               case RESTARTING:
                 behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
-                if (plugin.is1_12_R1()) {
+                if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_13_R1)) {
                   Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 15);
                 }
                 break;
