@@ -271,10 +271,14 @@ Arena-Selector:
   Inv-Title: "Arena selector"
   Item:
     Lore:
-      - "&4Murder Mystery"
-      - "&7%state%"
-      - "&c%mapname%"
-      - "&5[%playersize%/%maxplayers%]"
+      - "&4Murder Mystery &f- &e%mapname%"
+      - " "
+      - " "
+      - "  &fOnline: %playersize%/%maxplayers%"
+      - "  &fState: %state%"
+      - " "
+      - " "
+      - "&eClick to join this arena"
 
 Leaderheads:
   #top command from leaderheads ex. mmtopkills
