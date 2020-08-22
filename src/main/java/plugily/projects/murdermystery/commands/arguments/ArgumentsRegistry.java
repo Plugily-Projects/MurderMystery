@@ -123,7 +123,7 @@ public class ArgumentsRegistry implements CommandExecutor {
             //does it make sense that it is a list?
             for (String perm : argument.getPermissions()) {
               if (perm.isEmpty()) break;
-              if (Utils.hasPermission(sender, "murdermystery.arenas")){
+              if (Utils.hasPermission(sender, perm)){
                 break;
               } else {
                 //user has no permission to execute command
