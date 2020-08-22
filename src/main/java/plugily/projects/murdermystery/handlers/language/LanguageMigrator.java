@@ -214,10 +214,14 @@ public class LanguageMigrator {
             "  Inv-Title: \"Arena selector\"\r\n" +
             "  Item:\r\n" +
             "    Lore:\r\n" +
-            "      - \"&4Murder Mystery\"\r\n" +
-            "      - \"&7%state%\"\r\n" +
-            "      - \"&c%mapname%\"\r\n" +
-            "      - \"&5[%playersize%/%maxplayers%]\"");
+            "      - \"&4Murder Mystery &f- &e%mapname%\"\r\n" +
+            "      - \" \"\r\n" +
+            "      - \" \"\r\n" +
+            "      - \"  &fOnline: %playersize%/%maxplayers%\"\r\n" +
+            "      - \"  &fState: %state%\"\r\n" +
+            "      - \" \"\r\n" +
+            "      - \" \"\r\n" +
+            "      - \"&eClick to join this arena\"\r\n");
           break;
         default:
           break;
