@@ -120,15 +120,15 @@ public class ArgumentsRegistry implements CommandExecutor {
         }
         for (CommandArgument argument : entry.getValue()) {
           if (argument.getArgumentName().equalsIgnoreCase(args[0])) {
-            boolean hasPerm = false;
+            //does it make sense that it is a list?
             for (String perm : argument.getPermissions()) {
-              if (perm.isEmpty() || sender.hasPermission(perm)) {
-                hasPerm = true;
+              if (perm.isEmpty()) break;
+              if (Utils.hasPermission(sender, "murdermystery.arenas")){
                 break;
+              } else {
+                //user has no permission to execute command
+                return true;
               }
-            }
-            if (!hasPerm) {
-              return true;
             }
             if (checkSenderIsExecutorType(sender, argument.getValidExecutors())) {
               argument.execute(sender, args);
