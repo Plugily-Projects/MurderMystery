@@ -11,6 +11,7 @@
 * Reworked version checker
 * Changed message delay of "Waiting for players" from 15 to 45 seconds 
 * Fixed no permission message not found
+* Optimized player corpse heads on paper
 
 ### 1.6.1 Release (01.07.2020 - 27.07.2020)
 * Added missing 1.14 & 1.15 & 1.16 Materials

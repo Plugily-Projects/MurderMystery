@@ -25,6 +25,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.util.EulerAngle;
@@ -79,7 +80,11 @@ public class CorpseHandler implements Listener {
       ArmorStand stand = p.getLocation().getWorld().spawn(p.getLocation().add(0.0D, -1.25D, 0.0D), ArmorStand.class);
       ItemStack head = XMaterial.PLAYER_HEAD.parseItem();
       SkullMeta meta = (SkullMeta) head.getItemMeta();
-      meta.setOwner(p.getName());
+      if (Bukkit.getServer().getVersion().contains("Paper") && p.getPlayerProfile().hasTextures()) {
+        meta.setPlayerProfile(p.getPlayerProfile());
+      } else {
+        meta.setOwningPlayer(p);
+      }
       head.setItemMeta(meta);
       stand.setVisible(false);
       stand.setHelmet(head);
