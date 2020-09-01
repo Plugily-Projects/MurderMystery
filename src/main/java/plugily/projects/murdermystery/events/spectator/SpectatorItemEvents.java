@@ -88,7 +88,7 @@ public class SpectatorItemEvents implements Listener {
 
     //Get the raw role message and replace old placeholder, we don't want to do this inside the for loop.
     String roleRaw = chatManager.colorMessage("In-Game.Spectator.Target-Player-Role", p);
-    roleRaw = StringUtils.replace(roleRaw, "%ROLE%", "%role");
+    roleRaw = StringUtils.replace(roleRaw, "%ROLE%", "%role%");
 
     for (Player player : world.getPlayers()) {
       if (players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
