@@ -20,6 +20,9 @@ package plugily.projects.murdermystery.handlers;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+
+import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -32,18 +35,16 @@ import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import plugily.projects.murdermystery.HookManager;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.corpse.Corpse;
 import plugily.projects.murdermystery.arena.corpse.Stand;
-import plugily.projects.murdermystery.utils.Debugger;
+import plugily.projects.murdermystery.utils.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Plajer
@@ -81,18 +82,8 @@ public class CorpseHandler implements Listener {
       ArmorStand stand = p.getLocation().getWorld().spawn(p.getLocation().add(0.0D, -1.25D, 0.0D), ArmorStand.class);
       ItemStack head = XMaterial.PLAYER_HEAD.parseItem();
       SkullMeta meta = (SkullMeta) head.getItemMeta();
-      if (Bukkit.getServer().getVersion().contains("Paper") && p.getPlayerProfile().hasTextures()) {
-        CompletableFuture.supplyAsync(() -> {
-          meta.setPlayerProfile(p.getPlayerProfile());
-          return null;
-        }).exceptionally(e -> {
-          Debugger.debug(java.util.logging.Level.WARNING, "Retrieving player profile failed!");
-          return null;
-        });
-      } else {
-        meta.setOwningPlayer(p);
-      }
-      head.setItemMeta(meta);
+      Utils.setPlayerHead(p, meta);
+
       stand.setVisible(false);
       stand.setHelmet(head);
       stand.setGravity(false);
