@@ -138,18 +138,19 @@ public class Utils {
     return false;
   }
 
-  public static void setPlayerHead(Player player, SkullMeta meta) {
+  public static boolean setPlayerHead(Player player, SkullMeta meta) {
     if (Bukkit.getServer().getVersion().contains("Paper") && player.getPlayerProfile().hasTextures()) {
-      CompletableFuture.supplyAsync(() -> {
+      return CompletableFuture.supplyAsync(() -> {
         meta.setPlayerProfile(player.getPlayerProfile());
-        return null;
+        return true;
       }).exceptionally(e -> {
         Debugger.debug(java.util.logging.Level.WARNING, "Retrieving player profile failed!");
         return null;
-      });
-    } else {
-      meta.setOwningPlayer(player);
+      }).isDone();
     }
+
+    meta.setOwningPlayer(player);
+    return true;
   }
 
   public static Vector rotateAroundAxisX(Vector v, double angle) {
