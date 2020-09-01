@@ -139,7 +139,7 @@ In-Game:
   Spectator:
     Spectator-Item-Name: "&7Players list"
     Spectator-Menu-Name: "Alive players list"
-    Target-Player-Role: "&7Role: %ROLE%"
+    Target-Player-Role: "&7Role: %role%"
     Settings-Menu:
       Item-Name: "&7Spectator settings"
       Inventory-Name: "&7Spectator settings"

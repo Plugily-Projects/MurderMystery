@@ -85,6 +85,11 @@ public class SpectatorItemEvents implements Listener {
     Inventory inventory = plugin.getServer().createInventory(null, Utils.serializeInt(ArenaRegistry.getArena(p).getPlayers().size()),
       chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
     Set<Player> players = ArenaRegistry.getArena(p).getPlayers();
+
+    //Get the raw role message and replace old placeholder, we don't want to do this inside the for loop.
+    String roleRaw = chatManager.colorMessage("In-Game.Spectator.Target-Player-Role", p);
+    roleRaw = StringUtils.replace(roleRaw, "%ROLE%", "%role");
+
     for (Player player : world.getPlayers()) {
       if (players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
         ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
@@ -95,13 +100,14 @@ public class SpectatorItemEvents implements Listener {
           meta.setOwningPlayer(player);
         }
         meta.setDisplayName(player.getName());
-        String role = chatManager.colorMessage("In-Game.Spectator.Target-Player-Role", p);
+
+        String role = roleRaw;
         if (Role.isRole(Role.MURDERER, player)) {
-          role = StringUtils.replace(role, "%ROLE%", chatManager.colorMessage("Scoreboard.Roles.Murderer"));
+          role = StringUtils.replace(role, "%role%", chatManager.colorMessage("Scoreboard.Roles.Murderer"));
         } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
-          role = StringUtils.replace(role, "%ROLE%", chatManager.colorMessage("Scoreboard.Roles.Detective"));
+          role = StringUtils.replace(role, "%role%", chatManager.colorMessage("Scoreboard.Roles.Detective"));
         } else {
-          role = StringUtils.replace(role, "%ROLE%", chatManager.colorMessage("Scoreboard.Roles.Innocent"));
+          role = StringUtils.replace(role, "%role%", chatManager.colorMessage("Scoreboard.Roles.Innocent"));
         }
         meta.setLore(Collections.singletonList(role));
         skull.setDurability((short) SkullType.PLAYER.ordinal());
