@@ -50,6 +50,8 @@ public class PrayerRegistry {
   private static Main plugin;
   private static ChatManager chatManager;
   private static final List<Prayer> prayers = new ArrayList<>();
+  private static final ArrayList<Player> ban = new ArrayList<>();
+  private static final ArrayList<Player> rush = new ArrayList<>();
   private static Random rand;
 
   private PrayerRegistry() {
@@ -137,8 +139,11 @@ public class PrayerRegistry {
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0, false, false));
         break;
       case GOLD_BAN:
+        ban.add(player);
+        break;
       case GOLD_RUSH:
-        //unused
+        rush.add(player);
+        break;
       default:
         break;
     }
@@ -147,4 +152,11 @@ public class PrayerRegistry {
     }
   }
 
+  public static ArrayList<Player> getBan() {
+    return ban;
+  }
+
+  public static ArrayList<Player> getRush() {
+    return rush;
+  }
 }

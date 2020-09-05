@@ -46,6 +46,7 @@ import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.role.Role;
+import plugily.projects.murdermystery.arena.special.pray.PrayerRegistry;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.items.SpecialItemManager;
 import plugily.projects.murdermystery.handlers.rewards.Reward;
@@ -151,7 +152,7 @@ public class ArenaEvents implements Listener {
     if (user.isSpectator() || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-    if (user.getStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY) == /* magic number */ 3) {
+    if (PrayerRegistry.getBan().contains(e.getPlayer())){
       e.setCancelled(true);
       return;
     }
@@ -159,7 +160,7 @@ public class ArenaEvents implements Listener {
     e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
     arena.getGoldSpawned().remove(e.getItem());
     ItemStack stack = new ItemStack(Material.GOLD_INGOT, e.getItem().getItemStack().getAmount());
-    if (user.getStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY) == /* magic number */ 4) {
+    if (PrayerRegistry.getRush().contains(e.getPlayer())){
       stack.setAmount(3 * e.getItem().getItemStack().getAmount());
     }
     ItemPosition.addItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, stack);

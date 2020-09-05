@@ -50,6 +50,7 @@ import plugily.projects.murdermystery.arena.managers.ScoreboardManager;
 import plugily.projects.murdermystery.arena.options.ArenaOption;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
+import plugily.projects.murdermystery.arena.special.pray.PrayerRegistry;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
@@ -434,6 +435,8 @@ public class Arena extends BukkitRunnable {
             doBarAction(BarAction.REMOVE, player);
             player.setFireTicks(0);
             player.setFoodLevel(20);
+            PrayerRegistry.getRush().remove(player);
+            PrayerRegistry.getBan().remove(player);
           }
           teleportAllToEndLocation();
 
