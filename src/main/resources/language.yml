@@ -131,6 +131,7 @@ In-Game:
   Join-As-Party-Member: "&cYou joined %ARENANAME% because the party leader joined it!"
   Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
   Game-Chat-Format: "&7%player%: &f%message%"
+  Game-Death-Format: "&7[&4☠&7] &r"
   Cooldown-Format: "&8&l[%progress%&8&l] &6%time% seconds"
   Bow-Locator-Item-Name: "&6Bow locator"
   Innocent-Locator-Item-Name: "&6Innocent locator"
@@ -299,4 +300,4 @@ Validator:
 
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p
-File-Version-Do-Not-Edit: 3
+File-Version-Do-Not-Edit: 4

@@ -1,6 +1,6 @@
 ### 1.6.2-b2 Beta
 * Fixed goldrush & goldban prayer did not reset on game end
-
+* Death prefix can now be changed
 
 ### 1.6.2-b Beta
 * Fixed MYSQL stats can't update

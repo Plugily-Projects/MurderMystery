@@ -34,7 +34,7 @@ import java.io.File;
 public class LanguageMigrator {
 
   public static final int CONFIG_FILE_VERSION = 18;
-  public static final int LANGUAGE_FILE_VERSION = 3;
+  public static final int LANGUAGE_FILE_VERSION = 4;
   private final Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -222,6 +222,9 @@ public class LanguageMigrator {
             "      - \" \"\r\n" +
             "      - \" \"\r\n" +
             "      - \"&eClick to join this arena\"\r\n");
+          break;
+        case 3:
+          MigratorUtils.insertAfterLine(file, "In-Game:", "  Game-Death-Format: \"&7[&4☠&7] &r\"");
           break;
         default:
           break;

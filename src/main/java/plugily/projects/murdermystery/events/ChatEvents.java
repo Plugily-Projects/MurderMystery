@@ -82,7 +82,7 @@ public class ChatEvents implements Listener {
             continue;
           }
           if (dead) {
-            String prefix = "§7[§4☠§7] §r";
+            String prefix = formatChatPlaceholders(LanguageManager.getLanguageMessage("In-Game.Game-Death-Format"), plugin.getUserManager().getUser(event.getPlayer()), null);
             player.sendMessage(prefix + message);
           } else {
             player.sendMessage(message);
