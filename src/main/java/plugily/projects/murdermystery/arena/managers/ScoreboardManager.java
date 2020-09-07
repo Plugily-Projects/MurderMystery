@@ -130,8 +130,8 @@ public class ScoreboardManager {
 
   private String formatScoreboardLine(String line, User user) {
     String formattedLine = line;
-    formattedLine = StringUtils.replace(formattedLine, "%TIME%", String.valueOf(arena.getTimer()));
-    formattedLine = StringUtils.replace(formattedLine, "%FORMATTED_TIME%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));
+    formattedLine = StringUtils.replace(formattedLine, "%TIME%", String.valueOf(arena.getTimer() + 1));
+    formattedLine = StringUtils.replace(formattedLine, "%FORMATTED_TIME%", StringFormatUtils.formatIntoMMSS(arena.getTimer() + 1));
     formattedLine = StringUtils.replace(formattedLine, "%MAPNAME%", arena.getMapName());
     int innocents = 0;
     for (Player p : arena.getPlayersLeft()) {
