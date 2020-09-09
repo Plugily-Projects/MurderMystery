@@ -32,6 +32,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -87,6 +88,7 @@ public class Arena extends BukkitRunnable {
   private final ScoreboardManager scoreboardManager;
   private List<Location> goldSpawnPoints = new ArrayList<>();
   private List<Location> playerSpawnPoints = new ArrayList<>();
+  private int goldVisualsRunnableId = -1;
 
   private int murderers = 0;
   private int detectives = 0;
@@ -567,6 +569,27 @@ public class Arena extends BukkitRunnable {
 
   public void setGoldSpawnPoints(@NotNull List<Location> goldSpawnPoints) {
     this.goldSpawnPoints = goldSpawnPoints;
+  }
+
+  public void toggleGoldVisuals() {
+    BukkitScheduler scheduler = plugin.getServer().getScheduler();
+    int id = this.goldVisualsRunnableId;
+    if (id != -1) {
+      scheduler.cancelTask(id);
+      this.goldVisualsRunnableId = -1;
+    } else {
+      this.goldVisualsRunnableId = scheduler.scheduleSyncRepeatingTask(plugin, () -> {
+        for (Location goldLocation : goldSpawnPoints) {
+          Location particleLocation = goldLocation.clone();
+          particleLocation.add(0, 0.4, 0);
+          goldLocation.getWorld().spawnParticle(Particle.REDSTONE, particleLocation, 10, 0.1, 0.2, 0.1, new Particle.DustOptions(Color.YELLOW, 1));
+        }
+      }, 1, 1);
+    }
+  }
+
+  public boolean isGoldVisualsEnabled() {
+    return this.goldVisualsRunnableId != -1;
   }
 
   /**

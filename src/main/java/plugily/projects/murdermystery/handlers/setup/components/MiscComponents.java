@@ -193,6 +193,14 @@ public class MiscComponents implements SetupComponent {
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
     }), 7, 1);
 
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.GOLD_ORE.parseItem())
+      .name(chatManager.colorRawMessage(arena.isGoldVisualsEnabled() ? "&e&lDisable Gold Visuals" : "&e&lEnable Gold Visuals"))
+      .lore(ChatColor.GRAY + "Disabled on server restart")
+      .build(), e -> {
+      e.getWhoClicked().closeInventory();
+      arena.toggleGoldVisuals();
+    }), 7, 2);
+
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
       .name(chatManager.colorRawMessage("&e&lView Setup Video"))
       .lore(ChatColor.GRAY + "Having problems with setup or wanna")
