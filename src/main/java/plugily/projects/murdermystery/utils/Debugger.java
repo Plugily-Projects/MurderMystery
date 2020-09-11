@@ -20,6 +20,7 @@ package plugily.projects.murdermystery.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 
 import java.util.HashSet;
 import java.util.logging.Level;

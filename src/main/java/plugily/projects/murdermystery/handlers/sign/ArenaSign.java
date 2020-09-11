@@ -23,8 +23,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import plugily.projects.murdermystery.arena.Arena;
-import plugily.projects.murdermystery.utils.ServerVersion;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
