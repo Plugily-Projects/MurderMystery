@@ -86,7 +86,7 @@ public class Reward {
   }
 
   public enum RewardType {
-    DETECTIVE_KILL("detectivekill"), MURDERER_KILL("murdererkill"), END_GAME("endgame"), LOSE("lose"), WIN("win"), DEATH("death");
+    DETECTIVE_KILL("detectivekill"), MURDERER_KILL("murdererkill"), END_GAME("endgame"), LOSE("lose"), WIN("win"), DEATH("death"), GOLD_PICKUP("gold_pickup");
 
     private final String path;
 

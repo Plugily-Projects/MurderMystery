@@ -29,10 +29,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -139,8 +136,12 @@ public class ArenaEvents implements Listener {
   }
 
   @EventHandler
-  public void onItemPickup(PlayerPickupItemEvent e) {
-    Arena arena = ArenaRegistry.getArena(e.getPlayer());
+  public void onItemPickup(EntityPickupItemEvent e) {
+    if (!(e.getEntity() instanceof Player)){
+      return;
+    }
+    Player player = (Player) e.getEntity();
+    Arena arena = ArenaRegistry.getArena(player);
     if (arena == null) {
       return;
     }
@@ -148,38 +149,38 @@ public class ArenaEvents implements Listener {
     if (e.getItem().getItemStack().getType() != Material.GOLD_INGOT) {
       return;
     }
-    User user = plugin.getUserManager().getUser(e.getPlayer());
+    User user = plugin.getUserManager().getUser(player);
     if (user.isSpectator() || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
-    if (PrayerRegistry.getBan().contains(e.getPlayer())){
+    if (PrayerRegistry.getBan().contains(player)){
       e.setCancelled(true);
       return;
     }
     e.getItem().remove();
-    e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
+    player.playSound(player.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
     arena.getGoldSpawned().remove(e.getItem());
     ItemStack stack = new ItemStack(Material.GOLD_INGOT, e.getItem().getItemStack().getAmount());
-    if (PrayerRegistry.getRush().contains(e.getPlayer())){
+    if (PrayerRegistry.getRush().contains(player)){
       stack.setAmount(3 * e.getItem().getItemStack().getAmount());
     }
-    ItemPosition.addItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, stack);
+    ItemPosition.addItem(player, ItemPosition.GOLD_INGOTS, stack);
     user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, stack.getAmount());
     ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP, stack.getAmount());
-    e.getPlayer().sendMessage(chatManager.colorMessage("In-Game.Messages.Picked-Up-Gold", e.getPlayer()));
-
-    if (Role.isRole(Role.ANY_DETECTIVE, e.getPlayer())) {
-      ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, e.getItem().getItemStack().getAmount() * plugin.getConfig().getInt("Detective-Gold-Pick-Up-Arrows", 3)));
+    player.sendMessage(chatManager.colorMessage("In-Game.Messages.Picked-Up-Gold", player));
+    plugin.getRewardsHandler().performReward(player, Reward.RewardType.GOLD_PICKUP);
+    if (Role.isRole(Role.ANY_DETECTIVE, player)) {
+      ItemPosition.addItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, e.getItem().getItemStack().getAmount() * plugin.getConfig().getInt("Detective-Gold-Pick-Up-Arrows", 3)));
       return;
     }
 
     if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) >= plugin.getConfig().getInt("Gold-For-Bow", 10)) {
       user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
-      e.getPlayer().sendTitle(chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold", e.getPlayer()),
-        chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle", e.getPlayer()), 5, 40, 5);
-      ItemPosition.setItem(e.getPlayer(), ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-      ItemPosition.addItem(e.getPlayer(), ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Gold-Bow-Arrows", 3)));
-      e.getPlayer().getInventory().setItem(/* same for all roles */ ItemPosition.GOLD_INGOTS.getOtherRolesItemPosition(), new ItemStack(Material.GOLD_INGOT, 0));
+      player.sendTitle(chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-For-Gold", player),
+        chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Shot-Subtitle", player), 5, 40, 5);
+      ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+      ItemPosition.addItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Gold-Bow-Arrows", 3)));
+      player.getInventory().setItem(/* same for all roles */ ItemPosition.GOLD_INGOTS.getOtherRolesItemPosition(), new ItemStack(Material.GOLD_INGOT, 0));
     }
   }
 

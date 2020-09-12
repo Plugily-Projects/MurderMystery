@@ -1,8 +1,9 @@
-### 1.6.2 Release (15.08.2020 - 11.09.2020)
+### 1.6.2 Release (15.08.2020 - 12.09.2020)
 * (Developer Alert - Changed class names)
 * Added support for 1.16 hex colors
 * Added ArenaSelector
 * Added config option to play sound when adding score to user
+* Added new reward type gold_pickup
 * Fixed NPE when trying to teleport players to lobby location
 * Fixed no permission message not found
 * Fixed goldrush & goldban prayer did not reset on game end
