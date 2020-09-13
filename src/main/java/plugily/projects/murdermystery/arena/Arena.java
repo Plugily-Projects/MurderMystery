@@ -238,8 +238,13 @@ public class Arena extends BukkitRunnable {
           }
           teleportAllToStartLocation();
           for (Player player : getPlayers()) {
-            //reset gold to be 100% sure
+            //reset local variables to be 100% sure
             plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
+            plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY, 0);
+            plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_KILLS, 0);
+            plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_PRAISES, 0);
+            plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_SCORE, 0);
+            //
             ArenaUtils.updateNameTagsVisibility(player);
             player.getInventory().clear();
             player.setGameMode(GameMode.ADVENTURE);
