@@ -21,7 +21,8 @@ package plugily.projects.murdermystery.commands.completion;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
+
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
@@ -52,29 +53,45 @@ public class TabCompletion implements TabCompleter {
 
   @Override
   public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-    if (!(sender instanceof Player)) {
-      return Collections.emptyList();
+    List<String> completionList = new ArrayList<>(), cmds = new ArrayList<>();
+    String partOfCommand = null;
+
+    if (cmd.getName().equalsIgnoreCase("murdermysteryadmin")) {
+      if (args.length == 1) {
+        cmds.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
+            .collect(Collectors.toList()));
+        partOfCommand = args[0];
+      } else if (args.length == 2 && args[0].equalsIgnoreCase("delete")) {
+        cmds.addAll(ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList()));
+        partOfCommand = args[1];
+      }
     }
-    if (cmd.getName().equalsIgnoreCase("murdermysteryadmin") && args.length == 1) {
-      return registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName).collect(Collectors.toList());
-    }
+
     if (cmd.getName().equalsIgnoreCase("murdermystery")) {
       if (args.length == 2 && args[0].equalsIgnoreCase("join")) {
-        return ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList());
-      }
-      if (args.length == 1) {
-        return registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName).collect(Collectors.toList());
+        cmds.addAll(ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList()));
+        partOfCommand = args[1];
+      } else if (args.length == 1) {
+        cmds.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
+            .collect(Collectors.toList()));
+        partOfCommand = args[0];
       }
     }
-    if (args.length < 2) {
-      return Collections.emptyList();
-    }
-    for (CompletableArgument completion : registeredCompletions) {
-      if (!cmd.getName().equalsIgnoreCase(completion.getMainCommand()) || !completion.getArgument().equalsIgnoreCase(args[0])) {
-        continue;
+
+    // Completes the player names
+    if (cmds.isEmpty() || partOfCommand == null) {
+      for (CompletableArgument completion : registeredCompletions) {
+        if (!cmd.getName().equalsIgnoreCase(completion.getMainCommand()) || !completion.getArgument().equalsIgnoreCase(args[0])) {
+          continue;
+        }
+        return completion.getCompletions();
       }
-      return completion.getCompletions();
+
+      return null;
     }
-    return Collections.emptyList();
+
+    StringUtil.copyPartialMatches(partOfCommand, cmds, completionList);
+    Collections.sort(completionList);
+    return completionList;
   }
 }

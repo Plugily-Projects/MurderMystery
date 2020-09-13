@@ -125,10 +125,9 @@ public class ArgumentsRegistry implements CommandExecutor {
               if (perm.isEmpty()) break;
               if (Utils.hasPermission(sender, perm)){
                 break;
-              } else {
-                //user has no permission to execute command
-                return true;
               }
+              //user has no permission to execute command
+              return true;
             }
             if (checkSenderIsExecutorType(sender, argument.getValidExecutors())) {
               argument.execute(sender, args);
