@@ -144,7 +144,7 @@ public class Utils {
         meta.setPlayerProfile(player.getPlayerProfile());
         return true;
       }).exceptionally(e -> {
-        Debugger.debug(java.util.logging.Level.WARNING, "Retrieving player profile failed!");
+        Debugger.debug(java.util.logging.Level.WARNING, "Retrieving player profile of "+ player.getName() +" failed!");
         return null;
       }).isDone();
     }
