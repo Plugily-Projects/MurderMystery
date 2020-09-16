@@ -22,9 +22,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>pl.plajer</groupId>
+    <groupId>plugily.projects</groupId>
     <artifactId>murdermystery</artifactId>
-    <version>1.6.1</version>
+    <version>1.6.2</version>
     <name>MurderMystery</name>
 
     <properties>
@@ -112,31 +112,25 @@
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <version>1.16.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-classic</artifactId>
-            <version>1.1.2</version>
+            <version>1.1.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-database</artifactId>
-            <version>1.1.2</version>
+            <version>1.1.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-minecraft</artifactId>
-            <version>1.1.2</version>
+            <version>1.1.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -161,6 +155,7 @@
             <groupId>com.alessiodp.parties</groupId>
             <artifactId>parties-api</artifactId>
             <version>2.6.14</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.bstats.bStats-Metrics</groupId>
@@ -283,23 +278,23 @@
                             <relocations>
                                 <relocation>
                                     <pattern>com.github.stefvanschie.inventoryframework</pattern>
-                                    <shadedPattern>pl.plajer.murdermystery.utils.inventoryframework</shadedPattern>
+                                    <shadedPattern>plugily.projects.murdermystery.utils.inventoryframework</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.zaxxer.hikari</pattern>
-                                    <shadedPattern>pl.plajer.murdermystery.database.hikari</shadedPattern>
+                                    <shadedPattern>plugily.projects.murdermystery.database.hikari</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>me.tigerhix.lib.scoreboard</pattern>
-                                    <shadedPattern>pl.plajer.murdermystery.utils.scoreboard</shadedPattern>
+                                    <shadedPattern>plugily.projects.murdermystery.utils.scoreboard</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>pl.plajerlair.commonsbox</pattern>
-                                    <shadedPattern>pl.plajer.murdermystery.plajerlair.commonsbox</shadedPattern>
+                                    <shadedPattern>plugily.projects.murdermystery.plajerlair.commonsbox</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>pl.plajer.murdermystery.utils</shadedPattern>
+                                    <shadedPattern>plugily.projects.murdermystery.utils</shadedPattern>
                                 </relocation>
                             </relocations>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -310,9 +305,9 @@
 
             <!-- External beta versions discord deployer plugin -->
             <plugin>
-                <groupId>pl.plajer</groupId>
+                <groupId>plugily.projects</groupId>
                 <artifactId>betty-maven-plugin</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.2</version>
                 <configuration>
                     <changelogFile>${project.basedir}/CHANGELOG.md</changelogFile>
                 </configuration>
@@ -335,8 +330,8 @@
         </repository>
         <site>
             <id>plugily-projects-java-docs</id>
-            <name>VillageDefense</name>
-            <url>sftp://167.86.90.57/home/maven-javadocs-mc/jd</url>
+            <name>MurderMystery</name>
+            <url>sftp://167.86.90.57/home/maven-javadocs-mc/jd/</url>
         </site>
     </distributionManagement>
 

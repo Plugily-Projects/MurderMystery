@@ -1,3 +1,22 @@
+### 1.6.2 Release (15.08.2020 - 13.09.2020)
+* (Developer Alert - Changed class names)
+* Added support for 1.16 hex colors
+* Added ArenaSelector
+* Added config option to play sound when adding score to user
+* Added new reward type gold_pickup
+* Fixed NPE when trying to teleport players to lobby location
+* Fixed no permission message not found
+* Fixed goldrush & goldban prayer did not reset on game end
+* Fixed MYSQL stats can't update
+* Fixed special blocks registering click twice
+* Fixed IllegalPluginAccessException on plugin disable
+* Fixed wrong order in trails
+* Fixed local values got no reset
+* Changed Death prefix can now be changed
+* Changed message delay of "Waiting for players" from 15 to 45 seconds 
+* Optimized player corpse heads on paper
+* Reworked version checker
+
 ### 1.6.1 Release (01.07.2020 - 27.07.2020)
 * Added missing 1.14 & 1.15 & 1.16 Materials
 * Added simple head corpse when no CorpseReborn is installed

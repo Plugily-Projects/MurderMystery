@@ -3,7 +3,7 @@
 #
 #              Use \n to make new line
 #        Some messages like kit and kit items
-#        descriptions dont't support new lines
+#        descriptions don't support new lines
 # they are wrapped every 40 characters automatically
 #
 #     Some messages support their own placeholders
@@ -131,6 +131,7 @@ In-Game:
   Join-As-Party-Member: "&cYou joined %ARENANAME% because the party leader joined it!"
   Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
   Game-Chat-Format: "&7%player%: &f%message%"
+  Game-Death-Format: "&7[&4☠&7] &r"
   Cooldown-Format: "&8&l[%progress%&8&l] &6%time% seconds"
   Bow-Locator-Item-Name: "&6Bow locator"
   Innocent-Locator-Item-Name: "&6Innocent locator"
@@ -139,7 +140,7 @@ In-Game:
   Spectator:
     Spectator-Item-Name: "&7Players list"
     Spectator-Menu-Name: "Alive players list"
-    Target-Player-Role: "&7Role: %ROLE%"
+    Target-Player-Role: "&7Role: %role%"
     Settings-Menu:
       Item-Name: "&7Spectator settings"
       Inventory-Name: "&7Spectator settings"
@@ -267,6 +268,19 @@ Signs:
     - "%mapname%"
     - "&5[%playersize%/%maxplayers%]"
 
+Arena-Selector:
+  Inv-Title: "Arena selector"
+  Item:
+    Lore:
+      - "&4Murder Mystery &f- &e%mapname%"
+      - " "
+      - " "
+      - "  &fOnline: %playersize%/%maxplayers%"
+      - "  &fState: %state%"
+      - " "
+      - " "
+      - "&eClick to join this arena"
+
 Leaderheads:
   #top command from leaderheads ex. mmtopkills
   Top-Command-Name: "mmtop%stat%"
@@ -286,4 +300,4 @@ Validator:
 
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p
-File-Version-Do-Not-Edit: 2
+File-Version-Do-Not-Edit: 4

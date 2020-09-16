@@ -118,6 +118,10 @@ Speed-Effect-Murderer:
   #Enter a multiplier (min 2, max 10)
   Speed: 3
 
+# Play sound when a user gets score.
+# https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
+AddScore-Sound: ""
+
 # Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/minecraft/murdermystery/cmds_and_perms.php#basic-permissions
 Basic-Permissions:
   Full-Games-Permission: "murdermystery.fullgames"
