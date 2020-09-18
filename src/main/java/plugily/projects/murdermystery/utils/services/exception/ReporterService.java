@@ -50,8 +50,7 @@ public class ReporterService {
 
   public void reportException() {
     try {
-      //todo /v2/
-      URL url = new URL("https://api.plajer.xyz/error/report.php");
+      URL url = new URL("https://api.plugily.xyz/error/report.php");
       HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
       conn.setRequestMethod("POST");
       conn.setRequestProperty("User-Agent", "PLService/1.0");
@@ -63,7 +62,7 @@ public class ReporterService {
       os.flush();
       os.close();
 
-      plugin.getLogger().log(Level.WARNING, "[Reporter service] Error reported!");
+      plugin.getLogger().log(Level.WARNING, "[Reporter service] Error reported! " + "https://api.plugily.xyz/error/report.php?pass=servicereporter&type=" + pluginName + "&pluginversion=" + pluginVersion + "&serverversion=" + serverVersion + "&error=" + error);
       Debugger.debug(Level.INFO, "[Reporter service] Code: {0} ({1})", conn.getResponseCode(), conn.getResponseMessage());
     } catch (IOException ignored) {/*cannot connect or there is a problem*/
     }

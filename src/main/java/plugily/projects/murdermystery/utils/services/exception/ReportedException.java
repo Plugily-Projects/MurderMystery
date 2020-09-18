@@ -25,7 +25,7 @@ import plugily.projects.murdermystery.utils.services.ServiceRegistry;
 import java.util.logging.Level;
 
 /**
- * Create reported exception with data sent to plajer.xyz reporter service
+ * Create reported exception with data sent to plugily.xyz reporter service
  */
 public class ReportedException {
 
