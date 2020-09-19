@@ -204,7 +204,7 @@ public class LanguageManager {
       Debugger.sendConsoleMsg("&c[Murder Mystery] Game message not found in your locale! Added it to your language.yml");
       Debugger.sendConsoleMsg("&c[Murder Mystery] Path: " + path + " | Language not found. Report it to the author on Discord!");
     }
-    return languageConfig.getString(path, "Not found");
+    return languageConfig.getString(path, "not found");
   }
 
   public static void reloadConfig() {
