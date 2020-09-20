@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -185,11 +186,11 @@ public class LanguageManager {
 
 
   private static List<String> getStrings(String path) {
-    //check normal language if nothing found in specific language
     if (!languageConfig.isSet(path)) {
-      //send normal english message - User can change this translation on his own
-      Debugger.sendConsoleMsg("&c[Murder Mystery] Game message not found in your locale! Added it to your language.yml");
-      Debugger.sendConsoleMsg("&c[Murder Mystery] Path: " + path + " | Language not found. Report it to the author on Discord!");
+      Debugger.sendConsoleMsg("&c[MurderMystery] Game message not found in your locale!");
+      Debugger.sendConsoleMsg("&c[MurderMystery] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
+      Debugger.sendConsoleMsg("&c[MurderMystery] Path: " + path);
+      return Collections.singletonList("ERR_MESSAGE_" + path + "_NOT_FOUND");
     }
     List<String> list = languageConfig.getStringList(path);
     list = list.stream().map(string -> org.bukkit.ChatColor.translateAlternateColorCodes('&', string)).collect(Collectors.toList());
@@ -198,11 +199,11 @@ public class LanguageManager {
 
 
   private static String getString(String path) {
-    //check normal language if nothing found in specific language
     if (!languageConfig.isSet(path)) {
-      //send normal english message - User can change this translation on his own
-      Debugger.sendConsoleMsg("&c[Murder Mystery] Game message not found in your locale! Added it to your language.yml");
-      Debugger.sendConsoleMsg("&c[Murder Mystery] Path: " + path + " | Language not found. Report it to the author on Discord!");
+      Debugger.sendConsoleMsg("&c[MurderMystery] Game message not found in your locale!");
+      Debugger.sendConsoleMsg("&c[MurderMystery] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
+      Debugger.sendConsoleMsg("&c[MurderMystery] Path: " + path);
+      return "ERR_MESSAGE_" + path + "_NOT_FOUND";
     }
     return languageConfig.getString(path, "not found");
   }
