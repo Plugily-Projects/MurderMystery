@@ -17,6 +17,9 @@
 #    ru - Русский язык              es - Idioma español
 #    nl - Nederlandse taal          pt_br - Português (Brasil)
 #    tr - Türk dili                 sk - Slovenský jazyk
+#    ja - Japanese                  af - Afrikaans
+#    dk - Danish                    th - Thai
+#    uk - Ukrainian
 locale: default
 
 # Enable bossbar support?
