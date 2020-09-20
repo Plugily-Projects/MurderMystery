@@ -82,9 +82,8 @@ public class CorpseHandler implements Listener {
       ArmorStand stand = p.getLocation().getWorld().spawn(p.getLocation().add(0.0D, -1.25D, 0.0D), ArmorStand.class);
       ItemStack head = XMaterial.PLAYER_HEAD.parseItem();
       SkullMeta meta = (SkullMeta) head.getItemMeta();
-      if (Utils.setPlayerHead(p, meta)) {
-        head.setItemMeta(meta);
-      }
+      meta = Utils.setPlayerHead(p, meta);
+      head.setItemMeta(meta);
 
       stand.setVisible(false);
       stand.setHelmet(head);
