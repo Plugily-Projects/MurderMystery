@@ -63,8 +63,8 @@ public class ExceptionLogHandler extends Handler {
         : !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")) {
       return;
     }*/
-    if (throwable.getStackTrace().length <= 0 || throwable.getCause() != null &&
-      !throwable.getCause().getStackTrace()[0].getClassName().contains("plugily.projects.murdermystery")) {
+    if (throwable.getStackTrace().length <= 0 || (throwable.getCause() != null &&
+      !throwable.getCause().getStackTrace()[0].getClassName().contains("plugily.projects.murdermystery"))) {
       return;
     }
     if (!throwable.getStackTrace()[0].getClassName().contains("plugily.projects.murdermystery") || containsBlacklistedClass(throwable)) {
