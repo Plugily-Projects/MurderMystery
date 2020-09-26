@@ -52,6 +52,7 @@ import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
 import plugily.projects.murdermystery.arena.special.pray.PrayerRegistry;
 import plugily.projects.murdermystery.handlers.ChatManager;
+import plugily.projects.murdermystery.handlers.hologram.HoloHandler;
 import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Debugger;
@@ -85,15 +86,13 @@ public class Arena extends BukkitRunnable {
   private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
 
   private final ScoreboardManager scoreboardManager;
+  private HoloHandler holohandler = null;
+
   private List<Location> goldSpawnPoints = new ArrayList<>();
   private List<Location> playerSpawnPoints = new ArrayList<>();
 
-  private int murderers = 0;
-  private int detectives = 0;
-  private int spawnGoldTimer = 0;
-  private int spawnGoldTime = 0;
+  private int murderers = 0, detectives = 0, spawnGoldTimer = 0, spawnGoldTime = 0;
 
-  private Hologram bowHologram;
   private boolean detectiveDead;
   private boolean murdererLocatorReceived;
   private boolean hideChances;
@@ -112,6 +111,10 @@ public class Arena extends BukkitRunnable {
       gameBar = Bukkit.createBossBar(chatManager.colorMessage("Bossbar.Main-Title"), BarColor.BLUE, BarStyle.SOLID);
     }
     scoreboardManager = new ScoreboardManager(this);
+
+    if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+      holohandler = new HoloHandler();
+    }
   }
 
   public boolean isReady() {
@@ -131,19 +134,6 @@ public class Arena extends BukkitRunnable {
 
   public void addHead(Stand stand) {
     stands.add(stand);
-  }
-
-
-  public void setBowHologram(Hologram bowHologram) {
-    if (bowHologram == null) {
-      return;
-    }
-
-    if (this.bowHologram != null && !this.bowHologram.isDeleted()) {
-      this.bowHologram.delete();
-    }
-
-    this.bowHologram = bowHologram;
   }
 
   @Override
@@ -562,6 +552,10 @@ public class Arena extends BukkitRunnable {
     return scoreboardManager;
   }
 
+  public HoloHandler getHoloHandler() {
+    return holohandler;
+  }
+
   @NotNull
   public List<Item> getGoldSpawned() {
     return goldSpawned;
@@ -886,11 +880,15 @@ public class Arena extends BukkitRunnable {
   }
 
   public void cleanUpArena() {
-    if (bowHologram != null && !bowHologram.isDeleted()) {
-      bowHologram.delete();
+    if (holohandler != null) {
+      com.gmail.filoghost.holographicdisplays.api.Hologram bowHologram = holohandler.getBowHologram();
+      if (bowHologram != null && !bowHologram.isDeleted()) {
+        bowHologram.delete();
+      }
+      holohandler.setBowHologram(null);
     }
+
     murdererLocatorReceived = false;
-    bowHologram = null;
     gameCharacters.clear();
     allMurderer.clear();
     allDetectives.clear();

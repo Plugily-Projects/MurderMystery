@@ -196,7 +196,9 @@ public class ArenaUtils {
         chatManager.broadcast(arena, chatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message", player));
       }
     });
-    arena.setBowHologram(hologram);
+    if (arena.getHoloHandler() != null) {
+      arena.getHoloHandler().setBowHologram(hologram);
+    }
     addBowLocator(arena, hologram.getLocation());
   }
 
