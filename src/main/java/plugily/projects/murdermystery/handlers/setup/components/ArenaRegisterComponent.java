@@ -86,8 +86,8 @@ public class ArenaRegisterComponent implements SetupComponent {
         e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&a&l✔ &aThis arena was already validated and is ready to use!"));
         return;
       }
-      String[] locations = new String[]{"lobbylocation", "Endlocation"};
-      String[] spawns = new String[]{"goldspawnpoints", "playerspawnpoints"};
+      String[] locations = {"lobbylocation", "Endlocation"};
+      String[] spawns = {"goldspawnpoints", "playerspawnpoints"};
       FileConfiguration arenasConfig = ConfigUtils.getConfig(plugin, "arenas");
       for (String s : locations) {
         if (!arenasConfig.isSet("instances." + arena.getId() + "." + s) || arenasConfig.getString("instances." + arena.getId() + "." + s).equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {

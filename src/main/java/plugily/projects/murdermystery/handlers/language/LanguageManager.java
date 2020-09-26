@@ -37,7 +37,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Plajer
@@ -71,7 +70,7 @@ public class LanguageManager {
   }
 
   private static void registerLocales() {
-    Stream.of(
+    Arrays.asList(
       new Locale("Afrikaans", "Afrikaans", "af_ZA", "POEditor contributors", Arrays.asList("afrika", "af", "afr")),
       new Locale("Chinese (Simplified)", "简体中文", "zh_CN", "POEditor contributors", Arrays.asList("简体中文", "中文", "chinese", "chinese_simplified", "cn")),
       new Locale("Chinese (Traditional)", "繁體中文", "zh_TW", "POEditor contributors", Arrays.asList("中文(繁體)", "繁體中文", "chinese_traditional", "zh_tw")),
@@ -194,7 +193,7 @@ public class LanguageManager {
       return Collections.singletonList("ERR_MESSAGE_" + path + "_NOT_FOUND");
     }
     List<String> list = languageConfig.getStringList(path);
-    list = list.stream().map(string -> org.bukkit.ChatColor.translateAlternateColorCodes('&', string)).collect(Collectors.toList());
+    list = list.stream().map(string -> string = plugin.getChatManager().colorRawMessage(string)).collect(Collectors.toList());
     return list;
   }
 

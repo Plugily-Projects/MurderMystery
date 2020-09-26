@@ -72,7 +72,7 @@ public class ChatManager {
     if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       returnString = PlaceholderAPI.setPlaceholders(player, returnString);
     }
-    return ChatColor.translateAlternateColorCodes('&', returnString);
+    return colorRawMessage(returnString);
   }
 
   public void broadcast(Arena arena, String message) {
