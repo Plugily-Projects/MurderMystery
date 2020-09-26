@@ -18,8 +18,6 @@
 
 package plugily.projects.murdermystery.arena;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.StringUtils;
@@ -826,14 +824,20 @@ public class Arena extends BukkitRunnable {
   public void loadSpecialBlock(SpecialBlock block) {
     specialBlocks.add(block);
 
-    Hologram holo;
+    if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+      return;
+    }
+
+    com.gmail.filoghost.holographicdisplays.api.Hologram holo;
     switch (block.getSpecialBlockType()) {
       case MYSTERY_CAULDRON:
-        holo = HologramsAPI.createHologram(plugin, Utils.getBlockCenter(block.getLocation().clone().add(0, 1.8, 0)));
+        holo = com.gmail.filoghost.holographicdisplays.api.HologramsAPI.createHologram(plugin,
+            Utils.getBlockCenter(block.getLocation().clone().add(0, 1.8, 0)));
         holo.appendTextLine(chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
         break;
       case PRAISE_DEVELOPER:
-        holo = HologramsAPI.createHologram(plugin, Utils.getBlockCenter(block.getLocation().clone().add(0, 2.0, 0)));
+        holo = com.gmail.filoghost.holographicdisplays.api.HologramsAPI.createHologram(plugin,
+            Utils.getBlockCenter(block.getLocation().clone().add(0, 2.0, 0)));
         for (String str : chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
           holo.appendTextLine(str);
         }
