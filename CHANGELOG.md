@@ -1,7 +1,8 @@
 ### 1.6.3 Release (19.09.2020)
 * Updated locales to latest version
 * Added the possibility to change messages of locales on language.yml 
-* Fixed adding cauldrons to the arena 
+* Fixed adding cauldrons to the arena
+* HolographicDisplays is now optional
 
 ### 1.6.2 Release (15.08.2020 - 13.09.2020)
 * (Developer Alert - Changed class names)
