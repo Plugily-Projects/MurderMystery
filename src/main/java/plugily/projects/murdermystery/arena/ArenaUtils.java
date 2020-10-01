@@ -18,9 +18,6 @@
 
 package plugily.projects.murdermystery.arena;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -32,11 +29,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.handlers.ChatManager;
+import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.ItemPosition;
 
@@ -173,32 +172,10 @@ public class ArenaUtils {
       }
     }
 
-    Hologram hologram = HologramsAPI.createHologram(plugin, victim.getLocation().clone().add(0, 0.6, 0));
-    ItemLine itemLine = hologram.appendItemLine(new ItemStack(Material.BOW, 1));
+    ArmorStandHologram hologram = new ArmorStandHologram(victim.getLocation().clone().add(0, 0.6, 0))
+        .appendItem(new ItemStack(Material.BOW, 1));
 
-    itemLine.setPickupHandler(player -> {
-      if (plugin.getUserManager().getUser(player).isSpectator()) {
-        return;
-      }
-      if (Role.isRole(Role.INNOCENT, player)) {
-        player.playSound(player.getLocation(), Sound.BLOCK_LAVA_POP, 1F, 2F);
-        hologram.delete();
-
-        for (Player loopPlayer : arena.getPlayersLeft()) {
-          if (Role.isRole(Role.INNOCENT, loopPlayer)) {
-            ItemPosition.setItem(loopPlayer, ItemPosition.BOW_LOCATOR, new ItemStack(Material.AIR, 1));
-          }
-        }
-
-        arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, player);
-        ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-        ItemPosition.setItem(player, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Fake-Arrows", 3)));
-        chatManager.broadcast(arena, chatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message", player));
-      }
-    });
-    if (arena.getHoloHandler() != null) {
-      arena.getHoloHandler().setBowHologram(hologram);
-    }
+    arena.setBowHologram(hologram);
     addBowLocator(arena, hologram.getLocation());
   }
 

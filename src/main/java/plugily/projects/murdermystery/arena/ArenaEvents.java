@@ -137,7 +137,7 @@ public class ArenaEvents implements Listener {
 
   @EventHandler
   public void onItemPickup(EntityPickupItemEvent e) {
-    if (!(e.getEntity() instanceof Player)){
+    if (!(e.getEntity() instanceof Player)) {
       return;
     }
     Player player = (Player) e.getEntity();
@@ -145,30 +145,64 @@ public class ArenaEvents implements Listener {
     if (arena == null) {
       return;
     }
+
+    if (arena.getBowHologram() != null && e.getItem().equals(arena.getBowHologram().getEntityItem())) {
+      if (plugin.getUserManager().getUser(player).isSpectator()) {
+        return;
+      }
+
+      if (Role.isRole(Role.INNOCENT, player)) {
+        player.playSound(player.getLocation(), Sound.BLOCK_LAVA_POP, 1F, 2F);
+        arena.getBowHologram().delete();
+
+        for (Player loopPlayer : arena.getPlayersLeft()) {
+          if (Role.isRole(Role.INNOCENT, loopPlayer)) {
+            ItemPosition.setItem(loopPlayer, ItemPosition.BOW_LOCATOR, new ItemStack(Material.AIR, 1));
+          }
+        }
+
+        arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, player);
+        ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+        ItemPosition.setItem(player, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Fake-Arrows", 3)));
+        chatManager.broadcast(arena, chatManager.colorMessage("In-Game.Messages.Bow-Messages.Pickup-Bow-Message", player));
+      }
+
+      return;
+    }
+
     e.setCancelled(true);
+
     if (e.getItem().getItemStack().getType() != Material.GOLD_INGOT) {
       return;
     }
+
     User user = plugin.getUserManager().getUser(player);
     if (user.isSpectator() || arena.getArenaState() != ArenaState.IN_GAME) {
       return;
     }
+
     if (PrayerRegistry.getBan().contains(player)){
       e.setCancelled(true);
       return;
     }
+
     e.getItem().remove();
+
     player.playSound(player.getLocation(), Sound.BLOCK_LAVA_POP, 1, 1);
     arena.getGoldSpawned().remove(e.getItem());
+
     ItemStack stack = new ItemStack(Material.GOLD_INGOT, e.getItem().getItemStack().getAmount());
-    if (PrayerRegistry.getRush().contains(player)){
+    if (PrayerRegistry.getRush().contains(player)) {
       stack.setAmount(3 * e.getItem().getItemStack().getAmount());
     }
+
     ItemPosition.addItem(player, ItemPosition.GOLD_INGOTS, stack);
     user.addStat(StatsStorage.StatisticType.LOCAL_GOLD, stack.getAmount());
     ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP, stack.getAmount());
+
     player.sendMessage(chatManager.colorMessage("In-Game.Messages.Picked-Up-Gold", player));
     plugin.getRewardsHandler().performReward(player, Reward.RewardType.GOLD_PICKUP);
+
     if (Role.isRole(Role.ANY_DETECTIVE, player)) {
       ItemPosition.addItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, e.getItem().getItemStack().getAmount() * plugin.getConfig().getInt("Detective-Gold-Pick-Up-Arrows", 3)));
       return;

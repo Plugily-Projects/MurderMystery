@@ -21,7 +21,11 @@ package plugily.projects.murdermystery.arena;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -33,6 +37,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import pl.plajerlair.commonsbox.number.NumberUtils;
@@ -50,7 +55,7 @@ import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
 import plugily.projects.murdermystery.arena.special.pray.PrayerRegistry;
 import plugily.projects.murdermystery.handlers.ChatManager;
-import plugily.projects.murdermystery.handlers.hologram.HoloHandler;
+import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
 import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Debugger;
@@ -84,7 +89,7 @@ public class Arena extends BukkitRunnable {
   private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
 
   private final ScoreboardManager scoreboardManager;
-  private HoloHandler holohandler = null;
+  private ArmorStandHologram holohandler = new ArmorStandHologram();
 
   private List<Location> goldSpawnPoints = new ArrayList<>();
   private List<Location> playerSpawnPoints = new ArrayList<>();
@@ -109,10 +114,6 @@ public class Arena extends BukkitRunnable {
       gameBar = Bukkit.createBossBar(chatManager.colorMessage("Bossbar.Main-Title"), BarColor.BLUE, BarStyle.SOLID);
     }
     scoreboardManager = new ScoreboardManager(this);
-
-    if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
-      holohandler = new HoloHandler();
-    }
   }
 
   public boolean isReady() {
@@ -550,7 +551,7 @@ public class Arena extends BukkitRunnable {
     return scoreboardManager;
   }
 
-  public HoloHandler getHoloHandler() {
+  public ArmorStandHologram getHoloHandler() {
     return holohandler;
   }
 
@@ -884,13 +885,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void cleanUpArena() {
-    if (holohandler != null) {
-      com.gmail.filoghost.holographicdisplays.api.Hologram bowHologram = holohandler.getBowHologram();
-      if (bowHologram != null && !bowHologram.isDeleted()) {
-        bowHologram.delete();
-      }
-      holohandler.setBowHologram(null);
-    }
+    removeBowHolo();
 
     murdererLocatorReceived = false;
     gameCharacters.clear();
@@ -1033,6 +1028,34 @@ public class Arena extends BukkitRunnable {
 
   public enum CharacterType {
     MURDERER, DETECTIVE, FAKE_DETECTIVE, HERO
+  }
+
+
+  private ArmorStandHologram bowHologram;
+
+  public void removeBowHolo() {
+    if (bowHologram != null && !bowHologram.isDeleted()) {
+      bowHologram.delete();
+    }
+
+    bowHologram = null;
+  }
+
+  public void setBowHologram(ArmorStandHologram bowHologram) {
+    if (bowHologram == null) {
+      this.bowHologram = null;
+      return;
+    }
+
+    if (this.bowHologram != null && !this.bowHologram.isDeleted()) {
+      this.bowHologram.delete();
+    }
+
+    this.bowHologram = bowHologram;
+  }
+
+  public ArmorStandHologram getBowHologram() {
+    return bowHologram;
   }
 
 }

@@ -18,8 +18,9 @@
 
 package plugily.projects.murdermystery.arena.corpse;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import org.bukkit.entity.ArmorStand;
+
+import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
 
 /**
  * @author Plajer
@@ -28,15 +29,15 @@ import org.bukkit.entity.ArmorStand;
  */
 public class Stand {
 
-  private final Hologram hologram;
+  private final ArmorStandHologram hologram;
   private final ArmorStand stand;
 
-  public Stand(Hologram hologram, ArmorStand stand) {
+  public Stand(ArmorStandHologram hologram, ArmorStand stand) {
     this.hologram = hologram;
     this.stand = stand;
   }
 
-  public Hologram getHologram() {
+  public ArmorStandHologram getHologram() {
     return hologram;
   }
 
