@@ -18,12 +18,11 @@
 
 package plugily.projects.murdermystery;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
@@ -43,6 +42,8 @@ import plugily.projects.murdermystery.events.*;
 import plugily.projects.murdermystery.events.spectator.SpectatorEvents;
 import plugily.projects.murdermystery.events.spectator.SpectatorItemEvents;
 import plugily.projects.murdermystery.handlers.*;
+import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
+import plugily.projects.murdermystery.handlers.hologram.HologramManager;
 import plugily.projects.murdermystery.handlers.items.SpecialItem;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.handlers.party.PartyHandler;
@@ -152,13 +153,14 @@ public class Main extends JavaPlugin {
 
     Bukkit.getLogger().removeHandler(exceptionLogHandler);
     saveAllUserStatistics();
-    if (hookManager != null && hookManager.isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
-      HologramsAPI.getHolograms(this).forEach(Hologram::delete);
-    }
     if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       getMysqlDatabase().shutdownConnPool();
     }
-
+    for (ArmorStand armorStand : HologramManager.getArmorStands()){
+      armorStand.remove();
+      armorStand.setCustomNameVisible(false);
+    }
+    HologramManager.getArmorStands().clear();
     for (Arena arena : ArenaRegistry.getArenas()) {
       arena.getScoreboardManager().stopAllScoreboards();
       for (Player player : arena.getPlayers()) {

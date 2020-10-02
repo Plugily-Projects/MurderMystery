@@ -163,6 +163,9 @@ public class ArenaUtils {
   }
 
   public static void dropBowAndAnnounce(Arena arena, Player victim) {
+    if (arena.getBowHologram() != null) {
+      return;
+    }
     if (arena.getPlayersLeft().size() > 1) {
       for (Player p : arena.getPlayers()) {
         p.sendTitle(chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title", p), null, 5, 40, 5);
@@ -172,8 +175,8 @@ public class ArenaUtils {
       }
     }
 
-    ArmorStandHologram hologram = new ArmorStandHologram(victim.getLocation().clone().add(0, 0.6, 0))
-        .appendItem(new ItemStack(Material.BOW, 1));
+    ArmorStandHologram hologram = new ArmorStandHologram(victim.getLocation())
+      .appendItem(new ItemStack(Material.BOW, 1));
 
     arena.setBowHologram(hologram);
     addBowLocator(arena, hologram.getLocation());

@@ -361,7 +361,9 @@ public class Arena extends BukkitRunnable {
         }
 
         if (getTimer() <= 30 || getPlayersLeft().size() == aliveMurderer() + 1) {
-          ArenaUtils.updateInnocentLocator(this);
+          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INNOCENT_LOCATOR)) {
+            ArenaUtils.updateInnocentLocator(this);
+          }
         }
         //no players - stop game
         if (getPlayersLeft().size() == 0) {
@@ -824,23 +826,14 @@ public class Arena extends BukkitRunnable {
 
   public void loadSpecialBlock(SpecialBlock block) {
     specialBlocks.add(block);
-
-    if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
-      return;
-    }
-
-    com.gmail.filoghost.holographicdisplays.api.Hologram holo;
     switch (block.getSpecialBlockType()) {
       case MYSTERY_CAULDRON:
-        holo = com.gmail.filoghost.holographicdisplays.api.HologramsAPI.createHologram(plugin,
-            Utils.getBlockCenter(block.getLocation().clone().add(0, 1.8, 0)));
-        holo.appendTextLine(chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
+        new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()), chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
         break;
       case PRAISE_DEVELOPER:
-        holo = com.gmail.filoghost.holographicdisplays.api.HologramsAPI.createHologram(plugin,
-            Utils.getBlockCenter(block.getLocation().clone().add(0, 2.0, 0)));
+        ArmorStandHologram holo = new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()));
         for (String str : chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
-          holo.appendTextLine(str);
+          holo.appendLine(str);
         }
         break;
       case HORSE_PURCHASE:
@@ -1045,10 +1038,6 @@ public class Arena extends BukkitRunnable {
     if (bowHologram == null) {
       this.bowHologram = null;
       return;
-    }
-
-    if (this.bowHologram != null && !this.bowHologram.isDeleted()) {
-      this.bowHologram.delete();
     }
 
     this.bowHologram = bowHologram;

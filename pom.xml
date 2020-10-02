@@ -118,19 +118,19 @@
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-classic</artifactId>
-            <version>1.1.5</version>
+            <version>1.1.6</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-database</artifactId>
-            <version>1.1.5</version>
+            <version>1.1.6</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-minecraft</artifactId>
-            <version>1.1.5</version>
+            <version>1.1.6</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -169,12 +169,6 @@
             <artifactId>annotations</artifactId>
             <version>13.0</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gmail.filoghost.holographicdisplays</groupId>
-            <artifactId>holographicdisplays-api</artifactId>
-            <version>2.3.1</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.golde</groupId>

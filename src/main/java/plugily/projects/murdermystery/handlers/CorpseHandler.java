@@ -107,7 +107,7 @@ public class CorpseHandler implements Listener {
   }
 
   private ArmorStandHologram getLastWordsHologram(Player p) {
-    ArmorStandHologram hologram = new ArmorStandHologram(p.getLocation().clone().add(0, 1.7, 0));
+    ArmorStandHologram hologram = new ArmorStandHologram(p.getLocation());
     hologram.appendLine(chatManager.colorMessage("In-Game.Messages.Corpse-Last-Words", p).replace("%player%", p.getName()));
     boolean found = false;
     for (Map.Entry<String, String> map : registeredLastWords.entrySet()) {

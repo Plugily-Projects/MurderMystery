@@ -145,7 +145,7 @@ public class ArenaEvents implements Listener {
     if (arena == null) {
       return;
     }
-
+    e.setCancelled(true);
     if (arena.getBowHologram() != null && e.getItem().equals(arena.getBowHologram().getEntityItem())) {
       if (plugin.getUserManager().getUser(player).isSpectator()) {
         return;
@@ -153,7 +153,8 @@ public class ArenaEvents implements Listener {
 
       if (Role.isRole(Role.INNOCENT, player)) {
         player.playSound(player.getLocation(), Sound.BLOCK_LAVA_POP, 1F, 2F);
-        arena.getBowHologram().delete();
+        arena.removeBowHolo();
+        e.getItem().remove();
 
         for (Player loopPlayer : arena.getPlayersLeft()) {
           if (Role.isRole(Role.INNOCENT, loopPlayer)) {
@@ -169,8 +170,6 @@ public class ArenaEvents implements Listener {
 
       return;
     }
-
-    e.setCancelled(true);
 
     if (e.getItem().getItemStack().getType() != Material.GOLD_INGOT) {
       return;
