@@ -33,7 +33,7 @@ import java.io.File;
  */
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 18;
+  public static final int CONFIG_FILE_VERSION = 19;
   public static final int LANGUAGE_FILE_VERSION = 4;
   private final Main plugin;
 
@@ -174,6 +174,11 @@ public class LanguageMigrator {
           MigratorUtils.addNewLines(file, "\r\n" +
             "#Disable Party features of external party plugins (such as PAF, Parties ...)\r\n" +
             "Disable-Parties: true\r\n");
+          break;
+        case 18:
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "#Should there be a innocent locator\r\n" +
+            "Enable-Innocent-Locator: true\r\n");
           break;
         default:
           break;

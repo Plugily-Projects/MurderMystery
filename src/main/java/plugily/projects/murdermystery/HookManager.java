@@ -62,7 +62,7 @@ public class HookManager {
 
   public enum HookFeature {
     //todo hidden name tags hook
-    CORPSES(Hook.CORPSE_REBORN, Hook.HOLOGRAPHIC_DISPLAYS);
+    CORPSES(Hook.CORPSE_REBORN);
 
     private final Hook[] requiredHooks;
 
@@ -76,7 +76,7 @@ public class HookManager {
   }
 
   public enum Hook {
-    CORPSE_REBORN("CorpseReborn"), HOLOGRAPHIC_DISPLAYS("HolographicDisplays");
+    CORPSE_REBORN("CorpseReborn");
 
     private final String pluginName;
 

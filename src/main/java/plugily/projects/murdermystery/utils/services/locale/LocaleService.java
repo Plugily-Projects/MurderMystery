@@ -79,8 +79,7 @@ public class LocaleService {
 
   private InputStream requestLocaleFetch(Locale locale) {
     try {
-      //todo /v2/
-      URL url = new URL("https://api.plajer.xyz/locale/fetch.php");
+      URL url = new URL("https://api.plugily.xyz/locale/v2/fetch.php");
       HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
       conn.setRequestMethod("POST");
       conn.setRequestProperty("User-Agent", "PLLocale/1.0");
@@ -109,8 +108,8 @@ public class LocaleService {
   }
 
   /**
-   * Sends a demand request to download latest locale from Plajer-Lair/locale_storage repository
-   * Whole repository can be seen here https://github.com/Plajer-Lair/locale_storage
+   * Sends a demand request to download latest locale from Plugily-Projects/locale_storage repository
+   * Whole repository can be seen here https://github.com/Plugily-Projects/locale_storage
    *
    * @param locale locale to download
    * @return SUCCESS for downloaded locale, FAIL for service fault, LATEST when locale is latest as one in repository

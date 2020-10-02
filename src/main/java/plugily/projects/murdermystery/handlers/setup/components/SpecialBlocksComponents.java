@@ -21,6 +21,7 @@ package plugily.projects.murdermystery.handlers.setup.components;
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
@@ -74,7 +75,7 @@ public class SpecialBlocksComponents implements SetupComponent {
       .build(), e -> {
       e.getWhoClicked().closeInventory();
       Debugger.debug(Level.INFO, "" + e.getWhoClicked().getTargetBlock(null, 10).getType() + e.getWhoClicked().getTargetBlock(null, 10).getLocation());
-      if (e.getWhoClicked().getTargetBlock(null, 15).getType() != XMaterial.CAULDRON.parseMaterial()) {
+      if (e.getWhoClicked().getTargetBlock(null, 15).getType() != Material.CAULDRON) {
         e.getWhoClicked().sendMessage(ChatColor.RED + "Please target cauldron to continue!");
         return;
       }

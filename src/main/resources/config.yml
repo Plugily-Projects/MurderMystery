@@ -17,6 +17,9 @@
 #    ru - Русский язык              es - Idioma español
 #    nl - Nederlandse taal          pt_br - Português (Brasil)
 #    tr - Türk dili                 sk - Slovenský jazyk
+#    ja - Japanese                  af - Afrikaans
+#    dk - Danish                    th - Thai
+#    uk - Ukrainian
 locale: default
 
 # Enable bossbar support?
@@ -112,6 +115,9 @@ Detective-Bow-Cooldown: 5
 #Should Detectives be killed if they kill a innocent?
 Enable-Kill-Detective-If-Innocent-Killed: true
 
+#Should there be a innocent locator
+Enable-Innocent-Locator: true
+
 #Should the murderer get speed effect?
 Speed-Effect-Murderer:
   Enabled: true
@@ -176,6 +182,6 @@ Update-Notifier:
 Disable-Parties: true
 
 # Don't modify.
-Version: 18
+Version: 19
 
 # No way! You've reached the end! But... where's the dragon!?

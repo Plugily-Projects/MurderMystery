@@ -50,8 +50,7 @@ public class ReporterService {
 
   public void reportException() {
     try {
-      //todo /v2/
-      URL url = new URL("https://api.plajer.xyz/error/report.php");
+      URL url = new URL("https://api.plugily.xyz/error/report.php");
       HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
       conn.setRequestMethod("POST");
       conn.setRequestProperty("User-Agent", "PLService/1.0");

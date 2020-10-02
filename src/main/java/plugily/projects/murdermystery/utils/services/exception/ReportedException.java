@@ -25,14 +25,13 @@ import plugily.projects.murdermystery.utils.services.ServiceRegistry;
 import java.util.logging.Level;
 
 /**
- * Create reported exception with data sent to plajer.xyz reporter service
+ * Create reported exception with data sent to plugily.xyz reporter service
  */
 public class ReportedException {
 
   private ReporterService reporterService;
 
   public ReportedException(JavaPlugin plugin, Exception e) {
-
     Exception exception = e.getCause() != null ? (Exception) e.getCause() : e;
     StringBuilder stacktrace = new StringBuilder(exception.getClass().getSimpleName());
     if (exception.getMessage() != null) {
@@ -47,8 +46,7 @@ public class ReportedException {
     plugin.getLogger().log(Level.WARNING, stacktrace.toString());
     plugin.getLogger().log(Level.WARNING, "[Reporter service] <<------------------------------[END]------------------------------>>");
 
-    if (!ServiceRegistry.isServiceEnabled() || System.currentTimeMillis() - ServiceRegistry.getServiceCooldown() < 900000
-      || plugin.getDescription().getVersion().contains("b")) {
+    if (!ServiceRegistry.isServiceEnabled() || System.currentTimeMillis() - ServiceRegistry.getServiceCooldown() < 900000) {
       return;
     }
     ServiceRegistry.setServiceCooldown(System.currentTimeMillis());
@@ -61,5 +59,4 @@ public class ReportedException {
       }
     }.runTaskAsynchronously(plugin);
   }
-
 }

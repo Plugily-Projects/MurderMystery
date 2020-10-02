@@ -56,6 +56,10 @@ public class ChatManager {
   }
 
   public String colorRawMessage(String message) {
+    if (message == null) {
+      return "";
+    }
+
     if (message.contains("#") && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
       message = Utils.matchColorRegex(message);
     }
@@ -68,7 +72,7 @@ public class ChatManager {
     if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       returnString = PlaceholderAPI.setPlaceholders(player, returnString);
     }
-    return ChatColor.translateAlternateColorCodes('&', returnString);
+    return colorRawMessage(returnString);
   }
 
   public void broadcast(Arena arena, String message) {

@@ -150,7 +150,7 @@ public class SignManager implements Listener {
   @EventHandler
   public void onJoinAttempt(PlayerInteractEvent e) {
     ArenaSign arenaSign = getArenaSignByBlock(e.getClickedBlock());
-    if (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().getState() instanceof Sign && arenaSign != null) {
+    if (e.getAction() == Action.RIGHT_CLICK_BLOCK && arenaSign != null && e.getClickedBlock().getState() instanceof Sign) {
       Arena arena = arenaSign.getArena();
       if (arena != null) {
         ArenaManager.joinAttempt(e.getPlayer(), arena);
@@ -163,14 +163,12 @@ public class SignManager implements Listener {
     if (block == null) {
       return null;
     }
-    ArenaSign arenaSign = null;
     for (ArenaSign sign : arenaSigns) {
       if (sign.getSign().getLocation().equals(block.getLocation())) {
-        arenaSign = sign;
-        break;
+        return sign;
       }
     }
-    return arenaSign;
+    return null;
   }
 
   public void loadSigns() {

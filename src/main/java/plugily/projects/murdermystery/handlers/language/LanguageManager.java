@@ -33,10 +33,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Plajer
@@ -49,6 +49,7 @@ public class LanguageManager {
   private static Main plugin;
   private static Locale pluginLocale;
   private static FileConfiguration languageConfig;
+  private static FileConfiguration defaultLanguageConfig;
 
   private LanguageManager() {
   }
@@ -56,19 +57,25 @@ public class LanguageManager {
   public static void init(Main plugin) {
     LanguageManager.plugin = plugin;
     if (!new File(LanguageManager.plugin.getDataFolder() + File.separator + "language.yml").exists()) {
-      LanguageManager.plugin.saveResource("language.yml", false);
+      plugin.saveResource("language.yml", false);
     }
+    //auto update
+    plugin.saveResource("locales/language_default.yml", true);
+
     new LanguageMigrator(plugin);
     languageConfig = ConfigUtils.getConfig(plugin, "language");
+    defaultLanguageConfig = ConfigUtils.getConfig(plugin, "locales/language_default");
     registerLocales();
     setupLocale();
   }
 
   private static void registerLocales() {
-    Stream.of(new Locale("Chinese (Simplified)", "简体中文", "zh_CN", "POEditor contributors", Arrays.asList("简体中文", "中文", "chinese", "chinese_simplified", "cn")),
+    Arrays.asList(
+      new Locale("Afrikaans", "Afrikaans", "af_ZA", "POEditor contributors", Arrays.asList("afrika", "af", "afr")),
       new Locale("Chinese (Simplified)", "简体中文", "zh_CN", "POEditor contributors", Arrays.asList("简体中文", "中文", "chinese", "chinese_simplified", "cn")),
       new Locale("Chinese (Traditional)", "繁體中文", "zh_TW", "POEditor contributors", Arrays.asList("中文(繁體)", "繁體中文", "chinese_traditional", "zh_tw")),
       new Locale("Czech", "Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")),
+      new Locale("Danish", "Dänemark", "da_DK", "POEditor contributors", Arrays.asList("dänisch", "da", "dk")),
       new Locale("Dutch", "Nederlands", "nl_NL", "POEditor contributors", Arrays.asList("dutch", "nederlands", "nl")),
       new Locale("English", "English", "en_GB", "Plajer", Arrays.asList("default", "english", "en")),
       new Locale("French", "Français", "fr_FR", "POEditor contributors", Arrays.asList("french", "francais", "français", "fr")),
@@ -76,6 +83,7 @@ public class LanguageManager {
       new Locale("Hungarian", "Magyar", "hu_HU", "POEditor contributors", Arrays.asList("hungarian", "magyar", "hu")),
       new Locale("Indonesian", "Indonesia", "id_ID", "POEditor contributors", Arrays.asList("indonesian", "indonesia", "id")),
       new Locale("Italian", "Italiano", "it_IT", "POEditor contributors", Arrays.asList("italian", "italiano", "it")),
+      new Locale("Japanese", "Japan", "ja_JP", "POEditor contributors", Arrays.asList("japan", "japanese", "ja")),
       new Locale("Korean", "한국의", "ko_KR", "POEditor contributors", Arrays.asList("korean", "한국의", "kr")),
       new Locale("Polish", "Polski", "pl_PL", "Plajer", Arrays.asList("polish", "polski", "pl")),
       new Locale("Portuguese (BR)", "Português (Brasil)", "pt_BR", "POEditor contributors", Arrays.asList("portuguese br", "português br", "português brasil", "pt_br")),
@@ -83,7 +91,9 @@ public class LanguageManager {
       new Locale("Russian", "Pусский", "ru_RU", "POEditor contributors", Arrays.asList("russian", "pусский", "pyccknn", "russkiy", "ru")),
       new Locale("Slovak", "Slovenský", "sk_SK", "POEditor contributors", Arrays.asList("slovak", "slovenský", "slovensky", "sk")),
       new Locale("Spanish", "Español", "es_ES", "POEditor contributors", Arrays.asList("spanish", "espanol", "español", "es")),
+      new Locale("Thai", "Thai", "th_TH", "POEditor contributors", Arrays.asList("thai", "th")),
       new Locale("Turkish", "Türkçe", "tr_TR", "POEditor contributors", Arrays.asList("turkish", "türkçe", "turkce", "tr")),
+      new Locale("Ukrainian", "Ukraine", "uk_UA", "POEditor contributors", Arrays.asList("ukraine", "ua", "uk")),
       new Locale("Vietnamese", "Việt", "vn_VN", "POEditor contributors", Arrays.asList("vietnamese", "viet", "việt", "vn")))
       .forEach(LocaleRegistry::registerLocale);
   }
@@ -151,7 +161,13 @@ public class LanguageManager {
       return getString(path);
     }
     String prop = properties.getProperty(path);
-    return prop == null ? getString(path) : prop;
+    if (prop == null){
+      return getString(path);
+    }
+    if (getString(path).equalsIgnoreCase(defaultLanguageConfig.getString(path, "not found"))){
+      return prop;
+    }
+    return getString(path);
   }
 
   public static List<String> getLanguageList(String path) {
@@ -160,34 +176,36 @@ public class LanguageManager {
     }
     String prop = properties.getProperty(path);
     if (prop == null) {
-      //check normal language if nothing found in specific language
       return getStrings(path);
     }
-    return Arrays.asList(plugin.getChatManager().colorRawMessage(prop).split(";"));
+    if (getString(path).equalsIgnoreCase(defaultLanguageConfig.getString(path, "not found"))){
+      return Arrays.asList(plugin.getChatManager().colorRawMessage(prop).split(";"));
+    }
+    return getStrings(path);
   }
 
 
   private static List<String> getStrings(String path) {
-    //check normal language if nothing found in specific language
     if (!languageConfig.isSet(path)) {
-      //send normal english message - User can change this translation on his own
-      Debugger.sendConsoleMsg("&c[Murder Mystery] Game message not found in your locale! Added it to your language.yml");
-      Debugger.sendConsoleMsg("&c[Murder Mystery] Path: " + path + " | Language not found. Report it to the author on Discord!");
+      Debugger.sendConsoleMsg("&c[MurderMystery] Game message not found in your locale!");
+      Debugger.sendConsoleMsg("&c[MurderMystery] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
+      Debugger.sendConsoleMsg("&c[MurderMystery] Path: " + path);
+      return Collections.singletonList("ERR_MESSAGE_" + path + "_NOT_FOUND");
     }
     List<String> list = languageConfig.getStringList(path);
-    list = list.stream().map(string -> org.bukkit.ChatColor.translateAlternateColorCodes('&', string)).collect(Collectors.toList());
+    list = list.stream().map(string -> string = plugin.getChatManager().colorRawMessage(string)).collect(Collectors.toList());
     return list;
   }
 
 
   private static String getString(String path) {
-    //check normal language if nothing found in specific language
     if (!languageConfig.isSet(path)) {
-      //send normal english message - User can change this translation on his own
-      Debugger.sendConsoleMsg("&c[Murder Mystery] Game message not found in your locale! Added it to your language.yml");
-      Debugger.sendConsoleMsg("&c[Murder Mystery] Path: " + path + " | Language not found. Report it to the author on Discord!");
+      Debugger.sendConsoleMsg("&c[MurderMystery] Game message not found in your locale!");
+      Debugger.sendConsoleMsg("&c[MurderMystery] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
+      Debugger.sendConsoleMsg("&c[MurderMystery] Path: " + path);
+      return "ERR_MESSAGE_" + path + "_NOT_FOUND";
     }
-    return languageConfig.getString(path);
+    return languageConfig.getString(path, "not found");
   }
 
   public static void reloadConfig() {

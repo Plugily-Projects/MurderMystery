@@ -18,9 +18,6 @@
 
 package plugily.projects.murdermystery.handlers;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 
 import org.bukkit.Bukkit;
@@ -41,6 +38,7 @@ import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.corpse.Corpse;
 import plugily.projects.murdermystery.arena.corpse.Stand;
+import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
 import plugily.projects.murdermystery.utils.Utils;
 
 import java.util.HashMap;
@@ -82,16 +80,15 @@ public class CorpseHandler implements Listener {
       ArmorStand stand = p.getLocation().getWorld().spawn(p.getLocation().add(0.0D, -1.25D, 0.0D), ArmorStand.class);
       ItemStack head = XMaterial.PLAYER_HEAD.parseItem();
       SkullMeta meta = (SkullMeta) head.getItemMeta();
-      if (Utils.setPlayerHead(p, meta)) {
-        head.setItemMeta(meta);
-      }
+      meta = Utils.setPlayerHead(p, meta);
+      head.setItemMeta(meta);
 
       stand.setVisible(false);
       stand.setHelmet(head);
       stand.setGravity(false);
       stand.setCustomNameVisible(false);
       stand.setHeadPose(new EulerAngle(Math.toRadians(p.getLocation().getX()), Math.toRadians(p.getLocation().getPitch()), Math.toRadians(p.getLocation().getZ())));
-      Hologram hologram = getLastWordsHologram(p);
+      ArmorStandHologram hologram = getLastWordsHologram(p);
       arena.addHead(new Stand(hologram, stand));
       Bukkit.getScheduler().runTaskLater(plugin, () -> {
         hologram.delete();
@@ -99,7 +96,7 @@ public class CorpseHandler implements Listener {
       }, 15 * 20);
       return;
     }
-    Hologram hologram = getLastWordsHologram(p);
+    ArmorStandHologram hologram = getLastWordsHologram(p);
     Corpses.CorpseData corpse = CorpseAPI.spawnCorpse(p, p.getLocation());
     lastSpawnedCorpse = corpse;
     arena.addCorpse(new Corpse(hologram, corpse));
@@ -109,19 +106,19 @@ public class CorpseHandler implements Listener {
     }, 15 * 20);
   }
 
-  private Hologram getLastWordsHologram(Player p) {
-    Hologram hologram = HologramsAPI.createHologram(plugin, p.getLocation().clone().add(0, 1.7, 0));
-    hologram.appendTextLine(chatManager.colorMessage("In-Game.Messages.Corpse-Last-Words", p).replace("%player%", p.getName()));
+  private ArmorStandHologram getLastWordsHologram(Player p) {
+    ArmorStandHologram hologram = new ArmorStandHologram(p.getLocation());
+    hologram.appendLine(chatManager.colorMessage("In-Game.Messages.Corpse-Last-Words", p).replace("%player%", p.getName()));
     boolean found = false;
-    for (String perm : registeredLastWords.keySet()) {
-      if (p.hasPermission(perm)) {
-        hologram.appendTextLine(registeredLastWords.get(perm));
+    for (Map.Entry<String, String> map : registeredLastWords.entrySet()) {
+      if (p.hasPermission(map.getKey())) {
+        hologram.appendLine(map.getValue());
         found = true;
         break;
       }
     }
     if (!found) {
-      hologram.appendTextLine(registeredLastWords.get("default"));
+      hologram.appendLine(registeredLastWords.get("default"));
     }
     return hologram;
   }

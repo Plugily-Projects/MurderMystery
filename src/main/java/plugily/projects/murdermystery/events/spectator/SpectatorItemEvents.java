@@ -93,10 +93,7 @@ public class SpectatorItemEvents implements Listener {
       if (players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
         ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
-        if (!Utils.setPlayerHead(p, meta)) {
-          continue;
-        }
-
+        meta = Utils.setPlayerHead(player, meta);
         meta.setDisplayName(player.getName());
 
         String role = roleRaw;

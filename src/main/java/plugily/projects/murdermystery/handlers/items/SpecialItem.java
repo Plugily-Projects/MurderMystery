@@ -56,7 +56,7 @@ public class SpecialItem {
   }
 
   public void load(String displayName, String[] lore, Material material, int slot) {
-    FileConfiguration config = ConfigUtils.getConfig(JavaPlugin.getPlugin(Main.class), "lobbyitems");
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "lobbyitems");
     ChatManager chatManager = plugin.getChatManager();
 
     if (!config.contains(name)) {
@@ -66,8 +66,9 @@ public class SpecialItem {
       config.set(name + ".material-name", material.toString());
       config.set(name + ".slot", slot);
     }
-    ConfigUtils.saveConfig(JavaPlugin.getPlugin(Main.class), config, "lobbyitems");
-    ItemStack stack = XMaterial.matchXMaterial(config.getString(name + ".material-name", "STONE").toUpperCase()).get().parseItem();
+    ConfigUtils.saveConfig(plugin, config, "lobbyitems");
+    ItemStack stack = XMaterial.matchXMaterial(config.getString(name + ".material-name", "STONE").toUpperCase())
+        .orElse(XMaterial.STONE).parseItem();
     ItemMeta meta = stack.getItemMeta();
     meta.setDisplayName(chatManager.colorRawMessage(config.getString(name + ".displayname")));
 

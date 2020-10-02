@@ -294,7 +294,7 @@ public class Events implements Listener {
       return;
     }
     LivingEntity livingEntity = (LivingEntity) e.getEntity();
-    if (!livingEntity.getType().equals(EntityType.ARMOR_STAND)) {
+    if (livingEntity.getType() != EntityType.ARMOR_STAND) {
       return;
     }
     if (e.getDamager() instanceof Player && ArenaRegistry.isInArena((Player) e.getDamager())) {

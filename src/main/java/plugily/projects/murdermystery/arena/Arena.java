@@ -18,12 +18,14 @@
 
 package plugily.projects.murdermystery.arena;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -35,6 +37,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import pl.plajerlair.commonsbox.number.NumberUtils;
@@ -52,6 +55,7 @@ import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
 import plugily.projects.murdermystery.arena.special.pray.PrayerRegistry;
 import plugily.projects.murdermystery.handlers.ChatManager;
+import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
 import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Debugger;
@@ -85,15 +89,13 @@ public class Arena extends BukkitRunnable {
   private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
 
   private final ScoreboardManager scoreboardManager;
+  private ArmorStandHologram holohandler = new ArmorStandHologram();
+
   private List<Location> goldSpawnPoints = new ArrayList<>();
   private List<Location> playerSpawnPoints = new ArrayList<>();
 
-  private int murderers = 0;
-  private int detectives = 0;
-  private int spawnGoldTimer = 0;
-  private int spawnGoldTime = 0;
+  private int murderers = 0, detectives = 0, spawnGoldTimer = 0, spawnGoldTime = 0;
 
-  private Hologram bowHologram;
   private boolean detectiveDead;
   private boolean murdererLocatorReceived;
   private boolean hideChances;
@@ -131,19 +133,6 @@ public class Arena extends BukkitRunnable {
 
   public void addHead(Stand stand) {
     stands.add(stand);
-  }
-
-
-  public void setBowHologram(Hologram bowHologram) {
-    if (bowHologram == null) {
-      return;
-    }
-
-    if (this.bowHologram != null && !this.bowHologram.isDeleted()) {
-      this.bowHologram.delete();
-    }
-
-    this.bowHologram = bowHologram;
   }
 
   @Override
@@ -372,7 +361,9 @@ public class Arena extends BukkitRunnable {
         }
 
         if (getTimer() <= 30 || getPlayersLeft().size() == aliveMurderer() + 1) {
-          ArenaUtils.updateInnocentLocator(this);
+          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INNOCENT_LOCATOR)) {
+            ArenaUtils.updateInnocentLocator(this);
+          }
         }
         //no players - stop game
         if (getPlayersLeft().size() == 0) {
@@ -560,6 +551,10 @@ public class Arena extends BukkitRunnable {
 
   public ScoreboardManager getScoreboardManager() {
     return scoreboardManager;
+  }
+
+  public ArmorStandHologram getHoloHandler() {
+    return holohandler;
   }
 
   @NotNull
@@ -831,17 +826,14 @@ public class Arena extends BukkitRunnable {
 
   public void loadSpecialBlock(SpecialBlock block) {
     specialBlocks.add(block);
-
-    Hologram holo;
     switch (block.getSpecialBlockType()) {
       case MYSTERY_CAULDRON:
-        holo = HologramsAPI.createHologram(plugin, Utils.getBlockCenter(block.getLocation().clone().add(0, 1.8, 0)));
-        holo.appendTextLine(chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
+        new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()), chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
         break;
       case PRAISE_DEVELOPER:
-        holo = HologramsAPI.createHologram(plugin, Utils.getBlockCenter(block.getLocation().clone().add(0, 2.0, 0)));
+        ArmorStandHologram holo = new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()));
         for (String str : chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
-          holo.appendTextLine(str);
+          holo.appendLine(str);
         }
         break;
       case HORSE_PURCHASE:
@@ -886,11 +878,9 @@ public class Arena extends BukkitRunnable {
   }
 
   public void cleanUpArena() {
-    if (bowHologram != null && !bowHologram.isDeleted()) {
-      bowHologram.delete();
-    }
+    removeBowHolo();
+
     murdererLocatorReceived = false;
-    bowHologram = null;
     gameCharacters.clear();
     allMurderer.clear();
     allDetectives.clear();
@@ -1031,6 +1021,30 @@ public class Arena extends BukkitRunnable {
 
   public enum CharacterType {
     MURDERER, DETECTIVE, FAKE_DETECTIVE, HERO
+  }
+
+
+  private ArmorStandHologram bowHologram;
+
+  public void removeBowHolo() {
+    if (bowHologram != null && !bowHologram.isDeleted()) {
+      bowHologram.delete();
+    }
+
+    bowHologram = null;
+  }
+
+  public void setBowHologram(ArmorStandHologram bowHologram) {
+    if (bowHologram == null) {
+      this.bowHologram = null;
+      return;
+    }
+
+    this.bowHologram = bowHologram;
+  }
+
+  public ArmorStandHologram getBowHologram() {
+    return bowHologram;
   }
 
 }
