@@ -1,4 +1,4 @@
-### 1.6.3 Release (19.09.2020)
+### 1.6.3 Release (19.09.2020 - 02.10.2020)
 * Updated locales to latest version
 * Added the possibility to disable the innocent locator
 * Added the possibility to change messages of locales on language.yml 
