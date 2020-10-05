@@ -96,7 +96,10 @@ public class SpecialBlockEvents implements Listener {
   }
 
   private void onCauldronClick(PlayerInteractEvent e) {
-    if (e.getClickedBlock().getType() != XMaterial.CAULDRON.parseMaterial()) {
+    if (e.getClickedBlock() == null){
+      return;
+    }
+    if (e.getClickedBlock().getType() != Material.CAULDRON) {
       return;
     }
     User user = plugin.getUserManager().getUser(e.getPlayer());

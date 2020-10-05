@@ -1,3 +1,7 @@
+### 1.6.4 Hotfix (05.10.2020)
+* Fixed cauldron click event
+* Fixed detectives will get bow from prayer
+
 ### 1.6.3 Release (19.09.2020 - 02.10.2020)
 * Updated locales to latest version
 * Added the possibility to disable the innocent locator
