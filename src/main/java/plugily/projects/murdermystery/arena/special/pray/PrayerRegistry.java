@@ -30,6 +30,7 @@ import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.ArenaState;
+import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.user.User;
@@ -99,7 +100,9 @@ public class PrayerRegistry {
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
         break;
       case BOW_TIME:
-        ItemPosition.addItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+        if (!Role.isRole(Role.ANY_DETECTIVE, user.getPlayer())) {
+          ItemPosition.addItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+        }
         ItemPosition.setItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Prayer-Arrows", 2)));
         break;
       case DETECTIVE_REVELATION:
