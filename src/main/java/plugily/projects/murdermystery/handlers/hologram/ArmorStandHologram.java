@@ -111,8 +111,7 @@ public class ArmorStandHologram {
   private void append() {
     delete();
     double distanceAbove = -0.27,
-      y = location.getY(),
-      lastY = y;
+      y = location.getY();
 
     for (int i = 0; i <= lines.size() - 1; i++) {
       y += distanceAbove;
@@ -120,11 +119,10 @@ public class ArmorStandHologram {
       eas.setCustomName(lines.get(i));
       armorStands.add(eas);
       HologramManager.getArmorStands().add(eas);
-      lastY = y;
     }
 
     if (item != null && item.getType() != org.bukkit.Material.AIR) {
-      Location l = location.clone().add(0, lastY, 0);
+      Location l = location.clone();
       entityItem = location.getWorld().dropItem(l, item);
       if (Bukkit.getServer().getVersion().contains("Paper"))
         entityItem.setCanMobPickup(false);

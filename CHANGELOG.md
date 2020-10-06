@@ -1,3 +1,6 @@
+### 1.6.5-b Beta
+* Fixed hologram spawn item height (bow) 
+
 ### 1.6.4 Hotfix (05.10.2020)
 * Fixed cauldron click event
 * Fixed detectives will get bow from prayer
