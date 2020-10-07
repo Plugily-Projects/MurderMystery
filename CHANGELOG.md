@@ -1,5 +1,6 @@
 ### 1.6.5-b Beta
 * Fixed hologram spawn item height (bow) 
+* Fixed the bow item got not removed on some cases
 
 ### 1.6.4 Hotfix (05.10.2020)
 * Fixed cauldron click event

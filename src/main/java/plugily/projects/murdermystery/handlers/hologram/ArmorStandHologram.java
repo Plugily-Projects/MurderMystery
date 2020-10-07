@@ -98,13 +98,16 @@ public class ArmorStandHologram {
       armor.remove();
       HologramManager.getArmorStands().remove(armor);
     }
-    if (entityItem != null)
+    if (entityItem != null) {
       entityItem.remove();
-
+    }
     armorStands.clear();
   }
 
   public boolean isDeleted() {
+    if (entityItem != null) {
+      return false;
+    }
     return armorStands.isEmpty();
   }
 
