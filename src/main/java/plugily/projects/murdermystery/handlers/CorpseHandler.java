@@ -128,7 +128,7 @@ public class CorpseHandler implements Listener {
     if (!plugin.getConfig().getBoolean("Override-Corpses-Spawn", true) || lastSpawnedCorpse == null) {
       return;
     }
-    if (!e.getCorpse().equals(lastSpawnedCorpse)) {
+    if (!lastSpawnedCorpse.equals(e.getCorpse())) {
       e.setCancelled(true);
     }
   }

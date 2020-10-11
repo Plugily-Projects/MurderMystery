@@ -23,11 +23,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
-import plugily.projects.murdermystery.handlers.ChatManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Plajer
@@ -37,25 +36,25 @@ import java.util.Random;
 public class MysteryPotionRegistry {
 
   private static final List<MysteryPotion> mysteryPotions = new ArrayList<>();
-  private static Random rand;
 
   public static void init(Main plugin) {
-    rand = new Random();
     FileConfiguration config = ConfigUtils.getConfig(plugin, "specialblocks");
     String path = "Special-Blocks.Cauldron-Potions";
+    if (!config.isConfigurationSection(path)) {
+      return;
+    }
 
-    ChatManager chatManager = plugin.getChatManager();
     for (String key : config.getConfigurationSection(path).getKeys(false)) {
       //amplifiers are counted from 0 so -1
       PotionEffect effect = new PotionEffect(PotionEffectType.getByName(config.getString(path + "." + key + ".Type").toUpperCase()),
         config.getInt(path + "." + key + ".Duration") * 20, config.getInt(path + "." + key + ".Amplifier") - 1, false, false);
-      mysteryPotions.add(new MysteryPotion(chatManager.colorRawMessage(config.getString(path + "." + key + ".Name")),
-        chatManager.colorRawMessage(config.getString(path + "." + key + ".Subtitle")), effect));
+      mysteryPotions.add(new MysteryPotion(plugin.getChatManager().colorRawMessage(config.getString(path + "." + key + ".Name")),
+        plugin.getChatManager().colorRawMessage(config.getString(path + "." + key + ".Subtitle")), effect));
     }
   }
 
   public static MysteryPotion getRandomPotion() {
-    return mysteryPotions.get(rand.nextInt(mysteryPotions.size()));
+    return mysteryPotions.get(ThreadLocalRandom.current().nextInt(mysteryPotions.size()));
   }
 
   public static List<MysteryPotion> getMysteryPotions() {

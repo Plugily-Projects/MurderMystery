@@ -19,7 +19,6 @@
 package plugily.projects.murdermystery.user.data;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import pl.plajerlair.commonsbox.database.MysqlDatabase;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
@@ -85,9 +84,9 @@ public class MysqlManager implements UserDatabase {
     for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
       if (!stat.isPersistent()) continue;
       if (update.toString().equalsIgnoreCase(" SET ")) {
-        update.append(stat.getName()).append("=").append(user.getStat(stat));
+        update.append(stat.getName()).append('=').append(user.getStat(stat));
       }
-      update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
+      update.append(", ").append(stat.getName()).append('=').append(user.getStat(stat));
     }
     String finalUpdate = update.toString();
 
@@ -130,8 +129,7 @@ public class MysqlManager implements UserDatabase {
   }
 
   public String getTableName() {
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "mysql");
-    return config.getString("table", "playerstats");
+    return ConfigUtils.getConfig(plugin, "mysql").getString("table", "playerstats");
   }
 
   public MysqlDatabase getDatabase() {

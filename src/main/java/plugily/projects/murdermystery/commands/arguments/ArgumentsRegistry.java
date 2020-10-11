@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -67,10 +68,15 @@ public class ArgumentsRegistry implements CommandExecutor {
     this.plugin = plugin;
     chatManager = plugin.getChatManager();
     tabCompletion = new TabCompletion(this);
-    plugin.getCommand("murdermystery").setExecutor(this);
-    plugin.getCommand("murdermystery").setTabCompleter(tabCompletion);
-    plugin.getCommand("murdermysteryadmin").setExecutor(this);
-    plugin.getCommand("murdermysteryadmin").setTabCompleter(tabCompletion);
+
+    Optional.ofNullable(plugin.getCommand("murdermystery")).ifPresent(mm -> {
+      mm.setExecutor(this);
+      mm.setTabCompleter(tabCompletion);
+    });
+    Optional.ofNullable(plugin.getCommand("murdermysteryadmin")).ifPresent(mma -> {
+      mma.setExecutor(this);
+      mma.setTabCompleter(tabCompletion);
+    });
 
     //register basic arugments
     new ArenaSelectorArgument(this, chatManager);

@@ -121,9 +121,8 @@ public class CreateArgument {
         specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
       }
     }
-    for (SpecialBlock block : specialBlocks) {
-      arena.loadSpecialBlock(block);
-    }
+    specialBlocks.forEach(arena::loadSpecialBlock);
+
     arena.setMinimumPlayers(config.getInt(path + "minimumplayers"));
     arena.setMaximumPlayers(config.getInt(path + "maximumplayers"));
     arena.setDetectives(config.getInt(path + "playerperdetective"));

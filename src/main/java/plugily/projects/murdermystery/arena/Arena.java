@@ -78,8 +78,7 @@ public class Arena extends BukkitRunnable {
   private final List<Corpse> corpses = new ArrayList<>();
   private final List<Stand> stands = new ArrayList<>();
   private final List<SpecialBlock> specialBlocks = new ArrayList<>();
-  private final List<Player> allMurderer = new ArrayList<>();
-  private final List<Player> allDetectives = new ArrayList<>();
+  private final List<Player> allMurderer = new ArrayList<>(), allDetectives = new ArrayList<>();
 
   //contains murderer, detective, fake detective and hero
   private final Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
@@ -91,19 +90,14 @@ public class Arena extends BukkitRunnable {
   private final ScoreboardManager scoreboardManager;
   private ArmorStandHologram holohandler = new ArmorStandHologram();
 
-  private List<Location> goldSpawnPoints = new ArrayList<>();
-  private List<Location> playerSpawnPoints = new ArrayList<>();
+  private List<Location> goldSpawnPoints = new ArrayList<>(), playerSpawnPoints = new ArrayList<>();
 
   private int murderers = 0, detectives = 0, spawnGoldTimer = 0, spawnGoldTime = 0;
 
-  private boolean detectiveDead;
-  private boolean murdererLocatorReceived;
-  private boolean hideChances;
+  private boolean detectiveDead, murdererLocatorReceived, hideChances, ready = true, forceStart = false;
   private ArenaState arenaState = ArenaState.WAITING_FOR_PLAYERS;
   private BossBar gameBar;
   private String mapName = "";
-  private boolean ready = true;
-  private boolean forceStart = false;
 
   public Arena(String id) {
     this.id = id;
