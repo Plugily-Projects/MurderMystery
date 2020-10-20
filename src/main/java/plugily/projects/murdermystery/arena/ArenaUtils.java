@@ -183,7 +183,7 @@ public class ArenaUtils {
   }
 
   public static boolean areInSameArena(Player one, Player two) {
-    return ArenaRegistry.getArena(one) != null && ArenaRegistry.getArena(two) != null && ArenaRegistry.getArena(one).equals(ArenaRegistry.getArena(two));
+    return ArenaRegistry.getArena(one) != null && ArenaRegistry.getArena(one).equals(ArenaRegistry.getArena(two));
   }
 
   public static void hidePlayer(Player p, Arena arena) {

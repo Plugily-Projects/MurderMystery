@@ -363,8 +363,7 @@ public class ArenaEvents implements Listener {
       player.getInventory().clear();
       player.setFlying(false);
       player.setAllowFlight(false);
-      User user = plugin.getUserManager().getUser(player);
-      user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
+      plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
       return;
     }
     if (Role.isRole(Role.MURDERER, player) && arena.lastAliveMurderer()) {
@@ -432,7 +431,7 @@ public class ArenaEvents implements Listener {
 
   @EventHandler
   public void onItemMove(InventoryClickEvent e) {
-    if (e.getWhoClicked() instanceof Player && ArenaRegistry.getArena((Player) e.getWhoClicked()) != null) {
+    if (e.getWhoClicked() instanceof Player && ArenaRegistry.isInArena((Player) e.getWhoClicked())) {
       e.setResult(Event.Result.DENY);
     }
   }

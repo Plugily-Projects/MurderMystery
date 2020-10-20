@@ -58,11 +58,6 @@ public class ExceptionLogHandler extends Handler {
     if (!(throwable instanceof Exception) || !throwable.getClass().getSimpleName().contains("Exception")) {
       return;
     }
-    /*if (throwable.getStackTrace().length == 0
-        || throwable.getCause() != null ? !throwable.getCause().getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")
-        : !throwable.getStackTrace()[0].getClassName().contains("pl.plajer.murdermystery")) {
-      return;
-    }*/
     if (throwable.getStackTrace().length <= 0 || (throwable.getCause() != null && throwable.getCause().getStackTrace().length <= 0 &&
       !throwable.getCause().getStackTrace()[0].getClassName().contains("plugily.projects.murdermystery"))) {
       return;

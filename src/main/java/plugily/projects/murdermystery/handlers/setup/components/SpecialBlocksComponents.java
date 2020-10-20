@@ -37,7 +37,6 @@ import plugily.projects.murdermystery.utils.Debugger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -74,7 +73,7 @@ public class SpecialBlocksComponents implements SetupComponent {
       .lore(ChatColor.GRAY + "Configure cauldron potions in specialblocks.yml file!")
       .build(), e -> {
       e.getWhoClicked().closeInventory();
-      Debugger.debug(Level.INFO, "" + e.getWhoClicked().getTargetBlock(null, 10).getType() + e.getWhoClicked().getTargetBlock(null, 10).getLocation());
+      Debugger.debug("" + e.getWhoClicked().getTargetBlock(null, 10).getType() + e.getWhoClicked().getTargetBlock(null, 10).getLocation());
       if (e.getWhoClicked().getTargetBlock(null, 15).getType() != Material.CAULDRON) {
         e.getWhoClicked().sendMessage(ChatColor.RED + "Please target cauldron to continue!");
         return;
@@ -102,7 +101,7 @@ public class SpecialBlocksComponents implements SetupComponent {
       .lore(ChatColor.RED + "or curses from prayer!")
       .build(), e -> {
       e.getWhoClicked().closeInventory();
-      Debugger.debug(Level.INFO, "" + e.getWhoClicked().getTargetBlock(null, 10).getType() + e.getWhoClicked().getTargetBlock(null, 10).getLocation());
+      Debugger.debug("" + e.getWhoClicked().getTargetBlock(null, 10).getType() + e.getWhoClicked().getTargetBlock(null, 10).getLocation());
       if (e.getWhoClicked().getTargetBlock(null, 15).getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
         e.getWhoClicked().sendMessage(ChatColor.RED + "Please target enchanting table to continue!");
         return;

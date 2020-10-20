@@ -18,13 +18,14 @@
 
 package plugily.projects.murdermystery.events;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaManager;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
-import plugily.projects.murdermystery.user.User;
 
 /**
  * @author Plajer
@@ -42,11 +43,19 @@ public class QuitEvent implements Listener {
 
   @EventHandler
   public void onQuit(PlayerQuitEvent event) {
-    if (ArenaRegistry.getArena(event.getPlayer()) != null) {
-      ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArena(event.getPlayer()));
+    onQuit(event.getPlayer());
+  }
+
+  @EventHandler
+  public void onKick(PlayerKickEvent event) {
+    onQuit(event.getPlayer());
+  }
+
+  private void onQuit(Player player) {
+  if (ArenaRegistry.isInArena(player)) {
+      ArenaManager.leaveAttempt(player, ArenaRegistry.getArena(player));
     }
-    final User user = plugin.getUserManager().getUser(event.getPlayer());
-    plugin.getUserManager().removeUser(user);
+    plugin.getUserManager().removeUser(plugin.getUserManager().getUser(player));
   }
 
 }

@@ -44,7 +44,6 @@ import plugily.projects.murdermystery.arena.ArenaManager;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.ArenaUtils;
 import plugily.projects.murdermystery.arena.role.Role;
-import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.items.SpecialItemManager;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Utils;
@@ -57,11 +56,9 @@ import plugily.projects.murdermystery.utils.Utils;
 public class Events implements Listener {
 
   private final Main plugin;
-  private final ChatManager chatManager;
 
   public Events(Main plugin) {
     this.plugin = plugin;
-    chatManager = plugin.getChatManager();
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
@@ -74,11 +71,9 @@ public class Events implements Listener {
 
   @EventHandler
   public void onDrop(PlayerDropItemEvent event) {
-    Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    if (arena == null) {
-      return;
+    if (ArenaRegistry.isInArena(event.getPlayer())) {
+      event.setCancelled(true);
     }
-    event.setCancelled(true);
   }
 
   @EventHandler
@@ -95,7 +90,6 @@ public class Events implements Listener {
     }
     Player attacker = e.getPlayer();
     User attackerUser = plugin.getUserManager().getUser(attacker);
-    //todo not hardcoded!
     if (attacker.getInventory().getItemInMainHand().getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
       return;
     }
@@ -159,8 +153,8 @@ public class Events implements Listener {
     }
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
     victim.damage(100.0);
-    victim.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", victim),
-      chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You", victim), 5, 40, 5);
+    victim.sendTitle(plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", victim),
+      plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You", victim), 5, 40, 5);
     attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
     attackerUser.addStat(StatsStorage.StatisticType.KILLS, 1);
     ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
@@ -197,7 +191,7 @@ public class Events implements Listener {
       return;
     }
     event.setCancelled(true);
-    event.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
+    event.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
   }
 
   @EventHandler
@@ -213,11 +207,9 @@ public class Events implements Listener {
 
   @EventHandler
   public void onInGameBedEnter(PlayerBedEnterEvent event) {
-    Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    if (arena == null) {
-      return;
+    if (ArenaRegistry.isInArena(event.getPlayer())) {
+      event.setCancelled(true);
     }
-    event.setCancelled(true);
   }
 
   @EventHandler
@@ -255,19 +247,17 @@ public class Events implements Listener {
   @EventHandler(priority = EventPriority.HIGH)
   //highest priority to fully protect our game (i didn't set it because my test server was destroyed, n-no......)
   public void onBlockBreakEvent(BlockBreakEvent event) {
-    if (!ArenaRegistry.isInArena(event.getPlayer())) {
-      return;
+    if (ArenaRegistry.isInArena(event.getPlayer())) {
+      event.setCancelled(true);
     }
-    event.setCancelled(true);
   }
 
   @EventHandler(priority = EventPriority.HIGH)
   //highest priority to fully protect our game (i didn't set it because my test server was destroyed, n-no......)
   public void onBuild(BlockPlaceEvent event) {
-    if (!ArenaRegistry.isInArena(event.getPlayer())) {
-      return;
+    if (ArenaRegistry.isInArena(event.getPlayer())) {
+      event.setCancelled(true);
     }
-    event.setCancelled(true);
   }
 
   @EventHandler(priority = EventPriority.HIGH)

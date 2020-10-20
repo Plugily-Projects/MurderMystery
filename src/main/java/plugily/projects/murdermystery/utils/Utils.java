@@ -124,7 +124,7 @@ public class Utils {
   }
 
   public static boolean checkIsInGameInstance(Player player) {
-    if (ArenaRegistry.getArena(player) == null) {
+    if (!ArenaRegistry.isInArena(player)) {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Not-Playing", player));
       return false;
     }
@@ -146,7 +146,7 @@ public class Utils {
         meta.setPlayerProfile(player.getPlayerProfile());
         return meta;
       }).exceptionally(e -> {
-        Debugger.debug(java.util.logging.Level.WARNING, "Retrieving player profile of "+ player.getName() +" failed!");
+        Debugger.debug(java.util.logging.Level.WARNING, "Retrieving player profile of " + player.getName() + " failed!");
         return meta;
       }).join();
     }

@@ -116,11 +116,8 @@ public class SpectatorItemEvents implements Listener {
   @EventHandler
   public void onSpectatorInventoryClick(InventoryClickEvent e) {
     Player p = (Player) e.getWhoClicked();
-    if (ArenaRegistry.getArena(p) == null) {
-      return;
-    }
     Arena arena = ArenaRegistry.getArena(p);
-    if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
+    if (arena == null || e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
       || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
       return;
     }

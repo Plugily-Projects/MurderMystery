@@ -24,7 +24,6 @@ import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.plugin.java.JavaPlugin;
 import plugily.projects.murdermystery.Main;
-import plugily.projects.murdermystery.handlers.ChatManager;
 
 /**
  * @author Plajer
@@ -34,7 +33,6 @@ import plugily.projects.murdermystery.handlers.ChatManager;
 public class SimpleConversationBuilder {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-  private final ChatManager chatManager = plugin.getChatManager();
   private final ConversationFactory conversationFactory;
 
   public SimpleConversationBuilder() {
@@ -47,7 +45,7 @@ public class SimpleConversationBuilder {
         if (listener.gracefulExit()) {
           return;
         }
-        listener.getContext().getForWhom().sendRawMessage(chatManager.colorRawMessage("&7Operation cancelled!"));
+        listener.getContext().getForWhom().sendRawMessage(plugin.getChatManager().colorRawMessage("&7Operation cancelled!"));
       })
       .thatExcludesNonPlayersWithMessage(ChatColor.RED + "Only by players!");
   }

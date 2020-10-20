@@ -19,7 +19,6 @@
 package plugily.projects.murdermystery.events.spectator;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,15 +28,17 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.murdermystery.Main;
+import plugily.projects.murdermystery.handlers.ChatManager;
 
 /**
  * @author Plajer
  * <p>
  * Created at 06.04.2019
  */
-@Deprecated //api subject to merge
 public class SpectatorSettingsMenu implements Listener {
 
   private final String inventoryName;
@@ -48,7 +49,7 @@ public class SpectatorSettingsMenu implements Listener {
     this.inventoryName = inventoryName;
     this.speedOptionName = speedOptionName;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    initInventory();
+    this.inv = initInventory();
   }
 
   public void openSpectatorSettingsMenu(Player player) {
@@ -57,7 +58,7 @@ public class SpectatorSettingsMenu implements Listener {
 
   @EventHandler
   public void onSpectatorMenuClick(InventoryClickEvent e) {
-    if (!e.getView().getTitle().equals(color(inventoryName))) {
+    if (!e.getView().getTitle().equals(JavaPlugin.getPlugin(Main.class).getChatManager().colorRawMessage(inventoryName))) {
       return;
     }
     if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
@@ -92,26 +93,25 @@ public class SpectatorSettingsMenu implements Listener {
         p.setFlySpeed(0.35f);
         p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 4, false, false));
         break;
+      default:
+        break;
     }
   }
 
-  private void initInventory() {
+  private Inventory initInventory() {
     Inventory inv = Bukkit.createInventory(null, 9 * 3, inventoryName);
+    ChatManager cm = JavaPlugin.getPlugin(Main.class).getChatManager();
     inv.setItem(11, new ItemBuilder(Material.LEATHER_BOOTS)
-      .name(color(speedOptionName + " I")).build());
+      .name(cm.colorRawMessage(speedOptionName + " I")).build());
     inv.setItem(12, new ItemBuilder(Material.CHAINMAIL_BOOTS)
-      .name(color(speedOptionName + " II")).build());
+      .name(cm.colorRawMessage(speedOptionName + " II")).build());
     inv.setItem(13, new ItemBuilder(Material.IRON_BOOTS)
-      .name(color(speedOptionName + " III")).build());
+      .name(cm.colorRawMessage(speedOptionName + " III")).build());
     inv.setItem(14, new ItemBuilder(XMaterial.GOLDEN_BOOTS.parseItem())
-      .name(color(speedOptionName + " IV")).build());
+      .name(cm.colorRawMessage(speedOptionName + " IV")).build());
     inv.setItem(15, new ItemBuilder(Material.DIAMOND_BOOTS)
-      .name(color(speedOptionName + " V")).build());
-    this.inv = inv;
-  }
-
-  private String color(String message) {
-    return ChatColor.translateAlternateColorCodes('&', message);
+      .name(cm.colorRawMessage(speedOptionName + " V")).build());
+    return inv;
   }
 
 }

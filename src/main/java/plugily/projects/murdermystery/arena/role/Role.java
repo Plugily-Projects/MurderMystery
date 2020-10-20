@@ -98,7 +98,6 @@ public enum Role {
    * @return true if is playing one role, false otherwise
    */
   public static boolean isAnyRole(Player player) {
-    Arena arena = ArenaRegistry.getArena(player);
-    return arena != null && Arrays.stream(Role.values()).anyMatch(role -> isRole(role, player));
+    return ArenaRegistry.isInArena(player) && Arrays.stream(Role.values()).anyMatch(role -> isRole(role, player));
   }
 }

@@ -94,10 +94,10 @@ public class Main extends JavaPlugin {
     LanguageManager.init(this);
     saveDefaultConfig();
 
-    Debugger.setEnabled(getDescription().getVersion().contains("b") || getConfig().getBoolean("Debug", false));
+    Debugger.setEnabled(getDescription().getVersion().contains("b") || getConfig().getBoolean("Debug"));
 
     Debugger.debug("[System] Initialization start");
-    if (getConfig().getBoolean("Developer-Mode", false)) {
+    if (getConfig().getBoolean("Developer-Mode")) {
       Debugger.deepDebug(true);
       Debugger.debug(Level.FINE, "Deep debug enabled");
       for (String listenable : new ArrayList<>(getConfig().getStringList("Performance-Listenable"))) {
@@ -155,7 +155,7 @@ public class Main extends JavaPlugin {
     if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       getMysqlDatabase().shutdownConnPool();
     }
-    for (ArmorStand armorStand : HologramManager.getArmorStands()){
+    for (ArmorStand armorStand : HologramManager.getArmorStands()) {
       armorStand.remove();
       armorStand.setCustomNameVisible(false);
     }
@@ -184,7 +184,7 @@ public class Main extends JavaPlugin {
   private void initializeClasses() {
     chatManager = new ChatManager(this);
     ScoreboardLib.setPluginInstance(this);
-    if (getConfig().getBoolean("BungeeActivated", false)) {
+    if (getConfig().getBoolean("BungeeActivated")) {
       bungeeManager = new BungeeManager(this);
     }
     if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
@@ -329,9 +329,9 @@ public class Main extends JavaPlugin {
         for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
           if (!stat.isPersistent()) continue;
           if (update.toString().equalsIgnoreCase(" SET ")) {
-            update.append(stat.getName()).append("=").append(user.getStat(stat));
+            update.append(stat.getName()).append('=').append(user.getStat(stat));
           }
-          update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
+          update.append(", ").append(stat.getName()).append('=').append(user.getStat(stat));
         }
         String finalUpdate = update.toString();
         //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.

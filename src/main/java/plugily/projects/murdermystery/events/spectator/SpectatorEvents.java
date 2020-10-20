@@ -27,7 +27,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import plugily.projects.murdermystery.Main;
-import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 
 /**
@@ -132,7 +131,7 @@ public class SpectatorEvents implements Listener {
       return;
     }
     Player player = (Player) event.getEntity();
-    if (!plugin.getUserManager().getUser(player).isSpectator() || ArenaRegistry.getArena(player) == null) {
+    if (!plugin.getUserManager().getUser(player).isSpectator() || !ArenaRegistry.isInArena(player)) {
       return;
     }
     if (player.getLocation().getY() < 1) {
@@ -165,17 +164,14 @@ public class SpectatorEvents implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onPickup(EntityPickupItemEvent event) {
-    if (!(event.getEntity() instanceof Player)) return;
-
-    if (plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
+    if (event.getEntity() instanceof Player && plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onRightClick(PlayerInteractEvent event) {
-    Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    if (arena != null && plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
+    if (ArenaRegistry.isInArena(event.getPlayer()) && plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
       event.setCancelled(true);
     }
   }
