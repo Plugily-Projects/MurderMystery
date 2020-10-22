@@ -141,7 +141,7 @@ public class ArenaManager {
         if (loopPlayer.hasPermission(PermissionsManager.getJoinFullGames())) {
           continue;
         }
-        ArenaManager.leaveAttempt(loopPlayer, arena);
+        leaveAttempt(loopPlayer, arena);
         loopPlayer.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
         chatManager.broadcast(arena, chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), loopPlayer));
         foundSlot = true;
@@ -220,6 +220,7 @@ public class ArenaManager {
     }
     arena.showPlayers();
     ArenaUtils.updateNameTagsVisibility(player);
+    plugin.getSignManager().updateSigns();
     Debugger.debug("[{0}] Join attempt as player for {1} took {2}ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);
   }
 
@@ -305,7 +306,7 @@ public class ArenaManager {
         }
         plugin.getCorpseHandler().spawnCorpse(player, arena);
       } else {
-        ArenaManager.stopGame(false, arena);
+        stopGame(false, arena);
       }
     }
     //the default fly speed
@@ -349,6 +350,7 @@ public class ArenaManager {
       InventorySerializer.loadInventory(plugin, player);
     }
     plugin.getUserManager().saveAllStatistic(user);
+    plugin.getSignManager().updateSigns();
     Debugger.debug("[{0}] Game leave finished for {1} took{2}ms ", arena.getId(), player.getName(), System.currentTimeMillis() - start);
   }
 

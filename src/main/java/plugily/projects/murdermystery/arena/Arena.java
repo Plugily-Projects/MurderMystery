@@ -671,6 +671,8 @@ public class Arena extends BukkitRunnable {
 
     MMGameStateChangeEvent gameStateChangeEvent = new MMGameStateChangeEvent(this, getArenaState());
     Bukkit.getPluginManager().callEvent(gameStateChangeEvent);
+
+    plugin.getSignManager().updateSigns();
   }
 
   /**

@@ -100,17 +100,17 @@ public class SpectatorSettingsMenu implements Listener {
 
   private Inventory initInventory() {
     Inventory inv = Bukkit.createInventory(null, 9 * 3, inventoryName);
-    ChatManager cm = JavaPlugin.getPlugin(Main.class).getChatManager();
+    ChatManager chatManager = JavaPlugin.getPlugin(Main.class).getChatManager();
     inv.setItem(11, new ItemBuilder(Material.LEATHER_BOOTS)
-      .name(cm.colorRawMessage(speedOptionName + " I")).build());
+      .name(chatManager.colorRawMessage(speedOptionName + " I")).build());
     inv.setItem(12, new ItemBuilder(Material.CHAINMAIL_BOOTS)
-      .name(cm.colorRawMessage(speedOptionName + " II")).build());
+      .name(chatManager.colorRawMessage(speedOptionName + " II")).build());
     inv.setItem(13, new ItemBuilder(Material.IRON_BOOTS)
-      .name(cm.colorRawMessage(speedOptionName + " III")).build());
+      .name(chatManager.colorRawMessage(speedOptionName + " III")).build());
     inv.setItem(14, new ItemBuilder(XMaterial.GOLDEN_BOOTS.parseItem())
-      .name(cm.colorRawMessage(speedOptionName + " IV")).build());
+      .name(chatManager.colorRawMessage(speedOptionName + " IV")).build());
     inv.setItem(15, new ItemBuilder(Material.DIAMOND_BOOTS)
-      .name(cm.colorRawMessage(speedOptionName + " V")).build());
+      .name(chatManager.colorRawMessage(speedOptionName + " V")).build());
     return inv;
   }
 
