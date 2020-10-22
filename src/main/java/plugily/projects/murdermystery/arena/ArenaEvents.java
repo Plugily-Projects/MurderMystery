@@ -83,7 +83,7 @@ public class ArenaEvents implements Listener {
   }
 
   @EventHandler
-  public void onFallDamage(EntityDamageEvent e) {
+  public void onEntityDamage(EntityDamageEvent e) {
     if (!(e.getEntity() instanceof Player)) {
       return;
     }
@@ -91,6 +91,9 @@ public class ArenaEvents implements Listener {
     Arena arena = ArenaRegistry.getArena(victim);
     if (arena == null) {
       return;
+    }
+    if (e.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
+      e.setCancelled(true);
     }
     if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
       if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
