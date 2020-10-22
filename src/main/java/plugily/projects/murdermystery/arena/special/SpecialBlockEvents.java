@@ -73,7 +73,7 @@ public class SpecialBlockEvents implements Listener {
       leverBlock = true;
     }
     for (SpecialBlock specialBlock : arena.getSpecialBlocks()) {
-      if (leverBlock && specialBlock.getLocation().getBlock().equals(e.getClickedBlock())) {
+      if (leverBlock && Utils.getNearbyBlocks(specialBlock.getLocation(), 3).contains(e.getClickedBlock())) {
         onPrayLeverClick(e);
         return;
       }
