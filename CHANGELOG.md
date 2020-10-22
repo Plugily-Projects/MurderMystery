@@ -1,7 +1,11 @@
 ### 1.6.5 Release (07.10.2020)
+* Added special blocks remove command /mma removeblock
 * Fixed hologram spawn item height (bow) 
 * Fixed the bow item got not removed on some cases
 * Another fix for cauldron click event
+* Fixed locations of special blocks on setup menu
+* Optimized special block click performance
+* Fixed stacked armorstands
 
 ### 1.6.4 Hotfix (05.10.2020)
 * Fixed cauldron click event

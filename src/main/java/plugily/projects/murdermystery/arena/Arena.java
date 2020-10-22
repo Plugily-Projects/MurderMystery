@@ -88,7 +88,6 @@ public class Arena extends BukkitRunnable {
   private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
 
   private final ScoreboardManager scoreboardManager;
-  private ArmorStandHologram holohandler = new ArmorStandHologram();
 
   private List<Location> goldSpawnPoints = new ArrayList<>(), playerSpawnPoints = new ArrayList<>();
 
@@ -547,10 +546,6 @@ public class Arena extends BukkitRunnable {
     return scoreboardManager;
   }
 
-  public ArmorStandHologram getHoloHandler() {
-    return holohandler;
-  }
-
   @NotNull
   public List<Item> getGoldSpawned() {
     return goldSpawned;
@@ -822,13 +817,15 @@ public class Arena extends BukkitRunnable {
     specialBlocks.add(block);
     switch (block.getSpecialBlockType()) {
       case MYSTERY_CAULDRON:
-        new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()), chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
+        ArmorStandHologram cauldron = new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()), chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
+        block.setArmorStandHologram(cauldron);
         break;
       case PRAISE_DEVELOPER:
-        ArmorStandHologram holo = new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()));
+        ArmorStandHologram prayer = new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()));
         for (String str : chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
-          holo.appendLine(str);
+          prayer.appendLine(str);
         }
+        block.setArmorStandHologram(prayer);
         break;
       case HORSE_PURCHASE:
       case RAPID_TELEPORTATION:

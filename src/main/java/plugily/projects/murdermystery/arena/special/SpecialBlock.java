@@ -19,6 +19,7 @@
 package plugily.projects.murdermystery.arena.special;
 
 import org.bukkit.Location;
+import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
 
 /**
  * @author Plajer
@@ -29,6 +30,7 @@ public class SpecialBlock {
 
   private final Location location;
   private final SpecialBlockType specialBlockType;
+  private ArmorStandHologram armorStandHologram;
 
   public SpecialBlock(Location location, SpecialBlockType specialBlockType) {
     this.location = location;
@@ -41,6 +43,14 @@ public class SpecialBlock {
 
   public SpecialBlockType getSpecialBlockType() {
     return specialBlockType;
+  }
+
+  public ArmorStandHologram getArmorStandHologram() {
+    return armorStandHologram;
+  }
+
+  public void setArmorStandHologram(ArmorStandHologram armorStandHologram) {
+    this.armorStandHologram = armorStandHologram;
   }
 
   public enum SpecialBlockType {

@@ -73,11 +73,11 @@ public class SpecialBlockEvents implements Listener {
       leverBlock = true;
     }
     for (SpecialBlock specialBlock : arena.getSpecialBlocks()) {
-      if (leverBlock && Utils.getNearbyBlocks(specialBlock.getLocation(), 3).contains(e.getClickedBlock())) {
+      if (leverBlock && specialBlock.getLocation().getBlock().equals(e.getClickedBlock())) {
         onPrayLeverClick(e);
         return;
       }
-      if (Utils.getNearbyBlocks(specialBlock.getLocation(), 1).contains(e.getClickedBlock())) {
+      if (specialBlock.getLocation().getBlock().equals(e.getClickedBlock())) {
         switch (specialBlock.getSpecialBlockType()) {
           case MYSTERY_CAULDRON:
             onCauldronClick(e);
