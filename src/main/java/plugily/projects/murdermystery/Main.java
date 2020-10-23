@@ -205,6 +205,8 @@ public class Main extends JavaPlugin {
     User.cooldownHandlerTask();
     signManager = new SignManager(this);
     ArenaRegistry.registerArenas();
+    signManager.loadSigns();
+    signManager.updateSigns();
     new Events(this);
     new LobbyEvent(this);
     new SpectatorItemEvents(this);

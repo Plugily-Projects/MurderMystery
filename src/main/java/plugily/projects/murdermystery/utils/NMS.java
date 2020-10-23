@@ -25,7 +25,6 @@ public abstract class NMS {
 		}
 	}
 
-
 	public static void hidePlayer(Player to, Player p) {
 		if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
 			to.hidePlayer(PLUGIN, p);
