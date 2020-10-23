@@ -34,7 +34,6 @@ import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.setup.SetupInventory;
-import plugily.projects.murdermystery.utils.Debugger;
 
 import java.util.ArrayList;
 import java.util.List;

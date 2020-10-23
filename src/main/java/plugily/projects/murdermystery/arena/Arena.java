@@ -60,6 +60,7 @@ import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.ItemPosition;
+import plugily.projects.murdermystery.utils.NMS;
 import plugily.projects.murdermystery.utils.Utils;
 
 import java.util.*;
@@ -411,9 +412,9 @@ public class Arena extends BukkitRunnable {
             plugin.getUserManager().getUser(player).removeScoreboard();
             player.setGameMode(GameMode.SURVIVAL);
             for (Player players : Bukkit.getOnlinePlayers()) {
-              player.showPlayer(players);
-              if (ArenaRegistry.getArena(players) == null) {
-                players.showPlayer(player);
+              NMS.showPlayer(player, players);
+              if (!ArenaRegistry.isInArena(players)) {
+                NMS.showPlayer(players, player);
               }
             }
             player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
@@ -864,8 +865,8 @@ public class Arena extends BukkitRunnable {
   void showPlayers() {
     for (Player player : getPlayers()) {
       for (Player p : getPlayers()) {
-        player.showPlayer(p);
-        p.showPlayer(player);
+        NMS.showPlayer(player, p);
+        NMS.showPlayer(p, player);
       }
     }
   }

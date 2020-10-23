@@ -203,12 +203,12 @@ public class Main extends JavaPlugin {
     new ChatEvents(this);
     registerSoftDependenciesAndServices();
     User.cooldownHandlerTask();
+    signManager = new SignManager(this);
     ArenaRegistry.registerArenas();
     new Events(this);
     new LobbyEvent(this);
     new SpectatorItemEvents(this);
     rewardsHandler = new RewardsFactory(this);
-    signManager = new SignManager(this);
     corpseHandler = new CorpseHandler(this);
     partyHandler = new PartySupportInitializer().initialize(this);
     new BowTrailsHandler(this);

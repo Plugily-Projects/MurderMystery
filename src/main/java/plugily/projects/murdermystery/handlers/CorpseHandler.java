@@ -18,6 +18,7 @@
 
 package plugily.projects.murdermystery.handlers;
 
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 
 import org.bukkit.Bukkit;
@@ -75,6 +76,7 @@ public class CorpseHandler implements Listener {
     registeredLastWords.put(permission, lastWord);
   }
 
+  @SuppressWarnings("deprecation")
   public void spawnCorpse(Player p, Arena arena) {
     if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
       ArmorStand stand = p.getLocation().getWorld().spawn(p.getLocation().add(0.0D, -1.25D, 0.0D), ArmorStand.class);
@@ -84,7 +86,11 @@ public class CorpseHandler implements Listener {
       head.setItemMeta(meta);
 
       stand.setVisible(false);
-      stand.setHelmet(head);
+      if (Version.isCurrentEqualOrHigher(Version.v1_16_R1)) {
+        stand.getEquipment().setHelmet(head);
+      } else {
+        stand.setHelmet(head);
+      }
       stand.setGravity(false);
       stand.setCustomNameVisible(false);
       stand.setHeadPose(new EulerAngle(Math.toRadians(p.getLocation().getX()), Math.toRadians(p.getLocation().getPitch()), Math.toRadians(p.getLocation().getZ())));

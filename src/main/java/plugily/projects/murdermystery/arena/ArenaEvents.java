@@ -49,6 +49,7 @@ import plugily.projects.murdermystery.handlers.items.SpecialItemManager;
 import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.ItemPosition;
+import plugily.projects.murdermystery.utils.NMS;
 import plugily.projects.murdermystery.utils.Utils;
 
 /**
@@ -124,7 +125,7 @@ public class ArenaEvents implements Listener {
       user.setCooldown("bow_shot", plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
       Player player = (Player) e.getEntity();
       Utils.applyActionBarCooldown(player, plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
-      e.getBow().setDurability((short) 0);
+      NMS.setDurability(e.getBow(), (short) 0);
     } else {
       e.setCancelled(true);
     }

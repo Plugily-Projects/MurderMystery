@@ -36,6 +36,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
@@ -102,6 +103,7 @@ public class Events implements Listener {
     Utils.applyActionBarCooldown(attacker, plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5));
   }
 
+  @SuppressWarnings("deprecation")
   private void createFlyingSword(Arena arena, Player attacker, User attackerUser) {
     Location loc = attacker.getLocation();
     Vector vec = attacker.getLocation().getDirection();
@@ -111,7 +113,11 @@ public class Events implements Listener {
     ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(standStart, EntityType.ARMOR_STAND);
     stand.setVisible(false);
     stand.setInvulnerable(true);
-    stand.setItemInHand(plugin.getConfigPreferences().getMurdererSword());
+    if (Version.isCurrentEqualOrHigher(Version.v1_16_R1)) {
+      stand.getEquipment().setItemInMainHand(plugin.getConfigPreferences().getMurdererSword());
+    } else {
+      stand.setItemInHand(plugin.getConfigPreferences().getMurdererSword());
+    }
     stand.setRightArmPose(new EulerAngle(Math.toRadians(350.0), Math.toRadians(attacker.getLocation().getPitch() * -1.0), Math.toRadians(90.0)));
     stand.setCollidable(false);
     stand.setSilent(true);

@@ -51,6 +51,7 @@ import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.ItemPosition;
+import plugily.projects.murdermystery.utils.NMS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -193,9 +194,9 @@ public class ArenaManager {
 
       for (Player spectator : arena.getPlayers()) {
         if (plugin.getUserManager().getUser(spectator).isSpectator()) {
-          player.hidePlayer(spectator);
+          NMS.hidePlayer(player, spectator);
         } else {
-          player.showPlayer(spectator);
+          NMS.showPlayer(player, spectator);
         }
       }
       ArenaUtils.hidePlayersOutsideTheGame(player, arena);
@@ -339,10 +340,10 @@ public class ArenaManager {
 
     player.setGameMode(GameMode.SURVIVAL);
     for (Player players : plugin.getServer().getOnlinePlayers()) {
-      if (ArenaRegistry.getArena(players) == null) {
-        players.showPlayer(player);
+      if (!ArenaRegistry.isInArena(players)) {
+        NMS.showPlayer(players, player);
       }
-      player.showPlayer(players);
+      NMS.showPlayer(player, players);
     }
     arena.teleportToEndLocation(player);
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)

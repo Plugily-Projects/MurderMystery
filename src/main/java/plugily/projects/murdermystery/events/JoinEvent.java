@@ -30,6 +30,7 @@ import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.handlers.PermissionsManager;
+import plugily.projects.murdermystery.utils.NMS;
 import plugily.projects.murdermystery.utils.UpdateChecker;
 
 /**
@@ -70,8 +71,8 @@ public class JoinEvent implements Listener {
       if (ArenaRegistry.getArena(player) == null) {
         continue;
       }
-      player.hidePlayer(event.getPlayer());
-      event.getPlayer().hidePlayer(player);
+      NMS.hidePlayer(player, event.getPlayer());
+      NMS.hidePlayer(event.getPlayer(), player);
     }
     //load player inventory in case of server crash, file is deleted once loaded so if file was already
     //deleted player won't receive his backup, in case of crash he will get it back

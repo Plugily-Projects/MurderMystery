@@ -38,6 +38,7 @@ import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.ItemPosition;
+import plugily.projects.murdermystery.utils.NMS;
 
 /**
  * @author Plajer
@@ -188,13 +189,13 @@ public class ArenaUtils {
 
   public static void hidePlayer(Player p, Arena arena) {
     for (Player player : arena.getPlayers()) {
-      player.hidePlayer(p);
+      NMS.hidePlayer(player, p);
     }
   }
 
   public static void showPlayer(Player p, Arena arena) {
     for (Player player : arena.getPlayers()) {
-      player.showPlayer(p);
+      NMS.showPlayer(player, p);
     }
   }
 
@@ -203,8 +204,8 @@ public class ArenaUtils {
       if (arena.getPlayers().contains(players)) {
         continue;
       }
-      player.hidePlayer(players);
-      players.hidePlayer(player);
+      NMS.hidePlayer(player, players);
+      NMS.hidePlayer(players, player);
     }
   }
 
