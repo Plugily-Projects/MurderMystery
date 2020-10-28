@@ -151,6 +151,7 @@ public class ScoreboardManager {
         formattedLine = StringUtils.replace(formattedLine, "%ROLE%", chatManager.colorMessage("Scoreboard.Roles.Innocent"));
       }
     }
+    formattedLine = StringUtils.replace(formattedLine, "%MAP%", arena.getMapName());
     formattedLine = StringUtils.replace(formattedLine, "%INNOCENTS%", String.valueOf(innocents));
     formattedLine = StringUtils.replace(formattedLine, "%PLAYERS%", String.valueOf(arena.getPlayers().size()));
     formattedLine = StringUtils.replace(formattedLine, "%MAX_PLAYERS%", String.valueOf(arena.getMaximumPlayers()));
