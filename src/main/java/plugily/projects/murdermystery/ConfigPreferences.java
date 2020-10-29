@@ -48,7 +48,7 @@ public class ConfigPreferences {
       murdererSword = XMaterial.matchXMaterial(plugin.getConfig().getString("Murderer-Sword-Material", "IRON_SWORD").toUpperCase()).get().parseItem();
     } catch (Exception ex) {
       MessageUtils.errorOccurred();
-      Debugger.sendConsoleMsg("Can not found Material " + plugin.getConfig().getString("Murderer-Sword-Material", "IRON_SWORD"));
+      Debugger.sendConsoleMsg("Can not found Material " + plugin.getConfig().getString("Murderer-Sword-Material"));
       //Set the murdererSword to avoid errors
       murdererSword = XMaterial.IRON_SWORD.parseItem();
     }

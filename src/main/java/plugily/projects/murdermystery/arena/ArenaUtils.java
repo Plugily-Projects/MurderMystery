@@ -229,8 +229,7 @@ public class ArenaUtils {
       team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
       if (arena.getArenaState() == ArenaState.IN_GAME) {
         team.addEntry(p.getName());
-      } else if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS
-        || arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
+      } else {
         team.removeEntry(p.getName());
       }
       players.setScoreboard(scoreboard);
