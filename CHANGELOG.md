@@ -1,4 +1,4 @@
-### 1.6.5-pre2 Beta (07.10.2020-22.10.2020)
+### 1.6.5 (07.10.2020 - 29.10.2020)
 * Added special blocks remove command /mma removeblock
 * Fixed hologram spawn item height (bow) 
 * Fixed the bow item got not removed on some cases
