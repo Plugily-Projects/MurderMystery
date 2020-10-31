@@ -31,6 +31,7 @@ import java.io.File;
 /*
   NOTE FOR CONTRIBUTORS - Please do not touch this class if you don't now how it works! You can break migrator modyfing these values!
  */
+@SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
   public static final int CONFIG_FILE_VERSION = 19;

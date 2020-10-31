@@ -19,7 +19,7 @@
 package plugily.projects.murdermystery.handlers.sign;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -74,8 +74,6 @@ public class SignManager implements Listener {
     gameStateToString.put(ArenaState.RESTARTING, chatManager.colorMessage("Signs.Game-States.Restarting"));
     signLines = LanguageManager.getLanguageList("Signs.Lines");
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    loadSigns();
-    updateSignScheduler();
   }
 
   @EventHandler
@@ -190,60 +188,58 @@ public class SignManager implements Listener {
     Debugger.debug("Sign load event finished took {0}ms", System.currentTimeMillis() - start);
   }
 
-  private void updateSignScheduler() {
-    Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-      Debugger.performance("SignUpdate", "[PerformanceMonitor] [SignUpdate] Updating signs");
-      long start = System.currentTimeMillis();
+  public void updateSigns() {
+    Debugger.performance("SignUpdate", "[PerformanceMonitor] [SignUpdate] Updating signs");
+    long start = System.currentTimeMillis();
 
-      for (ArenaSign arenaSign : arenaSigns) {
-        Sign sign = arenaSign.getSign();
-        for (int i = 0; i < signLines.size(); i++) {
-          sign.setLine(i, formatSign(signLines.get(i), arenaSign.getArena()));
-        }
-        if (plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true) && arenaSign.getBehind() != null) {
-          Block behind = arenaSign.getBehind();
-          try {
-            switch (arenaSign.getArena().getArenaState()) {
-              case WAITING_FOR_PLAYERS:
-                behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
-                if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_13_R1)) {
-                  Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 0);
-                }
-                break;
-              case STARTING:
-                behind.setType(XMaterial.YELLOW_STAINED_GLASS.parseMaterial());
-                if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_13_R1)) {
-                  Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 4);
-                }
-                break;
-              case IN_GAME:
-                behind.setType(XMaterial.ORANGE_STAINED_GLASS.parseMaterial());
-                if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_13_R1)) {
-                  Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 1);
-                }
-                break;
-              case ENDING:
-                behind.setType(XMaterial.GRAY_STAINED_GLASS.parseMaterial());
-                if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_13_R1)) {
-                  Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 7);
-                }
-                break;
-              case RESTARTING:
-                behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
-                if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_13_R1)) {
-                  Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 15);
-                }
-                break;
-              default:
-                break;
-            }
-          } catch (Exception ignored) {
-          }
-        }
-        sign.update();
+    for (ArenaSign arenaSign : arenaSigns) {
+      Sign sign = arenaSign.getSign();
+      for (int i = 0; i < signLines.size(); i++) {
+        sign.setLine(i, formatSign(signLines.get(i), arenaSign.getArena()));
       }
-      Debugger.performance("SignUpdate", "[PerformanceMonitor] [SignUpdate] Updated signs took {0}ms", System.currentTimeMillis() - start);
-    }, 10, 10);
+      if (plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true) && arenaSign.getBehind() != null) {
+        Block behind = arenaSign.getBehind();
+        try {
+          switch (arenaSign.getArena().getArenaState()) {
+            case WAITING_FOR_PLAYERS:
+              behind.setType(XMaterial.WHITE_STAINED_GLASS.parseMaterial());
+              if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_13_R1)) {
+                Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 0);
+              }
+              break;
+            case STARTING:
+              behind.setType(XMaterial.YELLOW_STAINED_GLASS.parseMaterial());
+              if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_13_R1)) {
+                Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 4);
+              }
+              break;
+            case IN_GAME:
+              behind.setType(XMaterial.ORANGE_STAINED_GLASS.parseMaterial());
+              if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_13_R1)) {
+                Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 1);
+              }
+              break;
+            case ENDING:
+              behind.setType(XMaterial.GRAY_STAINED_GLASS.parseMaterial());
+              if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_13_R1)) {
+                Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 7);
+              }
+              break;
+            case RESTARTING:
+              behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
+              if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_13_R1)) {
+                Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 15);
+              }
+              break;
+            default:
+              break;
+          }
+        } catch (Exception ignored) {
+        }
+      }
+      sign.update();
+    }
+    Debugger.performance("SignUpdate", "[PerformanceMonitor] [SignUpdate] Updated signs took {0}ms", System.currentTimeMillis() - start);
   }
 
   public List<ArenaSign> getArenaSigns() {

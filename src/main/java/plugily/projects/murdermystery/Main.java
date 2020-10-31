@@ -42,7 +42,6 @@ import plugily.projects.murdermystery.events.*;
 import plugily.projects.murdermystery.events.spectator.SpectatorEvents;
 import plugily.projects.murdermystery.events.spectator.SpectatorItemEvents;
 import plugily.projects.murdermystery.handlers.*;
-import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
 import plugily.projects.murdermystery.handlers.hologram.HologramManager;
 import plugily.projects.murdermystery.handlers.items.SpecialItem;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
@@ -95,10 +94,10 @@ public class Main extends JavaPlugin {
     LanguageManager.init(this);
     saveDefaultConfig();
 
-    Debugger.setEnabled(getDescription().getVersion().contains("b") || getConfig().getBoolean("Debug", false));
+    Debugger.setEnabled(getDescription().getVersion().contains("b") || getConfig().getBoolean("Debug"));
 
     Debugger.debug("[System] Initialization start");
-    if (getConfig().getBoolean("Developer-Mode", false)) {
+    if (getConfig().getBoolean("Developer-Mode")) {
       Debugger.deepDebug(true);
       Debugger.debug(Level.FINE, "Deep debug enabled");
       for (String listenable : new ArrayList<>(getConfig().getStringList("Performance-Listenable"))) {
@@ -156,7 +155,7 @@ public class Main extends JavaPlugin {
     if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       getMysqlDatabase().shutdownConnPool();
     }
-    for (ArmorStand armorStand : HologramManager.getArmorStands()){
+    for (ArmorStand armorStand : HologramManager.getArmorStands()) {
       armorStand.remove();
       armorStand.setCustomNameVisible(false);
     }
@@ -185,7 +184,7 @@ public class Main extends JavaPlugin {
   private void initializeClasses() {
     chatManager = new ChatManager(this);
     ScoreboardLib.setPluginInstance(this);
-    if (getConfig().getBoolean("BungeeActivated", false)) {
+    if (getConfig().getBoolean("BungeeActivated")) {
       bungeeManager = new BungeeManager(this);
     }
     if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
@@ -204,12 +203,14 @@ public class Main extends JavaPlugin {
     new ChatEvents(this);
     registerSoftDependenciesAndServices();
     User.cooldownHandlerTask();
+    signManager = new SignManager(this);
     ArenaRegistry.registerArenas();
+    signManager.loadSigns();
+    signManager.updateSigns();
     new Events(this);
     new LobbyEvent(this);
     new SpectatorItemEvents(this);
     rewardsHandler = new RewardsFactory(this);
-    signManager = new SignManager(this);
     corpseHandler = new CorpseHandler(this);
     partyHandler = new PartySupportInitializer().initialize(this);
     new BowTrailsHandler(this);
@@ -330,9 +331,9 @@ public class Main extends JavaPlugin {
         for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
           if (!stat.isPersistent()) continue;
           if (update.toString().equalsIgnoreCase(" SET ")) {
-            update.append(stat.getName()).append("=").append(user.getStat(stat));
+            update.append(stat.getName()).append('=').append(user.getStat(stat));
           }
-          update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
+          update.append(", ").append(stat.getName()).append('=').append(user.getStat(stat));
         }
         String finalUpdate = update.toString();
         //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.

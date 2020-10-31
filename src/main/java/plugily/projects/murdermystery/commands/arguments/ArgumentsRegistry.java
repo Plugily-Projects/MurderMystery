@@ -32,6 +32,7 @@ import pl.plajerlair.commonsbox.string.StringMatcher;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.commands.arguments.admin.ListArenasArgument;
+import plugily.projects.murdermystery.commands.arguments.admin.arena.SpecialBlockRemoverArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.arena.DeleteArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.arena.ForceStartArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.arena.ReloadArgument;
@@ -49,6 +50,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -67,10 +69,15 @@ public class ArgumentsRegistry implements CommandExecutor {
     this.plugin = plugin;
     chatManager = plugin.getChatManager();
     tabCompletion = new TabCompletion(this);
-    plugin.getCommand("murdermystery").setExecutor(this);
-    plugin.getCommand("murdermystery").setTabCompleter(tabCompletion);
-    plugin.getCommand("murdermysteryadmin").setExecutor(this);
-    plugin.getCommand("murdermysteryadmin").setTabCompleter(tabCompletion);
+
+    Optional.ofNullable(plugin.getCommand("murdermystery")).ifPresent(mm -> {
+      mm.setExecutor(this);
+      mm.setTabCompleter(tabCompletion);
+    });
+    Optional.ofNullable(plugin.getCommand("murdermysteryadmin")).ifPresent(mma -> {
+      mma.setExecutor(this);
+      mma.setTabCompleter(tabCompletion);
+    });
 
     //register basic arugments
     new ArenaSelectorArgument(this, chatManager);
@@ -84,6 +91,7 @@ public class ArgumentsRegistry implements CommandExecutor {
     new DeleteArgument(this, chatManager);
     new ForceStartArgument(this, chatManager);
     new ListArenasArgument(this, chatManager);
+    new SpecialBlockRemoverArgument(this);
     new ReloadArgument(this, chatManager);
     new StopArgument(this);
   }
@@ -122,8 +130,7 @@ public class ArgumentsRegistry implements CommandExecutor {
           if (argument.getArgumentName().equalsIgnoreCase(args[0])) {
             //does it make sense that it is a list?
             for (String perm : argument.getPermissions()) {
-              if (perm.isEmpty()) break;
-              if (Utils.hasPermission(sender, perm)){
+              if (perm.isEmpty() || Utils.hasPermission(sender, perm)) {
                 break;
               }
               //user has no permission to execute command

@@ -36,6 +36,7 @@ import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.handlers.ChatManager;
+import plugily.projects.murdermystery.utils.NMS;
 import plugily.projects.murdermystery.utils.Utils;
 
 import java.util.Collections;
@@ -105,7 +106,7 @@ public class SpectatorItemEvents implements Listener {
           role = StringUtils.replace(role, "%role%", chatManager.colorMessage("Scoreboard.Roles.Innocent"));
         }
         meta.setLore(Collections.singletonList(role));
-        skull.setDurability((short) SkullType.PLAYER.ordinal());
+        NMS.setDurability(skull, (short) SkullType.PLAYER.ordinal());
         skull.setItemMeta(meta);
         inventory.addItem(skull);
       }
@@ -116,11 +117,8 @@ public class SpectatorItemEvents implements Listener {
   @EventHandler
   public void onSpectatorInventoryClick(InventoryClickEvent e) {
     Player p = (Player) e.getWhoClicked();
-    if (ArenaRegistry.getArena(p) == null) {
-      return;
-    }
     Arena arena = ArenaRegistry.getArena(p);
-    if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
+    if (arena == null || e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
       || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
       return;
     }

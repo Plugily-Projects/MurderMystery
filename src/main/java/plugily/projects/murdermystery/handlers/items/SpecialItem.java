@@ -43,7 +43,6 @@ public class SpecialItem {
   private ItemStack itemStack;
   private int slot;
   private final String name;
-  private final Main plugin = JavaPlugin.getPlugin(Main.class);
 
   public SpecialItem(String name) {
     this.name = name;
@@ -56,6 +55,7 @@ public class SpecialItem {
   }
 
   public void load(String displayName, String[] lore, Material material, int slot) {
+    Main plugin = JavaPlugin.getPlugin(Main.class);
     FileConfiguration config = ConfigUtils.getConfig(plugin, "lobbyitems");
     ChatManager chatManager = plugin.getChatManager();
 

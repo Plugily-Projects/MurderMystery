@@ -38,7 +38,7 @@ import plugily.projects.murdermystery.utils.ItemPosition;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
@@ -51,9 +51,7 @@ public class PrayerRegistry {
   private static Main plugin;
   private static ChatManager chatManager;
   private static final List<Prayer> prayers = new ArrayList<>();
-  private static final ArrayList<Player> ban = new ArrayList<>();
-  private static final ArrayList<Player> rush = new ArrayList<>();
-  private static Random rand;
+  private static final ArrayList<Player> ban = new ArrayList<>(), rush = new ArrayList<>();
 
   private PrayerRegistry() {
   }
@@ -72,11 +70,10 @@ public class PrayerRegistry {
     prayers.add(new Prayer(Prayer.PrayerType.BLINDNESS_CURSE, false, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Blindness-Curse")));
     prayers.add(new Prayer(Prayer.PrayerType.GOLD_BAN, false, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Gold-Ban")));
     prayers.add(new Prayer(Prayer.PrayerType.INCOMING_DEATH, false, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Incoming-Death")));
-    rand = new Random();
   }
 
   public static Prayer getRandomPray() {
-    return prayers.get(rand.nextInt(prayers.size()));
+    return prayers.get(ThreadLocalRandom.current().nextInt(prayers.size()));
   }
 
   public static List<Prayer> getPrayers() {

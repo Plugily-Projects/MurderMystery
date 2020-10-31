@@ -18,6 +18,7 @@
 
 package plugily.projects.murdermystery.handlers;
 
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 
 import org.bukkit.Bukkit;
@@ -39,6 +40,7 @@ import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.corpse.Corpse;
 import plugily.projects.murdermystery.arena.corpse.Stand;
 import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
+import plugily.projects.murdermystery.handlers.hologram.HologramManager;
 import plugily.projects.murdermystery.utils.Utils;
 
 import java.util.HashMap;
@@ -75,6 +77,7 @@ public class CorpseHandler implements Listener {
     registeredLastWords.put(permission, lastWord);
   }
 
+  @SuppressWarnings("deprecation")
   public void spawnCorpse(Player p, Arena arena) {
     if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
       ArmorStand stand = p.getLocation().getWorld().spawn(p.getLocation().add(0.0D, -1.25D, 0.0D), ArmorStand.class);
@@ -84,14 +87,21 @@ public class CorpseHandler implements Listener {
       head.setItemMeta(meta);
 
       stand.setVisible(false);
-      stand.setHelmet(head);
+      if (Version.isCurrentEqualOrHigher(Version.v1_16_R1)) {
+        stand.getEquipment().setHelmet(head);
+      } else {
+        stand.setHelmet(head);
+      }
       stand.setGravity(false);
       stand.setCustomNameVisible(false);
       stand.setHeadPose(new EulerAngle(Math.toRadians(p.getLocation().getX()), Math.toRadians(p.getLocation().getPitch()), Math.toRadians(p.getLocation().getZ())));
+
+      HologramManager.getArmorStands().add(stand);
       ArmorStandHologram hologram = getLastWordsHologram(p);
       arena.addHead(new Stand(hologram, stand));
       Bukkit.getScheduler().runTaskLater(plugin, () -> {
         hologram.delete();
+        HologramManager.getArmorStands().remove(stand);
         Bukkit.getScheduler().runTaskLater(plugin, stand::remove, 20 * 20);
       }, 15 * 20);
       return;
@@ -128,7 +138,7 @@ public class CorpseHandler implements Listener {
     if (!plugin.getConfig().getBoolean("Override-Corpses-Spawn", true) || lastSpawnedCorpse == null) {
       return;
     }
-    if (!e.getCorpse().equals(lastSpawnedCorpse)) {
+    if (!lastSpawnedCorpse.equals(e.getCorpse())) {
       e.setCancelled(true);
     }
   }

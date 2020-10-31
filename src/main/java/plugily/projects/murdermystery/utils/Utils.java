@@ -32,11 +32,11 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.ArenaState;
-import plugily.projects.murdermystery.handlers.ChatManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,14 +52,12 @@ import java.util.regex.Pattern;
 public class Utils {
 
   private static Main plugin;
-  private static ChatManager chatManager;
 
   private Utils() {
   }
 
   public static void init(Main plugin) {
     Utils.plugin = plugin;
-    Utils.chatManager = plugin.getChatManager();
   }
 
   /**
@@ -99,7 +97,7 @@ public class Utils {
           this.cancel();
         }
         String progress = StringFormatUtils.getProgressBar(ticks, seconds * 20, 10, "■", ChatColor.COLOR_CHAR + "a", ChatColor.COLOR_CHAR + "c");
-        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(chatManager.colorMessage("In-Game.Cooldown-Format", p)
+        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(plugin.getChatManager().colorMessage("In-Game.Cooldown-Format", p)
           .replace("%progress%", progress).replace("%time%", String.valueOf((double) ((seconds * 20) - ticks) / 20))));
         ticks += 10;
       }
@@ -119,12 +117,12 @@ public class Utils {
   }
 
   public static Location getBlockCenter(Location location) {
-    return location.add(0.5, 0, 0.5);
+    return location.clone().add(0.5, 0, 0.5);
   }
 
   public static boolean checkIsInGameInstance(Player player) {
-    if (ArenaRegistry.getArena(player) == null) {
-      player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Not-Playing", player));
+    if (!ArenaRegistry.isInArena(player)) {
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Not-Playing", player));
       return false;
     }
     return true;
@@ -134,22 +132,27 @@ public class Utils {
     if (sender.hasPermission(perm)) {
       return true;
     }
-    sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Permission"));
+    sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Permission"));
     return false;
   }
 
+  @SuppressWarnings("deprecation")
   public static SkullMeta setPlayerHead(Player player, SkullMeta meta) {
     if (Bukkit.getServer().getVersion().contains("Paper") && player.getPlayerProfile().hasTextures()) {
       return CompletableFuture.supplyAsync(() -> {
         meta.setPlayerProfile(player.getPlayerProfile());
         return meta;
       }).exceptionally(e -> {
-        Debugger.debug(java.util.logging.Level.WARNING, "Retrieving player profile of "+ player.getName() +" failed!");
+        Debugger.debug(java.util.logging.Level.WARNING, "Retrieving player profile of " + player.getName() + " failed!");
         return meta;
       }).join();
     }
 
-    meta.setOwningPlayer(player);
+    if (Version.isCurrentHigher(Version.v1_12_R1)) {
+      meta.setOwningPlayer(player);
+    } else {
+      meta.setOwner(player.getName());
+    }
     return meta;
   }
 

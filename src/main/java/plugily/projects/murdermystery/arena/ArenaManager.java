@@ -51,6 +51,7 @@ import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.ItemPosition;
+import plugily.projects.murdermystery.utils.NMS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,7 +142,7 @@ public class ArenaManager {
         if (loopPlayer.hasPermission(PermissionsManager.getJoinFullGames())) {
           continue;
         }
-        ArenaManager.leaveAttempt(loopPlayer, arena);
+        leaveAttempt(loopPlayer, arena);
         loopPlayer.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.You-Were-Kicked-For-Premium-Slot"));
         chatManager.broadcast(arena, chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Kicked-For-Premium-Slot"), loopPlayer));
         foundSlot = true;
@@ -193,9 +194,9 @@ public class ArenaManager {
 
       for (Player spectator : arena.getPlayers()) {
         if (plugin.getUserManager().getUser(spectator).isSpectator()) {
-          player.hidePlayer(spectator);
+          NMS.hidePlayer(player, spectator);
         } else {
-          player.showPlayer(spectator);
+          NMS.showPlayer(player, spectator);
         }
       }
       ArenaUtils.hidePlayersOutsideTheGame(player, arena);
@@ -220,6 +221,7 @@ public class ArenaManager {
     }
     arena.showPlayers();
     ArenaUtils.updateNameTagsVisibility(player);
+    plugin.getSignManager().updateSigns();
     Debugger.debug("[{0}] Join attempt as player for {1} took {2}ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);
   }
 
@@ -305,7 +307,7 @@ public class ArenaManager {
         }
         plugin.getCorpseHandler().spawnCorpse(player, arena);
       } else {
-        ArenaManager.stopGame(false, arena);
+        stopGame(false, arena);
       }
     }
     //the default fly speed
@@ -338,10 +340,10 @@ public class ArenaManager {
 
     player.setGameMode(GameMode.SURVIVAL);
     for (Player players : plugin.getServer().getOnlinePlayers()) {
-      if (ArenaRegistry.getArena(players) == null) {
-        players.showPlayer(player);
+      if (!ArenaRegistry.isInArena(players)) {
+        NMS.showPlayer(players, player);
       }
-      player.showPlayer(players);
+      NMS.showPlayer(player, players);
     }
     arena.teleportToEndLocation(player);
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
@@ -349,6 +351,7 @@ public class ArenaManager {
       InventorySerializer.loadInventory(plugin, player);
     }
     plugin.getUserManager().saveAllStatistic(user);
+    plugin.getSignManager().updateSigns();
     Debugger.debug("[{0}] Game leave finished for {1} took{2}ms ", arena.getId(), player.getName(), System.currentTimeMillis() - start);
   }
 

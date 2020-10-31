@@ -1,3 +1,25 @@
+### 1.6.6 Stable (31.10.2020)
+* Fixed armorstands are not correctly displayed
+* Fixed dead body heads 
+* Fixed locales not working
+* Fixed heads
+* Fixed sign loading
+* Fixed sign after arena validation
+* Fixed new arena is not proper registered 
+* Fixed scoreboard friendly fire caused players visible 
+* Fixed arrows can damage entities outside the game
+* Changed disabled arrow bouncing
+
+### 1.6.5 (07.10.2020 - 29.10.2020)
+* Added special blocks remove command /mma removeblock
+* Fixed hologram spawn item height (bow) 
+* Fixed the bow item got not removed on some cases
+* Another fix for cauldron click event
+* Fixed locations of special blocks on setup menu
+* Optimized special block click performance
+* Fixed stacked armorstands
+* Fixed players will die under water
+
 ### 1.6.4 Hotfix (05.10.2020)
 * Fixed cauldron click event
 * Fixed detectives will get bow from prayer

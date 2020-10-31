@@ -22,6 +22,7 @@ import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
@@ -33,11 +34,9 @@ import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.setup.SetupInventory;
-import plugily.projects.murdermystery.utils.Debugger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -74,16 +73,15 @@ public class SpecialBlocksComponents implements SetupComponent {
       .lore(ChatColor.GRAY + "Configure cauldron potions in specialblocks.yml file!")
       .build(), e -> {
       e.getWhoClicked().closeInventory();
-      Debugger.debug(Level.INFO, "" + e.getWhoClicked().getTargetBlock(null, 10).getType() + e.getWhoClicked().getTargetBlock(null, 10).getLocation());
-      if (e.getWhoClicked().getTargetBlock(null, 15).getType() != Material.CAULDRON) {
+      Block targetBlock = e.getWhoClicked().getTargetBlock(null, 7);
+      if (targetBlock.getType() != Material.CAULDRON) {
         e.getWhoClicked().sendMessage(ChatColor.RED + "Please target cauldron to continue!");
         return;
       }
-
-      arena.loadSpecialBlock(new SpecialBlock(e.getWhoClicked().getTargetBlock(null, 10).getLocation(),
+      arena.loadSpecialBlock(new SpecialBlock(targetBlock.getLocation(),
         SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
       List<String> cauldrons = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".mystery-cauldrons"));
-      cauldrons.add(LocationSerializer.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
+      cauldrons.add(LocationSerializer.locationToString(targetBlock.getLocation()));
       config.set("instances." + arena.getId() + ".mystery-cauldrons", cauldrons);
       player.sendMessage(chatManager.colorRawMessage("&e✔ Completed | &aAdded Cauldron special block!"));
       ConfigUtils.saveConfig(plugin, config, "arenas");
@@ -102,16 +100,16 @@ public class SpecialBlocksComponents implements SetupComponent {
       .lore(ChatColor.RED + "or curses from prayer!")
       .build(), e -> {
       e.getWhoClicked().closeInventory();
-      Debugger.debug(Level.INFO, "" + e.getWhoClicked().getTargetBlock(null, 10).getType() + e.getWhoClicked().getTargetBlock(null, 10).getLocation());
-      if (e.getWhoClicked().getTargetBlock(null, 15).getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
+      Block targetBlock = e.getWhoClicked().getTargetBlock(null, 7);
+      if (targetBlock.getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
         e.getWhoClicked().sendMessage(ChatColor.RED + "Please target enchanting table to continue!");
         return;
       }
 
-      arena.loadSpecialBlock(new SpecialBlock(e.getWhoClicked().getTargetBlock(null, 10).getLocation(),
+      arena.loadSpecialBlock(new SpecialBlock(targetBlock.getLocation(),
         SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
       List<String> confessionals = new ArrayList<>(config.getStringList("instances." + arena.getId() + ".confessionals"));
-      confessionals.add(LocationSerializer.locationToString(e.getWhoClicked().getTargetBlock(null, 10).getLocation()));
+      confessionals.add(LocationSerializer.locationToString(targetBlock.getLocation()));
       config.set("instances." + arena.getId() + ".confessionals", confessionals);
       player.sendMessage(chatManager.colorRawMessage("&e✔ Completed | &aAdded Confessional special block!"));
       player.sendMessage(chatManager.colorRawMessage("&eInfo | &aRemember to place any lever in radius of 3 near enchant table!"));

@@ -19,7 +19,6 @@
 package plugily.projects.murdermystery.arena;
 
 import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,7 +26,6 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
-import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.utils.Debugger;
 
 import java.util.ArrayList;
@@ -40,7 +38,6 @@ import java.util.Random;
 public class ArenaRegistry {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-  private static final ChatManager chatManager = plugin.getChatManager();
   private static final List<Arena> arenas = new ArrayList<>();
   private static int bungeeArena = -999;
 
@@ -117,12 +114,11 @@ public class ArenaRegistry {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
     if (!config.isConfigurationSection("instances")) {
-      Debugger.sendConsoleMsg(chatManager.colorMessage("Validator.No-Instances-Created"));
+      Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.No-Instances-Created"));
       return;
     }
 
-    ConfigurationSection section = config.getConfigurationSection("instances");
-    for (String id : section.getKeys(false)) {
+    for (String id : config.getConfigurationSection("instances").getKeys(false)) {
       Arena arena;
       String s = "instances." + id + ".";
       if (s.contains("default")) {
@@ -165,14 +161,14 @@ public class ArenaRegistry {
       arena.setEndLocation(LocationSerializer.getLocation(config.getString(s + "Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
 
       if (!config.getBoolean(s + "isdone", false)) {
-        Debugger.sendConsoleMsg(chatManager.colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
+        Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
         arena.setReady(false);
         ArenaRegistry.registerArena(arena);
         continue;
       }
       ArenaRegistry.registerArena(arena);
       arena.start();
-      Debugger.sendConsoleMsg(chatManager.colorMessage("Validator.Instance-Started").replace("%arena%", id));
+      Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Instance-Started").replace("%arena%", id));
     }
     Debugger.debug("Arenas registration completed, took {0}ms", System.currentTimeMillis() - start);
   }

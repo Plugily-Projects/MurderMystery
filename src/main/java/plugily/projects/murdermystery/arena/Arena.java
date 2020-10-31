@@ -60,6 +60,7 @@ import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.ItemPosition;
+import plugily.projects.murdermystery.utils.NMS;
 import plugily.projects.murdermystery.utils.Utils;
 
 import java.util.*;
@@ -78,8 +79,7 @@ public class Arena extends BukkitRunnable {
   private final List<Corpse> corpses = new ArrayList<>();
   private final List<Stand> stands = new ArrayList<>();
   private final List<SpecialBlock> specialBlocks = new ArrayList<>();
-  private final List<Player> allMurderer = new ArrayList<>();
-  private final List<Player> allDetectives = new ArrayList<>();
+  private final List<Player> allMurderer = new ArrayList<>(), allDetectives = new ArrayList<>();
 
   //contains murderer, detective, fake detective and hero
   private final Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
@@ -89,21 +89,15 @@ public class Arena extends BukkitRunnable {
   private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
 
   private final ScoreboardManager scoreboardManager;
-  private ArmorStandHologram holohandler = new ArmorStandHologram();
 
-  private List<Location> goldSpawnPoints = new ArrayList<>();
-  private List<Location> playerSpawnPoints = new ArrayList<>();
+  private List<Location> goldSpawnPoints = new ArrayList<>(), playerSpawnPoints = new ArrayList<>();
 
   private int murderers = 0, detectives = 0, spawnGoldTimer = 0, spawnGoldTime = 0;
 
-  private boolean detectiveDead;
-  private boolean murdererLocatorReceived;
-  private boolean hideChances;
+  private boolean detectiveDead, murdererLocatorReceived, hideChances, ready = true, forceStart = false;
   private ArenaState arenaState = ArenaState.WAITING_FOR_PLAYERS;
   private BossBar gameBar;
   private String mapName = "";
-  private boolean ready = true;
-  private boolean forceStart = false;
 
   public Arena(String id) {
     this.id = id;
@@ -418,9 +412,9 @@ public class Arena extends BukkitRunnable {
             plugin.getUserManager().getUser(player).removeScoreboard();
             player.setGameMode(GameMode.SURVIVAL);
             for (Player players : Bukkit.getOnlinePlayers()) {
-              player.showPlayer(players);
-              if (ArenaRegistry.getArena(players) == null) {
-                players.showPlayer(player);
+              NMS.showPlayer(player, players);
+              if (!ArenaRegistry.isInArena(players)) {
+                NMS.showPlayer(players, player);
               }
             }
             player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
@@ -553,10 +547,6 @@ public class Arena extends BukkitRunnable {
     return scoreboardManager;
   }
 
-  public ArmorStandHologram getHoloHandler() {
-    return holohandler;
-  }
-
   @NotNull
   public List<Item> getGoldSpawned() {
     return goldSpawned;
@@ -682,6 +672,8 @@ public class Arena extends BukkitRunnable {
 
     MMGameStateChangeEvent gameStateChangeEvent = new MMGameStateChangeEvent(this, getArenaState());
     Bukkit.getPluginManager().callEvent(gameStateChangeEvent);
+
+    plugin.getSignManager().updateSigns();
   }
 
   /**
@@ -828,13 +820,15 @@ public class Arena extends BukkitRunnable {
     specialBlocks.add(block);
     switch (block.getSpecialBlockType()) {
       case MYSTERY_CAULDRON:
-        new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()), chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
+        ArmorStandHologram cauldron = new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()), chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
+        block.setArmorStandHologram(cauldron);
         break;
       case PRAISE_DEVELOPER:
-        ArmorStandHologram holo = new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()));
+        ArmorStandHologram prayer = new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()));
         for (String str : chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
-          holo.appendLine(str);
+          prayer.appendLine(str);
         }
+        block.setArmorStandHologram(prayer);
         break;
       case HORSE_PURCHASE:
       case RAPID_TELEPORTATION:
@@ -871,8 +865,8 @@ public class Arena extends BukkitRunnable {
   void showPlayers() {
     for (Player player : getPlayers()) {
       for (Player p : getPlayers()) {
-        player.showPlayer(p);
-        p.showPlayer(player);
+        NMS.showPlayer(player, p);
+        NMS.showPlayer(p, player);
       }
     }
   }

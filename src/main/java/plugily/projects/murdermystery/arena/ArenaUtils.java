@@ -38,6 +38,7 @@ import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.ItemPosition;
+import plugily.projects.murdermystery.utils.NMS;
 
 /**
  * @author Plajer
@@ -183,18 +184,18 @@ public class ArenaUtils {
   }
 
   public static boolean areInSameArena(Player one, Player two) {
-    return ArenaRegistry.getArena(one) != null && ArenaRegistry.getArena(two) != null && ArenaRegistry.getArena(one).equals(ArenaRegistry.getArena(two));
+    return ArenaRegistry.getArena(one) != null && ArenaRegistry.getArena(one).equals(ArenaRegistry.getArena(two));
   }
 
   public static void hidePlayer(Player p, Arena arena) {
     for (Player player : arena.getPlayers()) {
-      player.hidePlayer(p);
+      NMS.hidePlayer(player, p);
     }
   }
 
   public static void showPlayer(Player p, Arena arena) {
     for (Player player : arena.getPlayers()) {
-      player.showPlayer(p);
+      NMS.showPlayer(player, p);
     }
   }
 
@@ -203,8 +204,8 @@ public class ArenaUtils {
       if (arena.getPlayers().contains(players)) {
         continue;
       }
-      player.hidePlayer(players);
-      players.hidePlayer(player);
+      NMS.hidePlayer(player, players);
+      NMS.hidePlayer(players, player);
     }
   }
 
@@ -225,11 +226,11 @@ public class ArenaUtils {
       if (team == null) {
         team = scoreboard.registerNewTeam("MMHide");
       }
+      team.setCanSeeFriendlyInvisibles(false);
       team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
       if (arena.getArenaState() == ArenaState.IN_GAME) {
         team.addEntry(p.getName());
-      } else if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS
-        || arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
+      } else {
         team.removeEntry(p.getName());
       }
       players.setScoreboard(scoreboard);

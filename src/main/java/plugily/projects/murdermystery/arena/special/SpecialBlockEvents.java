@@ -77,7 +77,7 @@ public class SpecialBlockEvents implements Listener {
         onPrayLeverClick(e);
         return;
       }
-      if (e.getClickedBlock().getLocation().equals(specialBlock.getLocation())) {
+      if (specialBlock.getLocation().getBlock().equals(e.getClickedBlock())) {
         switch (specialBlock.getSpecialBlockType()) {
           case MYSTERY_CAULDRON:
             onCauldronClick(e);

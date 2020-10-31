@@ -49,6 +49,7 @@ import plugily.projects.murdermystery.handlers.items.SpecialItemManager;
 import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.ItemPosition;
+import plugily.projects.murdermystery.utils.NMS;
 import plugily.projects.murdermystery.utils.Utils;
 
 /**
@@ -83,7 +84,7 @@ public class ArenaEvents implements Listener {
   }
 
   @EventHandler
-  public void onFallDamage(EntityDamageEvent e) {
+  public void onEntityDamage(EntityDamageEvent e) {
     if (!(e.getEntity() instanceof Player)) {
       return;
     }
@@ -91,6 +92,9 @@ public class ArenaEvents implements Listener {
     Arena arena = ArenaRegistry.getArena(victim);
     if (arena == null) {
       return;
+    }
+    if (e.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
+      e.setCancelled(true);
     }
     if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
       if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
@@ -121,7 +125,7 @@ public class ArenaEvents implements Listener {
       user.setCooldown("bow_shot", plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
       Player player = (Player) e.getEntity();
       Utils.applyActionBarCooldown(player, plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
-      e.getBow().setDurability((short) 0);
+      NMS.setDurability(e.getBow(), (short) 0);
     } else {
       e.setCancelled(true);
     }
@@ -180,7 +184,7 @@ public class ArenaEvents implements Listener {
       return;
     }
 
-    if (PrayerRegistry.getBan().contains(player)){
+    if (PrayerRegistry.getBan().contains(player)) {
       e.setCancelled(true);
       return;
     }
@@ -279,13 +283,20 @@ public class ArenaEvents implements Listener {
 
   @EventHandler
   public void onArrowDamage(EntityDamageByEntityEvent e) {
-    if (!(e.getDamager() instanceof Arrow && e.getEntity() instanceof Player)) {
+    if (!(e.getDamager() instanceof Arrow)) {
       return;
     }
     if (!(((Arrow) e.getDamager()).getShooter() instanceof Player)) {
       return;
     }
     Player attacker = (Player) ((Arrow) e.getDamager()).getShooter();
+    if (ArenaRegistry.isInArena(attacker)) {
+      e.setCancelled(true);
+      e.getDamager().remove();
+    }
+    if (!(e.getEntity() instanceof Player)) {
+      return;
+    }
     Player victim = (Player) e.getEntity();
     if (!ArenaUtils.areInSameArena(attacker, victim)) {
       return;
@@ -363,8 +374,7 @@ public class ArenaEvents implements Listener {
       player.getInventory().clear();
       player.setFlying(false);
       player.setAllowFlight(false);
-      User user = plugin.getUserManager().getUser(player);
-      user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
+      plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
       return;
     }
     if (Role.isRole(Role.MURDERER, player) && arena.lastAliveMurderer()) {
@@ -432,7 +442,7 @@ public class ArenaEvents implements Listener {
 
   @EventHandler
   public void onItemMove(InventoryClickEvent e) {
-    if (e.getWhoClicked() instanceof Player && ArenaRegistry.getArena((Player) e.getWhoClicked()) != null) {
+    if (e.getWhoClicked() instanceof Player && ArenaRegistry.isInArena((Player) e.getWhoClicked())) {
       e.setResult(Event.Result.DENY);
     }
   }

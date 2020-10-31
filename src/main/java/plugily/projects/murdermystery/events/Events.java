@@ -36,6 +36,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
@@ -44,7 +45,6 @@ import plugily.projects.murdermystery.arena.ArenaManager;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.ArenaUtils;
 import plugily.projects.murdermystery.arena.role.Role;
-import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.items.SpecialItemManager;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Utils;
@@ -57,11 +57,9 @@ import plugily.projects.murdermystery.utils.Utils;
 public class Events implements Listener {
 
   private final Main plugin;
-  private final ChatManager chatManager;
 
   public Events(Main plugin) {
     this.plugin = plugin;
-    chatManager = plugin.getChatManager();
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
@@ -74,11 +72,9 @@ public class Events implements Listener {
 
   @EventHandler
   public void onDrop(PlayerDropItemEvent event) {
-    Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    if (arena == null) {
-      return;
+    if (ArenaRegistry.isInArena(event.getPlayer())) {
+      event.setCancelled(true);
     }
-    event.setCancelled(true);
   }
 
   @EventHandler
@@ -95,7 +91,6 @@ public class Events implements Listener {
     }
     Player attacker = e.getPlayer();
     User attackerUser = plugin.getUserManager().getUser(attacker);
-    //todo not hardcoded!
     if (attacker.getInventory().getItemInMainHand().getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
       return;
     }
@@ -108,6 +103,7 @@ public class Events implements Listener {
     Utils.applyActionBarCooldown(attacker, plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5));
   }
 
+  @SuppressWarnings("deprecation")
   private void createFlyingSword(Arena arena, Player attacker, User attackerUser) {
     Location loc = attacker.getLocation();
     Vector vec = attacker.getLocation().getDirection();
@@ -117,7 +113,11 @@ public class Events implements Listener {
     ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(standStart, EntityType.ARMOR_STAND);
     stand.setVisible(false);
     stand.setInvulnerable(true);
-    stand.setItemInHand(plugin.getConfigPreferences().getMurdererSword());
+    if (Version.isCurrentEqualOrHigher(Version.v1_16_R1)) {
+      stand.getEquipment().setItemInMainHand(plugin.getConfigPreferences().getMurdererSword());
+    } else {
+      stand.setItemInHand(plugin.getConfigPreferences().getMurdererSword());
+    }
     stand.setRightArmPose(new EulerAngle(Math.toRadians(350.0), Math.toRadians(attacker.getLocation().getPitch() * -1.0), Math.toRadians(90.0)));
     stand.setCollidable(false);
     stand.setSilent(true);
@@ -159,8 +159,8 @@ public class Events implements Listener {
     }
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
     victim.damage(100.0);
-    victim.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", victim),
-      chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You", victim), 5, 40, 5);
+    victim.sendTitle(plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", victim),
+      plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You", victim), 5, 40, 5);
     attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
     attackerUser.addStat(StatsStorage.StatisticType.KILLS, 1);
     ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
@@ -197,7 +197,7 @@ public class Events implements Listener {
       return;
     }
     event.setCancelled(true);
-    event.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
+    event.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
   }
 
   @EventHandler
@@ -213,11 +213,9 @@ public class Events implements Listener {
 
   @EventHandler
   public void onInGameBedEnter(PlayerBedEnterEvent event) {
-    Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    if (arena == null) {
-      return;
+    if (ArenaRegistry.isInArena(event.getPlayer())) {
+      event.setCancelled(true);
     }
-    event.setCancelled(true);
   }
 
   @EventHandler
@@ -255,19 +253,17 @@ public class Events implements Listener {
   @EventHandler(priority = EventPriority.HIGH)
   //highest priority to fully protect our game (i didn't set it because my test server was destroyed, n-no......)
   public void onBlockBreakEvent(BlockBreakEvent event) {
-    if (!ArenaRegistry.isInArena(event.getPlayer())) {
-      return;
+    if (ArenaRegistry.isInArena(event.getPlayer())) {
+      event.setCancelled(true);
     }
-    event.setCancelled(true);
   }
 
   @EventHandler(priority = EventPriority.HIGH)
   //highest priority to fully protect our game (i didn't set it because my test server was destroyed, n-no......)
   public void onBuild(BlockPlaceEvent event) {
-    if (!ArenaRegistry.isInArena(event.getPlayer())) {
-      return;
+    if (ArenaRegistry.isInArena(event.getPlayer())) {
+      event.setCancelled(true);
     }
-    event.setCancelled(true);
   }
 
   @EventHandler(priority = EventPriority.HIGH)
