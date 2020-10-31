@@ -184,7 +184,7 @@ public class ArenaEvents implements Listener {
       return;
     }
 
-    if (PrayerRegistry.getBan().contains(player)){
+    if (PrayerRegistry.getBan().contains(player)) {
       e.setCancelled(true);
       return;
     }
@@ -283,13 +283,20 @@ public class ArenaEvents implements Listener {
 
   @EventHandler
   public void onArrowDamage(EntityDamageByEntityEvent e) {
-    if (!(e.getDamager() instanceof Arrow && e.getEntity() instanceof Player)) {
+    if (!(e.getDamager() instanceof Arrow)) {
       return;
     }
     if (!(((Arrow) e.getDamager()).getShooter() instanceof Player)) {
       return;
     }
     Player attacker = (Player) ((Arrow) e.getDamager()).getShooter();
+    if (ArenaRegistry.isInArena(attacker)) {
+      e.setCancelled(true);
+      e.getDamager().remove();
+    }
+    if (!(e.getEntity() instanceof Player)) {
+      return;
+    }
     Player victim = (Player) e.getEntity();
     if (!ArenaUtils.areInSameArena(attacker, victim)) {
       return;

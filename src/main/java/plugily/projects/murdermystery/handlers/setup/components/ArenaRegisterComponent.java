@@ -58,7 +58,6 @@ public class ArenaRegisterComponent implements SetupComponent {
 
   @Override
   public void injectComponents(StaticPane pane) {
-    FileConfiguration config = setupInventory.getConfig();
     Main plugin = setupInventory.getPlugin();
     ChatManager chatManager = plugin.getChatManager();
     ItemStack registeredItem;
@@ -78,32 +77,32 @@ public class ArenaRegisterComponent implements SetupComponent {
     }
     pane.addItem(new GuiItem(registeredItem, e -> {
       Arena arena = setupInventory.getArena();
-      if (arena.isReady()) {
-        return;
-      }
       e.getWhoClicked().closeInventory();
-      if (ArenaRegistry.getArena(setupInventory.getArena().getId()).isReady()) {
+      if (arena.isReady()) {
         e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&a&l✔ &aThis arena was already validated and is ready to use!"));
         return;
       }
+      String path = "instances." + arena.getId() + ".";
       String[] locations = {"lobbylocation", "Endlocation"};
       String[] spawns = {"goldspawnpoints", "playerspawnpoints"};
       FileConfiguration arenasConfig = ConfigUtils.getConfig(plugin, "arenas");
       for (String s : locations) {
-        if (!arenasConfig.isSet("instances." + arena.getId() + "." + s) || arenasConfig.getString("instances." + arena.getId() + "." + s).equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
+        if (!arenasConfig.isSet(path + s) || arenasConfig.getString(path + s).equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
           e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&c&l✘ &cArena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)"));
           return;
         }
       }
       for (String s : spawns) {
-        if (!arenasConfig.isSet("instances." + arena.getId() + "." + s) || arenasConfig.getStringList("instances." + arena.getId() + "." + s).size() < 4) {
+        if (!arenasConfig.isSet(path + s) || arenasConfig.getStringList(path + s).size() < 4) {
           e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&c&l✘ &cArena validation failed! Please configure following spawns properly: " + s + " (must be minimum 4 spawns)"));
           return;
         }
       }
       e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + arena.getId()));
-      config.set("instances." + arena.getId() + ".isdone", true);
-      ConfigUtils.saveConfig(plugin, config, "arenas");
+
+      arenasConfig.set(path + "isdone", true);
+      ConfigUtils.saveConfig(plugin, arenasConfig, "arenas");
+
       List<Sign> signsToUpdate = new ArrayList<>();
       ArenaRegistry.unregisterArena(setupInventory.getArena());
 
@@ -113,24 +112,24 @@ public class ArenaRegisterComponent implements SetupComponent {
       arena = new Arena(setupInventory.getArena().getId());
       arena.setReady(true);
       List<Location> playerSpawnPoints = new ArrayList<>();
-      for (String loc : config.getStringList("instances." + arena.getId() + ".playerspawnpoints")) {
+      for (String loc : arenasConfig.getStringList(path + "playerspawnpoints")) {
         playerSpawnPoints.add(LocationSerializer.getLocation(loc));
       }
       arena.setPlayerSpawnPoints(playerSpawnPoints);
       List<Location> goldSpawnPoints = new ArrayList<>();
-      for (String loc : config.getStringList("instances." + arena.getId() + ".goldspawnpoints")) {
+      for (String loc : arenasConfig.getStringList(path + "goldspawnpoints")) {
         goldSpawnPoints.add(LocationSerializer.getLocation(loc));
       }
       arena.setGoldSpawnPoints(goldSpawnPoints);
 
       List<SpecialBlock> specialBlocks = new ArrayList<>();
-      if (config.isSet("instances." + arena.getId() + ".mystery-cauldrons")) {
-        for (String loc : config.getStringList("instances." + arena.getId() + ".mystery-cauldrons")) {
+      if (arenasConfig.isSet(path + "mystery-cauldrons")) {
+        for (String loc : arenasConfig.getStringList(path + "mystery-cauldrons")) {
           specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
         }
       }
-      if (config.isSet("instances." + arena.getId() + ".confessionals")) {
-        for (String loc : config.getStringList("instances." + arena.getId() + ".confessionals")) {
+      if (arenasConfig.isSet(path + "confessionals")) {
+        for (String loc : arenasConfig.getStringList(path + "confessionals")) {
           specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
         }
       }
@@ -139,18 +138,22 @@ public class ArenaRegisterComponent implements SetupComponent {
           arena.loadSpecialBlock(specialBlock);
         }
       }
-      arena.setMinimumPlayers(config.getInt("instances." + arena.getId() + ".minimumplayers"));
-      arena.setMaximumPlayers(config.getInt("instances." + arena.getId() + ".maximumplayers"));
-      arena.setMapName(config.getString("instances." + arena.getId() + ".mapname"));
-      arena.setLobbyLocation(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".lobbylocation")));
-      arena.setEndLocation(LocationSerializer.getLocation(config.getString("instances." + arena.getId() + ".Endlocation")));
-      config.set("instances." + arena.getId() + ".hidechances", false);
+      arena.setMinimumPlayers(arenasConfig.getInt(path + "minimumplayers"));
+      arena.setMaximumPlayers(arenasConfig.getInt(path + "maximumplayers"));
+      arena.setMapName(arenasConfig.getString(path + "mapname"));
+      arena.setSpawnGoldTime(arenasConfig.getInt(path + "spawngoldtime", 5));
+      arena.setHideChances(arenasConfig.getBoolean(path + "hidechances", false));
+      arena.setLobbyLocation(LocationSerializer.getLocation(arenasConfig.getString(path + "lobbylocation")));
+      arena.setEndLocation(LocationSerializer.getLocation(arenasConfig.getString(path + "Endlocation")));
+      arena.setMurderers(arenasConfig.getInt(path + "playerpermurderer", 5));
+      arena.setDetectives(arenasConfig.getInt(path + "playerperdetective", 7));
       ArenaRegistry.registerArena(arena);
       arena.start();
+      plugin.getSignManager().getArenaSigns().clear();
       for (Sign s : signsToUpdate) {
         plugin.getSignManager().getArenaSigns().add(new ArenaSign(s, arena));
+        plugin.getSignManager().updateSigns();
       }
-      ConfigUtils.saveConfig(plugin, config, "arenas");
     }), 8, 0);
   }
 

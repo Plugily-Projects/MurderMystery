@@ -100,6 +100,8 @@ public class CreateArgument {
     config.set(path + "world", worldName);
     config.set(path + "mystery-cauldrons", new ArrayList<>());
     config.set(path + "confessionals", new ArrayList<>());
+    config.set(path + "spawngoldtime", 5);
+    config.set(path + "hidechances", false);
     ConfigUtils.saveConfig(registry.getPlugin(), config, "arenas");
 
     Arena arena = new Arena(id);
@@ -125,6 +127,8 @@ public class CreateArgument {
 
     arena.setMinimumPlayers(config.getInt(path + "minimumplayers"));
     arena.setMaximumPlayers(config.getInt(path + "maximumplayers"));
+    arena.setSpawnGoldTime(config.getInt(path + "spawngoldtime", 5));
+    arena.setHideChances(config.getBoolean(path + "hidechances", false));
     arena.setDetectives(config.getInt(path + "playerperdetective"));
     arena.setMurderers(config.getInt(path + "playerpermurderer"));
     arena.setMapName(config.getString(path + "mapname"));

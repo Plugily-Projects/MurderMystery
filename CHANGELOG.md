@@ -3,6 +3,12 @@
 * Fixed dead body heads 
 * Fixed locales not working
 * Fixed heads
+* Fixed sign loading
+* Fixed sign after arena validation
+* Fixed new arena is not proper registered 
+* Fixed scoreboard friendly fire caused players visible 
+* Fixed arrows can damage entities outside the game
+* Changed disabled arrow bouncing
 
 ### 1.6.5 (07.10.2020 - 29.10.2020)
 * Added special blocks remove command /mma removeblock

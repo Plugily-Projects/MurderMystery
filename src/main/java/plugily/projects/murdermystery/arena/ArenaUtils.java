@@ -226,6 +226,7 @@ public class ArenaUtils {
       if (team == null) {
         team = scoreboard.registerNewTeam("MMHide");
       }
+      team.setCanSeeFriendlyInvisibles(false);
       team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
       if (arena.getArenaState() == ArenaState.IN_GAME) {
         team.addEntry(p.getName());
