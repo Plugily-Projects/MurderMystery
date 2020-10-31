@@ -94,7 +94,7 @@ public class Arena extends BukkitRunnable {
 
   private int murderers = 0, detectives = 0, spawnGoldTimer = 0, spawnGoldTime = 0;
 
-  private boolean detectiveDead, murdererLocatorReceived, hideChances, ready = true, forceStart = false;
+  private boolean detectiveDead, murdererLocatorReceived, hideChances, ready = true, forceStart = false, goldVisualsEnabled = false;
   private ArenaState arenaState = ArenaState.WAITING_FOR_PLAYERS;
   private BossBar gameBar;
   private String mapName = "";
@@ -469,6 +469,11 @@ public class Arena extends BukkitRunnable {
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
         }
+
+        if (goldVisualsEnabled) {
+          startGoldVisuals();
+        }
+
         break;
       default:
         break; //o.o?
@@ -559,6 +564,52 @@ public class Arena extends BukkitRunnable {
 
   public void setGoldSpawnPoints(@NotNull List<Location> goldSpawnPoints) {
     this.goldSpawnPoints = goldSpawnPoints;
+  }
+
+  public void toggleGoldVisuals() {
+    if (goldSpawnPoints.isEmpty() || goldVisualsEnabled) {
+      goldVisualsEnabled = false;
+      return;
+    }
+
+    setGoldVisualsEnabled(true);
+  }
+
+  private void startGoldVisuals() {
+    java.util.concurrent.CompletableFuture.supplyAsync(() -> {
+      // todo reload somehow causes to execute twice
+      while (!goldSpawnPoints.isEmpty() && arenaState != ArenaState.IN_GAME && plugin.isEnabled()) {
+        try {
+          Thread.sleep(3 * 1000); // Slow down process to 3 sec
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+
+        if (!goldVisualsEnabled) {
+          break;
+        }
+
+        for (Location goldLocations : goldSpawnPoints) {
+          Location goldLocation = goldLocations.clone();
+          goldLocation.add(0, 0.4, 0);
+          goldLocation.getWorld().spawnParticle(org.bukkit.Particle.REDSTONE, goldLocation,
+              10, 0.1, 0.2, 0.1, new org.bukkit.Particle.DustOptions(org.bukkit.Color.YELLOW, 1));
+        }
+      }
+
+      return null;
+    });
+  }
+
+  public boolean isGoldVisualsEnabled() {
+    return goldVisualsEnabled;
+  }
+
+  public void setGoldVisualsEnabled(boolean goldVisualsEnabled) {
+    this.goldVisualsEnabled = goldVisualsEnabled;
+    if (goldVisualsEnabled) {
+      startGoldVisuals();
+    }
   }
 
   /**
