@@ -142,8 +142,8 @@ public class ArmorStandHologram {
    */
   private ArmorStand getEntityArmorStand(Location loc, double y) {
     loc.setY(y);
-    location.getWorld().getNearbyEntities(location, 1, 1, 1).forEach(entity -> {
-      if (entity instanceof ArmorStand) {
+    location.getWorld().getNearbyEntities(location, 0.2, 0.2, 0.2).forEach(entity -> {
+      if (entity instanceof ArmorStand && !armorStands.contains(entity) && !HologramManager.getArmorStands().contains(entity)) {
         entity.remove();
         entity.setCustomNameVisible(false);
         HologramManager.getArmorStands().remove(entity);

@@ -40,6 +40,7 @@ import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.corpse.Corpse;
 import plugily.projects.murdermystery.arena.corpse.Stand;
 import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
+import plugily.projects.murdermystery.handlers.hologram.HologramManager;
 import plugily.projects.murdermystery.utils.Utils;
 
 import java.util.HashMap;
@@ -94,10 +95,13 @@ public class CorpseHandler implements Listener {
       stand.setGravity(false);
       stand.setCustomNameVisible(false);
       stand.setHeadPose(new EulerAngle(Math.toRadians(p.getLocation().getX()), Math.toRadians(p.getLocation().getPitch()), Math.toRadians(p.getLocation().getZ())));
+
+      HologramManager.getArmorStands().add(stand);
       ArmorStandHologram hologram = getLastWordsHologram(p);
       arena.addHead(new Stand(hologram, stand));
       Bukkit.getScheduler().runTaskLater(plugin, () -> {
         hologram.delete();
+        HologramManager.getArmorStands().remove(stand);
         Bukkit.getScheduler().runTaskLater(plugin, stand::remove, 20 * 20);
       }, 15 * 20);
       return;

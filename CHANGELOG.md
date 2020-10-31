@@ -1,3 +1,9 @@
+### 1.6.6 Stable (31.10.2020)
+* Fixed armorstands are not correctly displayed
+* Fixed dead body heads 
+* Fixed locales not working
+* Fixed heads
+
 ### 1.6.5 (07.10.2020 - 29.10.2020)
 * Added special blocks remove command /mma removeblock
 * Fixed hologram spawn item height (bow) 
