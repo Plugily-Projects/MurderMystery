@@ -21,6 +21,8 @@ package plugily.projects.murdermystery.handlers.items;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 /**
  * @author Plajer
@@ -29,20 +31,22 @@ import java.util.HashMap;
  */
 public class SpecialItemManager {
 
-  private static final HashMap<String, SpecialItem> specialItems = new HashMap<>();
+  private static final HashMap<String, List<SpecialItem>> specialItems = new HashMap<>();
 
-  public static void addItem(String name, SpecialItem entityItem) {
+  public static void addItem(String name, List<SpecialItem> entityItem) {
     specialItems.put(name, entityItem);
   }
 
   public static SpecialItem getSpecialItem(String name) {
-    return specialItems.getOrDefault(name, null);
+  	List<SpecialItem> specialitem = specialItems.getOrDefault(name, null);
+  	Random num = new Random();
+  	return specialitem.get(num.nextInt(specialitem.size()));
   }
 
   public static String getRelatedSpecialItem(ItemStack itemStack) {
     for (String key : specialItems.keySet()) {
-      SpecialItem entityItem = specialItems.get(key);
-      if (entityItem.getItemStack().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
+      List<SpecialItem> entityItem = specialItems.get(key);
+      if (!entityItem.isEmpty() && entityItem.get(0).getItemStack().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
         return key;
       }
     }
