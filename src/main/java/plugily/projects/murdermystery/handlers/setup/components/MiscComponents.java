@@ -195,13 +195,13 @@ public class MiscComponents implements SetupComponent {
     }), 7, 1);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.REDSTONE.parseItem())
-      .name(chatManager.colorRawMessage(arena.isGoldVisualsEnabled() ? "&c&lDisable Gold Visuals" : "&a&lEnable Gold Visuals"))
+      .name(chatManager.colorRawMessage(arena.isGoldVisuals() ? "&c&lDisable Gold Visuals" : "&a&lEnable Gold Visuals"))
       .lore(ChatColor.GRAY + "Enables gold visuals to spawn").lore(ChatColor.GRAY + "some particle effects above gold locations")
       .build(), e -> {
-      e.getWhoClicked().closeInventory();
       arena.toggleGoldVisuals();
-      config.set("instances." + arena.getId() + ".goldvisualsenabled", arena.isGoldVisualsEnabled());
+      config.set("instances." + arena.getId() + ".goldvisuals", arena.isGoldVisuals());
       ConfigUtils.saveConfig(plugin, config, "arenas");
+      new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
     }), 7, 2);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP.parseItem())

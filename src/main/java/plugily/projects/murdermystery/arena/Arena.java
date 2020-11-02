@@ -21,11 +21,7 @@ package plugily.projects.murdermystery.arena;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -95,7 +91,7 @@ public class Arena extends BukkitRunnable {
 
   private int murderers = 0, detectives = 0, spawnGoldTimer = 0, spawnGoldTime = 0;
 
-  private boolean detectiveDead, murdererLocatorReceived, hideChances, ready = true, forceStart = false, goldVisualsEnabled = false;
+  private boolean detectiveDead, murdererLocatorReceived, hideChances, ready = true, forceStart = false, goldVisuals = false;
   private ArenaState arenaState = ArenaState.WAITING_FOR_PLAYERS;
   private BossBar gameBar;
   private String mapName = "";
@@ -474,7 +470,7 @@ public class Arena extends BukkitRunnable {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
         }
 
-        if (goldVisualsEnabled) {
+        if (goldVisuals) {
           startGoldVisuals();
         }
 
@@ -571,47 +567,39 @@ public class Arena extends BukkitRunnable {
   }
 
   public void toggleGoldVisuals() {
-    if (goldSpawnPoints.isEmpty() || goldVisualsEnabled) {
-      goldVisualsEnabled = false;
+    if (goldSpawnPoints.isEmpty() || goldVisuals) {
+      goldVisuals = false;
       return;
     }
 
-    setGoldVisualsEnabled(true);
+    setGoldVisuals(true);
   }
 
   private void startGoldVisuals() {
-    java.util.concurrent.CompletableFuture.supplyAsync(() -> {
-      // todo reload somehow causes to execute twice
-      while (!goldSpawnPoints.isEmpty() && arenaState != ArenaState.IN_GAME && plugin.isEnabled()) {
-        try {
-          Thread.sleep(3 * 1000); // Slow down process to 3 sec
-        } catch (InterruptedException e) {
-          e.printStackTrace();
+    Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+      if (!goldSpawnPoints.isEmpty() && arenaState != ArenaState.IN_GAME && plugin.isEnabled()) {
+        if (!goldVisuals) {
+          this.cancel();
+          return;
         }
-
-        if (!goldVisualsEnabled) {
-          break;
-        }
-
         for (Location goldLocations : goldSpawnPoints) {
           Location goldLocation = goldLocations.clone();
           goldLocation.add(0, 0.4, 0);
-          goldLocation.getWorld().spawnParticle(org.bukkit.Particle.REDSTONE, goldLocation,
-              10, 0.1, 0.2, 0.1, new org.bukkit.Particle.DustOptions(org.bukkit.Color.YELLOW, 1));
+          goldLocation.getWorld().spawnParticle(Particle.REDSTONE, goldLocation.getX(), goldLocation.getY(), goldLocation.getZ(), 10, 0.1, 0.2, 0.1);
         }
+      } else {
+        this.cancel();
       }
-
-      return null;
-    });
+    }, 20L, 20L);
   }
 
-  public boolean isGoldVisualsEnabled() {
-    return goldVisualsEnabled;
+  public boolean isGoldVisuals() {
+    return goldVisuals;
   }
 
-  public void setGoldVisualsEnabled(boolean goldVisualsEnabled) {
-    this.goldVisualsEnabled = goldVisualsEnabled;
-    if (goldVisualsEnabled) {
+  public void setGoldVisuals(boolean goldVisuals) {
+    this.goldVisuals = goldVisuals;
+    if (goldVisuals) {
       startGoldVisuals();
     }
   }

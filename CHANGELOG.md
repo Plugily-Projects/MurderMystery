@@ -1,3 +1,8 @@
+### 1.6.7 Release (02.11.2020)
+* Added particle effect to gold spawn locations to show where gold will spawn
+* Added death/spectator roles therefore users will not get rewards if they are spectator
+* Added rainbow beds
+
 ### 1.6.6 Stable (31.10.2020)
 * Fixed armorstands are not correctly displayed
 * Fixed dead body heads 

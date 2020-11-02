@@ -159,7 +159,7 @@ public class ArenaRegistry {
 
       arena.setLobbyLocation(LocationSerializer.getLocation(config.getString(s + "lobbylocation", "world,364.0,63.0,-72.0,0.0,0.0")));
       arena.setEndLocation(LocationSerializer.getLocation(config.getString(s + "Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
-      arena.setGoldVisualsEnabled(config.getBoolean(s + "goldvisualsenabled"));
+      arena.setGoldVisuals(config.getBoolean(s + "goldvisuals", false));
 
       if (!config.getBoolean(s + "isdone", false)) {
         Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
