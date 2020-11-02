@@ -19,6 +19,7 @@
 package plugily.projects.murdermystery.arena.role;
 
 import org.bukkit.entity.Player;
+
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 
@@ -51,7 +52,15 @@ public enum Role {
   /**
    * Murderer role, must kill everyone to win
    */
-  MURDERER;
+  MURDERER,
+  /**
+   * Spectator role, just look :D
+   */
+  SPECTATOR,
+  /**
+   * Death role, when everyone die
+   */
+  DEATH;
 
   /**
    * Checks whether player is playing specified role or not
@@ -86,6 +95,10 @@ public enum Role {
         return isRole(Role.DETECTIVE, player) || isRole(Role.FAKE_DETECTIVE, player);
       case INNOCENT:
         return !isRole(Role.MURDERER, player) && !isRole(Role.ANY_DETECTIVE, player);
+      case DEATH:
+        return arena.isDeathPlayer(player);
+      case SPECTATOR:
+    	  return arena.isSpectatorPlayer(player);
       default:
         return false;
     }

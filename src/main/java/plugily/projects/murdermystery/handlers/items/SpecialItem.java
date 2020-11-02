@@ -29,6 +29,7 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.handlers.ChatManager;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,6 +45,8 @@ public class SpecialItem {
   private int slot;
   private final String name;
 
+  private static List<XMaterial> materialbed = new ArrayList<>(Arrays.asList(XMaterial.BLACK_BED, XMaterial.BLUE_BED, XMaterial.BROWN_BED, XMaterial.CYAN_BED, XMaterial.GRAY_BED, XMaterial.LIGHT_BLUE_BED, XMaterial.GREEN_BED, XMaterial.LIGHT_GRAY_BED, XMaterial.LIME_BED,XMaterial.MAGENTA_BED, XMaterial.ORANGE_BED, XMaterial.PINK_BED, XMaterial.PURPLE_BED, XMaterial.RED_BED, XMaterial.WHITE_BED, XMaterial.YELLOW_BED));
+  
   public SpecialItem(String name) {
     this.name = name;
   }
@@ -58,7 +61,8 @@ public class SpecialItem {
     Main plugin = JavaPlugin.getPlugin(Main.class);
     FileConfiguration config = ConfigUtils.getConfig(plugin, "lobbyitems");
     ChatManager chatManager = plugin.getChatManager();
-
+    List<SpecialItem> items = new ArrayList<>();
+    
     if (!config.contains(name)) {
       config.set(name + ".data", 0);
       config.set(name + ".displayname", displayName);
@@ -67,20 +71,42 @@ public class SpecialItem {
       config.set(name + ".slot", slot);
     }
     ConfigUtils.saveConfig(plugin, config, "lobbyitems");
-    ItemStack stack = XMaterial.matchXMaterial(config.getString(name + ".material-name", "STONE").toUpperCase())
-        .orElse(XMaterial.STONE).parseItem();
-    ItemMeta meta = stack.getItemMeta();
-    meta.setDisplayName(chatManager.colorRawMessage(config.getString(name + ".displayname")));
-
-    List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(chatManager::colorRawMessage)
-      .collect(Collectors.toList());
-    meta.setLore(colorizedLore);
-    stack.setItemMeta(meta);
-
-    SpecialItem item = new SpecialItem(name);
-    item.itemStack = stack;
-    item.slot = config.getInt(name + ".slot");
-    SpecialItemManager.addItem(name, item);
+    
+    if(config.getString(name + ".material-name").equalsIgnoreCase("RAINBOW_BED")) {
+	    materialbed.forEach(xmaterial ->{
+	    	ItemStack stack = xmaterial.parseItem();
+				ItemMeta meta = stack.getItemMeta();
+		    meta.setDisplayName(chatManager.colorRawMessage(config.getString(name + ".displayname")));
+		
+		    List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(chatManager::colorRawMessage)
+		      .collect(Collectors.toList());
+		    meta.setLore(colorizedLore);
+		    stack.setItemMeta(meta);
+		
+		    SpecialItem item = new SpecialItem(name);
+		    item.itemStack = stack;
+		    item.slot = config.getInt(name + ".slot");
+		    items.add(item);
+	    });
+    }
+    else {
+    	ItemStack stack = XMaterial.matchXMaterial(config.getString(name + ".material-name", "STONE").toUpperCase())
+	        .orElse(XMaterial.STONE).parseItem();
+			ItemMeta meta = stack.getItemMeta();
+	    meta.setDisplayName(chatManager.colorRawMessage(config.getString(name + ".displayname")));
+	
+	    List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(chatManager::colorRawMessage)
+	      .collect(Collectors.toList());
+	    meta.setLore(colorizedLore);
+	    stack.setItemMeta(meta);
+	
+	    SpecialItem item = new SpecialItem(name);
+	    item.itemStack = stack;
+	    item.slot = config.getInt(name + ".slot");
+	    items.add(item);
+    }
+    
+    SpecialItemManager.addItem(name, items);
   }
 
   public int getSlot() {

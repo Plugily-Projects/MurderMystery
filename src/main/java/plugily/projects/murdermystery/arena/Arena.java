@@ -80,7 +80,8 @@ public class Arena extends BukkitRunnable {
   private final List<Stand> stands = new ArrayList<>();
   private final List<SpecialBlock> specialBlocks = new ArrayList<>();
   private final List<Player> allMurderer = new ArrayList<>(), allDetectives = new ArrayList<>();
-
+  private final List<Player> spectators = new ArrayList<>();
+  private final List<Player> deaths = new ArrayList<>();
   //contains murderer, detective, fake detective and hero
   private final Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
   //all arena values that are integers, contains constant and floating values
@@ -447,7 +448,9 @@ public class Arena extends BukkitRunnable {
           }
           plugin.getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
           players.clear();
-
+          deaths.clear();
+          spectators.clear();
+          
           cleanUpArena();
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
             && ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
@@ -1014,7 +1017,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public enum CharacterType {
-    MURDERER, DETECTIVE, FAKE_DETECTIVE, HERO
+    MURDERER, DETECTIVE, FAKE_DETECTIVE, HERO, DEATH, SPECTATOR
   }
 
 
@@ -1039,6 +1042,30 @@ public class Arena extends BukkitRunnable {
 
   public ArmorStandHologram getBowHologram() {
     return bowHologram;
+  }
+  
+  public void addDeathPlayer(Player player) {
+  	this.deaths.add(player);
+  }
+  
+  public void removeDeathPlayer(Player player) {
+  	this.deaths.remove(player);
+  }
+  
+  public boolean isDeathPlayer(Player player) {
+  	return this.deaths.contains(player);
+  }
+  
+  public void addSpectatorPlayer(Player player) {
+  	this.spectators.add(player);
+  }
+  
+  public void removeSpectatorPlayer(Player player) {
+  	this.spectators.remove(player);
+  }
+  
+  public boolean isSpectatorPlayer(Player player) {
+  	return this.spectators.contains(player);
   }
 
 }
