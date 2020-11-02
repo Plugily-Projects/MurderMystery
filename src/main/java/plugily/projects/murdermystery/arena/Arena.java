@@ -1069,7 +1069,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public enum CharacterType {
-    MURDERER, DETECTIVE, FAKE_DETECTIVE, HERO, DEATH, SPECTATOR
+    MURDERER, DETECTIVE, FAKE_DETECTIVE, HERO
   }
 
 
