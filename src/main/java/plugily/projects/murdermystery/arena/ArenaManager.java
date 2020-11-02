@@ -192,7 +192,6 @@ public class ArenaManager {
       player.setAllowFlight(true);
       player.setFlying(true);
 
-
       for (Player spectator : arena.getPlayers()) {
         if (plugin.getUserManager().getUser(spectator).isSpectator()) {
           NMS.hidePlayer(player, spectator);
@@ -322,11 +321,11 @@ public class ArenaManager {
     }
     player.setGlowing(false);
     user.setSpectator(false);
-  	if(arena.isDeathPlayer(player)) {
-  		arena.removeDeathPlayer(player);
-  	}
-    if(arena.isSpectatorPlayer(player)) {
-    	arena.removeSpectatorPlayer(player);
+    if (arena.isDeathPlayer(player)) {
+      arena.removeDeathPlayer(player);
+    }
+    if (arena.isSpectatorPlayer(player)) {
+      arena.removeSpectatorPlayer(player);
     }
     player.setCollidable(true);
     user.removeScoreboard();
@@ -381,37 +380,40 @@ public class ArenaManager {
     } else {
       arena.setTimer(10);
     }
+
     List<String> summaryMessages = LanguageManager.getLanguageList("In-Game.Messages.Game-End-Messages.Summary-Message");
     arena.getScoreboardManager().stopAllScoreboards();
+
     boolean murderWon = arena.getPlayersLeft().size() == arena.aliveMurderer();
+
     for (final Player player : arena.getPlayers()) {
-	  	User user = plugin.getUserManager().getUser(player);
-			if(!quickStop && Role.isAnyRole(player)) {
-			  if (!Role.isRole(Role.DEATH, player) && !Role.isRole(Role.SPECTATOR, player)) {
-				  if (Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
-				    user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, ThreadLocalRandom.current().nextInt(4) + 1);
-						user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, ThreadLocalRandom.current().nextInt(4) + 1);
-					}
-					if (murderWon) {
-					  if (Role.isRole(Role.MURDERER, player)) {
-						  user.addStat(StatsStorage.StatisticType.WINS, 1);
-						  plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
-				  	} else {
-				  		user.addStat(StatsStorage.StatisticType.LOSES, 1);
-					    plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
-					  }
-					} else if (!Role.isRole(Role.MURDERER, player)) {
-					    user.addStat(StatsStorage.StatisticType.WINS, 1);
-					    plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
-				  } else {
-				    user.addStat(StatsStorage.StatisticType.LOSES, 1);
-				    plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
-				  }
-			  } else if (Role.isRole(Role.DEATH, player)) {
-						user.addStat(StatsStorage.StatisticType.LOSES, 1);
-			      plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
-			  }
-		  }
+      User user = plugin.getUserManager().getUser(player);
+      if (!quickStop && Role.isAnyRole(player)) {
+        if (!Role.isRole(Role.DEATH, player) && !Role.isRole(Role.SPECTATOR, player)) {
+          if (Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
+            user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, ThreadLocalRandom.current().nextInt(4) + 1);
+            user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, ThreadLocalRandom.current().nextInt(4) + 1);
+          }
+          if (murderWon) {
+            if (Role.isRole(Role.MURDERER, player)) {
+              user.addStat(StatsStorage.StatisticType.WINS, 1);
+              plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
+            } else {
+              user.addStat(StatsStorage.StatisticType.LOSES, 1);
+              plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
+            }
+          } else if (!Role.isRole(Role.MURDERER, player)) {
+            user.addStat(StatsStorage.StatisticType.WINS, 1);
+            plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
+          } else {
+            user.addStat(StatsStorage.StatisticType.LOSES, 1);
+            plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
+          }
+        } else if (Role.isRole(Role.DEATH, player)) {
+          user.addStat(StatsStorage.StatisticType.LOSES, 1);
+          plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
+        }
+      }
       //the default walk & fly speed
       player.setFlySpeed(0.1f);
       player.setWalkSpeed(0.2f);

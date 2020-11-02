@@ -98,7 +98,7 @@ public enum Role {
       case DEATH:
         return arena.isDeathPlayer(player);
       case SPECTATOR:
-    	  return arena.isSpectatorPlayer(player);
+        return arena.isSpectatorPlayer(player);
       default:
         return false;
     }

@@ -399,7 +399,7 @@ public class ArenaEvents implements Listener {
     player.getInventory().clear();
     chatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
     if (arena.getArenaState() != ArenaState.ENDING && arena.getArenaState() != ArenaState.RESTARTING) {
-    	arena.addDeathPlayer(player);
+      arena.addDeathPlayer(player);
     }
     //we must call it ticks later due to instant respawn bug
     Bukkit.getScheduler().runTaskLater(plugin, () -> {

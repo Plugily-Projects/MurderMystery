@@ -79,7 +79,9 @@ public class Arena extends BukkitRunnable {
   private final List<Corpse> corpses = new ArrayList<>();
   private final List<Stand> stands = new ArrayList<>();
   private final List<SpecialBlock> specialBlocks = new ArrayList<>();
-  private final List<Player> allMurderer = new ArrayList<>(), allDetectives = new ArrayList<>(), spectators = new ArrayList<>(), deaths = new ArrayList<>();
+  private final List<Player> allMurderer = new ArrayList<>(), allDetectives = new ArrayList<>(),
+      spectators = new ArrayList<>(), deaths = new ArrayList<>();
+
   //contains murderer, detective, fake detective and hero
   private final Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
   //all arena values that are integers, contains constant and floating values
@@ -446,9 +448,10 @@ public class Arena extends BukkitRunnable {
           }
           plugin.getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
           players.clear();
+
           deaths.clear();
           spectators.clear();
-          
+
           cleanUpArena();
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
             && ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
@@ -1092,29 +1095,29 @@ public class Arena extends BukkitRunnable {
   public ArmorStandHologram getBowHologram() {
     return bowHologram;
   }
-  
+
   public void addDeathPlayer(Player player) {
-  	deaths.add(player);
+    deaths.add(player);
   }
-  
+
   public void removeDeathPlayer(Player player) {
   	deaths.remove(player);
   }
-  
+
   public boolean isDeathPlayer(Player player) {
-  	return deaths.contains(player);
+    return deaths.contains(player);
   }
-  
+
   public void addSpectatorPlayer(Player player) {
-  	spectators.add(player);
+    spectators.add(player);
   }
-  
+
   public void removeSpectatorPlayer(Player player) {
-  	spectators.remove(player);
+    spectators.remove(player);
   }
-  
+
   public boolean isSpectatorPlayer(Player player) {
-  	return spectators.contains(player);
+    return spectators.contains(player);
   }
 
 }

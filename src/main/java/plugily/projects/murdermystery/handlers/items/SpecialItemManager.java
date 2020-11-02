@@ -38,15 +38,16 @@ public class SpecialItemManager {
   }
 
   public static SpecialItem getSpecialItem(String name) {
-  	List<SpecialItem> specialitem = specialItems.getOrDefault(name, null);
-  	Random num = new Random();
-  	return specialitem.get(num.nextInt(specialitem.size()));
+    List<SpecialItem> specialitem = specialItems.getOrDefault(name, new java.util.ArrayList<>());
+    Random num = new Random();
+    return specialitem.get(num.nextInt(specialitem.size()));
   }
 
   public static String getRelatedSpecialItem(ItemStack itemStack) {
     for (String key : specialItems.keySet()) {
       List<SpecialItem> entityItem = specialItems.get(key);
-      if (!entityItem.isEmpty() && entityItem.get(0).getItemStack().getItemMeta().getDisplayName().equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
+      if (!entityItem.isEmpty() && entityItem.get(0).getItemStack().getItemMeta().getDisplayName()
+          .equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
         return key;
       }
     }
