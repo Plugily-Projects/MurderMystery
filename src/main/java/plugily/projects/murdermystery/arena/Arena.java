@@ -79,9 +79,7 @@ public class Arena extends BukkitRunnable {
   private final List<Corpse> corpses = new ArrayList<>();
   private final List<Stand> stands = new ArrayList<>();
   private final List<SpecialBlock> specialBlocks = new ArrayList<>();
-  private final List<Player> allMurderer = new ArrayList<>(), allDetectives = new ArrayList<>();
-  private final List<Player> spectators = new ArrayList<>();
-  private final List<Player> deaths = new ArrayList<>();
+  private final List<Player> allMurderer = new ArrayList<>(), allDetectives = new ArrayList<>(), spectators = new ArrayList<>(), deaths = new ArrayList<>();
   //contains murderer, detective, fake detective and hero
   private final Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
   //all arena values that are integers, contains constant and floating values
@@ -1045,27 +1043,27 @@ public class Arena extends BukkitRunnable {
   }
   
   public void addDeathPlayer(Player player) {
-  	this.deaths.add(player);
+  	deaths.add(player);
   }
   
   public void removeDeathPlayer(Player player) {
-  	this.deaths.remove(player);
+  	deaths.remove(player);
   }
   
   public boolean isDeathPlayer(Player player) {
-  	return this.deaths.contains(player);
+  	return deaths.contains(player);
   }
   
   public void addSpectatorPlayer(Player player) {
-  	this.spectators.add(player);
+  	spectators.add(player);
   }
   
   public void removeSpectatorPlayer(Player player) {
-  	this.spectators.remove(player);
+  	spectators.remove(player);
   }
   
   public boolean isSpectatorPlayer(Player player) {
-  	return this.spectators.contains(player);
+  	return spectators.contains(player);
   }
 
 }

@@ -58,7 +58,7 @@ public enum Role {
    */
   SPECTATOR,
   /**
-   * Death role, when everyone die
+   * Death role, when everyone died
    */
   DEATH;
 

@@ -45,7 +45,14 @@ public class SpecialItem {
   private int slot;
   private final String name;
 
-  private static List<XMaterial> materialbed = new ArrayList<>(Arrays.asList(XMaterial.BLACK_BED, XMaterial.BLUE_BED, XMaterial.BROWN_BED, XMaterial.CYAN_BED, XMaterial.GRAY_BED, XMaterial.LIGHT_BLUE_BED, XMaterial.GREEN_BED, XMaterial.LIGHT_GRAY_BED, XMaterial.LIME_BED,XMaterial.MAGENTA_BED, XMaterial.ORANGE_BED, XMaterial.PINK_BED, XMaterial.PURPLE_BED, XMaterial.RED_BED, XMaterial.WHITE_BED, XMaterial.YELLOW_BED));
+  private static List<XMaterial> materialbed = new ArrayList<>(Arrays.asList(
+			XMaterial.BLACK_BED, XMaterial.BLUE_BED, XMaterial.BROWN_BED, 
+			XMaterial.CYAN_BED, XMaterial.GRAY_BED, XMaterial.LIGHT_BLUE_BED, 
+			XMaterial.GREEN_BED, XMaterial.LIGHT_GRAY_BED, XMaterial.LIME_BED,
+			XMaterial.MAGENTA_BED, XMaterial.ORANGE_BED, XMaterial.PINK_BED, 
+			XMaterial.PURPLE_BED, XMaterial.RED_BED, XMaterial.WHITE_BED, 
+			XMaterial.YELLOW_BED
+		));
   
   public SpecialItem(String name) {
     this.name = name;
@@ -72,7 +79,7 @@ public class SpecialItem {
     }
     ConfigUtils.saveConfig(plugin, config, "lobbyitems");
     
-    if(config.getString(name + ".material-name").equalsIgnoreCase("RAINBOW_BED")) {
+    if(config.getString(name + ".material-name", "STONE").equalsIgnoreCase("RAINBOW_BED")) {
 	    materialbed.forEach(xmaterial ->{
 	    	ItemStack stack = xmaterial.parseItem();
 				ItemMeta meta = stack.getItemMeta();
