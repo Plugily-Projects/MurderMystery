@@ -31,7 +31,9 @@ import plugily.projects.murdermystery.handlers.ChatManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -45,14 +47,14 @@ public class SpecialItem {
   private int slot;
   private final String name;
 
-  private static List<XMaterial> materialbed = new ArrayList<>(Arrays.asList(
+  private final Set<XMaterial> beds = EnumSet.of(
 			XMaterial.BLACK_BED, XMaterial.BLUE_BED, XMaterial.BROWN_BED, 
 			XMaterial.CYAN_BED, XMaterial.GRAY_BED, XMaterial.LIGHT_BLUE_BED, 
 			XMaterial.GREEN_BED, XMaterial.LIGHT_GRAY_BED, XMaterial.LIME_BED,
 			XMaterial.MAGENTA_BED, XMaterial.ORANGE_BED, XMaterial.PINK_BED, 
 			XMaterial.PURPLE_BED, XMaterial.RED_BED, XMaterial.WHITE_BED, 
 			XMaterial.YELLOW_BED
-		));
+		);
   
   public SpecialItem(String name) {
     this.name = name;
@@ -80,7 +82,7 @@ public class SpecialItem {
     ConfigUtils.saveConfig(plugin, config, "lobbyitems");
     
     if(config.getString(name + ".material-name", "STONE").equalsIgnoreCase("RAINBOW_BED")) {
-	    materialbed.forEach(xmaterial ->{
+    	beds.forEach(xmaterial ->{
 	    	ItemStack stack = xmaterial.parseItem();
 				ItemMeta meta = stack.getItemMeta();
 		    meta.setDisplayName(chatManager.colorRawMessage(config.getString(name + ".displayname")));
