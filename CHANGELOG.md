@@ -1,4 +1,4 @@
-### 1.6.7 Release (02.11.2020)
+### 1.6.7 Release (02.11.2020 - 08.11.2020)
 * Added particle effect to gold spawn locations to show where gold will spawn
 * Added death/spectator roles therefore users will not get rewards if they are spectator
 * Added rainbow beds
