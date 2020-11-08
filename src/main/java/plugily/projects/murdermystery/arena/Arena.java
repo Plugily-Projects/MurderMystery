@@ -21,11 +21,7 @@ package plugily.projects.murdermystery.arena;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -79,7 +75,8 @@ public class Arena extends BukkitRunnable {
   private final List<Corpse> corpses = new ArrayList<>();
   private final List<Stand> stands = new ArrayList<>();
   private final List<SpecialBlock> specialBlocks = new ArrayList<>();
-  private final List<Player> allMurderer = new ArrayList<>(), allDetectives = new ArrayList<>();
+  private final List<Player> allMurderer = new ArrayList<>(), allDetectives = new ArrayList<>(),
+      spectators = new ArrayList<>(), deaths = new ArrayList<>();
 
   //contains murderer, detective, fake detective and hero
   private final Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
@@ -94,7 +91,7 @@ public class Arena extends BukkitRunnable {
 
   private int murderers = 0, detectives = 0, spawnGoldTimer = 0, spawnGoldTime = 0;
 
-  private boolean detectiveDead, murdererLocatorReceived, hideChances, ready = true, forceStart = false;
+  private boolean detectiveDead, murdererLocatorReceived, hideChances, ready = true, forceStart = false, goldVisuals = false;
   private ArenaState arenaState = ArenaState.WAITING_FOR_PLAYERS;
   private BossBar gameBar;
   private String mapName = "";
@@ -448,6 +445,9 @@ public class Arena extends BukkitRunnable {
           plugin.getRewardsHandler().performReward(this, Reward.RewardType.END_GAME);
           players.clear();
 
+          deaths.clear();
+          spectators.clear();
+
           cleanUpArena();
           if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
             && ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
@@ -469,6 +469,11 @@ public class Arena extends BukkitRunnable {
         if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
         }
+
+        if (goldVisuals) {
+          startGoldVisuals();
+        }
+
         break;
       default:
         break; //o.o?
@@ -559,6 +564,44 @@ public class Arena extends BukkitRunnable {
 
   public void setGoldSpawnPoints(@NotNull List<Location> goldSpawnPoints) {
     this.goldSpawnPoints = goldSpawnPoints;
+  }
+
+  public void toggleGoldVisuals() {
+    if (goldSpawnPoints.isEmpty() || goldVisuals) {
+      goldVisuals = false;
+      return;
+    }
+
+    setGoldVisuals(true);
+  }
+
+  private void startGoldVisuals() {
+    Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+      if (!goldSpawnPoints.isEmpty() && arenaState != ArenaState.IN_GAME && plugin.isEnabled()) {
+        if (!goldVisuals) {
+          this.cancel();
+          return;
+        }
+        for (Location goldLocations : goldSpawnPoints) {
+          Location goldLocation = goldLocations.clone();
+          goldLocation.add(0, 0.4, 0);
+          goldLocation.getWorld().spawnParticle(Particle.REDSTONE, goldLocation.getX(), goldLocation.getY(), goldLocation.getZ(), 10, 0.1, 0.2, 0.1);
+        }
+      } else {
+        this.cancel();
+      }
+    }, 20L, 20L);
+  }
+
+  public boolean isGoldVisuals() {
+    return goldVisuals;
+  }
+
+  public void setGoldVisuals(boolean goldVisuals) {
+    this.goldVisuals = goldVisuals;
+    if (goldVisuals) {
+      startGoldVisuals();
+    }
   }
 
   /**
@@ -1039,6 +1082,30 @@ public class Arena extends BukkitRunnable {
 
   public ArmorStandHologram getBowHologram() {
     return bowHologram;
+  }
+
+  public void addDeathPlayer(Player player) {
+    deaths.add(player);
+  }
+
+  public void removeDeathPlayer(Player player) {
+  	deaths.remove(player);
+  }
+
+  public boolean isDeathPlayer(Player player) {
+    return deaths.contains(player);
+  }
+
+  public void addSpectatorPlayer(Player player) {
+    spectators.add(player);
+  }
+
+  public void removeSpectatorPlayer(Player player) {
+    spectators.remove(player);
+  }
+
+  public boolean isSpectatorPlayer(Player player) {
+    return spectators.contains(player);
   }
 
 }

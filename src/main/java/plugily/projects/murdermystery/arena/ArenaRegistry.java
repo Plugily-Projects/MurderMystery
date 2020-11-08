@@ -129,7 +129,7 @@ public class ArenaRegistry {
       arena.setMaximumPlayers(config.getInt(s + "maximumplayers", 4));
       arena.setMapName(config.getString(s + "mapname", "none"));
       arena.setSpawnGoldTime(config.getInt(s + "spawngoldtime", 5));
-      arena.setHideChances(config.getBoolean(s + "hidechances", false));
+      arena.setHideChances(config.getBoolean(s + "hidechances"));
       arena.setMurderers(config.getInt(s + "playerpermurderer", 5));
       arena.setDetectives(config.getInt(s + "playerperdetective", 7));
       List<Location> playerSpawnPoints = new ArrayList<>();
@@ -159,6 +159,7 @@ public class ArenaRegistry {
 
       arena.setLobbyLocation(LocationSerializer.getLocation(config.getString(s + "lobbylocation", "world,364.0,63.0,-72.0,0.0,0.0")));
       arena.setEndLocation(LocationSerializer.getLocation(config.getString(s + "Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
+      arena.setGoldVisuals(config.getBoolean(s + "goldvisuals", false));
 
       if (!config.getBoolean(s + "isdone", false)) {
         Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));

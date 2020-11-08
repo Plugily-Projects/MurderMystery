@@ -168,7 +168,7 @@ public class MiscComponents implements SetupComponent {
     }), 7, 0);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.GOLD_NUGGET.parseItem())
-      .amount(config.getInt("instances." + arena.getId() + "." + "spawngoldtime", 3))
+      .amount(config.getInt("instances." + arena.getId() + ".spawngoldtime", 3))
       .name(chatManager.colorRawMessage("&e&lSet gold spawn time in seconds"))
       .lore(ChatColor.GRAY + "LEFT click to decrease")
       .lore(ChatColor.GRAY + "RIGHT click to increase")
@@ -193,6 +193,16 @@ public class MiscComponents implements SetupComponent {
       ConfigUtils.saveConfig(plugin, config, "arenas");
       new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
     }), 7, 1);
+
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.REDSTONE.parseItem())
+      .name(chatManager.colorRawMessage(arena.isGoldVisuals() ? "&c&lDisable Gold Visuals" : "&a&lEnable Gold Visuals"))
+      .lore(ChatColor.GRAY + "Enables gold visuals to spawn").lore(ChatColor.GRAY + "some particle effects above gold locations")
+      .build(), e -> {
+      arena.toggleGoldVisuals();
+      config.set("instances." + arena.getId() + ".goldvisuals", arena.isGoldVisuals());
+      ConfigUtils.saveConfig(plugin, config, "arenas");
+      new SetupInventory(arena, setupInventory.getPlayer()).openInventory();
+    }), 7, 2);
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
       .name(chatManager.colorRawMessage("&e&lView Setup Video"))
