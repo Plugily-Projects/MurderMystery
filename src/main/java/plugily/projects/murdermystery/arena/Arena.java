@@ -34,6 +34,7 @@ import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import pl.plajerlair.commonsbox.number.NumberUtils;
@@ -579,16 +580,22 @@ public class Arena extends BukkitRunnable {
     Bukkit.getScheduler().runTaskTimer(plugin, () -> {
       if (!goldSpawnPoints.isEmpty() && arenaState != ArenaState.IN_GAME && plugin.isEnabled()) {
         if (!goldVisuals) {
-          this.cancel();
+          cancel();
           return;
         }
         for (Location goldLocations : goldSpawnPoints) {
           Location goldLocation = goldLocations.clone();
           goldLocation.add(0, 0.4, 0);
-          goldLocation.getWorld().spawnParticle(Particle.REDSTONE, goldLocation.getX(), goldLocation.getY(), goldLocation.getZ(), 10, 0.1, 0.2, 0.1);
+          if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
+            goldLocation.getWorld().spawnParticle(Particle.REDSTONE, goldLocation.getX(), goldLocation.getY(), goldLocation.getZ(),
+                10, 0.1, 0.2, 0.1, new org.bukkit.Particle.DustOptions(org.bukkit.Color.YELLOW, 1));
+          } else {
+            goldLocation.getWorld().spawnParticle(Particle.REDSTONE, goldLocation.getX(), goldLocation.getY(), goldLocation.getZ(),
+                10, 0.1, 0.2, 0.1);
+          }
         }
       } else {
-        this.cancel();
+        cancel();
       }
     }, 20L, 20L);
   }
