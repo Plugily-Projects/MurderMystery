@@ -1,5 +1,6 @@
 ### 1.6.8 Release (10.11.2020)
 * Fixed particle effects not working on 1.13+
+* Fixed joining through a sign while hotbar slot for leave-item is active
 
 ### 1.6.7 Release (02.11.2020 - 08.11.2020)
 * Added particle effect to gold spawn locations to show where gold will spawn
