@@ -1,3 +1,7 @@
+### 1.6.9 Release (28.11.2020)
+* Fixed joining through a sign while hotbar slot for leave-item is active
+* Fixed gold visuals broke the whole plugin while enabled
+
 ### 1.6.8 Release (10.11.2020)
 * Fixed particle effects not working on 1.13+
 

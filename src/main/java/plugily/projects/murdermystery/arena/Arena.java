@@ -30,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -77,7 +78,7 @@ public class Arena extends BukkitRunnable {
   private final List<Stand> stands = new ArrayList<>();
   private final List<SpecialBlock> specialBlocks = new ArrayList<>();
   private final List<Player> allMurderer = new ArrayList<>(), allDetectives = new ArrayList<>(),
-      spectators = new ArrayList<>(), deaths = new ArrayList<>();
+    spectators = new ArrayList<>(), deaths = new ArrayList<>();
 
   //contains murderer, detective, fake detective and hero
   private final Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
@@ -572,30 +573,31 @@ public class Arena extends BukkitRunnable {
       goldVisuals = false;
       return;
     }
-
     setGoldVisuals(true);
   }
 
+  private BukkitTask visualTask;
+
   private void startGoldVisuals() {
-    Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-      if (!goldSpawnPoints.isEmpty() && arenaState != ArenaState.IN_GAME && plugin.isEnabled()) {
-        if (!goldVisuals) {
-          cancel();
-          return;
+    if (visualTask != null) {
+      return;
+    }
+    visualTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+      if (!plugin.isEnabled() || !goldVisuals || goldSpawnPoints.isEmpty() || arenaState != ArenaState.WAITING_FOR_PLAYERS) {
+        //we need to cancel it that way as the arena class is an task
+        visualTask.cancel();
+        return;
+      }
+      for (Location goldLocations : goldSpawnPoints) {
+        Location goldLocation = goldLocations.clone();
+        goldLocation.add(0, 0.4, 0);
+        if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
+          goldLocation.getWorld().spawnParticle(Particle.REDSTONE, goldLocation.getX(), goldLocation.getY(), goldLocation.getZ(),
+            10, 0.1, 0.2, 0.1, new org.bukkit.Particle.DustOptions(org.bukkit.Color.YELLOW, 1));
+        } else {
+          goldLocation.getWorld().spawnParticle(Particle.REDSTONE, goldLocation.getX(), goldLocation.getY(), goldLocation.getZ(),
+            10, 0.1, 0.2, 0.1);
         }
-        for (Location goldLocations : goldSpawnPoints) {
-          Location goldLocation = goldLocations.clone();
-          goldLocation.add(0, 0.4, 0);
-          if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
-            goldLocation.getWorld().spawnParticle(Particle.REDSTONE, goldLocation.getX(), goldLocation.getY(), goldLocation.getZ(),
-                10, 0.1, 0.2, 0.1, new org.bukkit.Particle.DustOptions(org.bukkit.Color.YELLOW, 1));
-          } else {
-            goldLocation.getWorld().spawnParticle(Particle.REDSTONE, goldLocation.getX(), goldLocation.getY(), goldLocation.getZ(),
-                10, 0.1, 0.2, 0.1);
-          }
-        }
-      } else {
-        cancel();
       }
     }, 20L, 20L);
   }
@@ -1096,7 +1098,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void removeDeathPlayer(Player player) {
-  	deaths.remove(player);
+    deaths.remove(player);
   }
 
   public boolean isDeathPlayer(Player player) {

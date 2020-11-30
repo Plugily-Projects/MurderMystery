@@ -26,6 +26,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -145,7 +146,7 @@ public class SignManager implements Listener {
     e.getPlayer().sendMessage(chatManager.getPrefix() + ChatColor.RED + "Couldn't remove sign from configuration! Please do this manually!");
   }
 
-  @EventHandler
+  @EventHandler(priority = EventPriority.HIGH)
   public void onJoinAttempt(PlayerInteractEvent e) {
     ArenaSign arenaSign = getArenaSignByBlock(e.getClickedBlock());
     if (e.getAction() == Action.RIGHT_CLICK_BLOCK && arenaSign != null && e.getClickedBlock().getState() instanceof Sign) {

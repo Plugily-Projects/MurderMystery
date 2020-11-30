@@ -108,6 +108,18 @@ public class StatsStorage {
   }
 
   /**
+   * Set user statistic based on StatisticType
+   *
+   * @param player        Online player to get data from
+   * @param statisticType Statistic type to get (kills, deaths etc.)
+   * @param value        int of statistic
+   * @see StatisticType
+   */
+  public static void setUserStat(Player player, StatisticType statisticType, int value){
+    plugin.getUserManager().getUser(player).setStat(statisticType, value);
+  }
+
+  /**
    * Available statistics to get.
    */
   public enum StatisticType {
