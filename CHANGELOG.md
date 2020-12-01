@@ -1,3 +1,6 @@
+### 1.7.0-beta
+* Fix NoSuchMethodError when CommandSender#spigot does not exists on 1.11
+
 ### 1.6.9 Release (28.11.2020)
 * Fixed joining through a sign while hotbar slot for leave-item is active
 * Fixed gold visuals broke the whole plugin while enabled
