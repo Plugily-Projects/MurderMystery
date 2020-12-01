@@ -328,8 +328,8 @@ public class Arena extends BukkitRunnable {
             if (allMurderer.isEmpty()) ArenaManager.stopGame(false, this);
             for (Player p : allMurderer) {
               User murderer = plugin.getUserManager().getUser(p);
-              if (murderer.isSpectator()) continue;
-              if (!p.isOnline() || murderer.getArena() != this) continue;
+              if (murderer.isSpectator() || !p.isOnline() || murderer.getArena() != this)
+                continue;
               p.getInventory().setHeldItemSlot(0);
               ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
             }
@@ -359,7 +359,7 @@ public class Arena extends BukkitRunnable {
           }
         }
         //no players - stop game
-        if (getPlayersLeft().size() == 0) {
+        if (getPlayersLeft().isEmpty()) {
           ArenaManager.stopGame(false, this);
         } else
           //winner check
@@ -1025,7 +1025,7 @@ public class Arena extends BukkitRunnable {
   public int aliveMurderer() {
     int alive = 0;
     for (Player p : getPlayersLeft()) {
-      if (allMurderer.contains(p) && isMurderAlive(p)) {
+      if (Role.isRole(Role.MURDERER, p) && isMurderAlive(p)) {
         alive++;
       }
     }
