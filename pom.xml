@@ -24,7 +24,7 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>murdermystery</artifactId>
-    <version>1.6.9</version>
+    <version>1.6.9b</version>
     <name>MurderMystery</name>
 
     <properties>
@@ -136,7 +136,7 @@
         <dependency>
             <groupId>me.tigerhix.lib</groupId>
             <artifactId>scoreboard</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -310,12 +310,12 @@
     <distributionManagement>
         <repository>
             <id>plugily-projects-repo</id>
-            <url>ftp://plugily.xyz</url>
+            <url>ftp://46.249.204.191</url>
         </repository>
         <site>
             <id>plugily-projects-java-docs</id>
             <name>MurderMystery</name>
-            <url>ftp://plugily.xyz</url>
+            <url>ftp://46.249.204.191</url>
         </site>
     </distributionManagement>
 
