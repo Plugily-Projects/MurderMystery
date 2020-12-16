@@ -1,5 +1,6 @@
-### 1.7.0-beta
+### 1.6.9-b Beta (16.12.2020)
 * Fix NoSuchMethodError when CommandSender#spigot does not exists on 1.11
+* Updated ScoreboardLib to fix problems with color matching
 
 ### 1.6.9 Release (28.11.2020)
 * Fixed joining through a sign while hotbar slot for leave-item is active

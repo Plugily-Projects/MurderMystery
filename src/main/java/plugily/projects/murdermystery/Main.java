@@ -94,7 +94,7 @@ public class Main extends JavaPlugin {
     LanguageManager.init(this);
     saveDefaultConfig();
 
-    Debugger.setEnabled(getDescription().getVersion().contains("b") || getConfig().getBoolean("Debug"));
+    Debugger.setEnabled(getDescription().getVersion().contains("debug") || getConfig().getBoolean("Debug"));
 
     Debugger.debug("[System] Initialization start");
     if (getConfig().getBoolean("Developer-Mode")) {
