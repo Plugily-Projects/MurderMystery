@@ -44,6 +44,7 @@ import plugily.projects.murdermystery.commands.arguments.game.*;
 import plugily.projects.murdermystery.commands.completion.TabCompletion;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.setup.SetupInventory;
+import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.Utils;
 
 import java.util.ArrayList;
@@ -194,16 +195,15 @@ public class ArgumentsRegistry implements CommandExecutor {
     data.addAll(mappedArguments.get("murdermystery").stream().filter(arg -> arg instanceof LabeledCommandArgument)
       .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList()));
     for (LabelData labelData : data) {
-      TextComponent component;
       if (sender instanceof Player) {
-        component = new TextComponent(labelData.getText());
+        TextComponent component = new TextComponent(labelData.getText());
+        component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, labelData.getCommand()));
+        component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(labelData.getDescription()).create()));
+        ((Player) sender).spigot().sendMessage(component);
       } else {
         //more descriptive for console - split at \n to show only basic description
-        component = new TextComponent(labelData.getText() + " - " + labelData.getDescription().split("\n")[0]);
+        Debugger.sendConsoleMsg(labelData.getText() + " - " + labelData.getDescription().split("\n")[0]);
       }
-      component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, labelData.getCommand()));
-      component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(labelData.getDescription()).create()));
-      sender.spigot().sendMessage(component);
     }
   }
 

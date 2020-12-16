@@ -115,7 +115,7 @@ public class StatsStorage {
    * @param value        int of statistic
    * @see StatisticType
    */
-  public static void setUserStat(Player player, StatisticType statisticType, int value){
+  public static void setUserStat(Player player, StatisticType statisticType, int value) {
     plugin.getUserManager().getUser(player).setStat(statisticType, value);
   }
 

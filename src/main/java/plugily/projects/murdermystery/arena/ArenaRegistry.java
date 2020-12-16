@@ -106,7 +106,7 @@ public class ArenaRegistry {
   public static void registerArenas() {
     Debugger.debug("Initial arenas registration");
     long start = System.currentTimeMillis();
-    if (ArenaRegistry.getArenas().size() > 0) {
+    if (!ArenaRegistry.getArenas().isEmpty()) {
       ArenaRegistry.getArenas().forEach(Arena::cleanUpArena);
 
       new ArrayList<>(ArenaRegistry.getArenas()).forEach(ArenaRegistry::unregisterArena);
@@ -119,11 +119,13 @@ public class ArenaRegistry {
     }
 
     for (String id : config.getConfigurationSection("instances").getKeys(false)) {
-      Arena arena;
-      String s = "instances." + id + ".";
-      if (s.contains("default")) {
+      if (id.equalsIgnoreCase("default")) {
         continue;
       }
+
+      Arena arena;
+      String s = "instances." + id + ".";
+
       arena = new Arena(id);
       arena.setMinimumPlayers(config.getInt(s + "minimumplayers", 2));
       arena.setMaximumPlayers(config.getInt(s + "maximumplayers", 4));
