@@ -24,7 +24,7 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>murdermystery</artifactId>
-    <version>1.6.9-b</version>
+    <version>1.6.9-b-experimental</version>
     <name>MurderMystery</name>
 
     <properties>
@@ -136,7 +136,7 @@
         <dependency>
             <groupId>me.tigerhix.lib</groupId>
             <artifactId>scoreboard</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

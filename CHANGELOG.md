@@ -1,3 +1,8 @@
+### 1.6.9-b-experimental Experimental (16.12.2020)
+* This version supports up to 144 chars on the scoreboard (1.13+)
+* DO NOT USE THIS ON PRODUCTION AS IT CAN BE LAGGY
+* Would be nice to get feedback from you (feel free to share timings)!
+
 ### 1.6.9-b Beta (16.12.2020)
 * Fix NoSuchMethodError when CommandSender#spigot does not exists on 1.11
 * Updated ScoreboardLib to fix problems with color matching
