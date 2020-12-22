@@ -502,15 +502,16 @@ public class Arena extends BukkitRunnable {
         return;
       }
     }
+    if (goldSpawnPoints.isEmpty()) {
+      return;
+    }
     if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SPAWN_GOLD_EVERY_SPAWNER_MODE)) {
       for (Location location : goldSpawnPoints) {
-        Item item = location.getWorld().dropItem(location, new ItemStack(Material.GOLD_INGOT, 1));
-        goldSpawned.add(item);
+        goldSpawned.add(location.getWorld().dropItem(location, new ItemStack(Material.GOLD_INGOT, 1)));
       }
     } else {
       Location loc = goldSpawnPoints.get(random.nextInt(goldSpawnPoints.size()));
-      Item item = loc.getWorld().dropItem(loc, new ItemStack(Material.GOLD_INGOT, 1));
-      goldSpawned.add(item);
+      goldSpawned.add(loc.getWorld().dropItem(loc, new ItemStack(Material.GOLD_INGOT, 1)));
     }
   }
 

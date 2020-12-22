@@ -426,14 +426,14 @@ public class ArenaManager {
         }
       }
       user.removeScoreboard();
-      if (!quickStop && plugin.getConfig().getBoolean("Firework-When-Game-Ends", true)) {
+      if (!quickStop && plugin.getConfig().getBoolean("Firework-When-Game-Ends", true) && !user.isSpectator() && !user.isPermanentSpectator()) {
         new BukkitRunnable() {
           int i = 0;
 
           @Override
           public void run() {
             if (i == 4 || !arena.getPlayers().contains(player)) {
-              this.cancel();
+              cancel();
             }
             MiscUtils.spawnRandomFirework(player.getLocation());
             i++;

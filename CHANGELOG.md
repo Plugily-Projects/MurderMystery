@@ -5,6 +5,7 @@
 >>> b1
 * Fix NoSuchMethodError when CommandSender#spigot does not exists on 1.11
 * Updated ScoreboardLib to fix problems with color matching
+* Now spectators will not launches fireworks once game stopped
 
 ### 1.6.9 Release (28.11.2020)
 * Fixed joining through a sign while hotbar slot for leave-item is active
