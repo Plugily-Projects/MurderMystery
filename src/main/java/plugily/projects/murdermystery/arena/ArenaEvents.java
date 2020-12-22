@@ -108,7 +108,11 @@ public class ArenaEvents implements Listener {
     //kill the player and move to the spawn point
     if (e.getCause() == EntityDamageEvent.DamageCause.VOID) {
       victim.damage(1000.0);
-      victim.teleport(arena.getPlayerSpawnPoints().get(0));
+      if (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
+        victim.teleport(arena.getLobbyLocation());
+      } else {
+        victim.teleport(arena.getPlayerSpawnPoints().get(0));
+      }
     }
   }
 
