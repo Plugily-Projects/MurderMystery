@@ -186,6 +186,7 @@ public class ArenaManager {
       ArenaUtils.hidePlayer(player, arena);
 
       user.setSpectator(true);
+
       arena.addSpectatorPlayer(player);
       player.setCollidable(false);
       player.setGameMode(GameMode.SURVIVAL);
@@ -265,11 +266,13 @@ public class ArenaManager {
     }
 
     arena.getScoreboardManager().removeScoreboard(user);
+    if (Role.isRole(Role.MURDERER, player)) {
+      arena.removeFromMurdererList(player);
+    }
     //-1 cause we didn't remove player yet
     if (arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {
       if (arena.getPlayersLeft().size() - 1 > 1) {
         if (Role.isRole(Role.MURDERER, player)) {
-          arena.removeFromMurdererList(player);
           if (arena.getMurdererList().isEmpty()) {
             List<Player> players = new ArrayList<>();
             for (Player gamePlayer : arena.getPlayersLeft()) {
@@ -339,7 +342,7 @@ public class ArenaManager {
     player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
     player.setWalkSpeed(0.2f);
     player.setFireTicks(0);
-    if (arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS && arena.getArenaState() != ArenaState.STARTING && arena.getPlayers().size() == 0) {
+    if (arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS && arena.getArenaState() != ArenaState.STARTING && arena.getPlayers().isEmpty()) {
       arena.setArenaState(ArenaState.ENDING);
       arena.setTimer(0);
     }
@@ -426,14 +429,14 @@ public class ArenaManager {
         }
       }
       user.removeScoreboard();
-      if (!quickStop && plugin.getConfig().getBoolean("Firework-When-Game-Ends", true)) {
+      if (!quickStop && plugin.getConfig().getBoolean("Firework-When-Game-Ends", true) && !user.isSpectator() && !user.isPermanentSpectator()) {
         new BukkitRunnable() {
           int i = 0;
 
           @Override
           public void run() {
             if (i == 4 || !arena.getPlayers().contains(player)) {
-              this.cancel();
+              cancel();
             }
             MiscUtils.spawnRandomFirework(player.getLocation());
             i++;

@@ -1,3 +1,14 @@
+### 1.7.0 Release (29.12.2020)
+* Rewritten scoreboardlib (fixed flickering and color matching) -> 122 chars for 1.14 up and 48 for lower versions
+* Fixed issue that murderer is not removed from alive list if there are only 2 players left
+* Fixed player teleport on void death while in lobby stage
+>>> b2
+* Attempt to fix scoreboard problems
+>>> b1
+* Fix NoSuchMethodError when CommandSender#spigot does not exists on 1.11
+* Updated ScoreboardLib to fix problems with color matching
+* Now spectators will not launch fireworks once game stopped
+
 ### 1.6.9 Release (28.11.2020)
 * Fixed joining through a sign while hotbar slot for leave-item is active
 * Fixed gold visuals broke the whole plugin while enabled

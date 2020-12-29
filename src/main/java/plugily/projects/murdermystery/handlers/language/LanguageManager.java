@@ -100,6 +100,12 @@ public class LanguageManager {
 
   private static void loadProperties() {
     LocaleService service = ServiceRegistry.getLocaleService(plugin);
+    /* is beta release */
+    if ((plugin.getDescription().getVersion().contains("locales") || plugin.getDescription().getVersion().contains("pre")) && !plugin.getConfig().getBoolean("Developer-Mode", false)) {
+      Debugger.sendConsoleMsg("&c[Murder Mystery] Locales aren't supported in beta versions because they're lacking latest translations! Enabling English one...");
+      pluginLocale = LocaleRegistry.getByName("English");
+      return;
+    }
     if (service == null) {
       Debugger.sendConsoleMsg("&c[Murder Mystery] Locales cannot be downloaded because API website is unreachable, locales will be disabled.");
       pluginLocale = LocaleRegistry.getByName("English");
