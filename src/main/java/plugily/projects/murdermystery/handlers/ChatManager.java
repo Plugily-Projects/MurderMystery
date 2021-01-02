@@ -23,11 +23,11 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
-import plugily.projects.murdermystery.utils.Utils;
 
 /**
  * @author Plajer
@@ -60,8 +60,8 @@ public class ChatManager {
       return "";
     }
 
-    if (message.contains("#") && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
-      message = Utils.matchColorRegex(message);
+    if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1) && message.contains("#")) {
+      message = MiscUtils.matchColorRegex(message);
     }
 
     return ChatColor.translateAlternateColorCodes('&', message);

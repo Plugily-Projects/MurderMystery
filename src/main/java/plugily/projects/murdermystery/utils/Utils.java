@@ -33,6 +33,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
@@ -97,8 +98,8 @@ public class Utils {
           this.cancel();
         }
         String progress = StringFormatUtils.getProgressBar(ticks, seconds * 20, 10, "■", ChatColor.COLOR_CHAR + "a", ChatColor.COLOR_CHAR + "c");
-        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(plugin.getChatManager().colorMessage("In-Game.Cooldown-Format", p)
-          .replace("%progress%", progress).replace("%time%", String.valueOf((double) ((seconds * 20) - ticks) / 20))));
+        MiscUtils.sendActionBar(p, plugin.getChatManager().colorMessage("In-Game.Cooldown-Format", p)
+                .replace("%progress%", progress).replace("%time%", String.valueOf((double) ((seconds * 20) - ticks) / 20)));
         ticks += 10;
       }
     }.runTaskTimer(plugin, 0, 10);
@@ -136,26 +137,6 @@ public class Utils {
     return false;
   }
 
-  @SuppressWarnings("deprecation")
-  public static SkullMeta setPlayerHead(Player player, SkullMeta meta) {
-    if (Bukkit.getServer().getVersion().contains("Paper") && player.getPlayerProfile().hasTextures()) {
-      return CompletableFuture.supplyAsync(() -> {
-        meta.setPlayerProfile(player.getPlayerProfile());
-        return meta;
-      }).exceptionally(e -> {
-        Debugger.debug(java.util.logging.Level.WARNING, "Retrieving player profile of " + player.getName() + " failed!");
-        return meta;
-      }).join();
-    }
-
-    if (Version.isCurrentHigher(Version.v1_12_R1)) {
-      meta.setOwningPlayer(player);
-    } else {
-      meta.setOwner(player.getName());
-    }
-    return meta;
-  }
-
   public static Vector rotateAroundAxisX(Vector v, double angle) {
     angle = Math.toRadians(angle);
     double cos = Math.cos(angle),
@@ -173,23 +154,6 @@ public class Utils {
       x = v.getX() * cos + v.getZ() * sin,
       z = v.getX() * -sin + v.getZ() * cos;
     return v.setX(x).setZ(z);
-  }
-
-  public static String matchColorRegex(String s) {
-    String regex = "&?#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})";
-    Matcher matcher = Pattern.compile(regex).matcher(s);
-    while (matcher.find()) {
-      String group = matcher.group(0);
-      String group2 = matcher.group(1);
-
-      try {
-        s = s.replace(group, net.md_5.bungee.api.ChatColor.of("#" + group2) + "");
-      } catch (Exception e) {
-        Debugger.debug("Bad hex color match: " + group);
-      }
-    }
-
-    return s;
   }
 
 }
