@@ -266,6 +266,7 @@ Signs:
 Arena-Selector:
   Inv-Title: "Arena selector"
   Item:
+    Name: "&f%mapname%"
     Lore:
       - "&4Murder Mystery &f- &e%mapname%"
       - " "
@@ -295,4 +296,4 @@ Validator:
 
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p
-File-Version-Do-Not-Edit: 4
+File-Version-Do-Not-Edit: 5
