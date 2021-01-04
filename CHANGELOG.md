@@ -1,6 +1,7 @@
 ### 1.7.1 Release (04.01.2021)
 * Changed summary message for one murderer round
 * Changed Innocents will be killed if they kill the detective (if ENABLE_KILL_DETECTIVE_IF_INNOCENT_KILLED enabled)
+* Added customizable item name in arena selector gui
 
 ### 1.7.0 Release (29.12.2020)
 * Rewritten scoreboardlib (fixed flickering and color matching) -> 122 chars for 1.14 up and 48 for lower versions
