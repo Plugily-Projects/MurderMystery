@@ -24,7 +24,7 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>murdermystery</artifactId>
-    <version>1.7.0</version>
+    <version>1.7.1</version>
     <name>MurderMystery</name>
 
     <properties>
@@ -251,7 +251,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.2.4</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
