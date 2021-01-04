@@ -219,6 +219,7 @@ public class LanguageMigrator {
           MigratorUtils.addNewLines(file, "Arena-Selector:\r\n" +
             "  Inv-Title: \"Arena selector\"\r\n" +
             "  Item:\r\n" +
+            "    Name: \"&f%mapname%\"\r\n" +
             "    Lore:\r\n" +
             "      - \"&4Murder Mystery &f- &e%mapname%\"\r\n" +
             "      - \" \"\r\n" +
@@ -232,6 +233,8 @@ public class LanguageMigrator {
         case 3:
           MigratorUtils.insertAfterLine(file, "In-Game:", "  Game-Death-Format: \"&7[&4☠&7] &r\"");
           break;
+        case 4:
+          MigratorUtils.insertAfterLine(file, "  Item:", "    Name: \"&f%mapname%\"");
         default:
           break;
       }

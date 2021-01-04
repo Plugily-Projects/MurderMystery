@@ -454,10 +454,13 @@ public class ArenaManager {
     int murdererKills = 0;
 
     for (Player p : arena.getMurdererList()) {
-      murders.append(p.getName()).append(" (").append(plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS)).append("), ");
+      if (arena.getMurdererList().size() > 1) {
+        murders.append(p.getName()).append(" (").append(plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS)).append("), ");
+      } else {
+        murders.append(p.getName());
+      }
       murdererKills += plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS);
     }
-
     murders.deleteCharAt(murders.length() - 2);
 
     for (Player p : arena.getDetectiveList()) {

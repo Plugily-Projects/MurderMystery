@@ -20,6 +20,7 @@ package plugily.projects.murdermystery.handlers;
 
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.ArmorStand;
@@ -83,7 +84,7 @@ public class CorpseHandler implements Listener {
       ArmorStand stand = p.getLocation().getWorld().spawn(p.getLocation().add(0.0D, -1.25D, 0.0D), ArmorStand.class);
       ItemStack head = XMaterial.PLAYER_HEAD.parseItem();
       SkullMeta meta = (SkullMeta) head.getItemMeta();
-      meta = Utils.setPlayerHead(p, meta);
+      meta = MiscUtils.setPlayerHead(p, meta);
       head.setItemMeta(meta);
 
       stand.setVisible(false);
