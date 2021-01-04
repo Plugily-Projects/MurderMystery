@@ -35,7 +35,7 @@ import java.io.File;
 public class LanguageMigrator {
 
   public static final int CONFIG_FILE_VERSION = 19;
-  public static final int LANGUAGE_FILE_VERSION = 4;
+  public static final int LANGUAGE_FILE_VERSION = 5;
   private final Main plugin;
 
   public LanguageMigrator(Main plugin) {
