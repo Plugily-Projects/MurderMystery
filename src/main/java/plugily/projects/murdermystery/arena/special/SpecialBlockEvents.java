@@ -30,6 +30,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.Arena;
@@ -149,7 +150,7 @@ public class SpecialBlockEvents implements Listener {
 
   @EventHandler
   public void onMysteryPotionDrink(PlayerItemConsumeEvent e) {
-    if (e.getItem().getType() != XMaterial.POTION.parseMaterial() || !Utils.isNamed(e.getItem())) {
+    if (e.getItem().getType() != XMaterial.POTION.parseMaterial() || !ItemUtils.isItemStackNamed(e.getItem())) {
       return;
     }
     Arena arena = ArenaRegistry.getArena(e.getPlayer());

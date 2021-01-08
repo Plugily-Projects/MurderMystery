@@ -105,16 +105,12 @@ public class ArmorStandHologram {
   }
 
   public boolean isDeleted() {
-    if (entityItem != null) {
-      return false;
-    }
-    return armorStands.isEmpty();
+    return entityItem == null && armorStands.isEmpty();
   }
 
   private void append() {
     delete();
-    double distanceAbove = -0.27,
-      y = location.getY();
+    double distanceAbove = -0.27, y = location.getY();
 
     for (int i = 0; i <= lines.size() - 1; i++) {
       y += distanceAbove;
@@ -142,13 +138,15 @@ public class ArmorStandHologram {
    */
   private ArmorStand getEntityArmorStand(Location loc, double y) {
     loc.setY(y);
-    location.getWorld().getNearbyEntities(location, 0.2, 0.2, 0.2).forEach(entity -> {
-      if (entity instanceof ArmorStand && !armorStands.contains(entity) && !HologramManager.getArmorStands().contains(entity)) {
-        entity.remove();
-        entity.setCustomNameVisible(false);
-        HologramManager.getArmorStands().remove(entity);
-      }
-    });
+    if (location != null) {
+      location.getWorld().getNearbyEntities(location, 0.2, 0.2, 0.2).forEach(entity -> {
+        if (entity instanceof ArmorStand && !armorStands.contains(entity) && !HologramManager.getArmorStands().contains(entity)) {
+          entity.remove();
+          entity.setCustomNameVisible(false);
+          HologramManager.getArmorStands().remove(entity);
+        }
+      });
+    }
     ArmorStand stand = (ArmorStand) loc.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
     stand.setVisible(false);
     stand.setGravity(false);

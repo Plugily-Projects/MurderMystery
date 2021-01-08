@@ -129,6 +129,9 @@ public class SignManager implements Listener {
     }
     arenaSigns.remove(arenaSign);
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+    if (!config.isConfigurationSection("instances")) {
+      return;
+    }
     String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + "," + "0.0,0.0";
     for (String arena : config.getConfigurationSection("instances").getKeys(false)) {
       for (String sign : config.getStringList("instances." + arena + ".signs")) {
@@ -175,7 +178,12 @@ public class SignManager implements Listener {
     long start = System.currentTimeMillis();
 
     arenaSigns.clear();
+
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+    if (!config.isConfigurationSection("instances")) {
+      return;
+    }
+
     for (String path : config.getConfigurationSection("instances").getKeys(false)) {
       for (String sign : config.getStringList("instances." + path + ".signs")) {
         Location loc = LocationSerializer.getLocation(sign);

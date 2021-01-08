@@ -18,8 +18,6 @@
 
 package plugily.projects.murdermystery.arena;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
@@ -37,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import pl.plajerlair.commonsbox.number.NumberUtils;
 import plugily.projects.murdermystery.ConfigPreferences;
@@ -58,7 +57,6 @@ import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.ItemPosition;
-import plugily.projects.murdermystery.utils.NMS;
 import plugily.projects.murdermystery.utils.Utils;
 
 import java.util.*;
@@ -199,12 +197,7 @@ public class Arena extends BukkitRunnable {
         }
         if (!hideChances) {
           for (Player p : getPlayers()) {
-            User user = plugin.getUserManager().getUser(p);
-            try {
-              p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
-            } catch (NumberFormatException ignored) {
-              //fail silently
-            }
+            MiscUtils.sendActionBar(p, formatRoleChance(plugin.getUserManager().getUser(p), totalMurderer, totalDetective));
           }
         }
         if (getTimer() == 0 || forceStart) {
@@ -411,9 +404,9 @@ public class Arena extends BukkitRunnable {
             plugin.getUserManager().getUser(player).removeScoreboard();
             player.setGameMode(GameMode.SURVIVAL);
             for (Player players : Bukkit.getOnlinePlayers()) {
-              NMS.showPlayer(player, players);
+              MiscUtils.showPlayer(plugin, player, players);
               if (!ArenaRegistry.isInArena(players)) {
-                NMS.showPlayer(players, player);
+                MiscUtils.showPlayer(plugin, players, player);
               }
             }
             player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
@@ -918,8 +911,8 @@ public class Arena extends BukkitRunnable {
   void showPlayers() {
     for (Player player : getPlayers()) {
       for (Player p : getPlayers()) {
-        NMS.showPlayer(player, p);
-        NMS.showPlayer(p, player);
+        MiscUtils.showPlayer(plugin, player, p);
+        MiscUtils.showPlayer(plugin, p, player);
       }
     }
   }

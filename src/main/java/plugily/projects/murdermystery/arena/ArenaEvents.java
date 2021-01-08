@@ -39,6 +39,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
@@ -49,7 +50,6 @@ import plugily.projects.murdermystery.handlers.items.SpecialItemManager;
 import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.ItemPosition;
-import plugily.projects.murdermystery.utils.NMS;
 import plugily.projects.murdermystery.utils.Utils;
 
 /**
@@ -129,7 +129,7 @@ public class ArenaEvents implements Listener {
       user.setCooldown("bow_shot", plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
       Player player = (Player) e.getEntity();
       Utils.applyActionBarCooldown(player, plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
-      NMS.setDurability(e.getBow(), (short) 0);
+      MiscUtils.setDurability(e.getBow(), (short) 0);
     } else {
       e.setCancelled(true);
     }

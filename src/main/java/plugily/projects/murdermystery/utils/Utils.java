@@ -18,21 +18,14 @@
 
 package plugily.projects.murdermystery.utils;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.murdermystery.Main;
@@ -41,9 +34,6 @@ import plugily.projects.murdermystery.arena.ArenaState;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Plajer
@@ -73,16 +63,6 @@ public class Utils {
   public static int serializeInt(Integer i) {
     if (i == 0) return 9; //The function bellow doesn't work if i == 0, so return 9 in case that happens.
     return (i % 9) == 0 ? i : (i + 9 - 1) / 9 * 9;
-  }
-
-  /**
-   * Checks whether itemstack is named (not null, has meta and display name)
-   *
-   * @param stack item stack to check
-   * @return true if named, false otherwise
-   */
-  public static boolean isNamed(ItemStack stack) {
-    return stack != null && stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
   }
 
   public static void applyActionBarCooldown(Player p, int seconds) {
