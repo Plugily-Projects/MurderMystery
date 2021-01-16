@@ -2,6 +2,7 @@
 * Fix NPE for armor stand hologram location is null
 * Fixed issue when sign instances section not found in file
 * Fixed arena join permission
+* Added 1.11+ compatibility
 
 ### 1.7.1 Release (04.01.2021)
 * Changed summary message for one murderer round
