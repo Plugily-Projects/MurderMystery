@@ -25,6 +25,7 @@ import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
+import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
@@ -110,6 +111,9 @@ public class ChatManager {
   }
 
   public void broadcastAction(Arena a, Player p, ActionType action) {
+    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_DEATH_MESSAGE)) {
+      return;
+    }
     String message;
     switch (action) {
       case JOIN:

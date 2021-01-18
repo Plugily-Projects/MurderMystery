@@ -58,6 +58,10 @@ ChatFormat-Enabled: true
 # It will disable the separated chat, for example
 Disable-Separate-Chat: false
 
+# Should we disable death messages, so the player dies without other recognizes it
+# It will not broadcast the death message to all ;)
+Hide-Death: false
+
 # Should we override corpses spawn from CorpsesReborn plugin?
 # When player will die outside game corpse won't be spawned!
 # Disable this if you don't want this!
@@ -182,6 +186,6 @@ Update-Notifier:
 Disable-Parties: true
 
 # Don't modify.
-Version: 19
+Version: 20
 
 # No way! You've reached the end! But... where's the dragon!?

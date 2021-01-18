@@ -34,7 +34,7 @@ import java.io.File;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 19;
+  public static final int CONFIG_FILE_VERSION = 20;
   public static final int LANGUAGE_FILE_VERSION = 5;
   private final Main plugin;
 
@@ -181,6 +181,12 @@ public class LanguageMigrator {
             "#Should there be a innocent locator\r\n" +
             "Enable-Innocent-Locator: true\r\n");
           break;
+        case 19:
+          MigratorUtils.addNewLines(file, "\r\n" +
+            "# Should we disable death messages, so the player dies without other recognizes it\r\n" +
+            "# It will not broadcast the death message to all ;)\r\n" +
+            "Hide-Death: false\r\n" +
+            "\r\n");
         default:
           break;
       }
