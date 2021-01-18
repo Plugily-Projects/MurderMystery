@@ -51,7 +51,6 @@ import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.ItemPosition;
-import plugily.projects.murdermystery.utils.NMS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,9 +121,9 @@ public class ArenaManager {
       }
     }
 
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-      && !player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
-      || !player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId()))) {
+    if (!(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
+      || player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
+      || player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())))) {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Join-No-Permission").replace("%permission%",
         PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())));
       return;
@@ -195,9 +194,9 @@ public class ArenaManager {
 
       for (Player spectator : arena.getPlayers()) {
         if (plugin.getUserManager().getUser(spectator).isSpectator()) {
-          NMS.hidePlayer(player, spectator);
+          MiscUtils.hidePlayer(plugin, player, spectator);
         } else {
-          NMS.showPlayer(player, spectator);
+          MiscUtils.showPlayer(plugin, player, spectator);
         }
       }
       ArenaUtils.hidePlayersOutsideTheGame(player, arena);
@@ -350,9 +349,9 @@ public class ArenaManager {
     player.setGameMode(GameMode.SURVIVAL);
     for (Player players : plugin.getServer().getOnlinePlayers()) {
       if (!ArenaRegistry.isInArena(players)) {
-        NMS.showPlayer(players, player);
+        MiscUtils.showPlayer(plugin, players, player);
       }
-      NMS.showPlayer(player, players);
+      MiscUtils.showPlayer(plugin, player, players);
     }
     arena.teleportToEndLocation(player);
     if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)

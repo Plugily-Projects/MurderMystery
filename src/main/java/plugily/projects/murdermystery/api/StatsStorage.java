@@ -25,6 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.sorter.SortUtils;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.user.data.MysqlManager;
@@ -46,17 +47,6 @@ import java.util.logging.Level;
 public class StatsStorage {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-
-  private static Map sortByValue(Map<?, ?> unsortMap) {
-    List list = new LinkedList<>(unsortMap.entrySet());
-    list.sort((o1, o2) -> ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue()));
-    Map sortedMap = new LinkedHashMap();
-    for (Object sort : list) {
-      Map.Entry entry = (Map.Entry) sort;
-      sortedMap.put(entry.getKey(), entry.getValue());
-    }
-    return sortedMap;
-  }
 
   /**
    * Get all UUID's sorted ascending by Statistic Type
@@ -92,7 +82,7 @@ public class StatsStorage {
       }
       stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
     }
-    return sortByValue(stats);
+    return SortUtils.sortByValue(stats);
   }
 
   /**

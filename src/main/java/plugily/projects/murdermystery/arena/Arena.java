@@ -18,8 +18,6 @@
 
 package plugily.projects.murdermystery.arena;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
@@ -37,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import pl.plajerlair.commonsbox.number.NumberUtils;
 import plugily.projects.murdermystery.ConfigPreferences;
@@ -58,7 +57,6 @@ import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.ItemPosition;
-import plugily.projects.murdermystery.utils.NMS;
 import plugily.projects.murdermystery.utils.Utils;
 
 import java.util.*;
@@ -199,12 +197,7 @@ public class Arena extends BukkitRunnable {
         }
         if (!hideChances) {
           for (Player p : getPlayers()) {
-            User user = plugin.getUserManager().getUser(p);
-            try {
-              p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(formatRoleChance(user, totalMurderer, totalDetective)));
-            } catch (NumberFormatException ignored) {
-              //fail silently
-            }
+            MiscUtils.sendActionBar(p, formatRoleChance(plugin.getUserManager().getUser(p), totalMurderer, totalDetective));
           }
         }
         if (getTimer() == 0 || forceStart) {
@@ -244,7 +237,11 @@ public class Arena extends BukkitRunnable {
             murdererChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) totalMurderer) * 100.0);
             detectiveChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) totalDetective) * 100.0);
           }
-          Map<User, Double> sortedMurderer = murdererChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
+          //shuffling map to avoid the same murders on the next round
+          List<Map.Entry<User, Double>> shuffledMurderer = new ArrayList<>(murdererChances.entrySet());
+          Collections.shuffle(shuffledMurderer);
+          //
+          Map<User, Double> sortedMurderer = shuffledMurderer.stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
             Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
           Set<Player> playersToSet = new HashSet<>(getPlayers());
@@ -279,8 +276,11 @@ public class Arena extends BukkitRunnable {
               chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
             detectiveChances.remove(sortedMurderer.keySet().toArray()[i]);
           }
-
-          Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
+          //shuffling map to avoid the same detectives on the next round
+          List<Map.Entry<User, Double>> shuffledDetectives = new ArrayList<>(detectiveChances.entrySet());
+          Collections.shuffle(shuffledDetectives);
+          //
+          Map<User, Double> sortedDetective = shuffledDetectives.stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
             Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
           for (int i = 0; i < maxdetectives; i++) {
             Player detective = ((User) sortedDetective.keySet().toArray()[i]).getPlayer();
@@ -411,9 +411,9 @@ public class Arena extends BukkitRunnable {
             plugin.getUserManager().getUser(player).removeScoreboard();
             player.setGameMode(GameMode.SURVIVAL);
             for (Player players : Bukkit.getOnlinePlayers()) {
-              NMS.showPlayer(player, players);
+              MiscUtils.showPlayer(plugin, player, players);
               if (!ArenaRegistry.isInArena(players)) {
-                NMS.showPlayer(players, player);
+                MiscUtils.showPlayer(plugin, players, player);
               }
             }
             player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
@@ -918,8 +918,8 @@ public class Arena extends BukkitRunnable {
   void showPlayers() {
     for (Player player : getPlayers()) {
       for (Player p : getPlayers()) {
-        NMS.showPlayer(player, p);
-        NMS.showPlayer(p, player);
+        MiscUtils.showPlayer(plugin, player, p);
+        MiscUtils.showPlayer(plugin, p, player);
       }
     }
   }

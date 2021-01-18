@@ -36,6 +36,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
@@ -225,7 +226,7 @@ public class Events implements Listener {
     }
     Arena arena = ArenaRegistry.getArena(event.getPlayer());
     ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
-    if (arena == null || !Utils.isNamed(itemStack)) {
+    if (arena == null || !ItemUtils.isItemStackNamed(itemStack)) {
       return;
     }
     String key = SpecialItemManager.getRelatedSpecialItem(itemStack);

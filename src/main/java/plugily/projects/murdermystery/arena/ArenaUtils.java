@@ -30,6 +30,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
@@ -38,7 +39,6 @@ import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.ItemPosition;
-import plugily.projects.murdermystery.utils.NMS;
 
 /**
  * @author Plajer
@@ -189,13 +189,13 @@ public class ArenaUtils {
 
   public static void hidePlayer(Player p, Arena arena) {
     for (Player player : arena.getPlayers()) {
-      NMS.hidePlayer(player, p);
+      MiscUtils.hidePlayer(plugin, player, p);
     }
   }
 
   public static void showPlayer(Player p, Arena arena) {
     for (Player player : arena.getPlayers()) {
-      NMS.showPlayer(player, p);
+      MiscUtils.showPlayer(plugin, player, p);
     }
   }
 
@@ -204,8 +204,8 @@ public class ArenaUtils {
       if (arena.getPlayers().contains(players)) {
         continue;
       }
-      NMS.hidePlayer(player, players);
-      NMS.hidePlayer(players, player);
+      MiscUtils.hidePlayer(plugin, player, players);
+      MiscUtils.hidePlayer(plugin, players, player);
     }
   }
 

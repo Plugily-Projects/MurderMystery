@@ -121,7 +121,7 @@ public class Main extends JavaPlugin {
   }
 
   private boolean validateIfPluginShouldStart() {
-    if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_12_R1)) {
+    if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_11_R1)) {
       MessageUtils.thisVersionIsNotSupported();
       Debugger.sendConsoleMsg("&cYour server version is not supported by Murder Mystery!");
       Debugger.sendConsoleMsg("&cSadly, we must shut off. Maybe you consider changing your server version?");
