@@ -237,7 +237,11 @@ public class Arena extends BukkitRunnable {
             murdererChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) totalMurderer) * 100.0);
             detectiveChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) totalDetective) * 100.0);
           }
-          Map<User, Double> sortedMurderer = murdererChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
+          //shuffling map to avoid the same murders on the next round
+          List<Map.Entry<User, Double>> shuffledMurderer = new ArrayList<>(murdererChances.entrySet());
+          Collections.shuffle(shuffledMurderer);
+          //
+          Map<User, Double> sortedMurderer = shuffledMurderer.stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
             Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
           Set<Player> playersToSet = new HashSet<>(getPlayers());
@@ -272,8 +276,11 @@ public class Arena extends BukkitRunnable {
               chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
             detectiveChances.remove(sortedMurderer.keySet().toArray()[i]);
           }
-
-          Map<User, Double> sortedDetective = detectiveChances.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
+          //shuffling map to avoid the same detectives on the next round
+          List<Map.Entry<User, Double>> shuffledDetectives = new ArrayList<>(detectiveChances.entrySet());
+          Collections.shuffle(shuffledDetectives);
+          //
+          Map<User, Double> sortedDetective = shuffledDetectives.stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
             Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
           for (int i = 0; i < maxdetectives; i++) {
             Player detective = ((User) sortedDetective.keySet().toArray()[i]).getPlayer();
