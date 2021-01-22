@@ -1,3 +1,7 @@
+### 1.7.3 Release (18.01.2021 - 22.01.2021)
+* Fixed mm items are not removed if inventory manager is enabled and the server is stopping
+* Fixed 2nd last char of name gets removed if only one murderer
+
 ### 1.7.2 Release (10.01.2021 - 18.01.2021)
 * Fix NPE for armor stand hologram location is null
 * Fixed issue when sign instances section not found in file
