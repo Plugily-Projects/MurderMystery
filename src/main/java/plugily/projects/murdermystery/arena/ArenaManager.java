@@ -451,7 +451,6 @@ public class ArenaManager {
 
     StringBuilder murders = new StringBuilder(), detectives = new StringBuilder();
     int murdererKills = 0;
-
     for (Player p : arena.getMurdererList()) {
       if (arena.getMurdererList().size() > 1) {
         murders.append(p.getName()).append(" (").append(plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS)).append("), ");
@@ -460,8 +459,9 @@ public class ArenaManager {
       }
       murdererKills += plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS);
     }
-    murders.deleteCharAt(murders.length() - 2);
-
+    if (arena.getMurdererList().size() > 1) {
+      murders.deleteCharAt(murders.length() - 2);
+    }
     for (Player p : arena.getDetectiveList()) {
       detectives.append(p.getName()).append(", ");
     }
