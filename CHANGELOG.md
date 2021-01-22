@@ -1,4 +1,4 @@
-### 1.7.3 Release (18.01.2021)
+### 1.7.3 Release (18.01.2021 - 22.01.2021)
 * Fixed mm items are not removed if inventory manager is enabled and the server is stopping
 * Fixed 2nd last char of name gets removed if only one murderer
 
