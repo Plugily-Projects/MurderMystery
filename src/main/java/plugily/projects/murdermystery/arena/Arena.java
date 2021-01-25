@@ -279,7 +279,7 @@ public class Arena extends BukkitRunnable {
           //shuffling map to avoid the same detectives on the next round
           List<Map.Entry<User, Double>> shuffledDetectives = new ArrayList<>(detectiveChances.entrySet());
           Collections.shuffle(shuffledDetectives);
-          //
+
           Map<User, Double> sortedDetective = shuffledDetectives.stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
             Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
           for (int i = 0; i < maxdetectives; i++) {
