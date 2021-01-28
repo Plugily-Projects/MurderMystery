@@ -194,9 +194,9 @@ public class ArenaManager {
 
       for (Player spectator : arena.getPlayers()) {
         if (plugin.getUserManager().getUser(spectator).isSpectator()) {
-          MiscUtils.hidePlayer(plugin, player, spectator);
-        } else {
           MiscUtils.showPlayer(plugin, player, spectator);
+        } else {
+          MiscUtils.hidePlayer(plugin, player, spectator);
         }
       }
       ArenaUtils.hidePlayersOutsideTheGame(player, arena);
