@@ -194,9 +194,9 @@ public class ArenaManager {
 
       for (Player spectator : arena.getPlayers()) {
         if (plugin.getUserManager().getUser(spectator).isSpectator()) {
-          MiscUtils.hidePlayer(plugin, player, spectator);
-        } else {
           MiscUtils.showPlayer(plugin, player, spectator);
+        } else {
+          MiscUtils.hidePlayer(plugin, player, spectator);
         }
       }
       ArenaUtils.hidePlayersOutsideTheGame(player, arena);
@@ -318,7 +318,7 @@ public class ArenaManager {
     player.getInventory().setArmorContents(null);
     arena.removePlayer(player);
     arena.teleportToEndLocation(player);
-    if (!user.isSpectator()) {
+    if (!user.isSpectator() && !arena.isSpectatorPlayer(player)) {
       chatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
     }
     player.setGlowing(false);

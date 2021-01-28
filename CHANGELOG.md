@@ -1,3 +1,8 @@
+### 1.7.4 Release (25.01.2021 - 28.01.2021)
+* Fix stack trace array length is 0 when trying to send exception to service
+* Updated commonsbox to fix actionbar problems
+* Fixed spectators can not see each other after joining game while being ingame
+
 ### 1.7.3 Release (18.01.2021 - 22.01.2021)
 * Fixed mm items are not removed if inventory manager is enabled and the server is stopping
 * Fixed 2nd last char of name gets removed if only one murderer
