@@ -318,7 +318,7 @@ public class ArenaManager {
     player.getInventory().setArmorContents(null);
     arena.removePlayer(player);
     arena.teleportToEndLocation(player);
-    if (!user.isSpectator()) {
+    if (!user.isSpectator() && !arena.isSpectatorPlayer(player)) {
       chatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
     }
     player.setGlowing(false);
