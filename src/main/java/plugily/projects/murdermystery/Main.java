@@ -233,14 +233,12 @@ public class Main extends JavaPlugin {
   }
 
   private void startPluginMetrics() {
-    Metrics metrics = new Metrics(this);
-    if (!metrics.isEnabled())
-      return;
+    Metrics metrics = new Metrics(this, 3038);
 
-    metrics.addCustomChart(new Metrics.SimplePie("database_enabled", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED))));
-    metrics.addCustomChart(new Metrics.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
-    metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> LanguageManager.getPluginLocale().getPrefix()));
-    metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> {
+    metrics.addCustomChart(new org.bstats.charts.SimplePie("database_enabled", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED))));
+    metrics.addCustomChart(new org.bstats.charts.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
+    metrics.addCustomChart(new org.bstats.charts.SimplePie("locale_used", () -> LanguageManager.getPluginLocale().getPrefix()));
+    metrics.addCustomChart(new org.bstats.charts.SimplePie("update_notifier", () -> {
       if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
         return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Enabled with beta notifier" : "Enabled";
       }
