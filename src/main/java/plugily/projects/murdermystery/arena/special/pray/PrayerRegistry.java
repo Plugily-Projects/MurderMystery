@@ -86,27 +86,27 @@ public class PrayerRegistry {
     Player player = user.getPlayer();
     Arena arena = ArenaRegistry.getArena(user.getPlayer());
     List<String> prayMessage = LanguageManager.getLanguageList("In-Game.Messages.Special-Blocks.Praises.Message");
-    if (prayer.isGoodPray()) {
+    if(prayer.isGoodPray()) {
       prayMessage = prayMessage.stream().map(msg -> msg.replace("%feeling%", chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings.Blessed", player))).collect(Collectors.toList());
     } else {
       prayMessage = prayMessage.stream().map(msg -> msg.replace("%feeling%", chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings.Cursed", player))).collect(Collectors.toList());
     }
     prayMessage = prayMessage.stream().map(msg -> msg.replace("%praise%", prayer.getPrayerDescription())).collect(Collectors.toList());
-    switch (prayer.getPrayerType()) {
+    switch(prayer.getPrayerType()) {
       case BLINDNESS_CURSE:
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
         break;
       case BOW_TIME:
-        if (!Role.isRole(Role.ANY_DETECTIVE, user.getPlayer())) {
+        if(!Role.isRole(Role.ANY_DETECTIVE, user.getPlayer())) {
           ItemPosition.addItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
         }
         ItemPosition.setItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Prayer-Arrows", 2)));
         break;
       case DETECTIVE_REVELATION:
         String detectiveName;
-        if (arena.isCharacterSet(Arena.CharacterType.DETECTIVE)) {
+        if(arena.isCharacterSet(Arena.CharacterType.DETECTIVE)) {
           detectiveName = arena.getCharacter(Arena.CharacterType.DETECTIVE).getName();
-        } else if (arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
+        } else if(arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
           detectiveName = arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE).getName();
         } else {
           detectiveName = "????";
@@ -119,12 +119,12 @@ public class PrayerRegistry {
 
           @Override
           public void run() {
-            if (arena == null || arena.getArenaState() != ArenaState.IN_GAME || !arena.getPlayersLeft().contains(player)) {
+            if(arena == null || arena.getArenaState() != ArenaState.IN_GAME || !arena.getPlayersLeft().contains(player)) {
               this.cancel();
               return;
             }
             time--;
-            if (time == 0) {
+            if(time == 0) {
               player.damage(1000);
               this.cancel();
             }
@@ -147,7 +147,7 @@ public class PrayerRegistry {
       default:
         break;
     }
-    for (String msg : prayMessage) {
+    for(String msg : prayMessage) {
       MiscUtils.sendCenteredMessage(player, msg);
     }
   }

@@ -50,18 +50,18 @@ public enum ItemPosition {
    * @param itemStack    itemstack to be added at itemPostion or set at itemPosition
    */
   public static void addItem(Player player, ItemPosition itemPosition, ItemStack itemStack) {
-    if (player == null) {
+    if(player == null) {
       return;
     }
     Inventory inv = player.getInventory();
-    if (Role.isRole(Role.MURDERER, player)) {
-      if (inv.getItem(itemPosition.getMurdererItemPosition()) != null) {
+    if(Role.isRole(Role.MURDERER, player)) {
+      if(inv.getItem(itemPosition.getMurdererItemPosition()) != null) {
         inv.getItem(itemPosition.getMurdererItemPosition()).setAmount(inv.getItem(itemPosition.getMurdererItemPosition()).getAmount() + itemStack.getAmount());
         return;
       }
       inv.setItem(itemPosition.getMurdererItemPosition(), itemStack);
     } else {
-      if (inv.getItem(itemPosition.getOtherRolesItemPosition()) != null) {
+      if(inv.getItem(itemPosition.getOtherRolesItemPosition()) != null) {
         inv.getItem(itemPosition.getOtherRolesItemPosition()).setAmount(inv.getItem(itemPosition.getOtherRolesItemPosition()).getAmount() + itemStack.getAmount());
         return;
       }
@@ -78,11 +78,11 @@ public enum ItemPosition {
    * @param itemStack    itemstack to set at itemPosition
    */
   public static void setItem(Player player, ItemPosition itemPosition, ItemStack itemStack) {
-    if (player == null) {
+    if(player == null) {
       return;
     }
     Inventory inv = player.getInventory();
-    if (Role.isRole(Role.MURDERER, player)) {
+    if(Role.isRole(Role.MURDERER, player)) {
       inv.setItem(itemPosition.getMurdererItemPosition(), itemStack);
     } else {
       inv.setItem(itemPosition.getOtherRolesItemPosition(), itemStack);

@@ -42,12 +42,12 @@ public class LobbyEvent implements Listener {
 
   @EventHandler
   public void onLobbyDamage(EntityDamageEvent event) {
-    if (event.getEntity().getType() != EntityType.PLAYER) {
+    if(event.getEntity().getType() != EntityType.PLAYER) {
       return;
     }
     Player player = (Player) event.getEntity();
     Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
+    if(arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
       return;
     }
     event.setCancelled(true);

@@ -57,18 +57,18 @@ public class BowTrailsHandler implements Listener {
 
   @EventHandler
   public void onArrowShoot(EntityShootBowEvent e) {
-    if (!(e.getEntity() instanceof Player && e.getProjectile() instanceof Arrow)) {
+    if(!(e.getEntity() instanceof Player && e.getProjectile() instanceof Arrow)) {
       return;
     }
-    if (!ArenaRegistry.isInArena((Player) e.getEntity()) || e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
+    if(!ArenaRegistry.isInArena((Player) e.getEntity()) || e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
       return;
     }
-    for (String perm : registeredTrails.keySet()) {
-      if (e.getEntity().hasPermission(perm)) {
+    for(String perm : registeredTrails.keySet()) {
+      if(e.getEntity().hasPermission(perm)) {
         new BukkitRunnable() {
           @Override
           public void run() {
-            if (e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
+            if(e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
               this.cancel();
             }
             Debugger.debug("Spawned particle with perm {0} for player {1}", perm, e.getEntity().getName());

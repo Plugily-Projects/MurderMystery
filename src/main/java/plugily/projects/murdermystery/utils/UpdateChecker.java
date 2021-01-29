@@ -55,16 +55,16 @@ public final class UpdateChecker {
   private static final Pattern DECIMAL_SCHEME_PATTERN = Pattern.compile("\\d+(?:\\.\\d+)*");
   public static final VersionScheme VERSION_SCHEME_DECIMAL = (first, second) -> {
     String[] firstSplit = splitVersionInfo(first), secondSplit = splitVersionInfo(second);
-    if (firstSplit == null || secondSplit == null) {
+    if(firstSplit == null || secondSplit == null) {
       return null;
     }
 
-    for (int i = 0; i < Math.min(firstSplit.length, secondSplit.length); i++) {
+    for(int i = 0; i < Math.min(firstSplit.length, secondSplit.length); i++) {
       int currentValue = NumberUtils.toInt(firstSplit[i]), newestValue = NumberUtils.toInt(secondSplit[i]);
 
-      if (newestValue > currentValue) {
+      if(newestValue > currentValue) {
         return second;
-      } else if (newestValue < currentValue) {
+      } else if(newestValue < currentValue) {
         return first;
       }
     }
@@ -85,7 +85,7 @@ public final class UpdateChecker {
 
   private static String[] splitVersionInfo(String version) {
     Matcher matcher = DECIMAL_SCHEME_PATTERN.matcher(version);
-    if (!matcher.find()) {
+    if(!matcher.find()) {
       return null;
     }
 
@@ -166,7 +166,7 @@ public final class UpdateChecker {
         responseCode = connection.getResponseCode();
 
         JsonElement element = new JsonParser().parse(reader);
-        if (!element.isJsonArray()) {
+        if(!element.isJsonArray()) {
           return new UpdateResult(UpdateReason.INVALID_JSON);
         }
 
@@ -176,16 +176,16 @@ public final class UpdateChecker {
         String current = plugin.getDescription().getVersion(), newest = versionObject.get("name").getAsString();
         String latest = versionScheme.compareVersions(current, newest);
 
-        if (latest == null) {
+        if(latest == null) {
           return new UpdateResult(UpdateReason.UNSUPPORTED_VERSION_SCHEME);
-        } else if (latest.equals(current)) {
+        } else if(latest.equals(current)) {
           return new UpdateResult(current.equals(newest) ? UpdateReason.UP_TO_DATE : UpdateReason.UNRELEASED_VERSION);
-        } else if (latest.equals(newest)) {
+        } else if(latest.equals(newest)) {
           return new UpdateResult(UpdateReason.NEW_UPDATE, latest);
         }
-      } catch (IOException e) {
+      } catch(IOException e) {
         return new UpdateResult(UpdateReason.COULD_NOT_CONNECT);
-      } catch (JsonSyntaxException e) {
+      } catch(JsonSyntaxException e) {
         return new UpdateResult(UpdateReason.INVALID_JSON);
       }
 

@@ -38,10 +38,10 @@ public class HookManager {
   }
 
   private void enableHooks() {
-    for (HookFeature feature : HookFeature.values()) {
+    for(HookFeature feature : HookFeature.values()) {
       boolean hooked = true;
-      for (Hook requiredHook : feature.getRequiredHooks()) {
-        if (!Bukkit.getPluginManager().isPluginEnabled(requiredHook.getPluginName())) {
+      for(Hook requiredHook : feature.getRequiredHooks()) {
+        if(!Bukkit.getPluginManager().isPluginEnabled(requiredHook.getPluginName())) {
           hooks.put(feature, false);
           Debugger.debug("[HookManager] Feature {0} won't be enabled because {1} is not installed! Please install it in order to enable this feature in-game!",
             feature.name(), requiredHook.getPluginName());
@@ -49,7 +49,7 @@ public class HookManager {
           break;
         }
       }
-      if (hooked) {
+      if(hooked) {
         hooks.put(feature, true);
         Debugger.debug("[HookManager] Feature {0} enabled!", feature.name());
       }

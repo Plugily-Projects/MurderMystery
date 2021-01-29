@@ -41,7 +41,7 @@ public class ServiceRegistry {
   }
 
   public static boolean registerService(JavaPlugin plugin) {
-    if (registeredService != null && registeredService.equals(plugin)) {
+    if(registeredService != null && registeredService.equals(plugin)) {
       return false;
     }
     plugin.getLogger().log(Level.INFO, "Connecting to services, please wait! Server may freeze a bit!");
@@ -52,12 +52,12 @@ public class ServiceRegistry {
       connection.setRequestMethod("HEAD");
       connection.setRequestProperty("User-Agent", "PLService/1.0");
       int responseCode = connection.getResponseCode();
-      if (responseCode != 200) {
+      if(responseCode != 200) {
         plugin.getLogger().log(Level.WARNING, "Plugily Projects services aren't online or inaccessible from your location! Response: " + responseCode + ". Do you think it's site problem? Contact developer! Make sure Cloudflare isn't blocked in your area!");
         serviceEnabled = false;
         return false;
       }
-    } catch (IOException ignored) {
+    } catch(IOException ignored) {
       plugin.getLogger().log(Level.WARNING, "Plugily Projects services aren't online or inaccessible from your location!");
       serviceEnabled = false;
       return false;

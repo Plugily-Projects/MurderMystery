@@ -25,7 +25,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.murdermystery.Main;
@@ -61,7 +60,7 @@ public class Utils {
    * @return serialized number
    */
   public static int serializeInt(Integer i) {
-    if (i == 0) return 9; //The function bellow doesn't work if i == 0, so return 9 in case that happens.
+    if(i == 0) return 9; //The function bellow doesn't work if i == 0, so return 9 in case that happens.
     return (i % 9) == 0 ? i : (i + 9 - 1) / 9 * 9;
   }
 
@@ -71,15 +70,15 @@ public class Utils {
 
       @Override
       public void run() {
-        if (!ArenaRegistry.isInArena(p) || ArenaRegistry.getArena(p).getArenaState() != ArenaState.IN_GAME) {
+        if(!ArenaRegistry.isInArena(p) || ArenaRegistry.getArena(p).getArenaState() != ArenaState.IN_GAME) {
           this.cancel();
         }
-        if (ticks >= seconds * 20) {
+        if(ticks >= seconds * 20) {
           this.cancel();
         }
         String progress = StringFormatUtils.getProgressBar(ticks, seconds * 20, 10, "■", ChatColor.COLOR_CHAR + "a", ChatColor.COLOR_CHAR + "c");
         MiscUtils.sendActionBar(p, plugin.getChatManager().colorMessage("In-Game.Cooldown-Format", p)
-                .replace("%progress%", progress).replace("%time%", String.valueOf((double) ((seconds * 20) - ticks) / 20)));
+          .replace("%progress%", progress).replace("%time%", String.valueOf((double) ((seconds * 20) - ticks) / 20)));
         ticks += 10;
       }
     }.runTaskTimer(plugin, 0, 10);
@@ -87,9 +86,9 @@ public class Utils {
 
   public static List<Block> getNearbyBlocks(Location location, int radius) {
     List<Block> blocks = new ArrayList<>();
-    for (int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
-      for (int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
-        for (int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
+    for(int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
+      for(int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
+        for(int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
           blocks.add(location.getWorld().getBlockAt(x, y, z));
         }
       }
@@ -102,7 +101,7 @@ public class Utils {
   }
 
   public static boolean checkIsInGameInstance(Player player) {
-    if (!ArenaRegistry.isInArena(player)) {
+    if(!ArenaRegistry.isInArena(player)) {
       player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Not-Playing", player));
       return false;
     }
@@ -110,7 +109,7 @@ public class Utils {
   }
 
   public static boolean hasPermission(CommandSender sender, String perm) {
-    if (sender.hasPermission(perm)) {
+    if(sender.hasPermission(perm)) {
       return true;
     }
     sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Permission"));

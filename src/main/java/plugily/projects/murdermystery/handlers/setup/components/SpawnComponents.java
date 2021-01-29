@@ -98,7 +98,7 @@ public class SpawnComponents implements SetupComponent {
       .lore("", chatManager.colorRawMessage("&8Shift + Right Click to remove all spawns"))
       .build(), e -> {
       e.getWhoClicked().closeInventory();
-      if (e.getClick() == ClickType.SHIFT_RIGHT) {
+      if(e.getClick() == ClickType.SHIFT_RIGHT) {
         config.set("instances." + arena.getId() + ".playerspawnpoints", new ArrayList<>());
         arena.setPlayerSpawnPoints(new ArrayList<>());
         player.sendMessage(chatManager.colorRawMessage("&eDone | &aPlayer spawn points deleted, you can add them again now!"));
@@ -111,7 +111,7 @@ public class SpawnComponents implements SetupComponent {
       config.set("instances." + arena.getId() + ".playerspawnpoints", startingSpawns);
       String startingProgress = startingSpawns.size() >= 4 ? "&e✔ Completed | " : "&c✘ Not completed | ";
       player.sendMessage(chatManager.colorRawMessage(startingProgress + "&aPlayer spawn added! &8(&7" + startingSpawns.size() + "/4&8)"));
-      if (startingSpawns.size() == 4) {
+      if(startingSpawns.size() == 4) {
         player.sendMessage(chatManager.colorRawMessage("&eInfo | &aYou can add more than 4 player spawns! Four is just a minimum!"));
       }
       List<Location> spawns = new ArrayList<>(arena.getPlayerSpawnPoints());

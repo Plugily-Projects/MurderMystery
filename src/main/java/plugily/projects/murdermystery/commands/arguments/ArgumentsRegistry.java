@@ -32,15 +32,20 @@ import pl.plajerlair.commonsbox.string.StringMatcher;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.commands.arguments.admin.ListArenasArgument;
-import plugily.projects.murdermystery.commands.arguments.admin.arena.SpecialBlockRemoverArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.arena.DeleteArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.arena.ForceStartArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.arena.ReloadArgument;
+import plugily.projects.murdermystery.commands.arguments.admin.arena.SpecialBlockRemoverArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.arena.StopArgument;
 import plugily.projects.murdermystery.commands.arguments.data.CommandArgument;
 import plugily.projects.murdermystery.commands.arguments.data.LabelData;
 import plugily.projects.murdermystery.commands.arguments.data.LabeledCommandArgument;
-import plugily.projects.murdermystery.commands.arguments.game.*;
+import plugily.projects.murdermystery.commands.arguments.game.ArenaSelectorArgument;
+import plugily.projects.murdermystery.commands.arguments.game.CreateArgument;
+import plugily.projects.murdermystery.commands.arguments.game.JoinArguments;
+import plugily.projects.murdermystery.commands.arguments.game.LeaderboardArgument;
+import plugily.projects.murdermystery.commands.arguments.game.LeaveArgument;
+import plugily.projects.murdermystery.commands.arguments.game.StatsArgument;
 import plugily.projects.murdermystery.commands.completion.TabCompletion;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.setup.SetupInventory;
@@ -99,19 +104,19 @@ public class ArgumentsRegistry implements CommandExecutor {
 
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-    for (Map.Entry<String, List<CommandArgument>> entry : mappedArguments.entrySet()) {
-      if (cmd.getName().equalsIgnoreCase(entry.getKey())) {
-        if (cmd.getName().equalsIgnoreCase("murdermystery")) {
-          if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
+    for(Map.Entry<String, List<CommandArgument>> entry : mappedArguments.entrySet()) {
+      if(cmd.getName().equalsIgnoreCase(entry.getKey())) {
+        if(cmd.getName().equalsIgnoreCase("murdermystery")) {
+          if(args.length == 0 || args[0].equalsIgnoreCase("help")) {
             sendHelpCommand(sender);
             return true;
           }
-          if (args.length > 1 && args[1].equalsIgnoreCase("edit")) {
-            if (!checkSenderIsExecutorType(sender, CommandArgument.ExecutorType.PLAYER)
+          if(args.length > 1 && args[1].equalsIgnoreCase("edit")) {
+            if(!checkSenderIsExecutorType(sender, CommandArgument.ExecutorType.PLAYER)
               || !Utils.hasPermission(sender, "murdermystery.admin.create")) {
               return true;
             }
-            if (ArenaRegistry.getArena(args[0]) == null) {
+            if(ArenaRegistry.getArena(args[0]) == null) {
               sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Arena-Like-That"));
               return true;
             }
@@ -120,24 +125,24 @@ public class ArgumentsRegistry implements CommandExecutor {
             return true;
           }
         }
-        if (cmd.getName().equalsIgnoreCase("murdermysteryadmin") && (args.length == 0 || args[0].equalsIgnoreCase("help"))) {
-          if (!sender.hasPermission("murdermystery.admin")) {
+        if(cmd.getName().equalsIgnoreCase("murdermysteryadmin") && (args.length == 0 || args[0].equalsIgnoreCase("help"))) {
+          if(!sender.hasPermission("murdermystery.admin")) {
             return true;
           }
           sendAdminHelpCommand(sender);
           return true;
         }
-        for (CommandArgument argument : entry.getValue()) {
-          if (argument.getArgumentName().equalsIgnoreCase(args[0])) {
+        for(CommandArgument argument : entry.getValue()) {
+          if(argument.getArgumentName().equalsIgnoreCase(args[0])) {
             //does it make sense that it is a list?
-            for (String perm : argument.getPermissions()) {
-              if (perm.isEmpty() || Utils.hasPermission(sender, perm)) {
+            for(String perm : argument.getPermissions()) {
+              if(perm.isEmpty() || Utils.hasPermission(sender, perm)) {
                 break;
               }
               //user has no permission to execute command
               return true;
             }
-            if (checkSenderIsExecutorType(sender, argument.getValidExecutors())) {
+            if(checkSenderIsExecutorType(sender, argument.getValidExecutors())) {
               argument.execute(sender, args);
             }
             //return true even if sender is not good executor or hasn't got permission
@@ -147,7 +152,7 @@ public class ArgumentsRegistry implements CommandExecutor {
 
         //sending did you mean help
         List<StringMatcher.Match> matches = StringMatcher.match(args[0], mappedArguments.get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName).collect(Collectors.toList()));
-        if (!matches.isEmpty()) {
+        if(!matches.isEmpty()) {
           sender.sendMessage(chatManager.colorMessage("Commands.Did-You-Mean").replace("%command%", label + " " + matches.get(0).getMatch()));
           return true;
         }
@@ -157,13 +162,13 @@ public class ArgumentsRegistry implements CommandExecutor {
   }
 
   private boolean checkSenderIsExecutorType(CommandSender sender, CommandArgument.ExecutorType type) {
-    switch (type) {
+    switch(type) {
       case BOTH:
         return sender instanceof ConsoleCommandSender || sender instanceof Player;
       case CONSOLE:
         return sender instanceof ConsoleCommandSender;
       case PLAYER:
-        if (sender instanceof Player) {
+        if(sender instanceof Player) {
           return true;
         }
         sender.sendMessage(chatManager.colorMessage("Commands.Only-By-Player"));
@@ -176,7 +181,7 @@ public class ArgumentsRegistry implements CommandExecutor {
   private void sendHelpCommand(CommandSender sender) {
     sender.sendMessage(chatManager.colorMessage("Commands.Main-Command.Header"));
     sender.sendMessage(chatManager.colorMessage("Commands.Main-Command.Description"));
-    if (sender.hasPermission("murdermystery.admin")) {
+    if(sender.hasPermission("murdermystery.admin")) {
       sender.sendMessage(chatManager.colorMessage("Commands.Main-Command.Admin-Bonus-Description"));
     }
     sender.sendMessage(chatManager.colorMessage("Commands.Main-Command.Footer"));
@@ -185,7 +190,7 @@ public class ArgumentsRegistry implements CommandExecutor {
   private void sendAdminHelpCommand(CommandSender sender) {
     sender.sendMessage(ChatColor.GREEN + "  " + ChatColor.BOLD + "Murder Mystery " + ChatColor.GRAY + plugin.getDescription().getVersion());
     sender.sendMessage(ChatColor.RED + " []" + ChatColor.GRAY + " = optional  " + ChatColor.GOLD + "<>" + ChatColor.GRAY + " = required");
-    if (sender instanceof Player) {
+    if(sender instanceof Player) {
       sender.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");
     }
     List<LabelData> data = mappedArguments.get("murdermysteryadmin").stream().filter(arg -> arg instanceof LabeledCommandArgument)
@@ -194,8 +199,8 @@ public class ArgumentsRegistry implements CommandExecutor {
       "&7Edit existing arena\n&6Permission: &7murdermystery.admin.edit"));
     data.addAll(mappedArguments.get("murdermystery").stream().filter(arg -> arg instanceof LabeledCommandArgument)
       .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList()));
-    for (LabelData labelData : data) {
-      if (sender instanceof Player) {
+    for(LabelData labelData : data) {
+      if(sender instanceof Player) {
         TextComponent component = new TextComponent(labelData.getText());
         component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, labelData.getCommand()));
         component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(labelData.getDescription()).create()));

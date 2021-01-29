@@ -44,7 +44,7 @@ public class UserManager {
   private final UserDatabase database;
 
   public UserManager(Main plugin) {
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       database = new MysqlManager(plugin);
       Debugger.debug("MySQL Stats enabled");
     } else {
@@ -59,8 +59,8 @@ public class UserManager {
   }
 
   public User getUser(Player player) {
-    for (User user : users) {
-      if (user.getPlayer().equals(player)) {
+    for(User user : users) {
+      if(user.getPlayer().equals(player)) {
         return user;
       }
     }
@@ -75,7 +75,7 @@ public class UserManager {
   }
 
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {
-    if (!stat.isPersistent()) {
+    if(!stat.isPersistent()) {
       return;
     }
     //apply before save
@@ -90,10 +90,10 @@ public class UserManager {
   }
 
   private void fixContirbutionStatistics(User user) {
-    if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) <= 0) {
+    if(user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) <= 0) {
       user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
     }
-    if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) <= 0) {
+    if(user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) <= 0) {
       user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
     }
   }

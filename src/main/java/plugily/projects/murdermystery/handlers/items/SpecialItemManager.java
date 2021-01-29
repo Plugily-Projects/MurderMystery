@@ -44,10 +44,10 @@ public class SpecialItemManager {
   }
 
   public static String getRelatedSpecialItem(ItemStack itemStack) {
-    for (String key : specialItems.keySet()) {
+    for(String key : specialItems.keySet()) {
       List<SpecialItem> entityItem = specialItems.get(key);
-      if (!entityItem.isEmpty() && entityItem.get(0).getItemStack().getItemMeta().getDisplayName()
-          .equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
+      if(!entityItem.isEmpty() && entityItem.get(0).getItemStack().getItemMeta().getDisplayName()
+        .equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
         return key;
       }
     }

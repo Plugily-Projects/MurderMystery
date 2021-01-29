@@ -41,10 +41,10 @@ public class StopArgument {
       new LabelData("/mma stop", "/mma stop", "&7Stops the arena you're in\n&7&lYou must be in target arena!\n&6Permission: &7murdermystery.admin.stop")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if (!Utils.checkIsInGameInstance((Player) sender)) {
+        if(!Utils.checkIsInGameInstance((Player) sender)) {
           return;
         }
-        if (ArenaRegistry.getArena((Player) sender).getArenaState() != ArenaState.ENDING) {
+        if(ArenaRegistry.getArena((Player) sender).getArenaState() != ArenaState.ENDING) {
           ArenaManager.stopGame(true, ArenaRegistry.getArena((Player) sender));
           //todo execute success command message
         }

@@ -40,12 +40,12 @@ public class StatsArgument {
       @Override
       public void execute(@NotNull CommandSender sender, String[] args) {
         Player player = args.length == 2 ? Bukkit.getPlayerExact(args[1]) : (Player) sender;
-        if (player == null) {
+        if(player == null) {
           sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
           return;
         }
         User user = registry.getPlugin().getUserManager().getUser(player);
-        if (player.equals(sender)) {
+        if(player.equals(sender)) {
           sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Header", player));
         } else {
           sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Header-Other", player).replace("%player%", player.getName()));

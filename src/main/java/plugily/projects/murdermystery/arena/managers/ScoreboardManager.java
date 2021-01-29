@@ -86,8 +86,8 @@ public class ScoreboardManager {
    * @see User
    */
   public void removeScoreboard(User user) {
-    for (Scoreboard board : scoreboards) {
-      if (board.getHolder().equals(user.getPlayer())) {
+    for(Scoreboard board : scoreboards) {
+      if(board.getHolder().equals(user.getPlayer())) {
         scoreboards.remove(board);
         board.deactivate();
         return;
@@ -106,23 +106,23 @@ public class ScoreboardManager {
   private List<Entry> formatScoreboard(User user) {
     EntryBuilder builder = new EntryBuilder();
     List<String> lines;
-    if (arena.getArenaState() == ArenaState.IN_GAME) {
+    if(arena.getArenaState() == ArenaState.IN_GAME) {
       lines = LanguageManager.getLanguageList("Scoreboard.Content.Playing");
-      if (Role.isRole(Role.MURDERER, user.getPlayer())) {
+      if(Role.isRole(Role.MURDERER, user.getPlayer())) {
         lines = LanguageManager.getLanguageList("Scoreboard.Content.Playing-Murderer");
       }
     } else {
       //apply fix
-      if (arena.getArenaState() == ArenaState.ENDING) {
+      if(arena.getArenaState() == ArenaState.ENDING) {
         lines = LanguageManager.getLanguageList("Scoreboard.Content.Playing");
-        if (Role.isRole(Role.MURDERER, user.getPlayer())) {
+        if(Role.isRole(Role.MURDERER, user.getPlayer())) {
           lines = LanguageManager.getLanguageList("Scoreboard.Content.Playing-Murderer");
         }
       } else {
         lines = LanguageManager.getLanguageList("Scoreboard.Content." + arena.getArenaState().getFormattedName());
       }
     }
-    for (String line : lines) {
+    for(String line : lines) {
       builder.next(formatScoreboardLine(line, user));
     }
     return builder.build();
@@ -134,18 +134,18 @@ public class ScoreboardManager {
     formattedLine = StringUtils.replace(formattedLine, "%FORMATTED_TIME%", StringFormatUtils.formatIntoMMSS(arena.getTimer() + 1));
     formattedLine = StringUtils.replace(formattedLine, "%MAPNAME%", arena.getMapName());
     int innocents = 0;
-    for (Player p : arena.getPlayersLeft()) {
-      if (Role.isRole(Role.MURDERER, p)) {
+    for(Player p : arena.getPlayersLeft()) {
+      if(Role.isRole(Role.MURDERER, p)) {
         continue;
       }
       innocents++;
     }
-    if (!arena.getPlayersLeft().contains(user.getPlayer())) {
+    if(!arena.getPlayersLeft().contains(user.getPlayer())) {
       formattedLine = StringUtils.replace(formattedLine, "%ROLE%", chatManager.colorMessage("Scoreboard.Roles.Dead"));
     } else {
-      if (Role.isRole(Role.MURDERER, user.getPlayer())) {
+      if(Role.isRole(Role.MURDERER, user.getPlayer())) {
         formattedLine = StringUtils.replace(formattedLine, "%ROLE%", chatManager.colorMessage("Scoreboard.Roles.Murderer"));
-      } else if (Role.isRole(Role.ANY_DETECTIVE, user.getPlayer())) {
+      } else if(Role.isRole(Role.ANY_DETECTIVE, user.getPlayer())) {
         formattedLine = StringUtils.replace(formattedLine, "%ROLE%", chatManager.colorMessage("Scoreboard.Roles.Detective"));
       } else {
         formattedLine = StringUtils.replace(formattedLine, "%ROLE%", chatManager.colorMessage("Scoreboard.Roles.Innocent"));
@@ -155,20 +155,20 @@ public class ScoreboardManager {
     formattedLine = StringUtils.replace(formattedLine, "%PLAYERS%", String.valueOf(arena.getPlayers().size()));
     formattedLine = StringUtils.replace(formattedLine, "%MAX_PLAYERS%", String.valueOf(arena.getMaximumPlayers()));
     formattedLine = StringUtils.replace(formattedLine, "%MIN_PLAYERS%", String.valueOf(arena.getMinimumPlayers()));
-    if (arena.isDetectiveDead() && !arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
+    if(arena.isDetectiveDead() && !arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
       formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", chatManager.colorMessage("Scoreboard.Detective-Died-No-Bow"));
     }
-    if (arena.isDetectiveDead() && arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
+    if(arena.isDetectiveDead() && arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
       formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", chatManager.colorMessage("Scoreboard.Detective-Died-Bow"));
     }
-    if (!arena.isDetectiveDead()) {
+    if(!arena.isDetectiveDead()) {
       formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", chatManager.colorMessage("Scoreboard.Detective-Status-Normal"));
     }
     //should be for murderer only
     formattedLine = StringUtils.replace(formattedLine, "%KILLS%", String.valueOf(user.getStat(StatsStorage.StatisticType.LOCAL_KILLS)));
     formattedLine = StringUtils.replace(formattedLine, "%SCORE%", String.valueOf(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE)));
     formattedLine = chatManager.colorRawMessage(formattedLine);
-    if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+    if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formattedLine = PlaceholderAPI.setPlaceholders(user.getPlayer(), formattedLine);
     }
     return formattedLine;

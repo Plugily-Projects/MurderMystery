@@ -74,7 +74,7 @@ public class SpecialBlocksComponents implements SetupComponent {
       .build(), e -> {
       e.getWhoClicked().closeInventory();
       Block targetBlock = e.getWhoClicked().getTargetBlock(null, 7);
-      if (targetBlock.getType() != Material.CAULDRON) {
+      if(targetBlock.getType() != Material.CAULDRON) {
         e.getWhoClicked().sendMessage(ChatColor.RED + "Please target cauldron to continue!");
         return;
       }
@@ -101,7 +101,7 @@ public class SpecialBlocksComponents implements SetupComponent {
       .build(), e -> {
       e.getWhoClicked().closeInventory();
       Block targetBlock = e.getWhoClicked().getTargetBlock(null, 7);
-      if (targetBlock.getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
+      if(targetBlock.getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
         e.getWhoClicked().sendMessage(ChatColor.RED + "Please target enchanting table to continue!");
         return;
       }

@@ -47,7 +47,7 @@ public class LanguageMigrator {
   }
 
   private void configUpdate() {
-    if (plugin.getConfig().getInt("Version") == CONFIG_FILE_VERSION) {
+    if(plugin.getConfig().getInt("Version") == CONFIG_FILE_VERSION) {
       return;
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Murder Mystery] System notify >> Your config file is outdated! Updating...");
@@ -56,8 +56,8 @@ public class LanguageMigrator {
 
     int version = plugin.getConfig().getInt("Version", CONFIG_FILE_VERSION - 1);
 
-    for (int i = version; i < CONFIG_FILE_VERSION; i++) {
-      switch (i) {
+    for(int i = version; i < CONFIG_FILE_VERSION; i++) {
+      switch(i) {
         case 1:
           MigratorUtils.addNewLines(file, "\r\n# How many blocks per tick sword thrown by murderer should fly\r\n" +
             "# Please avoid high values as it might look like the sword is\r\n" +
@@ -200,13 +200,13 @@ public class LanguageMigrator {
 
   private void languageFileUpdate() {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "language");
-    if (config.getString("File-Version-Do-Not-Edit", "").equals(String.valueOf(LANGUAGE_FILE_VERSION))) {
+    if(config.getString("File-Version-Do-Not-Edit", "").equals(String.valueOf(LANGUAGE_FILE_VERSION))) {
       return;
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Murder Mystery] [System notify] Your language file is outdated! Updating...");
 
     int version = LANGUAGE_FILE_VERSION - 1;
-    if (NumberUtils.isNumber(config.getString("File-Version-Do-Not-Edit"))) {
+    if(NumberUtils.isNumber(config.getString("File-Version-Do-Not-Edit"))) {
       version = Integer.parseInt(config.getString("File-Version-Do-Not-Edit"));
     } else {
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Murder Mystery] [System notify] Failed to parse language file version!");
@@ -215,8 +215,8 @@ public class LanguageMigrator {
 
     File file = new File(plugin.getDataFolder() + "/language.yml");
 
-    for (int i = version; i < LANGUAGE_FILE_VERSION; i++) {
-      switch (version) {
+    for(int i = version; i < LANGUAGE_FILE_VERSION; i++) {
+      switch(version) {
         case 1:
           MigratorUtils.insertAfterLine(file, "Lobby-Messages:", "      Not-Enough-Space-For-Party: \"&cYour party is bigger than free places on the arena %ARENANAME%\"");
           MigratorUtils.insertAfterLine(file, "In-Game:", "  Join-As-Party-Member: \"&cYou joined %ARENANAME% because the party leader joined it!\"");

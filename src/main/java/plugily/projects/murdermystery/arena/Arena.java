@@ -19,7 +19,12 @@
 package plugily.projects.murdermystery.arena;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -32,7 +37,6 @@ import org.bukkit.scheduler.BukkitTask;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
@@ -59,7 +63,17 @@ import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.ItemPosition;
 import plugily.projects.murdermystery.utils.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -98,10 +112,10 @@ public class Arena extends BukkitRunnable {
 
   public Arena(String id) {
     this.id = id;
-    for (ArenaOption option : ArenaOption.values()) {
+    for(ArenaOption option : ArenaOption.values()) {
       arenaOptions.put(option, option.getDefaultValue());
     }
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       gameBar = Bukkit.createBossBar(chatManager.colorMessage("Bossbar.Main-Title"), BarColor.BLUE, BarStyle.SOLID);
     }
     scoreboardManager = new ScoreboardManager(this);
@@ -116,7 +130,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void addCorpse(Corpse corpse) {
-    if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+    if(plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
       return;
     }
     corpses.add(corpse);
@@ -129,25 +143,25 @@ public class Arena extends BukkitRunnable {
   @Override
   public void run() {
     //idle task
-    if (getPlayers().isEmpty() && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+    if(getPlayers().isEmpty() && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       return;
     }
     Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Running game task", getId());
     long start = System.currentTimeMillis();
 
-    switch (getArenaState()) {
+    switch(getArenaState()) {
       case WAITING_FOR_PLAYERS:
-        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           plugin.getServer().setWhitelist(false);
         }
-        if (getPlayers().size() < getMinimumPlayers()) {
-          if (getTimer() <= 0) {
+        if(getPlayers().size() < getMinimumPlayers()) {
+          if(getTimer() <= 0) {
             setTimer(45);
             chatManager.broadcast(this, chatManager.formatMessage(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), getMinimumPlayers()));
             break;
           }
         } else {
-          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
           }
           chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
@@ -158,20 +172,20 @@ public class Arena extends BukkitRunnable {
         setTimer(getTimer() - 1);
         break;
       case STARTING:
-        if (getPlayers().size() == getMaximumPlayers() && getTimer() >= plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15) && !forceStart) {
+        if(getPlayers().size() == getMaximumPlayers() && getTimer() >= plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15) && !forceStart) {
           setTimer(plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15));
           chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Start-In").replace("%TIME%", String.valueOf(getTimer())));
         }
-        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Starting-In").replace("%time%", String.valueOf(getTimer())));
           gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 60));
         }
-        for (Player player : getPlayers()) {
+        for(Player player : getPlayers()) {
           player.setExp((float) (getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 60)));
           player.setLevel(getTimer());
         }
-        if (getPlayers().size() < getMinimumPlayers() && !forceStart) {
-          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+        if(getPlayers().size() < getMinimumPlayers() && !forceStart) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
             gameBar.setProgress(1.0);
           }
@@ -179,40 +193,40 @@ public class Arena extends BukkitRunnable {
           setArenaState(ArenaState.WAITING_FOR_PLAYERS);
           Bukkit.getPluginManager().callEvent(new MMGameStartEvent(this));
           setTimer(15);
-          for (Player player : getPlayers()) {
+          for(Player player : getPlayers()) {
             player.setExp(1);
             player.setLevel(0);
           }
-          if (forceStart) {
+          if(forceStart) {
             forceStart = false;
           }
           break;
         }
         int totalMurderer = 0;
         int totalDetective = 0;
-        for (Player p : getPlayers()) {
+        for(Player p : getPlayers()) {
           User user = plugin.getUserManager().getUser(p);
           totalMurderer += user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER);
           totalDetective += user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE);
         }
-        if (!hideChances) {
-          for (Player p : getPlayers()) {
+        if(!hideChances) {
+          for(Player p : getPlayers()) {
             MiscUtils.sendActionBar(p, formatRoleChance(plugin.getUserManager().getUser(p), totalMurderer, totalDetective));
           }
         }
-        if (getTimer() == 0 || forceStart) {
+        if(getTimer() == 0 || forceStart) {
           MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
           Bukkit.getPluginManager().callEvent(gameStartEvent);
           setArenaState(ArenaState.IN_GAME);
-          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
             gameBar.setProgress(1.0);
           }
           setTimer(5);
-          if (players.isEmpty()) {
+          if(players.isEmpty()) {
             break;
           }
           teleportAllToStartLocation();
-          for (Player player : getPlayers()) {
+          for(Player player : getPlayers()) {
             //reset local variables to be 100% sure
             plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
             plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY, 0);
@@ -232,7 +246,7 @@ public class Arena extends BukkitRunnable {
 
           Map<User, Double> murdererChances = new HashMap<>();
           Map<User, Double> detectiveChances = new HashMap<>();
-          for (Player p : getPlayers()) {
+          for(Player p : getPlayers()) {
             User user = plugin.getUserManager().getUser(p);
             murdererChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) totalMurderer) * 100.0);
             detectiveChances.put(user, ((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) totalDetective) * 100.0);
@@ -249,24 +263,24 @@ public class Arena extends BukkitRunnable {
           int maxdetectives = 1;
           Debugger.debug("Before: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
             getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
-          if (murderers > 1 && getPlayers().size() > murderers) {
+          if(murderers > 1 && getPlayers().size() > murderers) {
             maxmurderer = (getPlayers().size() / murderers);
           }
-          if (detectives > 1 && getPlayers().size() > detectives) {
+          if(detectives > 1 && getPlayers().size() > detectives) {
             maxdetectives = (getPlayers().size() / detectives);
           }
-          if (getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
+          if(getPlayers().size() - (maxmurderer + maxdetectives) < 1) {
             Debugger.debug("{0} Murderers and detectives amount was reduced because there are not enough players", this);
             //Make sure to have one innocent!
-            if (maxdetectives > 1) {
+            if(maxdetectives > 1) {
               maxdetectives--;
-            } else if (maxmurderer > 1) {
+            } else if(maxmurderer > 1) {
               maxmurderer--;
             }
           }
           Debugger.debug("After: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}",
             getId(), maxdetectives, maxmurderer, getPlayers().size(), detectives, murderers);
-          for (int i = 0; i < maxmurderer; i++) {
+          for(int i = 0; i < maxmurderer; i++) {
             Player murderer = ((User) sortedMurderer.keySet().toArray()[i]).getPlayer();
             setCharacter(CharacterType.MURDERER, murderer);
             allMurderer.add(murderer);
@@ -282,7 +296,7 @@ public class Arena extends BukkitRunnable {
 
           Map<User, Double> sortedDetective = shuffledDetectives.stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(
             Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-          for (int i = 0; i < maxdetectives; i++) {
+          for(int i = 0; i < maxdetectives; i++) {
             Player detective = ((User) sortedDetective.keySet().toArray()[i]).getPlayer();
             setCharacter(CharacterType.DETECTIVE, detective);
             allDetectives.add(detective);
@@ -297,38 +311,38 @@ public class Arena extends BukkitRunnable {
           Debugger.debug("Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Players: Detectives = {4}, Murders = {5}",
             getId(), maxdetectives, maxmurderer, getPlayers().size(), allDetectives, allMurderer);
 
-          for (Player p : playersToSet) {
+          for(Player p : playersToSet) {
             p.sendTitle(chatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"),
               chatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
           }
-          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.In-Game-Info"));
           }
         }
-        if (forceStart) {
+        if(forceStart) {
           forceStart = false;
         }
         setTimer(getTimer() - 1);
         break;
       case IN_GAME:
-        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           plugin.getServer().setWhitelist(getMaximumPlayers() <= getPlayers().size());
         }
-        if (getTimer() <= 0) {
+        if(getTimer() <= 0) {
           ArenaManager.stopGame(false, this);
         }
-        if (getTimer() <= (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 10)
+        if(getTimer() <= (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 10)
           && getTimer() > (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15)) {
-          for (Player p : getPlayers()) {
+          for(Player p : getPlayers()) {
             p.sendMessage(chatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword")
               .replace("%time%", String.valueOf(getTimer() - (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15))));
             p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
           }
-          if (getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
-            if (allMurderer.isEmpty()) ArenaManager.stopGame(false, this);
-            for (Player p : allMurderer) {
+          if(getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
+            if(allMurderer.isEmpty()) ArenaManager.stopGame(false, this);
+            for(Player p : allMurderer) {
               User murderer = plugin.getUserManager().getUser(p);
-              if (murderer.isSpectator() || !p.isOnline() || murderer.getArena() != this)
+              if(murderer.isSpectator() || !p.isOnline() || murderer.getArena() != this)
                 continue;
               p.getInventory().setHeldItemSlot(0);
               ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
@@ -337,50 +351,50 @@ public class Arena extends BukkitRunnable {
         }
 
         //every 30 secs survive reward
-        if (getTimer() % 30 == 0) {
-          for (Player p : getPlayersLeft()) {
-            if (Role.isRole(Role.INNOCENT, p)) {
+        if(getTimer() % 30 == 0) {
+          for(Player p : getPlayersLeft()) {
+            if(Role.isRole(Role.INNOCENT, p)) {
               ArenaUtils.addScore(plugin.getUserManager().getUser(p), ArenaUtils.ScoreAction.SURVIVE_TIME, 0);
             }
           }
         }
 
-        if (getTimer() == 30 || getTimer() == 60) {
+        if(getTimer() == 30 || getTimer() == 60) {
           String title = chatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", String.valueOf(getTimer()));
           String subtitle = chatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle").replace("%time%", String.valueOf(getTimer()));
-          for (Player p : getPlayers()) {
+          for(Player p : getPlayers()) {
             p.sendTitle(title, subtitle, 5, 40, 5);
           }
         }
 
-        if (getTimer() <= 30 || getPlayersLeft().size() == aliveMurderer() + 1) {
-          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INNOCENT_LOCATOR)) {
+        if(getTimer() <= 30 || getPlayersLeft().size() == aliveMurderer() + 1) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INNOCENT_LOCATOR)) {
             ArenaUtils.updateInnocentLocator(this);
           }
         }
         //no players - stop game
-        if (getPlayersLeft().isEmpty()) {
+        if(getPlayersLeft().isEmpty()) {
           ArenaManager.stopGame(false, this);
         } else
           //winner check
-          if (getPlayersLeft().size() == aliveMurderer()) {
-            for (Player p : getPlayers()) {
+          if(getPlayersLeft().size() == aliveMurderer()) {
+            for(Player p : getPlayers()) {
               p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
                 chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone"), 5, 40, 5);
-              if (allMurderer.contains(p)) {
+              if(allMurderer.contains(p)) {
                 p.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
               }
             }
             ArenaManager.stopGame(false, this);
           } else
             //murderer speed add
-            if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.MURDERER_SPEED_ENABLED)) {
-              if (getPlayersLeft().size() == aliveMurderer() + 1) {
-                for (Player p : allMurderer) {
-                  if (isMurderAlive(p)) {
+            if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.MURDERER_SPEED_ENABLED)) {
+              if(getPlayersLeft().size() == aliveMurderer() + 1) {
+                for(Player p : allMurderer) {
+                  if(isMurderAlive(p)) {
                     //no potion because it adds particles which can be identified
                     int multiplier = plugin.getConfig().getInt("Speed-Effect-Murderer.Speed", 3);
-                    if (multiplier > 1 && multiplier <= 10) {
+                    if(multiplier > 1 && multiplier <= 10) {
                       p.setWalkSpeed(0.1f * plugin.getConfig().getInt("Speed-Effect-Murderer.Speed", 3));
                     }
                   }
@@ -388,7 +402,7 @@ public class Arena extends BukkitRunnable {
               }
             }
         //don't spawn it every time
-        if (spawnGoldTimer == spawnGoldTime) {
+        if(spawnGoldTimer == spawnGoldTime) {
           spawnSomeGold();
           spawnGoldTimer = 0;
         } else {
@@ -398,21 +412,21 @@ public class Arena extends BukkitRunnable {
         break;
       case ENDING:
         scoreboardManager.stopAllScoreboards();
-        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           plugin.getServer().setWhitelist(false);
         }
-        if (getTimer() <= 0) {
-          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+        if(getTimer() <= 0) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Game-Ended"));
           }
 
           List<Player> playersToQuit = new ArrayList<>(getPlayers());
-          for (Player player : playersToQuit) {
+          for(Player player : playersToQuit) {
             plugin.getUserManager().getUser(player).removeScoreboard();
             player.setGameMode(GameMode.SURVIVAL);
-            for (Player players : Bukkit.getOnlinePlayers()) {
+            for(Player players : Bukkit.getOnlinePlayers()) {
               MiscUtils.showPlayer(plugin, player, players);
-              if (!ArenaRegistry.isInArena(players)) {
+              if(!ArenaRegistry.isInArena(players)) {
                 MiscUtils.showPlayer(plugin, players, player);
               }
             }
@@ -431,15 +445,15 @@ public class Arena extends BukkitRunnable {
           }
           teleportAllToEndLocation();
 
-          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-            for (Player player : getPlayers()) {
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+            for(Player player : getPlayers()) {
               InventorySerializer.loadInventory(plugin, player);
             }
           }
 
           chatManager.broadcast(this, chatManager.colorMessage("Commands.Teleported-To-The-Lobby"));
 
-          for (User user : plugin.getUserManager().getUsers(this)) {
+          for(User user : plugin.getUserManager().getUsers(this)) {
             user.setSpectator(false);
             user.getPlayer().setCollidable(true);
             plugin.getUserManager().saveAllStatistic(user);
@@ -451,7 +465,7 @@ public class Arena extends BukkitRunnable {
           spectators.clear();
 
           cleanUpArena();
-          if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
+          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
             && ConfigUtils.getConfig(plugin, "bungee").getBoolean("Shutdown-When-Game-Ends")) {
             plugin.getServer().shutdown();
           }
@@ -462,17 +476,17 @@ public class Arena extends BukkitRunnable {
       case RESTARTING:
         getPlayers().clear();
         setArenaState(ArenaState.WAITING_FOR_PLAYERS);
-        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           ArenaRegistry.shuffleBungeeArena();
-          for (Player player : Bukkit.getOnlinePlayers()) {
+          for(Player player : Bukkit.getOnlinePlayers()) {
             ArenaManager.joinAttempt(player, ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
           }
         }
-        if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
         }
 
-        if (goldVisuals) {
+        if(goldVisuals) {
           startGoldVisuals();
         }
 
@@ -496,17 +510,17 @@ public class Arena extends BukkitRunnable {
 
   private void spawnSomeGold() {
     //may users want to disable it and want much gold on there map xD
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_GOLD_LIMITER)) {
+    if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_GOLD_LIMITER)) {
       //do not exceed amount of gold per spawn
-      if (goldSpawned.size() >= goldSpawnPoints.size()) {
+      if(goldSpawned.size() >= goldSpawnPoints.size()) {
         return;
       }
     }
-    if (goldSpawnPoints.isEmpty()) {
+    if(goldSpawnPoints.isEmpty()) {
       return;
     }
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SPAWN_GOLD_EVERY_SPAWNER_MODE)) {
-      for (Location location : goldSpawnPoints) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SPAWN_GOLD_EVERY_SPAWNER_MODE)) {
+      for(Location location : goldSpawnPoints) {
         goldSpawned.add(location.getWorld().dropItem(location, new ItemStack(Material.GOLD_INGOT, 1)));
       }
     } else {
@@ -570,7 +584,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void toggleGoldVisuals() {
-    if (goldSpawnPoints.isEmpty() || goldVisuals) {
+    if(goldSpawnPoints.isEmpty() || goldVisuals) {
       goldVisuals = false;
       return;
     }
@@ -580,19 +594,19 @@ public class Arena extends BukkitRunnable {
   private BukkitTask visualTask;
 
   private void startGoldVisuals() {
-    if (visualTask != null) {
+    if(visualTask != null) {
       return;
     }
     visualTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-      if (!plugin.isEnabled() || !goldVisuals || goldSpawnPoints.isEmpty() || arenaState != ArenaState.WAITING_FOR_PLAYERS) {
+      if(!plugin.isEnabled() || !goldVisuals || goldSpawnPoints.isEmpty() || arenaState != ArenaState.WAITING_FOR_PLAYERS) {
         //we need to cancel it that way as the arena class is an task
         visualTask.cancel();
         return;
       }
-      for (Location goldLocations : goldSpawnPoints) {
+      for(Location goldLocations : goldSpawnPoints) {
         Location goldLocation = goldLocations.clone();
         goldLocation.add(0, 0.4, 0);
-        if (Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
+        if(Version.isCurrentEqualOrHigher(Version.v1_13_R1)) {
           goldLocation.getWorld().spawnParticle(Particle.REDSTONE, goldLocation.getX(), goldLocation.getY(), goldLocation.getZ(),
             10, 0.1, 0.2, 0.1, new org.bukkit.Particle.DustOptions(org.bukkit.Color.YELLOW, 1));
         } else {
@@ -609,7 +623,7 @@ public class Arena extends BukkitRunnable {
 
   public void setGoldVisuals(boolean goldVisuals) {
     this.goldVisuals = goldVisuals;
-    if (goldVisuals) {
+    if(goldVisuals) {
       startGoldVisuals();
     }
   }
@@ -639,7 +653,7 @@ public class Arena extends BukkitRunnable {
    * @param minimumPlayers players needed to start arena
    */
   public void setMinimumPlayers(int minimumPlayers) {
-    if (minimumPlayers < 2) {
+    if(minimumPlayers < 2) {
       Debugger.debug(Level.WARNING, "Minimum players amount for arena cannot be less than 2! Got {0}", minimumPlayers);
       setOptionValue(ArenaOption.MINIMUM_PLAYERS, 2);
       return;
@@ -746,7 +760,7 @@ public class Arena extends BukkitRunnable {
     player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
     player.setWalkSpeed(0.2f);
     Location location = getLobbyLocation();
-    if (location == null) {
+    if(location == null) {
       System.out.print("LobbyLocation isn't intialized for arena " + getId());
       return;
     }
@@ -760,10 +774,10 @@ public class Arena extends BukkitRunnable {
    * @param p      player
    */
   public void doBarAction(BarAction action, Player p) {
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+    if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       return;
     }
-    switch (action) {
+    switch(action) {
       case ADD:
         gameBar.addPlayer(p);
         break;
@@ -799,45 +813,45 @@ public class Arena extends BukkitRunnable {
   }
 
   private void teleportAllToStartLocation() {
-    for (Player player : getPlayers()) {
+    for(Player player : getPlayers()) {
       player.teleport(playerSpawnPoints.get(random.nextInt(playerSpawnPoints.size())));
     }
   }
 
   public void teleportAllToEndLocation() {
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
       && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
       getPlayers().forEach(plugin.getBungeeManager()::connectToHub);
       return;
     }
 
     Location location = getEndLocation();
-    if (location == null) {
+    if(location == null) {
       location = getLobbyLocation();
       System.out.print("EndLocation for arena " + getId() + " isn't intialized!");
     }
 
-    if (location != null) {
-      for (Player player : getPlayers()) {
+    if(location != null) {
+      for(Player player : getPlayers()) {
         player.teleport(location);
       }
     }
   }
 
   public void teleportToEndLocation(Player player) {
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
       && ConfigUtils.getConfig(plugin, "bungee").getBoolean("End-Location-Hub", true)) {
       plugin.getBungeeManager().connectToHub(player);
       return;
     }
 
     Location location = getEndLocation();
-    if (location == null) {
+    if(location == null) {
       System.out.print("EndLocation for arena " + getId() + " isn't intialized!");
       location = getLobbyLocation();
     }
 
-    if (location != null) {
+    if(location != null) {
       player.teleport(location);
     }
   }
@@ -871,14 +885,14 @@ public class Arena extends BukkitRunnable {
 
   public void loadSpecialBlock(SpecialBlock block) {
     specialBlocks.add(block);
-    switch (block.getSpecialBlockType()) {
+    switch(block.getSpecialBlockType()) {
       case MYSTERY_CAULDRON:
         ArmorStandHologram cauldron = new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()), chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
         block.setArmorStandHologram(cauldron);
         break;
       case PRAISE_DEVELOPER:
         ArmorStandHologram prayer = new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()));
-        for (String str : chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
+        for(String str : chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
           prayer.appendLine(str);
         }
         block.setArmorStandHologram(prayer);
@@ -906,7 +920,7 @@ public class Arena extends BukkitRunnable {
   }
 
   void removePlayer(Player player) {
-    if (player != null) {
+    if(player != null) {
       players.remove(player);
     }
   }
@@ -916,8 +930,8 @@ public class Arena extends BukkitRunnable {
   }
 
   void showPlayers() {
-    for (Player player : getPlayers()) {
-      for (Player p : getPlayers()) {
+    for(Player player : getPlayers()) {
+      for(Player p : getPlayers()) {
         MiscUtils.showPlayer(plugin, player, p);
         MiscUtils.showPlayer(plugin, p, player);
       }
@@ -942,23 +956,23 @@ public class Arena extends BukkitRunnable {
   }
 
   public void clearCorpses() {
-    if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
-      for (Stand stand : stands) {
-        if (!stand.getHologram().isDeleted()) {
+    if(plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+      for(Stand stand : stands) {
+        if(!stand.getHologram().isDeleted()) {
           stand.getHologram().delete();
         }
-        if (stand.getStand() != null) {
+        if(stand.getStand() != null) {
           stand.getStand().remove();
         }
       }
       stands.clear();
       return;
     }
-    for (Corpse corpse : corpses) {
-      if (!corpse.getHologram().isDeleted()) {
+    for(Corpse corpse : corpses) {
+      if(!corpse.getHologram().isDeleted()) {
         corpse.getHologram().delete();
       }
-      if (corpse.getCorpseData() != null) {
+      if(corpse.getCorpseData() != null) {
         corpse.getCorpseData().destroyCorpseFromEveryone();
         CorpseAPI.removeCorpse(corpse.getCorpseData());
       }
@@ -989,8 +1003,8 @@ public class Arena extends BukkitRunnable {
 
   public int aliveDetective() {
     int alive = 0;
-    for (Player p : getPlayersLeft()) {
-      if (Role.isRole(Role.ANY_DETECTIVE, p) && isDetectiveAlive(p)) {
+    for(Player p : getPlayersLeft()) {
+      if(Role.isRole(Role.ANY_DETECTIVE, p) && isDetectiveAlive(p)) {
         alive++;
       }
     }
@@ -998,8 +1012,8 @@ public class Arena extends BukkitRunnable {
   }
 
   public boolean isDetectiveAlive(Player player) {
-    for (Player p : getPlayersLeft()) {
-      if (p == player && allDetectives.contains(p)) {
+    for(Player p : getPlayersLeft()) {
+      if(p == player && allDetectives.contains(p)) {
         return true;
       }
     }
@@ -1025,8 +1039,8 @@ public class Arena extends BukkitRunnable {
 
   public int aliveMurderer() {
     int alive = 0;
-    for (Player p : getPlayersLeft()) {
-      if (Role.isRole(Role.MURDERER, p) && isMurderAlive(p)) {
+    for(Player p : getPlayersLeft()) {
+      if(Role.isRole(Role.MURDERER, p) && isMurderAlive(p)) {
         alive++;
       }
     }
@@ -1034,8 +1048,8 @@ public class Arena extends BukkitRunnable {
   }
 
   public boolean isMurderAlive(Player player) {
-    for (Player p : getPlayersLeft()) {
-      if (p == player && allMurderer.contains(p)) {
+    for(Player p : getPlayersLeft()) {
+      if(p == player && allMurderer.contains(p)) {
         return true;
       }
     }
@@ -1074,7 +1088,7 @@ public class Arena extends BukkitRunnable {
   private ArmorStandHologram bowHologram;
 
   public void removeBowHolo() {
-    if (bowHologram != null && !bowHologram.isDeleted()) {
+    if(bowHologram != null && !bowHologram.isDeleted()) {
       bowHologram.delete();
     }
 
@@ -1082,7 +1096,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void setBowHologram(ArmorStandHologram bowHologram) {
-    if (bowHologram == null) {
+    if(bowHologram == null) {
       this.bowHologram = null;
       return;
     }

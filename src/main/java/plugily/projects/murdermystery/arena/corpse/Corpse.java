@@ -18,9 +18,8 @@
 
 package plugily.projects.murdermystery.arena.corpse;
 
-import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
-
 import org.golde.bukkit.corpsereborn.nms.Corpses;
+import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
 
 /**
  * @author Plajer

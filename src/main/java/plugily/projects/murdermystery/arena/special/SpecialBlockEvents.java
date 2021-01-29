@@ -63,23 +63,23 @@ public class SpecialBlockEvents implements Listener {
   @EventHandler
   public void onSpecialBlockClick(PlayerInteractEvent e) {
     Arena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena == null || e.getHand() == EquipmentSlot.OFF_HAND || e.getClickedBlock() == null) {
+    if(arena == null || e.getHand() == EquipmentSlot.OFF_HAND || e.getClickedBlock() == null) {
       return;
     }
-    if (arena.getArenaState() != ArenaState.IN_GAME || plugin.getUserManager().getUser(e.getPlayer()).isSpectator()) {
+    if(arena.getArenaState() != ArenaState.IN_GAME || plugin.getUserManager().getUser(e.getPlayer()).isSpectator()) {
       return;
     }
     boolean leverBlock = false;
-    if (e.getClickedBlock().getType() == XMaterial.LEVER.parseMaterial()) {
+    if(e.getClickedBlock().getType() == XMaterial.LEVER.parseMaterial()) {
       leverBlock = true;
     }
-    for (SpecialBlock specialBlock : arena.getSpecialBlocks()) {
-      if (leverBlock && Utils.getNearbyBlocks(specialBlock.getLocation(), 3).contains(e.getClickedBlock())) {
+    for(SpecialBlock specialBlock : arena.getSpecialBlocks()) {
+      if(leverBlock && Utils.getNearbyBlocks(specialBlock.getLocation(), 3).contains(e.getClickedBlock())) {
         onPrayLeverClick(e);
         return;
       }
-      if (specialBlock.getLocation().getBlock().equals(e.getClickedBlock())) {
-        switch (specialBlock.getSpecialBlockType()) {
+      if(specialBlock.getLocation().getBlock().equals(e.getClickedBlock())) {
+        switch(specialBlock.getSpecialBlockType()) {
           case MYSTERY_CAULDRON:
             onCauldronClick(e);
             return;
@@ -97,18 +97,18 @@ public class SpecialBlockEvents implements Listener {
   }
 
   private void onCauldronClick(PlayerInteractEvent e) {
-    if (e.getClickedBlock() == null){
+    if(e.getClickedBlock() == null) {
       return;
     }
-    if (e.getClickedBlock().getType() != Material.CAULDRON) {
+    if(e.getClickedBlock().getType() != Material.CAULDRON) {
       return;
     }
     User user = plugin.getUserManager().getUser(e.getPlayer());
-    if (e.getPlayer().getInventory().getItem(/* same for all roles */ ItemPosition.POTION.getOtherRolesItemPosition()) != null) {
+    if(e.getPlayer().getInventory().getItem(/* same for all roles */ ItemPosition.POTION.getOtherRolesItemPosition()) != null) {
       e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Drink-Potion", e.getPlayer()));
       return;
     }
-    if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < 1) {
+    if(user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < 1) {
       e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold", e.getPlayer()).replace("%amount%", String.valueOf(1)));
       return;
     }
@@ -122,12 +122,12 @@ public class SpecialBlockEvents implements Listener {
   }
 
   private void onPrayerClick(PlayerInteractEvent e) {
-    if (e.getClickedBlock().getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
+    if(e.getClickedBlock().getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
       return;
     }
     e.setCancelled(true);
     User user = plugin.getUserManager().getUser(e.getPlayer());
-    if (user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < 1) {
+    if(user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < 1) {
       e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold", e.getPlayer()).replace("%amount%", String.valueOf(1)));
       return;
     }
@@ -140,7 +140,7 @@ public class SpecialBlockEvents implements Listener {
 
   private void onPrayLeverClick(PlayerInteractEvent e) {
     User user = plugin.getUserManager().getUser(e.getPlayer());
-    if (user.getStat(StatsStorage.StatisticType.LOCAL_PRAISES) < 1) {
+    if(user.getStat(StatsStorage.StatisticType.LOCAL_PRAISES) < 1) {
       e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Special-Blocks.No-Money-No-Pray", e.getPlayer()));
       return;
     }
@@ -150,15 +150,15 @@ public class SpecialBlockEvents implements Listener {
 
   @EventHandler
   public void onMysteryPotionDrink(PlayerItemConsumeEvent e) {
-    if (e.getItem().getType() != XMaterial.POTION.parseMaterial() || !ItemUtils.isItemStackNamed(e.getItem())) {
+    if(e.getItem().getType() != XMaterial.POTION.parseMaterial() || !ItemUtils.isItemStackNamed(e.getItem())) {
       return;
     }
     Arena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena == null) {
+    if(arena == null) {
       return;
     }
-    for (MysteryPotion potion : MysteryPotionRegistry.getMysteryPotions()) {
-      if (e.getItem().getItemMeta().getDisplayName().equals(potion.getName())) {
+    for(MysteryPotion potion : MysteryPotionRegistry.getMysteryPotions()) {
+      if(e.getItem().getItemMeta().getDisplayName().equals(potion.getName())) {
         e.setCancelled(true);
         e.getPlayer().sendMessage(potion.getSubtitle());
         e.getPlayer().sendTitle("", potion.getSubtitle(), 5, 40, 5);

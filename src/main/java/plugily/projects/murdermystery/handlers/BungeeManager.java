@@ -63,7 +63,7 @@ public class BungeeManager implements Listener {
   }
 
   public void connectToHub(Player player) {
-    if (!ConfigUtils.getConfig(plugin, "bungee").getBoolean("Connect-To-Hub", true)) {
+    if(!ConfigUtils.getConfig(plugin, "bungee").getBoolean("Connect-To-Hub", true)) {
       return;
     }
     ByteArrayDataOutput out = ByteStreams.newDataOutput();
@@ -78,7 +78,7 @@ public class BungeeManager implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onServerListPing(ServerListPingEvent event) {
-    if (!ConfigUtils.getConfig(plugin, "bungee").getBoolean("MOTD.Manager") || ArenaRegistry.getArenas().isEmpty()) {
+    if(!ConfigUtils.getConfig(plugin, "bungee").getBoolean("MOTD.Manager") || ArenaRegistry.getArenas().isEmpty()) {
       return;
     }
     Arena arena = ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena());
@@ -89,7 +89,7 @@ public class BungeeManager implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onJoin(final PlayerJoinEvent event) {
-    if (ArenaRegistry.getArenas().isEmpty()) {
+    if(ArenaRegistry.getArenas().isEmpty()) {
       return;
     }
 
@@ -99,12 +99,12 @@ public class BungeeManager implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onQuit(PlayerQuitEvent event) {
-    if (ArenaRegistry.getArenas().isEmpty()) {
+    if(ArenaRegistry.getArenas().isEmpty()) {
       return;
     }
 
     event.setQuitMessage("");
-    if (ArenaRegistry.isInArena(event.getPlayer())) {
+    if(ArenaRegistry.isInArena(event.getPlayer())) {
       ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
     }
   }

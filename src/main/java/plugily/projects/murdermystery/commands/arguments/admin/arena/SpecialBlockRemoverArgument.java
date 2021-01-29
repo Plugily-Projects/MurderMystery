@@ -53,25 +53,25 @@ public class SpecialBlockRemoverArgument {
         //no need for check as argument is only for players
         Player player = (Player) sender;
         Block targetBlock = player.getTargetBlock(null, 7);
-        if (targetBlock.getType() == Material.CAULDRON || targetBlock.getType() == XMaterial.ENCHANTING_TABLE.parseMaterial()) {
-          for (Arena arena : ArenaRegistry.getArenas()) {
+        if(targetBlock.getType() == Material.CAULDRON || targetBlock.getType() == XMaterial.ENCHANTING_TABLE.parseMaterial()) {
+          for(Arena arena : ArenaRegistry.getArenas()) {
             //do not check arenas that could not be the case
-            if (arena.getSpecialBlocks().isEmpty()){
+            if(arena.getSpecialBlocks().isEmpty()) {
               continue;
             }
-            if (arena.getPlayerSpawnPoints().get(0).getWorld() != player.getWorld()){
+            if(arena.getPlayerSpawnPoints().get(0).getWorld() != player.getWorld()) {
               continue;
             }
             //get all special blocks
-            for (SpecialBlock specialBlock : arena.getSpecialBlocks()) {
+            for(SpecialBlock specialBlock : arena.getSpecialBlocks()) {
               //check if targetBlock is specialblock
-              if (specialBlock.getLocation().getBlock().equals(targetBlock)) {
+              if(specialBlock.getLocation().getBlock().equals(targetBlock)) {
                 //get special blocks from config
                 FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
                 //remove special block from arena
                 arena.getSpecialBlocks().remove(specialBlock);
                 //remove hologram
-                if (specialBlock.getArmorStandHologram() != null){
+                if(specialBlock.getArmorStandHologram() != null) {
                   specialBlock.getArmorStandHologram().delete();
                 }
                 //remove special block from arena file

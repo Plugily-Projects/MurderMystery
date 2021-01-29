@@ -29,7 +29,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
@@ -51,21 +50,21 @@ public class ArenaUtils {
   private static final ChatManager chatManager = plugin.getChatManager();
 
   public static void onMurdererDeath(Arena arena) {
-    for (Player player : arena.getPlayers()) {
+    for(Player player : arena.getPlayers()) {
       player.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win", player),
         chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", player), 5, 40, 5);
-      if (Role.isRole(Role.MURDERER, player)) {
+      if(Role.isRole(Role.MURDERER, player)) {
         player.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", player), null, 5, 40, 5);
       }
       User loopUser = plugin.getUserManager().getUser(player);
-      if (Role.isRole(Role.INNOCENT, player)) {
+      if(Role.isRole(Role.INNOCENT, player)) {
         ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.SURVIVE_GAME, 0);
-      } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
+      } else if(Role.isRole(Role.ANY_DETECTIVE, player)) {
         ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.WIN_GAME, 0);
         ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.DETECTIVE_WIN_GAME, 0);
       }
     }
-    for (Player murderer : arena.getMurdererList()) {
+    for(Player murderer : arena.getMurdererList()) {
       murderer.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", murderer),
         chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", murderer), 5, 40, 5);
     }
@@ -75,14 +74,14 @@ public class ArenaUtils {
 
   public static void addScore(User user, ScoreAction action, int amount) {
     String s = plugin.getConfig().getString("AddScore-Sound", "");
-    if (!s.isEmpty()) {
+    if(!s.isEmpty()) {
       user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.valueOf(s.toUpperCase()), 1F, 2F);
     }
 
     String msg = chatManager.colorMessage("In-Game.Messages.Bonus-Score");
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
 
-    if (action == ScoreAction.GOLD_PICKUP && amount > 1) {
+    if(action == ScoreAction.GOLD_PICKUP && amount > 1) {
       msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints() * amount));
       msg = StringUtils.replace(msg, "%action%", action.getAction());
       user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + (action.getPoints() * amount));
@@ -90,10 +89,10 @@ public class ArenaUtils {
       return;
     }
 
-    if (action == ScoreAction.DETECTIVE_WIN_GAME) {
+    if(action == ScoreAction.DETECTIVE_WIN_GAME) {
       int innocents = 0;
-      for (Player p : user.getArena().getPlayersLeft()) {
-        if (Role.isRole(Role.INNOCENT, p)) {
+      for(Player p : user.getArena().getPlayersLeft()) {
+        if(Role.isRole(Role.INNOCENT, p)) {
           innocents++;
         }
       }
@@ -107,7 +106,7 @@ public class ArenaUtils {
 
     msg = StringUtils.replace(msg, "%score%", String.valueOf(action.getPoints()));
 
-    if (action.getPoints() < 0) {
+    if(action.getPoints() < 0) {
       msg = StringUtils.replace(msg, "+", "");
     }
 
@@ -118,31 +117,31 @@ public class ArenaUtils {
   }
 
   public static void updateInnocentLocator(Arena arena) {
-    if (!arena.isMurdererLocatorReceived()) {
+    if(!arena.isMurdererLocatorReceived()) {
       ItemStack innocentLocator = new ItemStack(Material.COMPASS, 1);
       ItemMeta innocentMeta = innocentLocator.getItemMeta();
       innocentMeta.setDisplayName(chatManager.colorMessage("In-Game.Innocent-Locator-Item-Name"));
       innocentLocator.setItemMeta(innocentMeta);
-      for (Player p : arena.getPlayersLeft()) {
-        if (arena.isMurderAlive(p)) {
+      for(Player p : arena.getPlayersLeft()) {
+        if(arena.isMurderAlive(p)) {
           ItemPosition.setItem(p, ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
         }
       }
       arena.setMurdererLocatorReceived(true);
 
-      for (Player p : arena.getPlayersLeft()) {
-        if (Role.isRole(Role.MURDERER, p)) {
+      for(Player p : arena.getPlayersLeft()) {
+        if(Role.isRole(Role.MURDERER, p)) {
           continue;
         }
         p.sendTitle(chatManager.colorMessage("In-Game.Watch-Out-Title", p), chatManager.colorMessage("In-Game.Watch-Out-Subtitle", p), 5, 40, 5);
       }
     }
-    for (Player p : arena.getPlayersLeft()) {
-      if (Role.isRole(Role.MURDERER, p)) {
+    for(Player p : arena.getPlayersLeft()) {
+      if(Role.isRole(Role.MURDERER, p)) {
         continue;
       }
-      for (Player murder : arena.getMurdererList()) {
-        if (arena.isMurderAlive(murder)) {
+      for(Player murder : arena.getMurdererList()) {
+        if(arena.isMurderAlive(murder)) {
           murder.setCompassTarget(p.getLocation());
         }
       }
@@ -155,8 +154,8 @@ public class ArenaUtils {
     ItemMeta bowMeta = bowLocator.getItemMeta();
     bowMeta.setDisplayName(chatManager.colorMessage("In-Game.Bow-Locator-Item-Name"));
     bowLocator.setItemMeta(bowMeta);
-    for (Player p : arena.getPlayersLeft()) {
-      if (Role.isRole(Role.INNOCENT, p)) {
+    for(Player p : arena.getPlayersLeft()) {
+      if(Role.isRole(Role.INNOCENT, p)) {
         ItemPosition.setItem(p, ItemPosition.BOW_LOCATOR, bowLocator);
         p.setCompassTarget(loc);
       }
@@ -164,14 +163,14 @@ public class ArenaUtils {
   }
 
   public static void dropBowAndAnnounce(Arena arena, Player victim) {
-    if (arena.getBowHologram() != null) {
+    if(arena.getBowHologram() != null) {
       return;
     }
-    if (arena.getPlayersLeft().size() > 1) {
-      for (Player p : arena.getPlayers()) {
+    if(arena.getPlayersLeft().size() > 1) {
+      for(Player p : arena.getPlayers()) {
         p.sendTitle(chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title", p), null, 5, 40, 5);
       }
-      for (Player p : arena.getPlayersLeft()) {
+      for(Player p : arena.getPlayersLeft()) {
         p.sendTitle(null, chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle", p), 5, 40, 5);
       }
     }
@@ -188,20 +187,20 @@ public class ArenaUtils {
   }
 
   public static void hidePlayer(Player p, Arena arena) {
-    for (Player player : arena.getPlayers()) {
+    for(Player player : arena.getPlayers()) {
       MiscUtils.hidePlayer(plugin, player, p);
     }
   }
 
   public static void showPlayer(Player p, Arena arena) {
-    for (Player player : arena.getPlayers()) {
+    for(Player player : arena.getPlayers()) {
       MiscUtils.showPlayer(plugin, player, p);
     }
   }
 
   public static void hidePlayersOutsideTheGame(Player player, Arena arena) {
-    for (Player players : plugin.getServer().getOnlinePlayers()) {
-      if (arena.getPlayers().contains(players)) {
+    for(Player players : plugin.getServer().getOnlinePlayers()) {
+      if(arena.getPlayers().contains(players)) {
         continue;
       }
       MiscUtils.hidePlayer(plugin, player, players);
@@ -210,25 +209,25 @@ public class ArenaUtils {
   }
 
   public static void updateNameTagsVisibility(final Player p) {
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
+    if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
       return;
     }
-    for (Player players : plugin.getServer().getOnlinePlayers()) {
+    for(Player players : plugin.getServer().getOnlinePlayers()) {
       Arena arena = ArenaRegistry.getArena(players);
-      if (arena == null) {
+      if(arena == null) {
         continue;
       }
       Scoreboard scoreboard = players.getScoreboard();
-      if (scoreboard == Bukkit.getScoreboardManager().getMainScoreboard()) {
+      if(scoreboard == Bukkit.getScoreboardManager().getMainScoreboard()) {
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
       }
       Team team = scoreboard.getTeam("MMHide");
-      if (team == null) {
+      if(team == null) {
         team = scoreboard.registerNewTeam("MMHide");
       }
       team.setCanSeeFriendlyInvisibles(false);
       team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
-      if (arena.getArenaState() == ArenaState.IN_GAME) {
+      if(arena.getArenaState() == ArenaState.IN_GAME) {
         team.addEntry(p.getName());
       } else {
         team.removeEntry(p.getName());

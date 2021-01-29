@@ -19,7 +19,6 @@
 package plugily.projects.murdermystery.arena.role;
 
 import org.bukkit.entity.Player;
-
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 
@@ -71,14 +70,14 @@ public enum Role {
    */
   public static boolean isRole(Role role, Player player) {
     Arena arena = ArenaRegistry.getArena(player);
-    if (arena == null) {
+    if(arena == null) {
       return false;
     }
-    switch (role) {
+    switch(role) {
       case DETECTIVE:
         return arena.isCharacterSet(Arena.CharacterType.DETECTIVE) && arena.getDetectiveList().contains(player);
       case FAKE_DETECTIVE:
-        if (!arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
+        if(!arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
           return false;
         }
         Player fakeDetective = arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE);

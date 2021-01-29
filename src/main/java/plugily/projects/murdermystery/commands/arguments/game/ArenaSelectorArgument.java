@@ -53,8 +53,8 @@ import java.util.Map;
 public class ArenaSelectorArgument implements Listener {
 
   private final ChatManager chatManager;
-  
-  private Map<Integer, Arena> arenaMappings = new HashMap<>();
+
+  private final Map<Integer, Arena> arenaMappings = new HashMap<>();
 
   public ArenaSelectorArgument(ArgumentsRegistry registry, ChatManager chatManager) {
     this.chatManager = chatManager;
@@ -64,19 +64,19 @@ public class ArenaSelectorArgument implements Listener {
       @Override
       public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
-        if (ArenaRegistry.getArenas().size() == 0) {
+        if(ArenaRegistry.getArenas().size() == 0) {
           player.sendMessage(chatManager.colorMessage("Validator.No-Instances-Created"));
           return;
         }
         Inventory inventory = Bukkit.createInventory(player, Utils.serializeInt(ArenaRegistry.getArenas().size()), chatManager.colorMessage("Arena-Selector.Inv-Title"));
-        
+
         int sloti = 0;
         arenaMappings.clear();
-        
-        for (Arena arena : ArenaRegistry.getArenas()) {
+
+        for(Arena arena : ArenaRegistry.getArenas()) {
           arenaMappings.put(sloti, arena);
           ItemStack itemStack;
-          switch (arena.getArenaState()) {
+          switch(arena.getArenaState()) {
             case WAITING_FOR_PLAYERS:
               itemStack = XMaterial.LIME_CONCRETE.parseItem();
               break;
@@ -91,7 +91,7 @@ public class ArenaSelectorArgument implements Listener {
           itemMeta.setDisplayName(formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
 
           ArrayList<String> lore = new ArrayList<>();
-          for (String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
+          for(String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
             lore.add(formatItem(string, arena, registry.getPlugin()));
           }
 
@@ -109,7 +109,7 @@ public class ArenaSelectorArgument implements Listener {
   private String formatItem(String string, Arena arena, Main plugin) {
     String formatted = string;
     formatted = StringUtils.replace(formatted, "%mapname%", arena.getMapName());
-    if (arena.getPlayers().size() >= arena.getMaximumPlayers()) {
+    if(arena.getPlayers().size() >= arena.getMaximumPlayers()) {
       formatted = StringUtils.replace(formatted, "%state%", chatManager.colorMessage("Signs.Game-States.Full-Game"));
     } else {
       formatted = StringUtils.replace(formatted, "%state%", plugin.getSignManager().getGameStateToString().get(arena.getArenaState()));
@@ -122,17 +122,17 @@ public class ArenaSelectorArgument implements Listener {
 
   @EventHandler
   public void onArenaSelectorMenuClick(InventoryClickEvent e) {
-    if (!e.getView().getTitle().equals(chatManager.colorMessage("Arena-Selector.Inv-Title"))) {
+    if(!e.getView().getTitle().equals(chatManager.colorMessage("Arena-Selector.Inv-Title"))) {
       return;
     }
-    if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
+    if(e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
       return;
     }
     Player player = (Player) e.getWhoClicked();
     player.closeInventory();
 
     Arena arena = arenaMappings.get(e.getRawSlot());
-    if (arena != null) {
+    if(arena != null) {
       ArenaManager.joinAttempt(player, arena);
     } else {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Arena-Like-That"));

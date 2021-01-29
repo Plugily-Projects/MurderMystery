@@ -22,7 +22,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.util.StringUtil;
-
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
@@ -56,32 +55,32 @@ public class TabCompletion implements TabCompleter {
     List<String> completionList = new ArrayList<>(), cmds = new ArrayList<>();
     String partOfCommand = null;
 
-    if (cmd.getName().equalsIgnoreCase("murdermysteryadmin")) {
-      if (args.length == 1) {
+    if(cmd.getName().equalsIgnoreCase("murdermysteryadmin")) {
+      if(args.length == 1) {
         cmds.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
-            .collect(Collectors.toList()));
+          .collect(Collectors.toList()));
         partOfCommand = args[0];
-      } else if (args.length == 2 && args[0].equalsIgnoreCase("delete")) {
+      } else if(args.length == 2 && args[0].equalsIgnoreCase("delete")) {
         cmds.addAll(ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList()));
         partOfCommand = args[1];
       }
     }
 
-    if (cmd.getName().equalsIgnoreCase("murdermystery")) {
-      if (args.length == 2 && args[0].equalsIgnoreCase("join")) {
+    if(cmd.getName().equalsIgnoreCase("murdermystery")) {
+      if(args.length == 2 && args[0].equalsIgnoreCase("join")) {
         cmds.addAll(ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList()));
         partOfCommand = args[1];
-      } else if (args.length == 1) {
+      } else if(args.length == 1) {
         cmds.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
-            .collect(Collectors.toList()));
+          .collect(Collectors.toList()));
         partOfCommand = args[0];
       }
     }
 
     // Completes the player names
-    if (cmds.isEmpty() || partOfCommand == null) {
-      for (CompletableArgument completion : registeredCompletions) {
-        if (!cmd.getName().equalsIgnoreCase(completion.getMainCommand()) || !completion.getArgument().equalsIgnoreCase(args[0])) {
+    if(cmds.isEmpty() || partOfCommand == null) {
+      for(CompletableArgument completion : registeredCompletions) {
+        if(!cmd.getName().equalsIgnoreCase(completion.getMainCommand()) || !completion.getArgument().equalsIgnoreCase(args[0])) {
           continue;
         }
         return completion.getCompletions();

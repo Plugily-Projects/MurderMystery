@@ -157,11 +157,11 @@
             <version>2.6.14</version>
             <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.bstats/bstats-bukkit -->
         <dependency>
-            <groupId>org.bstats.bStats-Metrics</groupId>
+            <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>2.1.0</version>
-            <scope>compile</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
         <dependency>

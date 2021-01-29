@@ -55,15 +55,15 @@ public class ExceptionLogHandler extends Handler {
   @Override
   public void publish(LogRecord record) {
     Throwable throwable = record.getThrown();
-    if (!(throwable instanceof Exception) || !throwable.getClass().getSimpleName().contains("Exception")) {
+    if(!(throwable instanceof Exception) || !throwable.getClass().getSimpleName().contains("Exception")) {
       return;
     }
-    if (throwable.getStackTrace().length == 0 || throwable.getCause() == null ||
+    if(throwable.getStackTrace().length == 0 || throwable.getCause() == null ||
       throwable.getCause().getStackTrace().length == 0 ||
       !throwable.getCause().getStackTrace()[0].getClassName().contains("plugily.projects.murdermystery")) {
       return;
     }
-    if (!throwable.getStackTrace()[0].getClassName().contains("plugily.projects.murdermystery") || containsBlacklistedClass(throwable)) {
+    if(!throwable.getStackTrace()[0].getClassName().contains("plugily.projects.murdermystery") || containsBlacklistedClass(throwable)) {
       return;
     }
     new ReportedException(plugin, (Exception) throwable);
@@ -73,9 +73,9 @@ public class ExceptionLogHandler extends Handler {
   }
 
   private boolean containsBlacklistedClass(Throwable throwable) {
-    for (StackTraceElement element : throwable.getStackTrace()) {
-      for (String blacklist : blacklistedClasses) {
-        if (element.getClassName().contains(blacklist)) {
+    for(StackTraceElement element : throwable.getStackTrace()) {
+      for(String blacklist : blacklistedClasses) {
+        if(element.getClassName().contains(blacklist)) {
           return true;
         }
       }

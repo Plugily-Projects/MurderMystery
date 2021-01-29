@@ -45,12 +45,12 @@ public class JoinArguments {
     registry.mapArgument("murdermystery", new CommandArgument("join", "", CommandArgument.ExecutorType.PLAYER) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if (args.length == 1) {
+        if(args.length == 1) {
           sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Type-Arena-Name"));
           return;
         }
-        for (Arena arena : ArenaRegistry.getArenas()) {
-          if (args[1].equalsIgnoreCase(arena.getId())) {
+        for(Arena arena : ArenaRegistry.getArenas()) {
+          if(args[1].equalsIgnoreCase(arena.getId())) {
             ArenaManager.joinAttempt((Player) sender, arena);
             return;
           }
@@ -60,29 +60,29 @@ public class JoinArguments {
     });
 
     //random join argument, register only for multi arena
-    if (!registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+    if(!registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       registry.mapArgument("murdermystery", new CommandArgument("randomjoin", "", CommandArgument.ExecutorType.PLAYER) {
         @Override
         public void execute(CommandSender sender, String[] args) {
           //first random get method
           Map<Arena, Integer> arenas = new HashMap<>();
-          for (Arena arena : ArenaRegistry.getArenas()) {
-            if (arena.getArenaState() == ArenaState.STARTING && arena.getPlayers().size() < arena.getMaximumPlayers()) {
+          for(Arena arena : ArenaRegistry.getArenas()) {
+            if(arena.getArenaState() == ArenaState.STARTING && arena.getPlayers().size() < arena.getMaximumPlayers()) {
               arenas.put(arena, arena.getPlayers().size());
             }
           }
-          if (arenas.size() > 0) {
+          if(arenas.size() > 0) {
             Stream<Map.Entry<Arena, Integer>> sorted = arenas.entrySet().stream().sorted(Map.Entry.comparingByValue());
             Arena arena = sorted.findFirst().get().getKey();
-            if (arena != null) {
+            if(arena != null) {
               ArenaManager.joinAttempt((Player) sender, arena);
               return;
             }
           }
 
           //fallback safe method
-          for (Arena arena : ArenaRegistry.getArenas()) {
-            if ((arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
+          for(Arena arena : ArenaRegistry.getArenas()) {
+            if((arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING)
               && arena.getPlayers().size() < arena.getMaximumPlayers()) {
               ArenaManager.joinAttempt((Player) sender, arena);
               return;

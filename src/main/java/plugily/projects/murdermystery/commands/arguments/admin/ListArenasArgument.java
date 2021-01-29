@@ -41,13 +41,13 @@ public class ListArenasArgument {
       public void execute(CommandSender sender, String[] args) {
         sender.sendMessage(chatManager.colorMessage("Commands.Admin-Commands.List-Command.Header"));
         int i = 0;
-        for (Arena arena : ArenaRegistry.getArenas()) {
+        for(Arena arena : ArenaRegistry.getArenas()) {
           sender.sendMessage(chatManager.colorMessage("Commands.Admin-Commands.List-Command.Format").replace("%arena%", arena.getId())
             .replace("%status%", arena.getArenaState().getFormattedName()).replace("%players%", String.valueOf(arena.getPlayers().size()))
             .replace("%maxplayers%", String.valueOf(arena.getMaximumPlayers())));
           i++;
         }
-        if (i == 0) {
+        if(i == 0) {
           sender.sendMessage(chatManager.colorMessage("Commands.Admin-Commands.List-Command.No-Arenas"));
         }
       }

@@ -20,7 +20,13 @@ package plugily.projects.murdermystery.events;
 
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.entity.*;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Painting;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -30,14 +36,19 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
@@ -66,14 +77,14 @@ public class Events implements Listener {
 
   @EventHandler
   public void onItemSwap(PlayerSwapHandItemsEvent e) {
-    if (ArenaRegistry.isInArena(e.getPlayer())) {
+    if(ArenaRegistry.isInArena(e.getPlayer())) {
       e.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onDrop(PlayerDropItemEvent event) {
-    if (ArenaRegistry.isInArena(event.getPlayer())) {
+    if(ArenaRegistry.isInArena(event.getPlayer())) {
       event.setCancelled(true);
     }
   }
@@ -81,21 +92,21 @@ public class Events implements Listener {
   @EventHandler
   public void onSwordThrow(PlayerInteractEvent e) {
     Arena arena = ArenaRegistry.getArena(e.getPlayer());
-    if (arena == null) {
+    if(arena == null) {
       return;
     }
-    if (!Role.isRole(Role.MURDERER, e.getPlayer())) {
+    if(!Role.isRole(Role.MURDERER, e.getPlayer())) {
       return;
     }
-    if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
+    if(e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.PHYSICAL) {
       return;
     }
     Player attacker = e.getPlayer();
     User attackerUser = plugin.getUserManager().getUser(attacker);
-    if (attacker.getInventory().getItemInMainHand().getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
+    if(attacker.getInventory().getItemInMainHand().getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
       return;
     }
-    if (attackerUser.getCooldown("sword_shoot") > 0) {
+    if(attackerUser.getCooldown("sword_shoot") > 0) {
       return;
     }
     attackerUser.setCooldown("sword_shoot", plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5));
@@ -114,7 +125,7 @@ public class Events implements Listener {
     ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(standStart, EntityType.ARMOR_STAND);
     stand.setVisible(false);
     stand.setInvulnerable(true);
-    if (Version.isCurrentEqualOrHigher(Version.v1_16_R1)) {
+    if(Version.isCurrentEqualOrHigher(Version.v1_16_R1)) {
       stand.getEquipment().setItemInMainHand(plugin.getConfigPreferences().getMurdererSword());
     } else {
       stand.setItemInHand(plugin.getConfigPreferences().getMurdererSword());
@@ -134,10 +145,10 @@ public class Events implements Listener {
         stand.teleport(standStart.add(vec));
         initialise.add(vec);
         initialise.getWorld().getNearbyEntities(initialise, maxHitRange, maxHitRange, maxHitRange).forEach(entity -> {
-          if (entity instanceof Player) {
+          if(entity instanceof Player) {
             Player victim = (Player) entity;
-            if (ArenaRegistry.isInArena(victim) && !plugin.getUserManager().getUser(victim).isSpectator()) {
-              if (!victim.equals(attacker)) {
+            if(ArenaRegistry.isInArena(victim) && !plugin.getUserManager().getUser(victim).isSpectator()) {
+              if(!victim.equals(attacker)) {
                 killBySword(arena, attackerUser, victim);
                 this.cancel();
                 stand.remove();
@@ -145,7 +156,7 @@ public class Events implements Listener {
             }
           }
         });
-        if (loc.distance(initialise) > maxRange || initialise.getBlock().getType().isSolid()) {
+        if(loc.distance(initialise) > maxRange || initialise.getBlock().getType().isSolid()) {
           this.cancel();
           stand.remove();
         }
@@ -155,7 +166,7 @@ public class Events implements Listener {
 
   private void killBySword(Arena arena, User attackerUser, Player victim) {
     //check if victim is murderer
-    if (Role.isRole(Role.MURDERER, victim)) {
+    if(Role.isRole(Role.MURDERER, victim)) {
       return;
     }
     victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
@@ -165,8 +176,8 @@ public class Events implements Listener {
     attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
     attackerUser.addStat(StatsStorage.StatisticType.KILLS, 1);
     ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
-    if (Role.isRole(Role.ANY_DETECTIVE, victim) && arena.lastAliveDetective()) {
-      if (Role.isRole(Role.FAKE_DETECTIVE, victim)) {
+    if(Role.isRole(Role.ANY_DETECTIVE, victim) && arena.lastAliveDetective()) {
+      if(Role.isRole(Role.FAKE_DETECTIVE, victim)) {
         arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
       }
       ArenaUtils.dropBowAndAnnounce(arena, victim);
@@ -176,23 +187,23 @@ public class Events implements Listener {
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onCommandExecute(PlayerCommandPreprocessEvent event) {
     Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    if (arena == null) {
+    if(arena == null) {
       return;
     }
-    if (!plugin.getConfig().getBoolean("Block-Commands-In-Game", true)) {
+    if(!plugin.getConfig().getBoolean("Block-Commands-In-Game", true)) {
       return;
     }
     String command = event.getMessage().substring(1);
     command = (command.indexOf(' ') >= 0 ? command.substring(0, command.indexOf(' ')) : command);
-    for (String msg : plugin.getConfig().getStringList("Whitelisted-Commands")) {
-      if (command.equalsIgnoreCase(msg)) {
+    for(String msg : plugin.getConfig().getStringList("Whitelisted-Commands")) {
+      if(command.equalsIgnoreCase(msg)) {
         return;
       }
     }
-    if (event.getPlayer().isOp() || event.getPlayer().hasPermission("murdermystery.admin") || event.getPlayer().hasPermission("murdermystery.command.bypass")) {
+    if(event.getPlayer().isOp() || event.getPlayer().hasPermission("murdermystery.admin") || event.getPlayer().hasPermission("murdermystery.command.bypass")) {
       return;
     }
-    if (command.equalsIgnoreCase("mm") || command.equalsIgnoreCase("murdermystery")
+    if(command.equalsIgnoreCase("mm") || command.equalsIgnoreCase("murdermystery")
       || event.getMessage().contains("murdermysteryadmin") || event.getMessage().contains("leave")
       || command.equalsIgnoreCase("stats") || command.equalsIgnoreCase("mma")) {
       return;
@@ -204,38 +215,38 @@ public class Events implements Listener {
   @EventHandler
   public void onInGameInteract(PlayerInteractEvent event) {
     Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    if (arena == null || event.getClickedBlock() == null) {
+    if(arena == null || event.getClickedBlock() == null) {
       return;
     }
-    if (event.getClickedBlock().getType() == XMaterial.PAINTING.parseMaterial() || event.getClickedBlock().getType() == XMaterial.FLOWER_POT.parseMaterial()) {
+    if(event.getClickedBlock().getType() == XMaterial.PAINTING.parseMaterial() || event.getClickedBlock().getType() == XMaterial.FLOWER_POT.parseMaterial()) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onInGameBedEnter(PlayerBedEnterEvent event) {
-    if (ArenaRegistry.isInArena(event.getPlayer())) {
+    if(ArenaRegistry.isInArena(event.getPlayer())) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onLeave(PlayerInteractEvent event) {
-    if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
+    if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
       return;
     }
     Arena arena = ArenaRegistry.getArena(event.getPlayer());
     ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
-    if (arena == null || !ItemUtils.isItemStackNamed(itemStack)) {
+    if(arena == null || !ItemUtils.isItemStackNamed(itemStack)) {
       return;
     }
     String key = SpecialItemManager.getRelatedSpecialItem(itemStack);
-    if (key == null) {
+    if(key == null) {
       return;
     }
-    if (SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Leave")) {
+    if(SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Leave")) {
       event.setCancelled(true);
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+      if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         plugin.getBungeeManager().connectToHub(event.getPlayer());
       } else {
         ArenaManager.leaveAttempt(event.getPlayer(), arena);
@@ -245,7 +256,7 @@ public class Events implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onFoodLevelChange(FoodLevelChangeEvent event) {
-    if (event.getEntity().getType() == EntityType.PLAYER && ArenaRegistry.isInArena((Player) event.getEntity())) {
+    if(event.getEntity().getType() == EntityType.PLAYER && ArenaRegistry.isInArena((Player) event.getEntity())) {
       event.setFoodLevel(20);
       event.setCancelled(true);
     }
@@ -254,7 +265,7 @@ public class Events implements Listener {
   @EventHandler(priority = EventPriority.HIGH)
   //highest priority to fully protect our game (i didn't set it because my test server was destroyed, n-no......)
   public void onBlockBreakEvent(BlockBreakEvent event) {
-    if (ArenaRegistry.isInArena(event.getPlayer())) {
+    if(ArenaRegistry.isInArena(event.getPlayer())) {
       event.setCancelled(true);
     }
   }
@@ -262,7 +273,7 @@ public class Events implements Listener {
   @EventHandler(priority = EventPriority.HIGH)
   //highest priority to fully protect our game (i didn't set it because my test server was destroyed, n-no......)
   public void onBuild(BlockPlaceEvent event) {
-    if (ArenaRegistry.isInArena(event.getPlayer())) {
+    if(ArenaRegistry.isInArena(event.getPlayer())) {
       event.setCancelled(true);
     }
   }
@@ -270,16 +281,16 @@ public class Events implements Listener {
   @EventHandler(priority = EventPriority.HIGH)
   //highest priority to fully protect our game (i didn't set it because my test server was destroyed, n-no......)
   public void onHangingBreakEvent(HangingBreakByEntityEvent event) {
-    if (event.getEntity() instanceof ItemFrame || event.getEntity() instanceof Painting) {
-      if (event.getRemover() instanceof Player && ArenaRegistry.isInArena((Player) event.getRemover())) {
+    if(event.getEntity() instanceof ItemFrame || event.getEntity() instanceof Painting) {
+      if(event.getRemover() instanceof Player && ArenaRegistry.isInArena((Player) event.getRemover())) {
         event.setCancelled(true);
         return;
       }
-      if (!(event.getRemover() instanceof Arrow)) {
+      if(!(event.getRemover() instanceof Arrow)) {
         return;
       }
       Arrow arrow = (Arrow) event.getRemover();
-      if (arrow.getShooter() instanceof Player && ArenaRegistry.isInArena((Player) arrow.getShooter())) {
+      if(arrow.getShooter() instanceof Player && ArenaRegistry.isInArena((Player) arrow.getShooter())) {
         event.setCancelled(true);
       }
     }
@@ -287,18 +298,18 @@ public class Events implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onArmorStandDestroy(EntityDamageByEntityEvent e) {
-    if (!(e.getEntity() instanceof LivingEntity)) {
+    if(!(e.getEntity() instanceof LivingEntity)) {
       return;
     }
     LivingEntity livingEntity = (LivingEntity) e.getEntity();
-    if (livingEntity.getType() != EntityType.ARMOR_STAND) {
+    if(livingEntity.getType() != EntityType.ARMOR_STAND) {
       return;
     }
-    if (e.getDamager() instanceof Player && ArenaRegistry.isInArena((Player) e.getDamager())) {
+    if(e.getDamager() instanceof Player && ArenaRegistry.isInArena((Player) e.getDamager())) {
       e.setCancelled(true);
-    } else if (e.getDamager() instanceof Arrow) {
+    } else if(e.getDamager() instanceof Arrow) {
       Arrow arrow = (Arrow) e.getDamager();
-      if (arrow.getShooter() instanceof Player && ArenaRegistry.isInArena((Player) arrow.getShooter())) {
+      if(arrow.getShooter() instanceof Player && ArenaRegistry.isInArena((Player) arrow.getShooter())) {
         e.setCancelled(true);
         return;
       }
@@ -308,17 +319,17 @@ public class Events implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onInteractWithArmorStand(PlayerArmorStandManipulateEvent event) {
-    if (ArenaRegistry.isInArena(event.getPlayer())) {
+    if(ArenaRegistry.isInArena(event.getPlayer())) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onCraft(PlayerInteractEvent event) {
-    if (!ArenaRegistry.isInArena(event.getPlayer())) {
+    if(!ArenaRegistry.isInArena(event.getPlayer())) {
       return;
     }
-    if (event.getPlayer().getTargetBlock(null, 7).getType() == XMaterial.CRAFTING_TABLE.parseMaterial()) {
+    if(event.getPlayer().getTargetBlock(null, 7).getType() == XMaterial.CRAFTING_TABLE.parseMaterial()) {
       event.setCancelled(true);
     }
   }

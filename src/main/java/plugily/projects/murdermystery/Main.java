@@ -39,10 +39,19 @@ import plugily.projects.murdermystery.arena.special.SpecialBlockEvents;
 import plugily.projects.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
 import plugily.projects.murdermystery.arena.special.pray.PrayerRegistry;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
-import plugily.projects.murdermystery.events.*;
+import plugily.projects.murdermystery.events.ChatEvents;
+import plugily.projects.murdermystery.events.Events;
+import plugily.projects.murdermystery.events.JoinEvent;
+import plugily.projects.murdermystery.events.LobbyEvent;
+import plugily.projects.murdermystery.events.QuitEvent;
 import plugily.projects.murdermystery.events.spectator.SpectatorEvents;
 import plugily.projects.murdermystery.events.spectator.SpectatorItemEvents;
-import plugily.projects.murdermystery.handlers.*;
+import plugily.projects.murdermystery.handlers.BowTrailsHandler;
+import plugily.projects.murdermystery.handlers.BungeeManager;
+import plugily.projects.murdermystery.handlers.ChatManager;
+import plugily.projects.murdermystery.handlers.CorpseHandler;
+import plugily.projects.murdermystery.handlers.PermissionsManager;
+import plugily.projects.murdermystery.handlers.PlaceholderManager;
 import plugily.projects.murdermystery.handlers.hologram.HologramManager;
 import plugily.projects.murdermystery.handlers.items.SpecialItem;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
@@ -53,7 +62,11 @@ import plugily.projects.murdermystery.handlers.sign.SignManager;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.user.UserManager;
 import plugily.projects.murdermystery.user.data.MysqlManager;
-import plugily.projects.murdermystery.utils.*;
+import plugily.projects.murdermystery.utils.Debugger;
+import plugily.projects.murdermystery.utils.ExceptionLogHandler;
+import plugily.projects.murdermystery.utils.MessageUtils;
+import plugily.projects.murdermystery.utils.UpdateChecker;
+import plugily.projects.murdermystery.utils.Utils;
 import plugily.projects.murdermystery.utils.services.ServiceRegistry;
 
 import java.io.File;
@@ -84,7 +97,7 @@ public class Main extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    if (!validateIfPluginShouldStart()) {
+    if(!validateIfPluginShouldStart()) {
       return;
     }
 
@@ -98,10 +111,10 @@ public class Main extends JavaPlugin {
     Debugger.setEnabled(getDescription().getVersion().contains("debug") || getConfig().getBoolean("Debug"));
 
     Debugger.debug("[System] Initialization start");
-    if (getConfig().getBoolean("Developer-Mode")) {
+    if(getConfig().getBoolean("Developer-Mode")) {
       Debugger.deepDebug(true);
       Debugger.debug(Level.FINE, "Deep debug enabled");
-      for (String listenable : new ArrayList<>(getConfig().getStringList("Performance-Listenable"))) {
+      for(String listenable : new ArrayList<>(getConfig().getStringList("Performance-Listenable"))) {
         Debugger.monitorPerformance(listenable);
       }
     }
@@ -115,14 +128,14 @@ public class Main extends JavaPlugin {
     Debugger.debug("Plugin loaded! Hooking into soft-dependencies in a while!");
     //start hook manager later in order to allow soft-dependencies to fully load
     Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
-    if (configPreferences.getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
+    if(configPreferences.getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
       Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () ->
         Bukkit.getOnlinePlayers().forEach(ArenaUtils::updateNameTagsVisibility), 60, 140);
     }
   }
 
   private boolean validateIfPluginShouldStart() {
-    if (ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_11_R1)) {
+    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_11_R1)) {
       MessageUtils.thisVersionIsNotSupported();
       Debugger.sendConsoleMsg("&cYour server version is not supported by Murder Mystery!");
       Debugger.sendConsoleMsg("&cSadly, we must shut off. Maybe you consider changing your server version?");
@@ -132,7 +145,7 @@ public class Main extends JavaPlugin {
     }
     try {
       Class.forName("org.spigotmc.SpigotConfig");
-    } catch (Exception e) {
+    } catch(Exception e) {
       MessageUtils.thisVersionIsNotSupported();
       Debugger.sendConsoleMsg("&cYour server software is not supported by Murder Mystery!");
       Debugger.sendConsoleMsg("&cWe support only Spigot and Spigot forks only! Shutting off...");
@@ -145,7 +158,7 @@ public class Main extends JavaPlugin {
 
   @Override
   public void onDisable() {
-    if (forceDisable) {
+    if(forceDisable) {
       return;
     }
     Debugger.debug("System disable initialized");
@@ -153,17 +166,17 @@ public class Main extends JavaPlugin {
 
     Bukkit.getLogger().removeHandler(exceptionLogHandler);
     saveAllUserStatistics();
-    if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+    if(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       getMysqlDatabase().shutdownConnPool();
     }
-    for (ArmorStand armorStand : HologramManager.getArmorStands()) {
+    for(ArmorStand armorStand : HologramManager.getArmorStands()) {
       armorStand.remove();
       armorStand.setCustomNameVisible(false);
     }
     HologramManager.getArmorStands().clear();
-    for (Arena arena : ArenaRegistry.getArenas()) {
+    for(Arena arena : ArenaRegistry.getArenas()) {
       arena.getScoreboardManager().stopAllScoreboards();
-      for (Player player : arena.getPlayers()) {
+      for(Player player : arena.getPlayers()) {
         arena.doBarAction(Arena.BarAction.REMOVE, player);
         arena.teleportToEndLocation(player);
         player.setFlySpeed(0.1f);
@@ -172,7 +185,7 @@ public class Main extends JavaPlugin {
         player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
         player.setWalkSpeed(0.2f);
         player.setGameMode(GameMode.SURVIVAL);
-        if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+        if(configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
           InventorySerializer.loadInventory(this, player);
         }
       }
@@ -185,10 +198,10 @@ public class Main extends JavaPlugin {
   private void initializeClasses() {
     chatManager = new ChatManager(this);
     ScoreboardLib.setPluginInstance(this);
-    if (getConfig().getBoolean("BungeeActivated")) {
+    if(getConfig().getBoolean("BungeeActivated")) {
       bungeeManager = new BungeeManager(this);
     }
-    if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+    if(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
       database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
     }
@@ -225,7 +238,7 @@ public class Main extends JavaPlugin {
     long start = System.currentTimeMillis();
 
     startPluginMetrics();
-    if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+    if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       Debugger.debug("Hooking into PlaceholderAPI");
       new PlaceholderManager().register();
     }
@@ -239,7 +252,7 @@ public class Main extends JavaPlugin {
     metrics.addCustomChart(new org.bstats.charts.SimplePie("bungeecord_hooked", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.BUNGEE_ENABLED))));
     metrics.addCustomChart(new org.bstats.charts.SimplePie("locale_used", () -> LanguageManager.getPluginLocale().getPrefix()));
     metrics.addCustomChart(new org.bstats.charts.SimplePie("update_notifier", () -> {
-      if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+      if(getConfig().getBoolean("Update-Notifier.Enabled", true)) {
         return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Enabled with beta notifier" : "Enabled";
       }
       return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Beta notifier only" : "Disabled";
@@ -247,15 +260,15 @@ public class Main extends JavaPlugin {
   }
 
   private void checkUpdate() {
-    if (!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+    if(!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
       return;
     }
     UpdateChecker.init(this, 66614).requestUpdateCheck().whenComplete((result, exception) -> {
-      if (!result.requiresUpdate()) {
+      if(!result.requiresUpdate()) {
         return;
       }
-      if (result.getNewestVersion().contains("b")) {
-        if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
+      if(result.getNewestVersion().contains("b")) {
+        if(getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
           Debugger.sendConsoleMsg("&c[MurderMystery] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
           Debugger.sendConsoleMsg("&c[MurderMystery] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
             result.getNewestVersion()));
@@ -270,9 +283,9 @@ public class Main extends JavaPlugin {
   }
 
   private void setupFiles() {
-    for (String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks")) {
+    for(String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks")) {
       File file = new File(getDataFolder() + File.separator + fileName + ".yml");
-      if (!file.exists()) {
+      if(!file.exists()) {
         saveResource(fileName + ".yml", false);
       }
     }
@@ -323,13 +336,13 @@ public class Main extends JavaPlugin {
   }
 
   private void saveAllUserStatistics() {
-    for (Player player : getServer().getOnlinePlayers()) {
+    for(Player player : getServer().getOnlinePlayers()) {
       User user = userManager.getUser(player);
-      if (userManager.getDatabase() instanceof MysqlManager) {
+      if(userManager.getDatabase() instanceof MysqlManager) {
         StringBuilder update = new StringBuilder(" SET ");
-        for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-          if (!stat.isPersistent()) continue;
-          if (update.toString().equalsIgnoreCase(" SET ")) {
+        for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+          if(!stat.isPersistent()) continue;
+          if(update.toString().equalsIgnoreCase(" SET ")) {
             update.append(stat.getName()).append('=').append(user.getStat(stat));
           }
           update.append(", ").append(stat.getName()).append('=').append(user.getStat(stat));
@@ -340,7 +353,7 @@ public class Main extends JavaPlugin {
           + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
         continue;
       }
-      for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+      for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
         userManager.getDatabase().saveStatistic(user, stat);
       }
     }
