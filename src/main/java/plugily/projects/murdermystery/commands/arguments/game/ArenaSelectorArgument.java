@@ -44,6 +44,7 @@ import plugily.projects.murdermystery.utils.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author 2Wild4You
@@ -75,19 +76,28 @@ public class ArenaSelectorArgument implements Listener {
 
         for(Arena arena : ArenaRegistry.getArenas()) {
           arenaMappings.put(sloti, arena);
-          ItemStack itemStack;
+
+          ItemStack itemStack = null;
           switch(arena.getArenaState()) {
             case WAITING_FOR_PLAYERS:
-              itemStack = XMaterial.LIME_CONCRETE.parseItem();
-              break;
             case STARTING:
-              itemStack = XMaterial.YELLOW_CONCRETE.parseItem();
+              itemStack = XMaterial.matchXMaterial(registry.getPlugin().getConfig().getString("Arena-Selector.Items." + arena.getArenaState()
+                  .toString().toLowerCase().replace('_', '-'), "YELLOW_CONCRETE").toUpperCase()).orElse(XMaterial.YELLOW_CONCRETE).parseItem();
               break;
             default:
-              itemStack = XMaterial.RED_CONCRETE.parseItem();
+              itemStack = XMaterial.matchXMaterial(registry.getPlugin().getConfig().getString("Arena-Selector.Items.other",
+                  "RED_CONCRETE").toUpperCase()).orElse(XMaterial.RED_CONCRETE).parseItem();
               break;
           }
+
+          if (itemStack == null)
+            return;
+
           ItemMeta itemMeta = itemStack.getItemMeta();
+          if (itemMeta == null) {
+            return;
+          }
+
           itemMeta.setDisplayName(formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
 
           ArrayList<String> lore = new ArrayList<>();

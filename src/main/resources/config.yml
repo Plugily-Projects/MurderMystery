@@ -174,6 +174,12 @@ Nametags-Hidden: true
 # - black (restarting) stained glass
 Signs-Block-States-Enabled: true
 
+Arena-Selector:
+  Items:
+    waiting-for-players: lime_concrete
+    starting: yellow_concrete
+    other: red_concrete
+
 Update-Notifier:
   # Should we check for updates on plugin start/after admin join?
   # You REALLY should have this true!
