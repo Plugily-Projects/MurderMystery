@@ -18,21 +18,31 @@
 
 package plugily.projects.murdermystery.arena;
 
+import org.bukkit.plugin.java.JavaPlugin;
+
+import plugily.projects.murdermystery.Main;
+
 /**
  * @author TomTheDeveloper
  * <p>
  * Contains all GameStates.
  */
 public enum ArenaState {
-  WAITING_FOR_PLAYERS("Waiting"), STARTING("Starting"), IN_GAME("Playing"), ENDING("Finishing"), RESTARTING("Restarting");
+  WAITING_FOR_PLAYERS("Waiting"), STARTING("Starting"), IN_GAME("Playing"), ENDING("Ending"), RESTARTING("Restarting");
 
   String formattedName;
+  String placeholder;
 
   ArenaState(String formattedName) {
     this.formattedName = formattedName;
+    this.placeholder = JavaPlugin.getPlugin(Main.class).getChatManager().colorMessage("Placeholders.Game-States." + formattedName);
   }
 
   public String getFormattedName() {
     return formattedName;
+  }
+
+  public String getPlaceholder() {
+    return placeholder;
   }
 }
