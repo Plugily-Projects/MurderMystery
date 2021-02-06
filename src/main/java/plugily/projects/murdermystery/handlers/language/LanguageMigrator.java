@@ -34,7 +34,7 @@ import java.io.File;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 20;
+  public static final int CONFIG_FILE_VERSION = 21;
   public static final int LANGUAGE_FILE_VERSION = 6;
   private final Main plugin;
 
@@ -187,6 +187,13 @@ public class LanguageMigrator {
             "# It will not broadcast the death message to all ;)\r\n" +
             "Hide-Death: false\r\n" +
             "\r\n");
+          break;
+        case 20:
+          MigratorUtils.addNewLines(file, "Arena-Selector:\r\n" +
+            "  Items:" +
+            "    waiting-for-players: lime_concrete" +
+            "    starting: yellow_concrete" +
+            "    other: red_concrete");
           break;
         default:
           break;

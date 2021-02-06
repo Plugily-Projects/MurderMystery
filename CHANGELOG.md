@@ -1,3 +1,7 @@
+### 1.7.5
+* Added modifiable arena state names to language
+* Added configurable map selector items
+
 ### 1.7.4 Release (25.01.2021 - 28.01.2021)
 * Fix stack trace array length is 0 when trying to send exception to service
 * Updated commonsbox to fix actionbar problems
