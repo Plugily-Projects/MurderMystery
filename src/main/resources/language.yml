@@ -299,6 +299,14 @@ Validator:
   Instance-Started: "[Murder Mystery] Arena %arena% instance successfully started!"
   No-Instances-Created: "[Murder Mystery] There are no arena instances created in configuration!"
 
+Placeholders:
+  Game-States:
+    Waiting: "&lWaiting for players..."
+    Starting: "&e&lStarting"
+    In-Game: "&lIn-game"
+    Ending: "&lEnding"
+    Restarting: "&c&lRestarting"
+
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p
-File-Version-Do-Not-Edit: 5
+File-Version-Do-Not-Edit: 6

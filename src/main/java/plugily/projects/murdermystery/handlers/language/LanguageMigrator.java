@@ -35,7 +35,7 @@ import java.io.File;
 public class LanguageMigrator {
 
   public static final int CONFIG_FILE_VERSION = 20;
-  public static final int LANGUAGE_FILE_VERSION = 5;
+  public static final int LANGUAGE_FILE_VERSION = 6;
   private final Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -187,6 +187,7 @@ public class LanguageMigrator {
             "# It will not broadcast the death message to all ;)\r\n" +
             "Hide-Death: false\r\n" +
             "\r\n");
+          break;
         default:
           break;
       }
@@ -241,6 +242,16 @@ public class LanguageMigrator {
           break;
         case 4:
           MigratorUtils.insertAfterLine(file, "  Item:", "    Name: \"&f%mapname%\"");
+          break;
+        case 5:
+          MigratorUtils.addNewLines(file, "Placeholders:\r\n" +
+            "  Game-States:\r\n" +
+            "    Waiting: \"&lWaiting for players...\"" +
+            "    Starting: \"&e&lStarting\"" +
+            "    In-Game: \"&lIn-game\"" +
+            "    Ending: \"&lEnding\"" +
+            "    Restarting: \"&c&lRestarting\"");
+          break;
         default:
           break;
       }
