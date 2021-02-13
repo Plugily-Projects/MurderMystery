@@ -25,6 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.murdermystery.ConfigPreferences;
@@ -71,8 +72,8 @@ public class JoinEvent implements Listener {
       if(ArenaRegistry.getArena(player) == null) {
         continue;
       }
-      MiscUtils.hidePlayer(plugin, player, event.getPlayer());
-      MiscUtils.hidePlayer(plugin, event.getPlayer(), player);
+      VersionUtils.hidePlayer(plugin, player, event.getPlayer());
+      VersionUtils.hidePlayer(plugin, event.getPlayer(), player);
     }
     //load player inventory in case of server crash, file is deleted once loaded so if file was already
     //deleted player won't receive his backup, in case of crash he will get it back

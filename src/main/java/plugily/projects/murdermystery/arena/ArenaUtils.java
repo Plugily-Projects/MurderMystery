@@ -188,13 +188,13 @@ public class ArenaUtils {
 
   public static void hidePlayer(Player p, Arena arena) {
     for(Player player : arena.getPlayers()) {
-      MiscUtils.hidePlayer(plugin, player, p);
+      VersionUtils.hidePlayer(plugin, player, p);
     }
   }
 
   public static void showPlayer(Player p, Arena arena) {
     for(Player player : arena.getPlayers()) {
-      MiscUtils.showPlayer(plugin, player, p);
+      VersionUtils.showPlayer(plugin, player, p);
     }
   }
 
@@ -203,8 +203,8 @@ public class ArenaUtils {
       if(arena.getPlayers().contains(players)) {
         continue;
       }
-      MiscUtils.hidePlayer(plugin, player, players);
-      MiscUtils.hidePlayer(plugin, players, player);
+      VersionUtils.hidePlayer(plugin, player, players);
+      VersionUtils.hidePlayer(plugin, players, player);
     }
   }
 

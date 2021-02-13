@@ -425,9 +425,9 @@ public class Arena extends BukkitRunnable {
             plugin.getUserManager().getUser(player).removeScoreboard();
             player.setGameMode(GameMode.SURVIVAL);
             for(Player players : Bukkit.getOnlinePlayers()) {
-              MiscUtils.showPlayer(plugin, player, players);
+              VersionUtils.showPlayer(plugin, player, players);
               if(!ArenaRegistry.isInArena(players)) {
-                MiscUtils.showPlayer(plugin, players, player);
+                VersionUtils.showPlayer(plugin, players, player);
               }
             }
             player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
@@ -929,8 +929,8 @@ public class Arena extends BukkitRunnable {
   void showPlayers() {
     for(Player player : getPlayers()) {
       for(Player p : getPlayers()) {
-        MiscUtils.showPlayer(plugin, player, p);
-        MiscUtils.showPlayer(plugin, p, player);
+        VersionUtils.showPlayer(plugin, player, p);
+        VersionUtils.showPlayer(plugin, p, player);
       }
     }
   }

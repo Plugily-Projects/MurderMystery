@@ -195,9 +195,9 @@ public class ArenaManager {
 
       for(Player spectator : arena.getPlayers()) {
         if(plugin.getUserManager().getUser(spectator).isSpectator()) {
-          MiscUtils.showPlayer(plugin, player, spectator);
+          VersionUtils.showPlayer(plugin, player, spectator);
         } else {
-          MiscUtils.hidePlayer(plugin, player, spectator);
+          VersionUtils.hidePlayer(plugin, player, spectator);
         }
       }
       ArenaUtils.hidePlayersOutsideTheGame(player, arena);
@@ -350,9 +350,9 @@ public class ArenaManager {
     player.setGameMode(GameMode.SURVIVAL);
     for(Player players : plugin.getServer().getOnlinePlayers()) {
       if(!ArenaRegistry.isInArena(players)) {
-        MiscUtils.showPlayer(plugin, players, player);
+        VersionUtils.showPlayer(plugin, players, player);
       }
-      MiscUtils.showPlayer(plugin, player, players);
+      VersionUtils.showPlayer(plugin, player, players);
     }
     arena.teleportToEndLocation(player);
     if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)

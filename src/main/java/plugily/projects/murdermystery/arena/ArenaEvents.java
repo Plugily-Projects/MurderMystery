@@ -138,7 +138,7 @@ public class ArenaEvents implements Listener {
       user.setCooldown("bow_shot", plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
       Player player = (Player) e.getEntity();
       Utils.applyActionBarCooldown(player, plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
-      MiscUtils.setDurability(e.getBow(), (short) 0);
+      VersionUtils.setDurability(e.getBow(), (short) 0);
     } else {
       e.setCancelled(true);
     }

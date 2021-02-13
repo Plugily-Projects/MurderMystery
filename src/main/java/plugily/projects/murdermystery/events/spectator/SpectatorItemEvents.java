@@ -109,7 +109,7 @@ public class SpectatorItemEvents implements Listener {
           role = StringUtils.replace(role, "%role%", chatManager.colorMessage("Scoreboard.Roles.Innocent"));
         }
         meta.setLore(Collections.singletonList(role));
-        MiscUtils.setDurability(skull, (short) SkullType.PLAYER.ordinal());
+        VersionUtils.setDurability(skull, (short) SkullType.PLAYER.ordinal());
         skull.setItemMeta(meta);
         inventory.addItem(skull);
       }
