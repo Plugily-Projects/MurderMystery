@@ -31,7 +31,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
@@ -169,7 +170,7 @@ public class ArenaManager {
     arena.addPlayer(player);
     player.setLevel(0);
     player.setExp(1);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+    player.setHealth(VersionUtils.getHealth(player));
     player.setFoodLevel(20);
     if((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)) {
       arena.teleportToStartLocation(player);
@@ -187,7 +188,7 @@ public class ArenaManager {
       user.setSpectator(true);
 
       arena.addSpectatorPlayer(player);
-      player.setCollidable(false);
+      VersionUtils.setCollidable(player,false);
       player.setGameMode(GameMode.SURVIVAL);
       player.setAllowFlight(true);
       player.setFlying(true);
@@ -289,9 +290,9 @@ public class ArenaManager {
             String subtitle = chatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle", player).replace("%role%",
               chatManager.colorMessage("Scoreboard.Roles.Murderer", player));
             for(Player gamePlayer : arena.getPlayers()) {
-              gamePlayer.sendTitle(title, subtitle, 5, 40, 5);
+              VersionUtils.sendTitles(gamePlayer, title, subtitle, 5, 40, 5);
             }
-            newMurderer.sendTitle(chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title", player),
+            VersionUtils.sendTitles(newMurderer, chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title", player),
               chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle", player), 5, 40, 5);
             ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
@@ -321,7 +322,7 @@ public class ArenaManager {
     if(!user.isSpectator() && !arena.isSpectatorPlayer(player)) {
       chatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
     }
-    player.setGlowing(false);
+    VersionUtils.setGlowing(player, false);
     user.setSpectator(false);
     if(arena.isDeathPlayer(player)) {
       arena.removeDeathPlayer(player);
@@ -329,10 +330,10 @@ public class ArenaManager {
     if(arena.isSpectatorPlayer(player)) {
       arena.removeSpectatorPlayer(player);
     }
-    player.setCollidable(true);
+    VersionUtils.setCollidable(player,true);
     user.removeScoreboard();
     arena.doBarAction(Arena.BarAction.REMOVE, player);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+    player.setHealth(VersionUtils.getHealth(player));
     player.setFoodLevel(20);
     player.setLevel(0);
     player.setExp(0);

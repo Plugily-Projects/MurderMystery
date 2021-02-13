@@ -19,7 +19,6 @@
 package plugily.projects.murdermystery.events;
 
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
@@ -41,13 +40,16 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerSwapHandItemsEvent;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
@@ -76,7 +78,7 @@ public class Events implements Listener {
   }
 
   @EventHandler
-  public void onItemSwap(PlayerSwapHandItemsEvent e) {
+  public void onItemSwap(CBPlayerSwapHandItemsEvent e) {
     if(ArenaRegistry.isInArena(e.getPlayer())) {
       e.setCancelled(true);
     }
@@ -103,14 +105,18 @@ public class Events implements Listener {
     }
     Player attacker = e.getPlayer();
     User attackerUser = plugin.getUserManager().getUser(attacker);
-    if(attacker.getInventory().getItemInMainHand().getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
+    if(VersionUtils.getItemInHand(attacker).getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
       return;
     }
     if(attackerUser.getCooldown("sword_shoot") > 0) {
       return;
     }
     attackerUser.setCooldown("sword_shoot", plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5));
-    attacker.setCooldown(plugin.getConfigPreferences().getMurdererSword().getType(), 20 * (plugin.getConfig().getInt("Murderer-Sword-Attack-Cooldown", 1)));
+    if(ServerVersion.Version.isCurrentLower(Version.v1_9_R1)) {
+      attackerUser.setCooldown("sword_attack", (plugin.getConfig().getInt("Murderer-Sword-Attack-Cooldown", 1)));
+    } else {
+      attacker.setCooldown(plugin.getConfigPreferences().getMurdererSword().getType(), 20 * (plugin.getConfig().getInt("Murderer-Sword-Attack-Cooldown", 1)));
+    }
     createFlyingSword(arena, attacker, attackerUser);
     Utils.applyActionBarCooldown(attacker, plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5));
   }
@@ -124,15 +130,17 @@ public class Events implements Listener {
     standStart.setYaw(loc.getYaw());
     ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(standStart, EntityType.ARMOR_STAND);
     stand.setVisible(false);
-    stand.setInvulnerable(true);
+    if(Version.isCurrentHigher(Version.v1_8_R3)) {
+      stand.setInvulnerable(true);
+      stand.setSilent(true);
+    }
     if(Version.isCurrentEqualOrHigher(Version.v1_16_R1)) {
       stand.getEquipment().setItemInMainHand(plugin.getConfigPreferences().getMurdererSword());
     } else {
       stand.setItemInHand(plugin.getConfigPreferences().getMurdererSword());
     }
     stand.setRightArmPose(new EulerAngle(Math.toRadians(350.0), Math.toRadians(attacker.getLocation().getPitch() * -1.0), Math.toRadians(90.0)));
-    stand.setCollidable(false);
-    stand.setSilent(true);
+    VersionUtils.setCollidable(stand, false);
     stand.setGravity(false);
     stand.setRemoveWhenFarAway(true);
     stand.setMarker(true);
@@ -169,10 +177,10 @@ public class Events implements Listener {
     if(Role.isRole(Role.MURDERER, victim)) {
       return;
     }
-    victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 50, 1);
+    XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation(), 50, 1);
     victim.damage(100.0);
-    victim.sendTitle(plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", victim),
-      plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You", victim), 5, 40, 5);
+    VersionUtils.sendTitles(victim, plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", victim),
+        plugin.getChatManager().colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You", victim), 5, 40, 5);
     attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
     attackerUser.addStat(StatsStorage.StatisticType.KILLS, 1);
     ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
@@ -204,8 +212,8 @@ public class Events implements Listener {
       return;
     }
     if(command.equalsIgnoreCase("mm") || command.equalsIgnoreCase("murdermystery")
-      || event.getMessage().contains("murdermysteryadmin") || event.getMessage().contains("leave")
-      || command.equalsIgnoreCase("stats") || command.equalsIgnoreCase("mma")) {
+        || event.getMessage().contains("murdermysteryadmin") || event.getMessage().contains("leave")
+        || command.equalsIgnoreCase("stats") || command.equalsIgnoreCase("mma")) {
       return;
     }
     event.setCancelled(true);
@@ -236,7 +244,7 @@ public class Events implements Listener {
       return;
     }
     Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
+    ItemStack itemStack = VersionUtils.getItemInHand(event.getPlayer());
     if(arena == null || !ItemUtils.isItemStackNamed(itemStack)) {
       return;
     }

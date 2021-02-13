@@ -18,13 +18,13 @@
 
 package plugily.projects.murdermystery.handlers;
 
-import org.bukkit.Particle;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.utils.Debugger;
@@ -39,19 +39,19 @@ import java.util.Map;
  */
 public class BowTrailsHandler implements Listener {
 
-  private final Map<String, Particle> registeredTrails = new LinkedHashMap<>();
+  private final Map<String, String> registeredTrails = new LinkedHashMap<>();
   private final Main plugin;
 
   public BowTrailsHandler(Main plugin) {
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    registerBowTrail("murdermystery.trails.heart", Particle.HEART);
-    registerBowTrail("murdermystery.trails.flame", Particle.FLAME);
-    registerBowTrail("murdermystery.trails.critical", Particle.CRIT);
-    registerBowTrail("murdermystery.trails.cloud", Particle.CLOUD);
+    registerBowTrail("murdermystery.trails.heart", "HEART");
+    registerBowTrail("murdermystery.trails.flame", "FLAME");
+    registerBowTrail("murdermystery.trails.critical", "CRIT");
+    registerBowTrail("murdermystery.trails.cloud", "CLOUD");
   }
 
-  public void registerBowTrail(String permission, Particle particle) {
+  public void registerBowTrail(String permission, String particle) {
     registeredTrails.put(permission, particle);
   }
 
@@ -72,7 +72,7 @@ public class BowTrailsHandler implements Listener {
               this.cancel();
             }
             Debugger.debug("Spawned particle with perm {0} for player {1}", perm, e.getEntity().getName());
-            e.getProjectile().getWorld().spawnParticle(registeredTrails.get(perm), e.getProjectile().getLocation(), 3, 0, 0, 0, 0);
+            VersionUtils.sendParticles(registeredTrails.get(perm), ((Player) e.getEntity()).getPlayer(), e.getEntity().getLocation(), 3);
           }
         }.runTaskTimer(plugin, 0, 0);
         break;

@@ -32,7 +32,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
@@ -69,7 +70,7 @@ public class SpectatorItemEvents implements Listener {
       if(ArenaRegistry.getArena(e.getPlayer()) == null) {
         return;
       }
-      ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
+      ItemStack stack = VersionUtils.getItemInHand(e.getPlayer());
       if(!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
         return;
       }

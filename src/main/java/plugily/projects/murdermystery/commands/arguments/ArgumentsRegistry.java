@@ -28,6 +28,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.string.StringMatcher;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
@@ -49,7 +50,6 @@ import plugily.projects.murdermystery.commands.arguments.game.StatsArgument;
 import plugily.projects.murdermystery.commands.completion.TabCompletion;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.setup.SetupInventory;
-import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.Utils;
 
 import java.util.ArrayList;
@@ -113,7 +113,7 @@ public class ArgumentsRegistry implements CommandExecutor {
           }
           if(args.length > 1 && args[1].equalsIgnoreCase("edit")) {
             if(!checkSenderIsExecutorType(sender, CommandArgument.ExecutorType.PLAYER)
-              || !Utils.hasPermission(sender, "murdermystery.admin.create")) {
+                || !Utils.hasPermission(sender, "murdermystery.admin.create")) {
               return true;
             }
             if(ArenaRegistry.getArena(args[0]) == null) {
@@ -194,21 +194,16 @@ public class ArgumentsRegistry implements CommandExecutor {
       sender.sendMessage(ChatColor.GRAY + "Hover command to see more, click command to suggest it.");
     }
     List<LabelData> data = mappedArguments.get("murdermysteryadmin").stream().filter(arg -> arg instanceof LabeledCommandArgument)
-      .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList());
+        .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList());
     data.add(new LabelData("/mm &6<arena>&f edit", "/mm <arena> edit",
-      "&7Edit existing arena\n&6Permission: &7murdermystery.admin.edit"));
+        "&7Edit existing arena\n&6Permission: &7murdermystery.admin.edit"));
     data.addAll(mappedArguments.get("murdermystery").stream().filter(arg -> arg instanceof LabeledCommandArgument)
-      .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList()));
+        .map(arg -> ((LabeledCommandArgument) arg).getLabelData()).collect(Collectors.toList()));
     for(LabelData labelData : data) {
-      if(sender instanceof Player) {
-        TextComponent component = new TextComponent(labelData.getText());
-        component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, labelData.getCommand()));
-        component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(labelData.getDescription()).create()));
-        ((Player) sender).spigot().sendMessage(component);
-      } else {
-        //more descriptive for console - split at \n to show only basic description
-        Debugger.sendConsoleMsg(labelData.getText() + " - " + labelData.getDescription().split("\n")[0]);
-      }
+      TextComponent component = new TextComponent(labelData.getText());
+      component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, labelData.getCommand()));
+      component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(labelData.getDescription()).create()));
+      VersionUtils.sendTextComponent(sender, component);
     }
   }
 

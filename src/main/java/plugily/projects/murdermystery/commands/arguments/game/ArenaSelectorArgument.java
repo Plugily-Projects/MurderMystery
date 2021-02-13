@@ -28,7 +28,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaManager;
@@ -82,11 +82,11 @@ public class ArenaSelectorArgument implements Listener {
             case WAITING_FOR_PLAYERS:
             case STARTING:
               itemStack = XMaterial.matchXMaterial(registry.getPlugin().getConfig().getString("Arena-Selector.Items." + arena.getArenaState()
-                  .toString().toLowerCase().replace('_', '-'), "YELLOW_CONCRETE").toUpperCase()).orElse(XMaterial.YELLOW_CONCRETE).parseItem();
+                  .toString().toLowerCase().replace('_', '-'), "YELLOW_CONCRETE").toUpperCase()).orElse(XMaterial.YELLOW_WOOL).parseItem();
               break;
             default:
               itemStack = XMaterial.matchXMaterial(registry.getPlugin().getConfig().getString("Arena-Selector.Items.other",
-                  "RED_CONCRETE").toUpperCase()).orElse(XMaterial.RED_CONCRETE).parseItem();
+                  "RED_CONCRETE").toUpperCase()).orElse(XMaterial.RED_WOOL).parseItem();
               break;
           }
 

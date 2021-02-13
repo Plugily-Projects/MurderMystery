@@ -27,8 +27,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
@@ -51,10 +51,10 @@ public class ArenaUtils {
 
   public static void onMurdererDeath(Arena arena) {
     for(Player player : arena.getPlayers()) {
-      player.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win", player),
-        chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", player), 5, 40, 5);
+      VersionUtils.sendTitles(player, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win", player),
+          chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", player), 5, 40, 5);
       if(Role.isRole(Role.MURDERER, player)) {
-        player.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", player), null, 5, 40, 5);
+        VersionUtils.sendTitles(player, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", player), null, 5, 40, 5);
       }
       User loopUser = plugin.getUserManager().getUser(player);
       if(Role.isRole(Role.INNOCENT, player)) {
@@ -65,8 +65,8 @@ public class ArenaUtils {
       }
     }
     for(Player murderer : arena.getMurdererList()) {
-      murderer.sendTitle(chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", murderer),
-        chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", murderer), 5, 40, 5);
+      VersionUtils.sendTitles(murderer, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", murderer),
+          chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", murderer), 5, 40, 5);
     }
     //we must call it ticks later due to instant respawn bug
     Bukkit.getScheduler().runTaskLater(plugin, () -> ArenaManager.stopGame(false, arena), 10);
@@ -75,7 +75,7 @@ public class ArenaUtils {
   public static void addScore(User user, ScoreAction action, int amount) {
     String s = plugin.getConfig().getString("AddScore-Sound", "");
     if(!s.isEmpty()) {
-      user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.valueOf(s.toUpperCase()), 1F, 2F);
+      XSound.matchXSound(Sound.valueOf(s.toUpperCase())).play(user.getPlayer().getLocation(), 1F, 2F);
     }
 
     String msg = chatManager.colorMessage("In-Game.Messages.Bonus-Score");
@@ -133,7 +133,7 @@ public class ArenaUtils {
         if(Role.isRole(Role.MURDERER, p)) {
           continue;
         }
-        p.sendTitle(chatManager.colorMessage("In-Game.Watch-Out-Title", p), chatManager.colorMessage("In-Game.Watch-Out-Subtitle", p), 5, 40, 5);
+        VersionUtils.sendTitles(p, chatManager.colorMessage("In-Game.Watch-Out-Title", p), chatManager.colorMessage("In-Game.Watch-Out-Subtitle", p), 5, 40, 5);
       }
     }
     for(Player p : arena.getPlayersLeft()) {
@@ -168,15 +168,15 @@ public class ArenaUtils {
     }
     if(arena.getPlayersLeft().size() > 1) {
       for(Player p : arena.getPlayers()) {
-        p.sendTitle(chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title", p), null, 5, 40, 5);
+        VersionUtils.sendTitles(p, chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title", p), null, 5, 40, 5);
       }
       for(Player p : arena.getPlayersLeft()) {
-        p.sendTitle(null, chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle", p), 5, 40, 5);
+        VersionUtils.sendTitles(p, null, chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle", p), 5, 40, 5);
       }
     }
 
     ArmorStandHologram hologram = new ArmorStandHologram(victim.getLocation())
-      .appendItem(new ItemStack(Material.BOW, 1));
+        .appendItem(new ItemStack(Material.BOW, 1));
 
     arena.setBowHologram(hologram);
     addBowLocator(arena, hologram.getLocation());
@@ -217,22 +217,7 @@ public class ArenaUtils {
       if(arena == null) {
         continue;
       }
-      Scoreboard scoreboard = players.getScoreboard();
-      if(scoreboard == Bukkit.getScoreboardManager().getMainScoreboard()) {
-        scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-      }
-      Team team = scoreboard.getTeam("MMHide");
-      if(team == null) {
-        team = scoreboard.registerNewTeam("MMHide");
-      }
-      team.setCanSeeFriendlyInvisibles(false);
-      team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
-      if(arena.getArenaState() == ArenaState.IN_GAME) {
-        team.addEntry(p.getName());
-      } else {
-        team.removeEntry(p.getName());
-      }
-      players.setScoreboard(scoreboard);
+      VersionUtils.updateNameTagsVisibility(plugin, p, players, "MMHide", arena.getArenaState() != ArenaState.IN_GAME);
     }
   }
 

@@ -7,6 +7,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -126,8 +127,10 @@ public class ArmorStandHologram {
       if(Bukkit.getServer().getVersion().contains("Paper"))
         entityItem.setCanMobPickup(false);
       entityItem.setCustomNameVisible(false);
-      entityItem.setGravity(true);
-      entityItem.setInvulnerable(true);
+      if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_8_R3)) {
+        entityItem.setGravity(true);
+        entityItem.setInvulnerable(true);
+      }
       entityItem.teleport(l);
     }
   }
