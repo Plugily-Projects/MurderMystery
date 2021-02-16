@@ -59,6 +59,7 @@ import plugily.projects.murdermystery.arena.ArenaManager;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.ArenaUtils;
 import plugily.projects.murdermystery.arena.role.Role;
+import plugily.projects.murdermystery.handlers.hologram.HologramManager;
 import plugily.projects.murdermystery.handlers.items.SpecialItemManager;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Utils;
@@ -313,16 +314,23 @@ public class Events implements Listener {
     if(livingEntity.getType() != EntityType.ARMOR_STAND) {
       return;
     }
-    if(e.getDamager() instanceof Player && ArenaRegistry.isInArena((Player) e.getDamager())) {
-      e.setCancelled(true);
-    } else if(e.getDamager() instanceof Arrow) {
-      Arrow arrow = (Arrow) e.getDamager();
-      if(arrow.getShooter() instanceof Player && ArenaRegistry.isInArena((Player) arrow.getShooter())) {
-        e.setCancelled(true);
-        return;
-      }
+    if((e.getDamager() instanceof Arrow && ((Arrow) e.getDamager()).getShooter() instanceof Player && ArenaRegistry.isInArena((Player) ((Arrow) e.getDamager()).getShooter()))
+        || (e.getDamager() instanceof Player && ArenaRegistry.isInArena((Player) e.getDamager()))) {
       e.setCancelled(true);
     }
+  }
+
+  @EventHandler
+  public void onHopperBreak(BlockBreakEvent event) {
+    HologramManager.getArmorStands().removeIf(armorStand -> {
+        boolean isSameType = armorStand.getLocation().getBlock().getType() == event.getBlock().getType();
+        if (isSameType) {
+          armorStand.remove();
+          armorStand.setCustomNameVisible(false);
+        }
+
+        return isSameType;
+    });
   }
 
   @EventHandler(priority = EventPriority.HIGH)
