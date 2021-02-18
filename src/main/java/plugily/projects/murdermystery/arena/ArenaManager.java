@@ -24,7 +24,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -43,6 +42,7 @@ import plugily.projects.murdermystery.api.events.game.MMGameJoinAttemptEvent;
 import plugily.projects.murdermystery.api.events.game.MMGameLeaveAttemptEvent;
 import plugily.projects.murdermystery.api.events.game.MMGameStopEvent;
 import plugily.projects.murdermystery.arena.role.Role;
+import plugily.projects.murdermystery.arena.special.SpecialBlock;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.PermissionsManager;
 import plugily.projects.murdermystery.handlers.items.SpecialItemManager;
@@ -382,6 +382,12 @@ public class ArenaManager {
       chatManager.broadcast(arena, chatManager.colorRawMessage("&cThe game has been force stopped by command"));
     } else {
       arena.setTimer(10);
+    }
+
+    for (SpecialBlock specialBlock : arena.getSpecialBlocks()) {
+      if (specialBlock.getArmorStandHologram() != null) {
+        specialBlock.getArmorStandHologram().delete();
+      }
     }
 
     List<String> summaryMessages = LanguageManager.getLanguageList("In-Game.Messages.Game-End-Messages.Summary-Message");

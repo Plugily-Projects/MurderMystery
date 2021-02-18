@@ -29,7 +29,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
@@ -217,7 +216,7 @@ public class ArenaUtils {
       if(arena == null) {
         continue;
       }
-      VersionUtils.updateNameTagsVisibility(plugin, p, players, "MMHide", arena.getArenaState() != ArenaState.IN_GAME);
+      VersionUtils.updateNameTagsVisibility(p, players, "MMHide", arena.getArenaState() != ArenaState.IN_GAME);
     }
   }
 
