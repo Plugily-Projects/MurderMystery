@@ -25,11 +25,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XParticleLegacy;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.utils.Debugger;
 
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -45,10 +47,9 @@ public class BowTrailsHandler implements Listener {
   public BowTrailsHandler(Main plugin) {
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    registerBowTrail("murdermystery.trails.heart", "HEART");
-    registerBowTrail("murdermystery.trails.flame", "FLAME");
-    registerBowTrail("murdermystery.trails.critical", "CRIT");
-    registerBowTrail("murdermystery.trails.cloud", "CLOUD");
+    for(XParticleLegacy particle : XParticleLegacy.values()) {
+      registerBowTrail("murdermystery.trails." + particle.getName().toLowerCase(), particle.getName());
+    }
   }
 
   public void registerBowTrail(String permission, String particle) {
