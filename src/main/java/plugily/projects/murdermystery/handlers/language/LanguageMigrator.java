@@ -35,7 +35,7 @@ import java.io.File;
 public class LanguageMigrator {
 
   public static final int CONFIG_FILE_VERSION = 21;
-  public static final int LANGUAGE_FILE_VERSION = 6;
+  public static final int LANGUAGE_FILE_VERSION = 7;
   private final Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -258,6 +258,9 @@ public class LanguageMigrator {
             "    In-Game: \"&lIn-game\"" +
             "    Ending: \"&lEnding\"" +
             "    Restarting: \"&c&lRestarting\"");
+          break;
+        case 6:
+          //No migrator as we can't handle that
           break;
         default:
           break;

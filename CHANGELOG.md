@@ -2,6 +2,7 @@
 * Added modifiable arena state names to language
 * Added configurable map selector items
 * Added legacy support
+* Added support for multiple last words that will randomize  
 * Cached armor stands will be removed after block break if type is matches
 * Now special block holograms will get removed after game stop
   * After game start, it will show again

@@ -56,6 +56,7 @@ import plugily.projects.murdermystery.handlers.PlaceholderManager;
 import plugily.projects.murdermystery.handlers.hologram.HologramManager;
 import plugily.projects.murdermystery.handlers.items.SpecialItem;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
+import plugily.projects.murdermystery.handlers.lastwords.LastWordsManager;
 import plugily.projects.murdermystery.handlers.party.PartyHandler;
 import plugily.projects.murdermystery.handlers.party.PartySupportInitializer;
 import plugily.projects.murdermystery.handlers.rewards.RewardsFactory;
@@ -95,6 +96,7 @@ public class Main extends JavaPlugin {
   private HookManager hookManager;
   private UserManager userManager;
   private ChatManager chatManager;
+  private LastWordsManager lastWordsManager;
 
   @Override
   public void onEnable() {
@@ -233,6 +235,7 @@ public class Main extends JavaPlugin {
     PrayerRegistry.init(this);
     new SpecialBlockEvents(this);
     new EventsInitializer().initialize(this);
+    lastWordsManager = new LastWordsManager(this);
   }
 
   private void registerSoftDependenciesAndServices() {
@@ -335,6 +338,10 @@ public class Main extends JavaPlugin {
 
   public UserManager getUserManager() {
     return userManager;
+  }
+
+  public LastWordsManager getLastWordsManager() {
+    return lastWordsManager;
   }
 
   private void saveAllUserStatistics() {
