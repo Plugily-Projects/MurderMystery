@@ -16,10 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package plugily.projects.murdermystery.handlers;
+package plugily.projects.murdermystery.handlers.trails;
 
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -28,57 +30,53 @@ import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XParticleLegacy;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
+import plugily.projects.murdermystery.handlers.lastwords.LastWord;
 import plugily.projects.murdermystery.utils.Debugger;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 /**
- * @author Plajer
+ * @author 2Wild4You & Tigerpanzer_02
  * <p>
- * Created at 19.10.2018
+ * Created at 19.02.2021
  */
 public class BowTrailsHandler implements Listener {
 
-  private final Map<String, String> registeredTrails = new LinkedHashMap<>();
   private final Main plugin;
 
   public BowTrailsHandler(Main plugin) {
     this.plugin = plugin;
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    for(XParticleLegacy particle : XParticleLegacy.values()) {
-      registerBowTrail("murdermystery.trails." + particle.getName().toLowerCase(), particle.getName());
-    }
-  }
-
-  public void registerBowTrail(String permission, String particle) {
-    registeredTrails.put(permission, particle);
   }
 
   @EventHandler
-  public void onArrowShoot(EntityShootBowEvent e) {
-    if(!(e.getEntity() instanceof Player && e.getProjectile() instanceof Arrow)) {
+  public void onArrowShoot(EntityShootBowEvent event) {
+    if(!(event.getEntity() instanceof Player && event.getProjectile() instanceof Arrow)) {
       return;
     }
-    if(!ArenaRegistry.isInArena((Player) e.getEntity()) || e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
+    Player player = (Player) event.getEntity();
+    Entity projectile = event.getProjectile();
+    if(!ArenaRegistry.isInArena(player) || projectile.isDead() || projectile.isOnGround()) {
       return;
     }
-    for(String perm : registeredTrails.keySet()) {
-      if(e.getEntity().hasPermission(perm)) {
-        new BukkitRunnable() {
-          @Override
-          public void run() {
-            if(e.getProjectile().isDead() || e.getProjectile().isOnGround()) {
-              this.cancel();
-            }
-            Debugger.debug("Spawned particle with perm {0} for player {1}", perm, e.getEntity().getName());
-            VersionUtils.sendParticles(registeredTrails.get(perm), ((Player) e.getEntity()).getPlayer(), e.getEntity().getLocation(), 3);
-          }
-        }.runTaskTimer(plugin, 0, 0);
-        break;
+    if(!plugin.getTrailsManager().gotAnyTrails(player)) {
+      return;
+    }
+    new BukkitRunnable() {
+      @Override
+      public void run() {
+        if(projectile.isDead() || projectile.isOnGround()) {
+          this.cancel();
+        }
+        Trail trail = plugin.getTrailsManager().getRandomTrail(player);
+        Debugger.debug("Spawned particle with perm {0} for player {1}", trail.getPermission(), player.getName());
+        VersionUtils.sendParticles(trail.getName(), player, player.getLocation(), 3);
       }
-    }
+    }.runTaskTimer(plugin, 0, 0);
   }
-
 }

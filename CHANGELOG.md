@@ -3,7 +3,8 @@
 * Added configurable map selector items
 * Added legacy support
 * Added support for multiple last words that will randomize
-* Added a lot of new Trails (Should support every particle name that is supported since 1.8)  
+* Added a lot of new Trails (Should support every particle name that is supported since 1.8)
+* Changed trails will now randomize if you got perms for more than one  
 * Cached armor stands will be removed after block break if type is matches
 * Now special block holograms will get removed after game stop
   * After game start, it will show again

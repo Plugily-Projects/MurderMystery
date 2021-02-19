@@ -15,25 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plugily.projects.murdermystery.handlers.lastwords;
+package plugily.projects.murdermystery.handlers.trails;
 
 /**
  * @author 2Wild4You & Tigerpanzer_02
  * <p>
  * Created at 19.02.2021
  */
-public class LastWord {
+public class Trail {
 
-  private final String message;
+  private final String name;
   private final String permission;
 
-  public LastWord(String message, String permission) {
-    this.message = message;
+  public Trail(String message, String permission) {
+    this.name = message;
     this.permission = permission;
   }
 
-  public String getMessage() {
-    return message;
+  public String getName() {
+    return name;
   }
 
   public String getPermission() {
