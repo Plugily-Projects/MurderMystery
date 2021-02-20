@@ -1,4 +1,4 @@
-### 1.7.5
+### 1.7.4-b Beta
 * Added modifiable arena state names to language
 * Added configurable map selector items
 * Added legacy support

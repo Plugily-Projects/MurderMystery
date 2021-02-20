@@ -18,7 +18,7 @@
 package plugily.projects.murdermystery.handlers.trails;
 
 /**
- * @author 2Wild4You & Tigerpanzer_02
+ * @author 2Wild4You, Tigerpanzer_02
  * <p>
  * Created at 19.02.2021
  */
