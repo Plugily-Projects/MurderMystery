@@ -141,15 +141,11 @@ public class ArenaRegistry {
       arena.setGoldSpawnPoints(goldSpawnPoints);
 
       List<SpecialBlock> specialBlocks = new ArrayList<>();
-      if(config.isSet(s + ".mystery-cauldrons")) {
-        for(String loc : config.getStringList(s + ".mystery-cauldrons")) {
-          specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
-        }
+      for(String loc : config.getStringList(s + ".mystery-cauldrons")) {
+        specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
       }
-      if(config.isSet(s + ".confessionals")) {
-        for(String loc : config.getStringList(s + ".confessionals")) {
-          specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
-        }
+      for(String loc : config.getStringList(s + ".confessionals")) {
+        specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
       }
 
       specialBlocks.forEach(arena::loadSpecialBlock);
@@ -158,7 +154,7 @@ public class ArenaRegistry {
       arena.setEndLocation(LocationSerializer.getLocation(config.getString(s + "Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
       arena.setGoldVisuals(config.getBoolean(s + "goldvisuals", false));
 
-      if(!config.getBoolean(s + "isdone", false)) {
+      if(!config.getBoolean(s + "isdone")) {
         Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
         arena.setReady(false);
         ArenaRegistry.registerArena(arena);

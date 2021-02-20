@@ -39,7 +39,6 @@ import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import pl.plajerlair.commonsbox.number.NumberUtils;
 import plugily.projects.murdermystery.ConfigPreferences;
@@ -228,18 +227,19 @@ public class Arena extends BukkitRunnable {
           teleportAllToStartLocation();
           for(Player player : getPlayers()) {
             //reset local variables to be 100% sure
-            plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
-            plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY, 0);
-            plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_KILLS, 0);
-            plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_PRAISES, 0);
-            plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_SCORE, 0);
-            //
+            User user = plugin.getUserManager().getUser(player);
+            user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
+            user.setStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY, 0);
+            user.setStat(StatsStorage.StatisticType.LOCAL_KILLS, 0);
+            user.setStat(StatsStorage.StatisticType.LOCAL_PRAISES, 0);
+            user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, 0);
+
             ArenaUtils.updateNameTagsVisibility(player);
             player.getInventory().clear();
             player.setGameMode(GameMode.ADVENTURE);
             ArenaUtils.hidePlayersOutsideTheGame(player, this);
             player.updateInventory();
-            plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
+            user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
             setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
             player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
           }
@@ -318,6 +318,9 @@ public class Arena extends BukkitRunnable {
           if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.In-Game-Info"));
           }
+
+          // Load and append special blocks hologram
+          specialBlocks.forEach(this::loadSpecialBlock);
         }
         if(forceStart) {
           forceStart = false;
@@ -881,7 +884,10 @@ public class Arena extends BukkitRunnable {
   }
 
   public void loadSpecialBlock(SpecialBlock block) {
-    specialBlocks.add(block);
+    if (!specialBlocks.contains(block)) {
+      specialBlocks.add(block);
+    }
+
     switch(block.getSpecialBlockType()) {
       case MYSTERY_CAULDRON:
         ArmorStandHologram cauldron = new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()), chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));

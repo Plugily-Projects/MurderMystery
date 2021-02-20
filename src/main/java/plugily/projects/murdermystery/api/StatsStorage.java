@@ -117,9 +117,7 @@ public class StatsStorage {
    * Available statistics to get.
    */
   public enum StatisticType {
-    @Deprecated //subject to remove and merge with randomized game points
     CONTRIBUTION_DETECTIVE("contribdetective", true),
-    @Deprecated //subject to remove and merge with randomized game points
     CONTRIBUTION_MURDERER("contribmurderer", true), DEATHS("deaths", true), GAMES_PLAYED("gamesplayed", true), HIGHEST_SCORE("highestscore", true),
     KILLS("kills", true), LOSES("loses", true), WINS("wins", true), LOCAL_CURRENT_PRAY("local_pray", false), LOCAL_GOLD("gold", false), LOCAL_KILLS("local_kills", false),
     LOCAL_PRAISES("local_praises", false), LOCAL_SCORE("local_score", false);

@@ -47,7 +47,7 @@ import plugily.projects.murdermystery.events.LobbyEvent;
 import plugily.projects.murdermystery.events.QuitEvent;
 import plugily.projects.murdermystery.events.spectator.SpectatorEvents;
 import plugily.projects.murdermystery.events.spectator.SpectatorItemEvents;
-import plugily.projects.murdermystery.handlers.BowTrailsHandler;
+import plugily.projects.murdermystery.handlers.trails.BowTrailsHandler;
 import plugily.projects.murdermystery.handlers.BungeeManager;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.CorpseHandler;
@@ -56,10 +56,12 @@ import plugily.projects.murdermystery.handlers.PlaceholderManager;
 import plugily.projects.murdermystery.handlers.hologram.HologramManager;
 import plugily.projects.murdermystery.handlers.items.SpecialItem;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
+import plugily.projects.murdermystery.handlers.lastwords.LastWordsManager;
 import plugily.projects.murdermystery.handlers.party.PartyHandler;
 import plugily.projects.murdermystery.handlers.party.PartySupportInitializer;
 import plugily.projects.murdermystery.handlers.rewards.RewardsFactory;
 import plugily.projects.murdermystery.handlers.sign.SignManager;
+import plugily.projects.murdermystery.handlers.trails.TrailsManager;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.user.UserManager;
 import plugily.projects.murdermystery.user.data.MysqlManager;
@@ -95,6 +97,8 @@ public class Main extends JavaPlugin {
   private HookManager hookManager;
   private UserManager userManager;
   private ChatManager chatManager;
+  private LastWordsManager lastWordsManager;
+  private TrailsManager trailsManager;
 
   @Override
   public void onEnable() {
@@ -233,6 +237,8 @@ public class Main extends JavaPlugin {
     PrayerRegistry.init(this);
     new SpecialBlockEvents(this);
     new EventsInitializer().initialize(this);
+    lastWordsManager = new LastWordsManager(this);
+    trailsManager = new TrailsManager(this);
   }
 
   private void registerSoftDependenciesAndServices() {
@@ -335,6 +341,14 @@ public class Main extends JavaPlugin {
 
   public UserManager getUserManager() {
     return userManager;
+  }
+
+  public LastWordsManager getLastWordsManager() {
+    return lastWordsManager;
+  }
+
+  public TrailsManager getTrailsManager() {
+    return trailsManager;
   }
 
   private void saveAllUserStatistics() {

@@ -24,7 +24,7 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>murdermystery</artifactId>
-    <version>1.7.X-LEGACY-DEBUG</version>
+    <version>1.7.4-b</version>
     <name>MurderMystery</name>
 
     <properties>
@@ -39,36 +39,6 @@
         </license>
     </licenses>
 
-    <developers>
-        <developer>
-            <name>Tigerpanzer</name>
-            <url>https://www.spigotmc.org/members/414545/</url>
-            <roles>
-                <role>maintainer</role>
-                <role>translator - German language</role>
-                <role>tester</role>
-            </roles>
-        </developer>
-        <developer>
-            <name>Plajer</name>
-            <url>https://www.spigotmc.org/members/423193/</url>
-            <roles>
-                <role>developer</role>
-                <role>translator - Polish language</role>
-            </roles>
-        </developer>
-    </developers>
-
-    <contributors>
-        <contributor>
-            <name>montlikadani</name>
-            <url>https://www.spigotmc.org/members/251100/</url>
-            <roles>
-                <role>code contributor</role>
-            </roles>
-        </contributor>
-    </contributors>
-
     <repositories>
         <repository>
             <id>papermc</id>
@@ -79,7 +49,7 @@
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
-            <id>plajerlair-repo</id>
+            <id>plugilyprojects</id>
             <url>https://maven.plugily.xyz/</url>
         </repository>
         <!-- repository is dead, contents moved to maven.plajer.xyz
@@ -108,6 +78,7 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
     </repositories>
+
     <dependencies>
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>

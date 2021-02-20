@@ -41,6 +41,7 @@ import plugily.projects.murdermystery.arena.corpse.Corpse;
 import plugily.projects.murdermystery.arena.corpse.Stand;
 import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
 import plugily.projects.murdermystery.handlers.hologram.HologramManager;
+import plugily.projects.murdermystery.handlers.lastwords.LastWord;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,16 +61,12 @@ public class CorpseHandler implements Listener {
   public CorpseHandler(Main plugin) {
     this.plugin = plugin;
     chatManager = plugin.getChatManager();
-    registerLastWord("murdermystery.lastwords.meme", chatManager.colorMessage("In-Game.Messages.Last-Words.Meme"));
-    registerLastWord("murdermystery.lastwords.rage", chatManager.colorMessage("In-Game.Messages.Last-Words.Rage"));
-    registerLastWord("murdermystery.lastwords.pro", chatManager.colorMessage("In-Game.Messages.Last-Words.Pro"));
-    registerLastWord("default", chatManager.colorMessage("In-Game.Messages.Last-Words.Default"));
     //run bit later than hook manager to ensure it's not null
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       if(plugin.getHookManager() != null && plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
       }
-    }, 25L * 5);
+    }, 20 * 5);
   }
 
   public void registerLastWord(String permission, String lastWord) {
@@ -115,20 +112,10 @@ public class CorpseHandler implements Listener {
     }, 15 * 20);
   }
 
-  private ArmorStandHologram getLastWordsHologram(Player p) {
-    ArmorStandHologram hologram = new ArmorStandHologram(p.getLocation());
-    hologram.appendLine(chatManager.colorMessage("In-Game.Messages.Corpse-Last-Words", p).replace("%player%", p.getName()));
-    boolean found = false;
-    for(Map.Entry<String, String> map : registeredLastWords.entrySet()) {
-      if(p.hasPermission(map.getKey())) {
-        hologram.appendLine(map.getValue());
-        found = true;
-        break;
-      }
-    }
-    if(!found) {
-      hologram.appendLine(registeredLastWords.get("default"));
-    }
+  private ArmorStandHologram getLastWordsHologram(Player player) {
+    ArmorStandHologram hologram = new ArmorStandHologram(player.getLocation());
+    hologram.appendLine(chatManager.colorMessage("In-Game.Messages.Corpse-Last-Words", player).replace("%player%", player.getName()));
+    hologram.appendLine(plugin.getLastWordsManager().getRandomLastWord(player));
     return hologram;
   }
 

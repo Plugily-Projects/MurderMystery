@@ -26,7 +26,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;

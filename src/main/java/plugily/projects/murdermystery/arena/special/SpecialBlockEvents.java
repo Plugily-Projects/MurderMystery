@@ -72,12 +72,9 @@ public class SpecialBlockEvents implements Listener {
     if(arena.getArenaState() != ArenaState.IN_GAME || plugin.getUserManager().getUser(e.getPlayer()).isSpectator()) {
       return;
     }
-    boolean leverBlock = false;
-    if(e.getClickedBlock().getType() == XMaterial.LEVER.parseMaterial()) {
-      leverBlock = true;
-    }
+
     for(SpecialBlock specialBlock : arena.getSpecialBlocks()) {
-      if(leverBlock && Utils.getNearbyBlocks(specialBlock.getLocation(), 3).contains(e.getClickedBlock())) {
+      if(e.getClickedBlock().getType() == XMaterial.LEVER.parseMaterial() && Utils.getNearbyBlocks(specialBlock.getLocation(), 3).contains(e.getClickedBlock())) {
         onPrayLeverClick(e);
         return;
       }
@@ -100,9 +97,6 @@ public class SpecialBlockEvents implements Listener {
   }
 
   private void onCauldronClick(PlayerInteractEvent e) {
-    if(e.getClickedBlock() == null) {
-      return;
-    }
     if(e.getClickedBlock().getType() != Material.CAULDRON) {
       return;
     }
