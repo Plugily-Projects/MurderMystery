@@ -31,8 +31,8 @@ import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.murdermystery.HookManager;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
@@ -82,7 +82,7 @@ public class CorpseHandler implements Listener {
       ArmorStand stand = p.getLocation().getWorld().spawn(p.getLocation().add(0.0D, -1.25D, 0.0D), ArmorStand.class);
       ItemStack head = XMaterial.PLAYER_HEAD.parseItem();
       SkullMeta meta = (SkullMeta) head.getItemMeta();
-      meta = MiscUtils.setPlayerHead(p, meta);
+      meta = VersionUtils.setPlayerHead(p, meta);
       head.setItemMeta(meta);
 
       stand.setVisible(false);

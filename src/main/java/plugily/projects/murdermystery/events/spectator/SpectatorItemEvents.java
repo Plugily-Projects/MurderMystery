@@ -34,7 +34,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
@@ -97,7 +96,7 @@ public class SpectatorItemEvents implements Listener {
       if(players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
         ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
-        meta = MiscUtils.setPlayerHead(player, meta);
+        meta = VersionUtils.setPlayerHead(player, meta);
         meta.setDisplayName(player.getName());
 
         String role = roleRaw;
