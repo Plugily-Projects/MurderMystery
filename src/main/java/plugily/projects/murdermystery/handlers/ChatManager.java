@@ -78,7 +78,9 @@ public class ChatManager {
 
   public void broadcast(Arena arena, String message) {
     for (Player p : arena.getPlayers()) {
-      p.sendMessage(PLUGIN_PREFIX + message);
+      if (message != "") {
+        p.sendMessage(PLUGIN_PREFIX + message);
+      }
     }
   }
 
