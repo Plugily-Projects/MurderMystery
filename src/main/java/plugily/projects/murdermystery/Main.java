@@ -30,6 +30,9 @@ import pl.plajerlair.commonsbox.database.MysqlDatabase;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.events.EventsInitializer;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.Complement;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.Complement1;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.Complement2;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.Arena;
@@ -99,8 +102,13 @@ public class Main extends JavaPlugin {
   private ChatManager chatManager;
   private LastWordsManager lastWordsManager;
   private TrailsManager trailsManager;
+  private Complement complement;
 
-  @Override
+  public Complement getComplement() {
+    return complement;
+  }
+
+@Override
   public void onEnable() {
     if(!validateIfPluginShouldStart()) {
       return;
@@ -201,6 +209,16 @@ public class Main extends JavaPlugin {
   }
 
   private void initializeClasses() {
+    boolean kyoriSupported = false;
+    try {
+        Class.forName("net.kyori.adventure.text.Component");
+        kyoriSupported = true;
+    } catch (ClassNotFoundException e) {
+    }
+
+    complement = (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R3) && kyoriSupported) ? new Complement2()
+            : new Complement1();
+
     chatManager = new ChatManager(this);
     ScoreboardLib.setPluginInstance(this);
     if(getConfig().getBoolean("BungeeActivated")) {

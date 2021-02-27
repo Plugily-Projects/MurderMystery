@@ -46,7 +46,7 @@ public class BungeeManager implements Listener {
 
   private final Main plugin;
   private final Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
-  private final String MOTD;
+  private final String motd;
 
   public BungeeManager(Main plugin) {
     this.plugin = plugin;
@@ -57,7 +57,7 @@ public class BungeeManager implements Listener {
     gameStateToString.put(ArenaState.IN_GAME, chatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.In-Game", "In-Game")));
     gameStateToString.put(ArenaState.ENDING, chatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Ending", "Ending")));
     gameStateToString.put(ArenaState.RESTARTING, chatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Restarting", "Restarting")));
-    MOTD = chatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Message", "The actual game state of mm is %state%"));
+    motd = chatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Message", "The actual game state of mm is %state%"));
     plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
@@ -83,9 +83,8 @@ public class BungeeManager implements Listener {
     }
     Arena arena = ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena());
     event.setMaxPlayers(arena.getMaximumPlayers());
-    event.setMotd(MOTD.replace("%state%", gameStateToString.get(arena.getArenaState())));
+    plugin.getComplement().setMotd(event, motd.replace("%state%", gameStateToString.get(arena.getArenaState())));
   }
-
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onJoin(final PlayerJoinEvent event) {
@@ -93,7 +92,7 @@ public class BungeeManager implements Listener {
       return;
     }
 
-    event.setJoinMessage("");
+    plugin.getComplement().setJoinMessage(event, "");
     plugin.getServer().getScheduler().runTaskLater(plugin, () -> ArenaManager.joinAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena())), 1L);
   }
 
@@ -103,7 +102,7 @@ public class BungeeManager implements Listener {
       return;
     }
 
-    event.setQuitMessage("");
+    plugin.getComplement().setQuitMessage(event, "");
     if(ArenaRegistry.isInArena(event.getPlayer())) {
       ArenaManager.leaveAttempt(event.getPlayer(), ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
     }

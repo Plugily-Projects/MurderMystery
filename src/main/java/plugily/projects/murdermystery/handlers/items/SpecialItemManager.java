@@ -19,6 +19,9 @@
 package plugily.projects.murdermystery.handlers.items;
 
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import plugily.projects.murdermystery.Main;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,10 +47,11 @@ public class SpecialItemManager {
   }
 
   public static String getRelatedSpecialItem(ItemStack itemStack) {
+    Main plugin = JavaPlugin.getPlugin(Main.class);
     for(String key : specialItems.keySet()) {
       List<SpecialItem> entityItem = specialItems.get(key);
-      if(!entityItem.isEmpty() && entityItem.get(0).getItemStack().getItemMeta().getDisplayName()
-        .equalsIgnoreCase(itemStack.getItemMeta().getDisplayName())) {
+      if(!entityItem.isEmpty() && plugin.getComplement().getDisplayName(entityItem.get(0).getItemStack().getItemMeta())
+        .equalsIgnoreCase(plugin.getComplement().getDisplayName(itemStack.getItemMeta()))) {
         return key;
       }
     }

@@ -381,7 +381,7 @@ public class ArenaEvents implements Listener {
     if(arena == null) {
       return;
     }
-    e.setDeathMessage("");
+    plugin.getComplement().setDeathMessage(e, "");
     e.getDrops().clear();
     e.setDroppedExp(0);
     plugin.getCorpseHandler().spawnCorpse(e.getEntity(), arena);
@@ -501,7 +501,7 @@ public class ArenaEvents implements Listener {
         if(player.getInventory().getItem(ItemPosition.BOW_LOCATOR.getOtherRolesItemPosition()) != null) {
           ItemStack bowLocator = new ItemStack(Material.COMPASS, 1);
           ItemMeta bowMeta = bowLocator.getItemMeta();
-          bowMeta.setDisplayName(chatManager.colorMessage("In-Game.Bow-Locator-Item-Name", player) + " §7| §a" + (int) Math.round(player.getLocation().distance(player.getCompassTarget())));
+          plugin.getComplement().setDisplayName(bowMeta, chatManager.colorMessage("In-Game.Bow-Locator-Item-Name", player) + " §7| §a" + (int) Math.round(player.getLocation().distance(player.getCompassTarget())));
           bowLocator.setItemMeta(bowMeta);
           ItemPosition.setItem(player, ItemPosition.BOW_LOCATOR, bowLocator);
           return;
@@ -512,7 +512,7 @@ public class ArenaEvents implements Listener {
         ItemMeta innocentMeta = innocentLocator.getItemMeta();
         for(Player p : arena.getPlayersLeft()) {
           if(Role.isRole(Role.INNOCENT, p) || Role.isRole(Role.ANY_DETECTIVE, p)) {
-            innocentMeta.setDisplayName(chatManager.colorMessage("In-Game.Innocent-Locator-Item-Name", player) + " §7| §a" + (int) Math.round(player.getLocation().distance(p.getLocation())));
+            plugin.getComplement().setDisplayName(innocentMeta, chatManager.colorMessage("In-Game.Innocent-Locator-Item-Name", player) + " §7| §a" + (int) Math.round(player.getLocation().distance(p.getLocation())));
             innocentLocator.setItemMeta(innocentMeta);
             ItemPosition.setItem(player, ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
           }

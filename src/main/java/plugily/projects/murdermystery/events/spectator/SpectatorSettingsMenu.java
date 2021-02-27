@@ -18,7 +18,6 @@
 
 package plugily.projects.murdermystery.events.spectator;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,12 +41,13 @@ public class SpectatorSettingsMenu implements Listener {
 
   private final String inventoryName;
   private final String speedOptionName;
+  private final Main plugin;
   private final Inventory inv;
 
-  public SpectatorSettingsMenu(JavaPlugin plugin, String inventoryName, String speedOptionName) {
+  public SpectatorSettingsMenu(Main plugin, String inventoryName, String speedOptionName) {
     this.inventoryName = inventoryName;
     this.speedOptionName = speedOptionName;
-    plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    (this.plugin = plugin).getServer().getPluginManager().registerEvents(this, plugin);
     this.inv = initInventory();
   }
 
@@ -57,7 +57,7 @@ public class SpectatorSettingsMenu implements Listener {
 
   @EventHandler
   public void onSpectatorMenuClick(InventoryClickEvent e) {
-    if(!e.getView().getTitle().equals(JavaPlugin.getPlugin(Main.class).getChatManager().colorRawMessage(inventoryName))) {
+    if(!plugin.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorRawMessage(inventoryName))) {
       return;
     }
     if(e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
@@ -98,7 +98,7 @@ public class SpectatorSettingsMenu implements Listener {
   }
 
   private Inventory initInventory() {
-    Inventory inv = Bukkit.createInventory(null, 9 * 3, inventoryName);
+    Inventory inv = plugin.getComplement().createInventory(null, 9 * 3, inventoryName);
     ChatManager chatManager = JavaPlugin.getPlugin(Main.class).getChatManager();
     inv.setItem(11, new ItemBuilder(Material.LEATHER_BOOTS)
       .name(chatManager.colorRawMessage(speedOptionName + " I")).build());

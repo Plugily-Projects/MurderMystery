@@ -85,11 +85,11 @@ public class SpecialItem {
         ItemStack stack = xmaterial.parseItem();
         ItemMeta meta = stack.getItemMeta();
         if(meta != null) {
-          meta.setDisplayName(chatManager.colorRawMessage(config.getString(name + ".displayname", "")));
+          plugin.getComplement().setDisplayName(meta, chatManager.colorRawMessage(config.getString(name + ".displayname", "")));
 
           List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(chatManager::colorRawMessage)
             .collect(Collectors.toList());
-          meta.setLore(colorizedLore);
+          plugin.getComplement().setLore(meta, colorizedLore);
           stack.setItemMeta(meta);
         }
 
@@ -103,11 +103,11 @@ public class SpecialItem {
         .orElse(XMaterial.STONE).parseItem();
       ItemMeta meta = stack.getItemMeta();
       if(meta != null) {
-        meta.setDisplayName(chatManager.colorRawMessage(config.getString(name + ".displayname")));
+        plugin.getComplement().setDisplayName(meta, chatManager.colorRawMessage(config.getString(name + ".displayname")));
 
         List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(chatManager::colorRawMessage)
           .collect(Collectors.toList());
-        meta.setLore(colorizedLore);
+        plugin.getComplement().setLore(meta, colorizedLore);
         stack.setItemMeta(meta);
       }
 

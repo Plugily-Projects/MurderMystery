@@ -73,10 +73,10 @@ public class SpectatorItemEvents implements Listener {
       if(!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
         return;
       }
-      if(stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
+      if(plugin.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
         e.setCancelled(true);
         openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
-      } else if(stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
+      } else if(plugin.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
         e.setCancelled(true);
         spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
       }
@@ -84,7 +84,7 @@ public class SpectatorItemEvents implements Listener {
   }
 
   private void openSpectatorMenu(World world, Player p) {
-    Inventory inventory = plugin.getServer().createInventory(null, Utils.serializeInt(ArenaRegistry.getArena(p).getPlayers().size()),
+    Inventory inventory = plugin.getComplement().createInventory(null, Utils.serializeInt(ArenaRegistry.getArena(p).getPlayers().size()),
       chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
     Set<Player> players = ArenaRegistry.getArena(p).getPlayers();
 
@@ -97,7 +97,7 @@ public class SpectatorItemEvents implements Listener {
         ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
         meta = VersionUtils.setPlayerHead(player, meta);
-        meta.setDisplayName(player.getName());
+        plugin.getComplement().setDisplayName(meta, player.getName());
 
         String role = roleRaw;
         if(Role.isRole(Role.MURDERER, player)) {
@@ -107,7 +107,7 @@ public class SpectatorItemEvents implements Listener {
         } else {
           role = StringUtils.replace(role, "%role%", chatManager.colorMessage("Scoreboard.Roles.Innocent"));
         }
-        meta.setLore(Collections.singletonList(role));
+        plugin.getComplement().setLore(meta, Collections.singletonList(role));
         VersionUtils.setDurability(skull, (short) SkullType.PLAYER.ordinal());
         skull.setItemMeta(meta);
         inventory.addItem(skull);
@@ -124,13 +124,14 @@ public class SpectatorItemEvents implements Listener {
       || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
       return;
     }
-    if(!e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name", p))) {
+    if(!plugin.getComplement().getTitle(e.getView()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name", p))) {
       return;
     }
     e.setCancelled(true);
     ItemMeta meta = e.getCurrentItem().getItemMeta();
     for(Player player : arena.getPlayers()) {
-      if(player.getName().equalsIgnoreCase(meta.getDisplayName()) || ChatColor.stripColor(meta.getDisplayName()).contains(player.getName())) {
+      if(player.getName().equalsIgnoreCase(plugin.getComplement().getDisplayName(meta))
+          || ChatColor.stripColor(plugin.getComplement().getDisplayName(meta)).contains(player.getName())) {
         p.sendMessage(chatManager.formatMessage(arena, chatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), player));
         p.teleport(player);
         p.closeInventory();

@@ -41,7 +41,6 @@ import plugily.projects.murdermystery.arena.corpse.Corpse;
 import plugily.projects.murdermystery.arena.corpse.Stand;
 import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
 import plugily.projects.murdermystery.handlers.hologram.HologramManager;
-import plugily.projects.murdermystery.handlers.lastwords.LastWord;
 
 import java.util.HashMap;
 import java.util.Map;

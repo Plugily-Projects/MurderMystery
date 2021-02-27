@@ -155,7 +155,7 @@ public class SpecialBlockEvents implements Listener {
       return;
     }
     for(MysteryPotion potion : MysteryPotionRegistry.getMysteryPotions()) {
-      if(e.getItem().getItemMeta().getDisplayName().equals(potion.getName())) {
+      if(plugin.getComplement().getDisplayName(e.getItem().getItemMeta()).equals(potion.getName())) {
         e.setCancelled(true);
         e.getPlayer().sendMessage(potion.getSubtitle());
         VersionUtils.sendTitles(e.getPlayer(), "", potion.getSubtitle(), 5, 40, 5);

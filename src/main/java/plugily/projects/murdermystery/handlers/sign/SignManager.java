@@ -79,19 +79,19 @@ public class SignManager implements Listener {
   @EventHandler
   public void onSignChange(SignChangeEvent e) {
     if(!e.getPlayer().hasPermission("murdermystery.admin.sign.create")
-      || !e.getLine(0).equalsIgnoreCase("[murdermystery]")) {
+      || !plugin.getComplement().getLine(e, 0).equalsIgnoreCase("[murdermystery]")) {
       return;
     }
-    if(e.getLine(1).isEmpty()) {
+    if(plugin.getComplement().getLine(e, 1).isEmpty()) {
       e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Signs.Please-Type-Arena-Name"));
       return;
     }
     for(Arena arena : ArenaRegistry.getArenas()) {
-      if(!arena.getId().equalsIgnoreCase(e.getLine(1))) {
+      if(!arena.getId().equalsIgnoreCase(plugin.getComplement().getLine(e, 1))) {
         continue;
       }
       for(int i = 0; i < signLines.size(); i++) {
-        e.setLine(i, formatSign(signLines.get(i), arena));
+        plugin.getComplement().setLine(e, i, formatSign(signLines.get(i), arena));
       }
       arenaSigns.add(new ArenaSign((Sign) e.getBlock().getState(), arena));
       e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Signs.Sign-Created"));
@@ -203,7 +203,7 @@ public class SignManager implements Listener {
     for(ArenaSign arenaSign : arenaSigns) {
       Sign sign = arenaSign.getSign();
       for(int i = 0; i < signLines.size(); i++) {
-        sign.setLine(i, formatSign(signLines.get(i), arenaSign.getArena()));
+        plugin.getComplement().setLine(sign, i, formatSign(signLines.get(i), arenaSign.getArena()));
       }
       if(plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true) && arenaSign.getBehind() != null) {
         Block behind = arenaSign.getBehind();
