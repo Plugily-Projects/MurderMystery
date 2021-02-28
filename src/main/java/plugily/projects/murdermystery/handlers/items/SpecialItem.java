@@ -26,6 +26,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.handlers.ChatManager;
 
@@ -85,11 +86,11 @@ public class SpecialItem {
         ItemStack stack = xmaterial.parseItem();
         ItemMeta meta = stack.getItemMeta();
         if(meta != null) {
-          plugin.getComplement().setDisplayName(meta, chatManager.colorRawMessage(config.getString(name + ".displayname", "")));
+          ComplementAccessor.getComplement().setDisplayName(meta, chatManager.colorRawMessage(config.getString(name + ".displayname", "")));
 
           List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(chatManager::colorRawMessage)
             .collect(Collectors.toList());
-          plugin.getComplement().setLore(meta, colorizedLore);
+          ComplementAccessor.getComplement().setLore(meta, colorizedLore);
           stack.setItemMeta(meta);
         }
 
@@ -103,11 +104,11 @@ public class SpecialItem {
         .orElse(XMaterial.STONE).parseItem();
       ItemMeta meta = stack.getItemMeta();
       if(meta != null) {
-        plugin.getComplement().setDisplayName(meta, chatManager.colorRawMessage(config.getString(name + ".displayname")));
+        ComplementAccessor.getComplement().setDisplayName(meta, chatManager.colorRawMessage(config.getString(name + ".displayname")));
 
         List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(chatManager::colorRawMessage)
           .collect(Collectors.toList());
-        plugin.getComplement().setLore(meta, colorizedLore);
+        ComplementAccessor.getComplement().setLore(meta, colorizedLore);
         stack.setItemMeta(meta);
       }
 

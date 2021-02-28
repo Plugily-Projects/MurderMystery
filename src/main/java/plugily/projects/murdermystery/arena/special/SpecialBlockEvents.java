@@ -31,6 +31,7 @@ import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.Arena;
@@ -155,7 +156,7 @@ public class SpecialBlockEvents implements Listener {
       return;
     }
     for(MysteryPotion potion : MysteryPotionRegistry.getMysteryPotions()) {
-      if(plugin.getComplement().getDisplayName(e.getItem().getItemMeta()).equals(potion.getName())) {
+      if(ComplementAccessor.getComplement().getDisplayName(e.getItem().getItemMeta()).equals(potion.getName())) {
         e.setCancelled(true);
         e.getPlayer().sendMessage(potion.getSubtitle());
         VersionUtils.sendTitles(e.getPlayer(), "", potion.getSubtitle(), 5, 40, 5);

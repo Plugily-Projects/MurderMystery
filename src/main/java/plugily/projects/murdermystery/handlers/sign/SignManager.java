@@ -34,6 +34,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
@@ -79,19 +80,19 @@ public class SignManager implements Listener {
   @EventHandler
   public void onSignChange(SignChangeEvent e) {
     if(!e.getPlayer().hasPermission("murdermystery.admin.sign.create")
-      || !plugin.getComplement().getLine(e, 0).equalsIgnoreCase("[murdermystery]")) {
+      || !ComplementAccessor.getComplement().getLine(e, 0).equalsIgnoreCase("[murdermystery]")) {
       return;
     }
-    if(plugin.getComplement().getLine(e, 1).isEmpty()) {
+    if(ComplementAccessor.getComplement().getLine(e, 1).isEmpty()) {
       e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Signs.Please-Type-Arena-Name"));
       return;
     }
     for(Arena arena : ArenaRegistry.getArenas()) {
-      if(!arena.getId().equalsIgnoreCase(plugin.getComplement().getLine(e, 1))) {
+      if(!arena.getId().equalsIgnoreCase(ComplementAccessor.getComplement().getLine(e, 1))) {
         continue;
       }
       for(int i = 0; i < signLines.size(); i++) {
-        plugin.getComplement().setLine(e, i, formatSign(signLines.get(i), arena));
+        ComplementAccessor.getComplement().setLine(e, i, formatSign(signLines.get(i), arena));
       }
       arenaSigns.add(new ArenaSign((Sign) e.getBlock().getState(), arena));
       e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Signs.Sign-Created"));
@@ -203,7 +204,7 @@ public class SignManager implements Listener {
     for(ArenaSign arenaSign : arenaSigns) {
       Sign sign = arenaSign.getSign();
       for(int i = 0; i < signLines.size(); i++) {
-        plugin.getComplement().setLine(sign, i, formatSign(signLines.get(i), arenaSign.getArena()));
+        ComplementAccessor.getComplement().setLine(sign, i, formatSign(signLines.get(i), arenaSign.getArena()));
       }
       if(plugin.getConfig().getBoolean("Signs-Block-States-Enabled", true) && arenaSign.getBehind() != null) {
         Block behind = arenaSign.getBehind();

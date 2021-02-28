@@ -29,6 +29,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.handlers.ChatManager;
 
@@ -57,7 +58,7 @@ public class SpectatorSettingsMenu implements Listener {
 
   @EventHandler
   public void onSpectatorMenuClick(InventoryClickEvent e) {
-    if(!plugin.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorRawMessage(inventoryName))) {
+    if(!ComplementAccessor.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorRawMessage(inventoryName))) {
       return;
     }
     if(e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
@@ -98,7 +99,7 @@ public class SpectatorSettingsMenu implements Listener {
   }
 
   private Inventory initInventory() {
-    Inventory inv = plugin.getComplement().createInventory(null, 9 * 3, inventoryName);
+    Inventory inv = ComplementAccessor.getComplement().createInventory(null, 9 * 3, inventoryName);
     ChatManager chatManager = JavaPlugin.getPlugin(Main.class).getChatManager();
     inv.setItem(11, new ItemBuilder(Material.LEATHER_BOOTS)
       .name(chatManager.colorRawMessage(speedOptionName + " I")).build());
