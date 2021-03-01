@@ -37,19 +37,19 @@ import plugily.projects.murdermystery.handlers.language.LanguageManager;
  */
 public class ChatManager {
 
-  private final String PLUGIN_PREFIX;
+  private final String pluginPrefix;
   private final Main plugin;
 
   public ChatManager(Main plugin) {
     this.plugin = plugin;
-    PLUGIN_PREFIX = colorMessage("In-Game.Plugin-Prefix");
+    pluginPrefix = colorMessage("In-Game.Plugin-Prefix");
   }
 
   /**
    * @return game prefix
    */
   public String getPrefix() {
-    return PLUGIN_PREFIX;
+    return pluginPrefix;
   }
 
   public String colorMessage(String message) {
@@ -77,8 +77,10 @@ public class ChatManager {
   }
 
   public void broadcast(Arena arena, String message) {
-    for(Player p : arena.getPlayers()) {
-      p.sendMessage(PLUGIN_PREFIX + message);
+    if (message != null && !message.isEmpty()) {
+      for(Player p : arena.getPlayers()) {
+        p.sendMessage(pluginPrefix + message);
+      }
     }
   }
 
@@ -129,7 +131,7 @@ public class ChatManager {
         return; //likely won't ever happen
     }
     for(Player player : a.getPlayers()) {
-      player.sendMessage(PLUGIN_PREFIX + message);
+      player.sendMessage(pluginPrefix + message);
     }
   }
 

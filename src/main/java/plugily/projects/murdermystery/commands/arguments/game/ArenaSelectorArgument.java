@@ -19,7 +19,6 @@
 package plugily.projects.murdermystery.commands.arguments.game;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,7 +27,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaManager;
@@ -44,7 +45,6 @@ import plugily.projects.murdermystery.utils.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author 2Wild4You
@@ -69,7 +69,7 @@ public class ArenaSelectorArgument implements Listener {
           player.sendMessage(chatManager.colorMessage("Validator.No-Instances-Created"));
           return;
         }
-        Inventory inventory = Bukkit.createInventory(player, Utils.serializeInt(ArenaRegistry.getArenas().size()), chatManager.colorMessage("Arena-Selector.Inv-Title"));
+        Inventory inventory = ComplementAccessor.getComplement().createInventory(player, Utils.serializeInt(ArenaRegistry.getArenas().size()), chatManager.colorMessage("Arena-Selector.Inv-Title"));
 
         int sloti = 0;
         arenaMappings.clear();
@@ -98,14 +98,14 @@ public class ArenaSelectorArgument implements Listener {
             return;
           }
 
-          itemMeta.setDisplayName(formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
+          ComplementAccessor.getComplement().setDisplayName(itemMeta, formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
 
           ArrayList<String> lore = new ArrayList<>();
           for(String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
             lore.add(formatItem(string, arena, registry.getPlugin()));
           }
 
-          itemMeta.setLore(lore);
+          ComplementAccessor.getComplement().setLore(itemMeta, lore);
           itemStack.setItemMeta(itemMeta);
           inventory.addItem(itemStack);
           sloti++;
@@ -132,7 +132,7 @@ public class ArenaSelectorArgument implements Listener {
 
   @EventHandler
   public void onArenaSelectorMenuClick(InventoryClickEvent e) {
-    if(!e.getView().getTitle().equals(chatManager.colorMessage("Arena-Selector.Inv-Title"))) {
+    if(!ComplementAccessor.getComplement().getTitle(e.getView()).equals(chatManager.colorMessage("Arena-Selector.Inv-Title"))) {
       return;
     }
     if(e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {

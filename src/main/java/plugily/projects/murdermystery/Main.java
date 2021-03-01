@@ -100,7 +100,7 @@ public class Main extends JavaPlugin {
   private LastWordsManager lastWordsManager;
   private TrailsManager trailsManager;
 
-  @Override
+@Override
   public void onEnable() {
     if(!validateIfPluginShouldStart()) {
       return;

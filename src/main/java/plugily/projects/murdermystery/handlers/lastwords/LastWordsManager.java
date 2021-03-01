@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  */
 public class LastWordsManager {
 
-  private final ArrayList<LastWord> registeredLastWords = new ArrayList<>();
+  private final List<LastWord> registeredLastWords = new ArrayList<>();
 
   public LastWordsManager(Main plugin) {
     registerLastWords(plugin);
@@ -45,7 +45,6 @@ public class LastWordsManager {
   public void registerLastWords(Main plugin) {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "language");
     ConfigurationSection section = config.getConfigurationSection("In-Game.Messages.Last-Words");
-    String path = "In-Game.Messages.Last-Words.";
     if(section == null) {
       //use old formatting under v1.7.5
       addLastWord(new LastWord(plugin.getChatManager().colorMessage("In-Game.Messages.Last-Words.Meme"), "murdermystery.lastwords.meme"));
@@ -55,12 +54,13 @@ public class LastWordsManager {
       Debugger.sendConsoleMsg("[MurderMystery] Please check your language.yml and update it to the new last words design that can be found on the latest language.yml");
       return;
     }
+    String path = "In-Game.Messages.Last-Words.";
     for(String id : section.getKeys(false)) {
       addLastWord(new LastWord(plugin.getChatManager().colorMessage(path + id + ".Message"), config.getString(path + id + ".Permission", "")));
     }
   }
 
-  public ArrayList<LastWord> getRegisteredLastWords() {
+  public List<LastWord> getRegisteredLastWords() {
     return registeredLastWords;
   }
 
