@@ -100,7 +100,7 @@ public class Main extends JavaPlugin {
   private LastWordsManager lastWordsManager;
   private TrailsManager trailsManager;
 
-@Override
+  @Override
   public void onEnable() {
     if(!validateIfPluginShouldStart()) {
       return;
@@ -184,6 +184,10 @@ public class Main extends JavaPlugin {
       for(Player player : arena.getPlayers()) {
         arena.doBarAction(Arena.BarAction.REMOVE, player);
         arena.teleportToEndLocation(player);
+        player.setFlySpeed(0.1f);
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(null);
+        player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
         player.setWalkSpeed(0.2f);
         player.setGameMode(GameMode.SURVIVAL);
         if(configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {

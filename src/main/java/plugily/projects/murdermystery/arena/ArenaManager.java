@@ -103,7 +103,7 @@ public class ArenaManager {
       if(party.getLeader().equals(player)) {
         if(arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
           for(Player partyPlayer : party.getPlayers()) {
-            if(partyPlayer == player) {
+            if(player.equals(partyPlayer)) {
               continue;
             }
             if(ArenaRegistry.isInArena(partyPlayer)) {
