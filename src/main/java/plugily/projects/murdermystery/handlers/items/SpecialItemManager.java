@@ -19,14 +19,13 @@
 package plugily.projects.murdermystery.handlers.items;
 
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
-import plugily.projects.murdermystery.Main;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Plajer
@@ -35,7 +34,7 @@ import java.util.Random;
  */
 public class SpecialItemManager {
 
-  private static final HashMap<String, List<SpecialItem>> specialItems = new HashMap<>();
+  private static final Map<String, List<SpecialItem>> specialItems = new HashMap<>();
 
   public static void addItem(String name, List<SpecialItem> entityItem) {
     specialItems.put(name, entityItem);
@@ -43,17 +42,15 @@ public class SpecialItemManager {
 
   public static SpecialItem getSpecialItem(String name) {
     List<SpecialItem> specialitem = specialItems.getOrDefault(name, new java.util.ArrayList<>());
-    Random num = new Random();
-    return specialitem.get(num.nextInt(specialitem.size()));
+    return specialitem.get(ThreadLocalRandom.current().nextInt(specialitem.size()));
   }
 
   public static String getRelatedSpecialItem(ItemStack itemStack) {
-    Main plugin = JavaPlugin.getPlugin(Main.class);
-    for(String key : specialItems.keySet()) {
-      List<SpecialItem> entityItem = specialItems.get(key);
+    for(Map.Entry<String, List<SpecialItem>> map : specialItems.entrySet()) {
+      List<SpecialItem> entityItem = map.getValue();
       if(!entityItem.isEmpty() && ComplementAccessor.getComplement().getDisplayName(entityItem.get(0).getItemStack().getItemMeta())
         .equalsIgnoreCase(ComplementAccessor.getComplement().getDisplayName(itemStack.getItemMeta()))) {
-        return key;
+        return map.getKey();
       }
     }
     return null;

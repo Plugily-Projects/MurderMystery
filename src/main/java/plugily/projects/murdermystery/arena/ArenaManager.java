@@ -170,7 +170,7 @@ public class ArenaManager {
     arena.addPlayer(player);
     player.setLevel(0);
     player.setExp(1);
-    player.setHealth(VersionUtils.getHealth(player));
+    player.setHealth(VersionUtils.getMaxHealth(player));
     player.setFoodLevel(20);
     if((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)) {
       arena.teleportToStartLocation(player);
@@ -333,7 +333,7 @@ public class ArenaManager {
     VersionUtils.setCollidable(player,true);
     user.removeScoreboard();
     arena.doBarAction(Arena.BarAction.REMOVE, player);
-    player.setHealth(VersionUtils.getHealth(player));
+    player.setHealth(VersionUtils.getMaxHealth(player));
     player.setFoodLevel(20);
     player.setLevel(0);
     player.setExp(0);

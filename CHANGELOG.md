@@ -8,6 +8,7 @@
 * Cached armor stands will be removed after block break if type is matches
 * Now special block holograms will get removed after game stop
   * After game start, it will show again
+* Fix when players are losed their components (like inventory items) when forcefully restarted the server.
 
 ### 1.7.4 Release (25.01.2021 - 28.01.2021)
 * Fix stack trace array length is 0 when trying to send exception to service
