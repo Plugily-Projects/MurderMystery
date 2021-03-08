@@ -208,7 +208,7 @@ public class Main extends JavaPlugin {
     }
     if(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
-      database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
+      database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"), config.getLong("maxLifeTime"));
     }
     argumentsRegistry = new ArgumentsRegistry(this);
     userManager = new UserManager(this);
