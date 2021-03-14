@@ -30,6 +30,7 @@ import pl.plajerlair.commonsbox.database.MysqlDatabase;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.events.EventsInitializer;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.Arena;
@@ -239,6 +240,7 @@ public class Main extends JavaPlugin {
     new EventsInitializer().initialize(this);
     lastWordsManager = new LastWordsManager(this);
     trailsManager = new TrailsManager(this);
+    MiscUtils.sendStartUpMessage(this, "MurderMystery", getDescription(),true, true);
   }
 
   private void registerSoftDependenciesAndServices() {
