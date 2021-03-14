@@ -425,7 +425,7 @@ public class Arena extends BukkitRunnable {
 
           List<Player> playersToQuit = new ArrayList<>(getPlayers());
           for(Player player : playersToQuit) {
-            plugin.getUserManager().getUser(player).removeScoreboard();
+            plugin.getUserManager().getUser(player).removeScoreboard(this);
             player.setGameMode(GameMode.SURVIVAL);
             for(Player players : Bukkit.getOnlinePlayers()) {
               VersionUtils.showPlayer(plugin, player, players);

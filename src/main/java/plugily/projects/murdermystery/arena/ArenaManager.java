@@ -331,7 +331,7 @@ public class ArenaManager {
       arena.removeSpectatorPlayer(player);
     }
     VersionUtils.setCollidable(player,true);
-    user.removeScoreboard();
+    user.removeScoreboard(arena);
     arena.doBarAction(Arena.BarAction.REMOVE, player);
     player.setHealth(VersionUtils.getMaxHealth(player));
     player.setFoodLevel(20);
@@ -434,7 +434,7 @@ public class ArenaManager {
           MiscUtils.sendCenteredMessage(player, formatSummaryPlaceholders(msg, arena, player));
         }
       }
-      user.removeScoreboard();
+      user.removeScoreboard(arena);
       if(!quickStop && plugin.getConfig().getBoolean("Firework-When-Game-Ends", true) && !user.isSpectator() && !user.isPermanentSpectator()) {
         new BukkitRunnable() {
           int i = 0;

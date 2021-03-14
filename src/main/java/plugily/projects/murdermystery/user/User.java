@@ -90,8 +90,9 @@ public class User {
     return stats.get(stat);
   }
 
-  public void removeScoreboard() {
-    player.setScoreboard(scoreboardManager.getNewScoreboard());
+  public void removeScoreboard(Arena arena) {
+    arena.getScoreboardManager().removeScoreboard(this);
+    //player.setScoreboard(scoreboardManager.getNewScoreboard());
   }
 
   public void setStat(StatsStorage.StatisticType stat, int i) {
