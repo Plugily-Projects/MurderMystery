@@ -33,6 +33,7 @@ import pl.plajerlair.commonsbox.string.StringMatcher;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.commands.arguments.admin.ListArenasArgument;
+import plugily.projects.murdermystery.commands.arguments.admin.TeleportArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.arena.DeleteArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.arena.ForceStartArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.arena.ReloadArgument;
@@ -100,6 +101,7 @@ public class ArgumentsRegistry implements CommandExecutor {
     new SpecialBlockRemoverArgument(this);
     new ReloadArgument(this, chatManager);
     new StopArgument(this);
+    new TeleportArgument(this);
   }
 
   @Override
