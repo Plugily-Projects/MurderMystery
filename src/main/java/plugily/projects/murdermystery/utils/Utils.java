@@ -71,14 +71,14 @@ public class Utils {
       @Override
       public void run() {
         if(!ArenaRegistry.isInArena(p) || ArenaRegistry.getArena(p).getArenaState() != ArenaState.IN_GAME) {
-          this.cancel();
+          cancel();
         }
         if(ticks >= seconds * 20) {
-          this.cancel();
+          cancel();
         }
         String progress = StringFormatUtils.getProgressBar(ticks, seconds * 20, 10, "■", ChatColor.COLOR_CHAR + "a", ChatColor.COLOR_CHAR + "c");
         VersionUtils.sendActionBar(p, plugin.getChatManager().colorMessage("In-Game.Cooldown-Format", p)
-          .replace("%progress%", progress).replace("%time%", String.valueOf((double) ((seconds * 20) - ticks) / 20)));
+          .replace("%progress%", progress).replace("%time%", Double.toString((double) ((seconds * 20) - ticks) / 20)));
         ticks += 10;
       }
     }.runTaskTimer(plugin, 0, 10);

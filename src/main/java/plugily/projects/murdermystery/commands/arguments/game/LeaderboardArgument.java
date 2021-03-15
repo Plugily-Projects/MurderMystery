@@ -54,10 +54,9 @@ public class LeaderboardArgument {
 
     List<String> stats = new ArrayList<>();
     for(StatsStorage.StatisticType value : StatsStorage.StatisticType.values()) {
-      if(!value.isPersistent()) {
-        continue;
+      if(value.isPersistent()) {
+        stats.add(value.name().toLowerCase());
       }
-      stats.add(value.name().toLowerCase());
     }
     registry.getTabCompletion().registerCompletion(new CompletableArgument("murdermystery", "top", stats));
     registry.mapArgument("murdermystery", new CommandArgument("top", "", CommandArgument.ExecutorType.PLAYER) {
@@ -82,7 +81,7 @@ public class LeaderboardArgument {
   }
 
   private void printLeaderboard(CommandSender sender, StatsStorage.StatisticType statisticType) {
-    LinkedHashMap<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
+    java.util.Map<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
     sender.sendMessage(chatManager.colorMessage("Commands.Statistics.Header"));
     String statistic = StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "));
     for(int i = 0; i < 10; i++) {

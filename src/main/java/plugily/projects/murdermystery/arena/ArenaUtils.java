@@ -117,26 +117,29 @@ public class ArenaUtils {
   }
 
   public static void updateInnocentLocator(Arena arena) {
+    java.util.List<Player> list = arena.getPlayersLeft();
+
     if(!arena.isMurdererLocatorReceived()) {
       ItemStack innocentLocator = new ItemStack(Material.COMPASS, 1);
       ItemMeta innocentMeta = innocentLocator.getItemMeta();
       ComplementAccessor.getComplement().setDisplayName(innocentMeta, chatManager.colorMessage("In-Game.Innocent-Locator-Item-Name"));
       innocentLocator.setItemMeta(innocentMeta);
-      for(Player p : arena.getPlayersLeft()) {
+      for(Player p : list) {
         if(arena.isMurderAlive(p)) {
           ItemPosition.setItem(p, ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
         }
       }
       arena.setMurdererLocatorReceived(true);
 
-      for(Player p : arena.getPlayersLeft()) {
+      for(Player p : list) {
         if(Role.isRole(Role.MURDERER, p)) {
           continue;
         }
         VersionUtils.sendTitles(p, chatManager.colorMessage("In-Game.Watch-Out-Title", p), chatManager.colorMessage("In-Game.Watch-Out-Subtitle", p), 5, 40, 5);
       }
     }
-    for(Player p : arena.getPlayersLeft()) {
+
+    for(Player p : list) {
       if(Role.isRole(Role.MURDERER, p)) {
         continue;
       }
@@ -166,11 +169,12 @@ public class ArenaUtils {
     if(arena.getBowHologram() != null) {
       return;
     }
-    if(arena.getPlayersLeft().size() > 1) {
+    java.util.List<Player> list = arena.getPlayersLeft();
+    if(list.size() > 1) {
       for(Player p : arena.getPlayers()) {
         VersionUtils.sendTitles(p, chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Title", p), null, 5, 40, 5);
       }
-      for(Player p : arena.getPlayersLeft()) {
+      for(Player p : list) {
         VersionUtils.sendTitles(p, null, chatManager.colorMessage("In-Game.Messages.Bow-Messages.Bow-Dropped-Subtitle", p), 5, 40, 5);
       }
     }

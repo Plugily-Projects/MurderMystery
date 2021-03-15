@@ -122,10 +122,9 @@ public class Events implements Listener {
     Utils.applyActionBarCooldown(attacker, plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5));
   }
 
-  @SuppressWarnings("deprecation")
   private void createFlyingSword(Arena arena, Player attacker, User attackerUser) {
     Location loc = attacker.getLocation();
-    Vector vec = attacker.getLocation().getDirection();
+    Vector vec = loc.getDirection();
     vec.normalize().multiply(plugin.getConfig().getDouble("Murderer-Sword-Speed", 0.65));
     Location standStart = Utils.rotateAroundAxisY(new Vector(1.0D, 0.0D, 0.0D), loc.getYaw()).toLocation(attacker.getWorld()).add(loc);
     standStart.setYaw(loc.getYaw());
@@ -135,13 +134,12 @@ public class Events implements Listener {
       stand.setInvulnerable(true);
       stand.setSilent(true);
     }
-    if(Version.isCurrentEqualOrHigher(Version.v1_16_R1)) {
-      stand.getEquipment().setItemInMainHand(plugin.getConfigPreferences().getMurdererSword());
-    } else {
-      stand.setItemInHand(plugin.getConfigPreferences().getMurdererSword());
-    }
-    stand.setRightArmPose(new EulerAngle(Math.toRadians(350.0), Math.toRadians(attacker.getLocation().getPitch() * -1.0), Math.toRadians(90.0)));
+
+    VersionUtils.setItemInHand(stand, plugin.getConfigPreferences().getMurdererSword());
+
+    stand.setRightArmPose(new EulerAngle(Math.toRadians(350.0), Math.toRadians(loc.getPitch() * -1.0), Math.toRadians(90.0)));
     VersionUtils.setCollidable(stand, false);
+
     stand.setGravity(false);
     stand.setRemoveWhenFarAway(true);
     stand.setMarker(true);

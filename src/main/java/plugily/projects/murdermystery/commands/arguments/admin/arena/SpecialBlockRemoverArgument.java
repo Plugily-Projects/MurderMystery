@@ -63,7 +63,7 @@ public class SpecialBlockRemoverArgument {
               continue;
             }
             //get all special blocks
-            for(SpecialBlock specialBlock : arena.getSpecialBlocks()) {
+            for(SpecialBlock specialBlock : new ArrayList<>(arena.getSpecialBlocks())) {
               //check if targetBlock is specialblock
               if(specialBlock.getLocation().getBlock().equals(targetBlock)) {
                 //get special blocks from config
@@ -76,13 +76,14 @@ public class SpecialBlockRemoverArgument {
                 }
                 //remove special block from arena file
                 String path = targetBlock.getType() == Material.CAULDRON ? ".mystery-cauldrons" : ".confessionals";
-                List<String> specialBlocksType = new ArrayList<>(config.getStringList("instances." + arena.getId() + path));
-                specialBlocksType.remove(LocationSerializer.locationToString(specialBlock.getLocation()));
+                String serializedLoc = LocationSerializer.locationToString(specialBlock.getLocation());
+                List<String> specialBlocksType = config.getStringList("instances." + arena.getId() + path);
+                specialBlocksType.remove(serializedLoc);
                 config.set("instances." + arena.getId() + path, specialBlocksType);
                 //save arena config after removing special block
                 ConfigUtils.saveConfig(registry.getPlugin(), config, "arenas");
 
-                player.sendMessage(ChatColor.RED + "Removed special block at loc " + LocationSerializer.locationToString(specialBlock.getLocation()) + " from arena " + arena.getId());
+                player.sendMessage(ChatColor.RED + "Removed special block at loc " + serializedLoc + " from arena " + arena.getId());
                 return;
               }
             }

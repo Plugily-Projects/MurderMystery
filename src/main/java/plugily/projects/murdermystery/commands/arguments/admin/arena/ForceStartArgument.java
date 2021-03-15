@@ -55,7 +55,7 @@ public class ForceStartArgument {
           arena.setArenaState(ArenaState.STARTING);
           arena.setForceStart(true);
           arena.setTimer(0);
-          for(Player player : ArenaRegistry.getArena((Player) sender).getPlayers()) {
+          for(Player player : arena.getPlayers()) {
             player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
           }
         }

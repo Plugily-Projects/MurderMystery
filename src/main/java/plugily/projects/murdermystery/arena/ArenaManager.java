@@ -210,7 +210,7 @@ public class ArenaManager {
     player.setAllowFlight(false);
     player.getInventory().clear();
     arena.doBarAction(Arena.BarAction.ADD, player);
-    if(!plugin.getUserManager().getUser(player).isSpectator()) {
+    if(!user.isSpectator()) {
       chatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
     }
     if(arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {

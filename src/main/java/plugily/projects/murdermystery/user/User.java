@@ -21,7 +21,6 @@ package plugily.projects.murdermystery.user;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.ScoreboardManager;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.api.events.player.MMPlayerStatisticChangeEvent;
@@ -41,7 +40,6 @@ public class User {
 
   private static final Main plugin = JavaPlugin.getPlugin(Main.class);
   private static long cooldownCounter = 0;
-  private final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
   private final Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
   private final Map<String, Double> cooldowns = new HashMap<>();
   private final Player player;
@@ -84,10 +82,9 @@ public class User {
     if(!stats.containsKey(stat)) {
       stats.put(stat, 0);
       return 0;
-    } else if(stats.get(stat) == null) {
-      return 0;
     }
-    return stats.get(stat);
+
+    return stats.getOrDefault(stat, 0);
   }
 
   public void removeScoreboard(Arena arena) {

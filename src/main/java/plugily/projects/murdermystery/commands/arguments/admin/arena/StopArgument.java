@@ -20,6 +20,8 @@ package plugily.projects.murdermystery.commands.arguments.admin.arena;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaManager;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.ArenaState;
@@ -44,8 +46,9 @@ public class StopArgument {
         if(!Utils.checkIsInGameInstance((Player) sender)) {
           return;
         }
-        if(ArenaRegistry.getArena((Player) sender).getArenaState() != ArenaState.ENDING) {
-          ArenaManager.stopGame(true, ArenaRegistry.getArena((Player) sender));
+        Arena arena = ArenaRegistry.getArena((Player) sender);
+        if(arena.getArenaState() != ArenaState.ENDING) {
+          ArenaManager.stopGame(true, arena);
           //todo execute success command message
         }
       }

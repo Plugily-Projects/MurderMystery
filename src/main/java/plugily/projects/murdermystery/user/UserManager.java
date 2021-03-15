@@ -31,7 +31,6 @@ import plugily.projects.murdermystery.utils.Debugger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -71,7 +70,13 @@ public class UserManager {
   }
 
   public List<User> getUsers(Arena arena) {
-    return arena.getPlayers().stream().map(this::getUser).collect(Collectors.toList());
+    List<User> list = new ArrayList<>();
+
+    for (Player player : arena.getPlayers()) {
+      list.add(getUser(player));
+    }
+
+    return list;
   }
 
   public void saveStatistic(User user, StatsStorage.StatisticType stat) {

@@ -21,14 +21,12 @@ package plugily.projects.murdermystery.commands.completion;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.util.StringUtil;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
 import plugily.projects.murdermystery.commands.arguments.data.CommandArgument;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,7 +50,7 @@ public class TabCompletion implements TabCompleter {
 
   @Override
   public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-    List<String> completionList = new ArrayList<>(), cmds = new ArrayList<>();
+    List<String> cmds = new ArrayList<>();
     String partOfCommand = null;
 
     if(cmd.getName().equalsIgnoreCase("murdermysteryadmin")) {
@@ -89,8 +87,6 @@ public class TabCompletion implements TabCompleter {
       return null;
     }
 
-    StringUtil.copyPartialMatches(partOfCommand, cmds, completionList);
-    Collections.sort(completionList);
-    return completionList;
+    return cmds;
   }
 }
