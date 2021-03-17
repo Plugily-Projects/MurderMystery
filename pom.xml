@@ -281,12 +281,12 @@
     <distributionManagement>
         <repository>
             <id>plugily-projects-repo</id>
-            <url>ftp://46.249.204.191</url>
+            <url>ftp://81.19.211.8</url>
         </repository>
         <site>
             <id>plugily-projects-java-docs</id>
-            <name>MurderMystery</name>
-            <url>ftp://46.249.204.191</url>
+            <name>thebridge</name>
+            <url>ftp://81.19.211.8</url>
         </site>
     </distributionManagement>
 
