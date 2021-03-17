@@ -60,46 +60,46 @@ public class LanguageMigrator {
       switch(i) {
         case 1:
           MigratorUtils.addNewLines(file, "\r\n# How many blocks per tick sword thrown by murderer should fly\r\n" +
-            "# Please avoid high values as it might look like the sword is\r\n" +
-            "# blinking each tick\r\n" +
-            "Murderer-Sword-Speed: 0.65\r\n");
+              "# Please avoid high values as it might look like the sword is\r\n" +
+              "# blinking each tick\r\n" +
+              "Murderer-Sword-Speed: 0.65\r\n");
           break;
         case 2:
           MigratorUtils.addNewLines(file, "\r\n# Should players' name tags in game be hidden?\r\n" +
-            "Nametags-Hidden: true\r\n");
+              "Nametags-Hidden: true\r\n");
           break;
         case 3:
           MigratorUtils.addNewLines(file, "\r\n# Lobby waiting time set when lobby max players number is reached, used to start game quicker.\r\n" +
-            "Start-Time-On-Full-Lobby: 15\r\n");
+              "Start-Time-On-Full-Lobby: 15\r\n");
           break;
         case 4:
           MigratorUtils.addNewLines(file, "\r\n# Should players get no fall damage?\r\n" +
-            "Disable-Fall-Damage: false\r\n");
+              "Disable-Fall-Damage: false\r\n");
           break;
         case 5:
           MigratorUtils.addNewLines(file, "\r\n#How long should be the sword attack after throw cooldown in seconds?\r\n" +
-            "#Its normal lower than Murderer-Sword-Fly-Cooldown!\r\n" +
-            "Murderer-Sword-Attack-Cooldown: 1\r\n" +
-            "\r\n" +
-            "#How long should be the sword fly cooldown in seconds?\r\n" +
-            "Murderer-Sword-Fly-Cooldown: 5\r\n" +
-            "\r\n" +
-            "#How long should be the bow shoot cooldown in seconds?\r\n" +
-            "Detective-Bow-Cooldown: 5\r\n");
+              "#Its normal lower than Murderer-Sword-Fly-Cooldown!\r\n" +
+              "Murderer-Sword-Attack-Cooldown: 1\r\n" +
+              "\r\n" +
+              "#How long should be the sword fly cooldown in seconds?\r\n" +
+              "Murderer-Sword-Fly-Cooldown: 5\r\n" +
+              "\r\n" +
+              "#How long should be the bow shoot cooldown in seconds?\r\n" +
+              "Detective-Bow-Cooldown: 5\r\n");
           break;
         case 6:
           MigratorUtils.addNewLines(file, "\r\n# Which item should be your Murderer sword?\r\n" +
-            "Murderer-Sword-Material: IRON_SWORD\r\n");
+              "Murderer-Sword-Material: IRON_SWORD\r\n");
           break;
         case 7:
           MigratorUtils.addNewLines(file, "\r\n#How much arrows should a player with bow gets when he pick up a gold ingot?\r\n" +
-            "Detective-Gold-Pick-Up-Arrows: 1\r\n" +
-            "\r\n" +
-            "#How much arrows should the detective gets on game start or when a player get a bow?\r\n" +
-            "Detective-Default-Arrows: 3\r\n" +
-            "\r\n" +
-            "#How much arrows should the player get when the prayer gives a bow to him?\r\n" +
-            "Detective-Prayer-Arrows: 2\r\n");
+              "Detective-Gold-Pick-Up-Arrows: 1\r\n" +
+              "\r\n" +
+              "#How much arrows should the detective gets on game start or when a player get a bow?\r\n" +
+              "Detective-Default-Arrows: 3\r\n" +
+              "\r\n" +
+              "#How much arrows should the player get when the prayer gives a bow to him?\r\n" +
+              "Detective-Prayer-Arrows: 2\r\n");
           break;
         case 8:
           MigratorUtils.removeLineFromFile(bungeefile, "# This is useful for bungee game systems.");
@@ -107,93 +107,93 @@ public class LanguageMigrator {
           MigratorUtils.removeLineFromFile(bungeefile, "MOTD-manager: false");
           MigratorUtils.removeLineFromFile(bungeefile, "MOTD-manager: true");
           MigratorUtils.addNewLines(bungeefile, "\r\n# This is useful for bungee game systems.\r\n" +
-            "# %state% - Game state will be visible at MOTD.\r\n" +
-            "MOTD:\r\n" +
-            "  Manager: false\r\n" +
-            "  Message: \"The actual game state of mm is %state%\"\r\n" +
-            "  Game-States:\r\n" +
-            "    Inactive: \"&lInactive...\"\r\n" +
-            "    In-Game: \"&lIn-game\"\r\n" +
-            "    Starting: \"&e&lStarting\"\r\n" +
-            "    Full-Game: \"&4&lFULL\"\r\n" +
-            "    Ending: \"&lEnding\"\r\n" +
-            "    Restarting: \"&c&lRestarting\"\r\n");
+              "# %state% - Game state will be visible at MOTD.\r\n" +
+              "MOTD:\r\n" +
+              "  Manager: false\r\n" +
+              "  Message: \"The actual game state of mm is %state%\"\r\n" +
+              "  Game-States:\r\n" +
+              "    Inactive: \"&lInactive...\"\r\n" +
+              "    In-Game: \"&lIn-game\"\r\n" +
+              "    Starting: \"&e&lStarting\"\r\n" +
+              "    Full-Game: \"&4&lFULL\"\r\n" +
+              "    Ending: \"&lEnding\"\r\n" +
+              "    Restarting: \"&c&lRestarting\"\r\n");
           break;
         case 9:
           MigratorUtils.addNewLines(file, "\r\n" +
-            "# Should we enable short commands such as /start and /leave\r\n" +
-            "Enable-Short-Commands: false\r\n");
+              "# Should we enable short commands such as /start and /leave\r\n" +
+              "Enable-Short-Commands: false\r\n");
           break;
         case 10:
           MigratorUtils.addNewLines(file, "\r\n" +
-            "#Should Detectives be killed if they kill a innocent?\r\n" +
-            "Enable-Kill-Detective-If-Innocent-Killed: true\r\n");
+              "#Should Detectives be killed if they kill a innocent?\r\n" +
+              "Enable-Kill-Detective-If-Innocent-Killed: true\r\n");
           break;
         case 11:
           MigratorUtils.addNewLines(file, "\r\n#Should the murderer get speed effect?\r\n" +
-            "Speed-Effect-Murderer:\r\n" +
-            "  Enabled: true\r\n" +
-            "  #Enter a multiplier (min 2, max 10)\r\n" +
-            "  Speed: 3\r\n");
+              "Speed-Effect-Murderer:\r\n" +
+              "  Enabled: true\r\n" +
+              "  #Enter a multiplier (min 2, max 10)\r\n" +
+              "  Speed: 3\r\n");
           break;
         case 12:
           MigratorUtils.addNewLines(file, "\r\n" +
-            "#Should we change spawner mode to spawn on all spawners instant of random one\r\n" +
-            "Change-Gold-Spawner-Mode-To-All: false\r\n");
+              "#Should we change spawner mode to spawn on all spawners instant of random one\r\n" +
+              "Change-Gold-Spawner-Mode-To-All: false\r\n");
           MigratorUtils.addNewLines(file, "\r\n" +
-            "#Should we disable the gold spawn limit (It does not spawn more gold than spawner locations)\r\n" +
-            "Disable-Gold-Limiter: false\r\n");
+              "#Should we disable the gold spawn limit (It does not spawn more gold than spawner locations)\r\n" +
+              "Disable-Gold-Limiter: false\r\n");
           break;
         case 13:
           MigratorUtils.addNewLines(file, "\r\n" +
-            "# How many blocks should the sword fly\r\n" +
-            "Murderer-Sword-Fly-Range: 20\r\n" +
-            "\r\n" +
-            "# In what radius should we hit the players\r\n" +
-            "Murderer-Sword-Fly-Hit-Range: 0.5\r\n");
+              "# How many blocks should the sword fly\r\n" +
+              "Murderer-Sword-Fly-Range: 20\r\n" +
+              "\r\n" +
+              "# In what radius should we hit the players\r\n" +
+              "Murderer-Sword-Fly-Hit-Range: 0.5\r\n");
           break;
         case 14:
           MigratorUtils.addNewLines(file, "\r\n" +
-            "#How much gold should a player need to get a bow\r\n" +
-            "Gold-For-Bow: 10\r\n");
+              "#How much gold should a player need to get a bow\r\n" +
+              "Gold-For-Bow: 10\r\n");
           break;
         case 15:
           MigratorUtils.addNewLines(file, "\r\n" +
-            "#How much arrows should the fake detective get? (Cause: Player pick up bow after detective died)\r\n" +
-            "Detective-Fake-Arrows: 3\r\n" +
-            "\r\n" +
-            "#How much arrows should the player get? (Cause: Bow because enough gold collected)\r\n" +
-            "Gold-Bow-Arrows: 3\r\n");
+              "#How much arrows should the fake detective get? (Cause: Player pick up bow after detective died)\r\n" +
+              "Detective-Fake-Arrows: 3\r\n" +
+              "\r\n" +
+              "#How much arrows should the player get? (Cause: Bow because enough gold collected)\r\n" +
+              "Gold-Bow-Arrows: 3\r\n");
           break;
         case 16:
           MigratorUtils.addNewLines(file, "\r\n" +
-            "# Should we disable all chat related stuff?\r\n" +
-            "# It will disable the separated chat, for example\r\n" +
-            "Disable-Separate-Chat: false\r\n");
+              "# Should we disable all chat related stuff?\r\n" +
+              "# It will disable the separated chat, for example\r\n" +
+              "Disable-Separate-Chat: false\r\n");
           break;
         case 17:
           MigratorUtils.addNewLines(file, "\r\n" +
-            "#Disable Party features of external party plugins (such as PAF, Parties ...)\r\n" +
-            "Disable-Parties: true\r\n");
+              "#Disable Party features of external party plugins (such as PAF, Parties ...)\r\n" +
+              "Disable-Parties: true\r\n");
           break;
         case 18:
           MigratorUtils.addNewLines(file, "\r\n" +
-            "#Should there be a innocent locator\r\n" +
-            "Enable-Innocent-Locator: true\r\n");
+              "#Should there be a innocent locator\r\n" +
+              "Enable-Innocent-Locator: true\r\n");
           break;
         case 19:
           MigratorUtils.addNewLines(file, "\r\n" +
-            "# Should we disable death messages, so the player dies without other recognizes it\r\n" +
-            "# It will not broadcast the death message to all ;)\r\n" +
-            "Hide-Death: false\r\n" +
-            "\r\n");
+              "# Should we disable death messages, so the player dies without other recognizes it\r\n" +
+              "# It will not broadcast the death message to all ;)\r\n" +
+              "Hide-Death: false\r\n" +
+              "\r\n");
           break;
         case 20:
           MigratorUtils.addNewLines(file, "Arena-Selector:\r\n" +
-            "  Items:" +
-            "    waiting-for-players: lime_concrete" +
-            "    starting: yellow_concrete" +
-            "    other: red_concrete");
+              "  Items:" +
+              "    waiting-for-players: lime_concrete" +
+              "    starting: yellow_concrete" +
+              "    other: red_concrete");
           break;
         default:
           break;
@@ -231,18 +231,18 @@ public class LanguageMigrator {
           break;
         case 2:
           MigratorUtils.addNewLines(file, "Arena-Selector:\r\n" +
-            "  Inv-Title: \"Arena selector\"\r\n" +
-            "  Item:\r\n" +
-            "    Name: \"&f%mapname%\"\r\n" +
-            "    Lore:\r\n" +
-            "      - \"&4Murder Mystery &f- &e%mapname%\"\r\n" +
-            "      - \" \"\r\n" +
-            "      - \" \"\r\n" +
-            "      - \"  &fOnline: %playersize%/%maxplayers%\"\r\n" +
-            "      - \"  &fState: %state%\"\r\n" +
-            "      - \" \"\r\n" +
-            "      - \" \"\r\n" +
-            "      - \"&eClick to join this arena\"\r\n");
+              "  Inv-Title: \"Arena selector\"\r\n" +
+              "  Item:\r\n" +
+              "    Name: \"&f%mapname%\"\r\n" +
+              "    Lore:\r\n" +
+              "      - \"&4Murder Mystery &f- &e%mapname%\"\r\n" +
+              "      - \" \"\r\n" +
+              "      - \" \"\r\n" +
+              "      - \"  &fOnline: %playersize%/%maxplayers%\"\r\n" +
+              "      - \"  &fState: %state%\"\r\n" +
+              "      - \" \"\r\n" +
+              "      - \" \"\r\n" +
+              "      - \"&eClick to join this arena\"\r\n");
           break;
         case 3:
           MigratorUtils.insertAfterLine(file, "In-Game:", "  Game-Death-Format: \"&7[&4☠&7] &r\"");
@@ -252,12 +252,12 @@ public class LanguageMigrator {
           break;
         case 5:
           MigratorUtils.addNewLines(file, "Placeholders:\r\n" +
-            "  Game-States:\r\n" +
-            "    Waiting: \"&lWaiting for players...\"" +
-            "    Starting: \"&e&lStarting\"" +
-            "    In-Game: \"&lIn-game\"" +
-            "    Ending: \"&lEnding\"" +
-            "    Restarting: \"&c&lRestarting\"");
+              "  Game-States:\r\n" +
+              "    Waiting: \"&lWaiting for players...\"\r\n" +
+              "    Starting: \"&e&lStarting\"\r\n" +
+              "    Playing: \"&lPlaying\"\r\n" +
+              "    Ending: \"&lEnding\"\r\n" +
+              "    Restarting: \"&c&lRestarting\"\r\n");
           break;
         case 6:
           //No migrator as we can't handle that
