@@ -59,12 +59,12 @@ public class ArenaRegistry {
    * @see #isInArena(Player) to check if player is playing
    */
   public static Arena getArena(Player p) {
-    if (p == null || !p.isOnline()) {
+    if(p == null || !p.isOnline()) {
       return null;
     }
-    for (Arena arena : arenas) {
-      for (Player player : arena.getPlayers()) {
-        if (player.getUniqueId().equals(p.getUniqueId())) {
+    for(Arena arena : arenas) {
+      for(Player player : arena.getPlayers()) {
+        if(player.getUniqueId().equals(p.getUniqueId())) {
           return arena;
         }
       }
@@ -79,8 +79,8 @@ public class ArenaRegistry {
    * @return Arena or null if not found
    */
   public static Arena getArena(String id) {
-    for (Arena loopArena : arenas) {
-      if (loopArena.getId().equalsIgnoreCase(id)) {
+    for(Arena loopArena : arenas) {
+      if(loopArena.getId().equalsIgnoreCase(id)) {
         return loopArena;
       }
     }
@@ -101,20 +101,20 @@ public class ArenaRegistry {
   public static void registerArenas() {
     Debugger.debug("Initial arenas registration");
     long start = System.currentTimeMillis();
-    if (!ArenaRegistry.getArenas().isEmpty()) {
+    if(!ArenaRegistry.getArenas().isEmpty()) {
       ArenaRegistry.getArenas().forEach(Arena::cleanUpArena);
 
       new ArrayList<>(ArenaRegistry.getArenas()).forEach(ArenaRegistry::unregisterArena);
     }
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
-    if (!config.isConfigurationSection("instances")) {
+    if(!config.isConfigurationSection("instances")) {
       Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.No-Instances-Created"));
       return;
     }
 
-    for (String id : config.getConfigurationSection("instances").getKeys(false)) {
-      if (id.equalsIgnoreCase("default")) {
+    for(String id : config.getConfigurationSection("instances").getKeys(false)) {
+      if(id.equalsIgnoreCase("default")) {
         continue;
       }
 
@@ -130,26 +130,22 @@ public class ArenaRegistry {
       arena.setMurderers(config.getInt(s + "playerpermurderer", 5));
       arena.setDetectives(config.getInt(s + "playerperdetective", 7));
       List<Location> playerSpawnPoints = new ArrayList<>();
-      for (String loc : config.getStringList(s + "playerspawnpoints")) {
+      for(String loc : config.getStringList(s + "playerspawnpoints")) {
         playerSpawnPoints.add(LocationSerializer.getLocation(loc));
       }
       arena.setPlayerSpawnPoints(playerSpawnPoints);
       List<Location> goldSpawnPoints = new ArrayList<>();
-      for (String loc : config.getStringList(s + "goldspawnpoints")) {
+      for(String loc : config.getStringList(s + "goldspawnpoints")) {
         goldSpawnPoints.add(LocationSerializer.getLocation(loc));
       }
       arena.setGoldSpawnPoints(goldSpawnPoints);
 
       List<SpecialBlock> specialBlocks = new ArrayList<>();
-      if (config.isSet(s + ".mystery-cauldrons")) {
-        for (String loc : config.getStringList(s + ".mystery-cauldrons")) {
-          specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
-        }
+      for(String loc : config.getStringList(s + ".mystery-cauldrons")) {
+        specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
       }
-      if (config.isSet(s + ".confessionals")) {
-        for (String loc : config.getStringList(s + ".confessionals")) {
-          specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
-        }
+      for(String loc : config.getStringList(s + ".confessionals")) {
+        specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
       }
 
       specialBlocks.forEach(arena::loadSpecialBlock);
@@ -158,7 +154,7 @@ public class ArenaRegistry {
       arena.setEndLocation(LocationSerializer.getLocation(config.getString(s + "Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
       arena.setGoldVisuals(config.getBoolean(s + "goldvisuals", false));
 
-      if (!config.getBoolean(s + "isdone", false)) {
+      if(!config.getBoolean(s + "isdone")) {
         Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
         arena.setReady(false);
         ArenaRegistry.registerArena(arena);
@@ -180,7 +176,7 @@ public class ArenaRegistry {
   }
 
   public static int getBungeeArena() {
-    if (bungeeArena == -999) {
+    if(bungeeArena == -999) {
       bungeeArena = new Random().nextInt(arenas.size());
     }
     return bungeeArena;

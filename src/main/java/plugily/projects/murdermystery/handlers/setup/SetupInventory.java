@@ -27,7 +27,11 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.handlers.ChatManager;
-import plugily.projects.murdermystery.handlers.setup.components.*;
+import plugily.projects.murdermystery.handlers.setup.components.ArenaRegisterComponent;
+import plugily.projects.murdermystery.handlers.setup.components.MiscComponents;
+import plugily.projects.murdermystery.handlers.setup.components.PlayerAmountComponents;
+import plugily.projects.murdermystery.handlers.setup.components.SpawnComponents;
+import plugily.projects.murdermystery.handlers.setup.components.SpecialBlocksComponents;
 
 import java.util.Random;
 
@@ -89,7 +93,7 @@ public class SetupInventory {
     ChatManager chatManager = plugin.getChatManager();
 
     int rand = random.nextInt(16 + 1);
-    switch (rand) {
+    switch(rand) {
       case 0:
         p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plugily.xyz"));
         break;

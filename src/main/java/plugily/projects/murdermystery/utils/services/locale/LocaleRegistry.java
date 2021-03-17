@@ -37,7 +37,7 @@ public class LocaleRegistry {
    * @throws IllegalArgumentException if same locale is registered twice
    */
   public static void registerLocale(Locale locale) {
-    if (registeredLocales.contains(locale)) {
+    if(registeredLocales.contains(locale)) {
       throw new IllegalArgumentException("Cannot register same locale twice!");
     }
     registeredLocales.add(locale);
@@ -60,8 +60,8 @@ public class LocaleRegistry {
    * @since 1.2.2
    */
   public static Locale getByName(String name) {
-    for (Locale locale : registeredLocales) {
-      if (locale.getName().equals(name)) {
+    for(Locale locale : registeredLocales) {
+      if(locale.getName().equals(name)) {
         return locale;
       }
     }

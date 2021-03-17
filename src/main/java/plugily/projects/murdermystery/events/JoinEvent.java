@@ -25,8 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
-
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
@@ -50,11 +49,11 @@ public class JoinEvent implements Listener {
 
   @EventHandler
   public void onLogin(PlayerLoginEvent e) {
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && !plugin.getServer().hasWhitelist()
+    if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && !plugin.getServer().hasWhitelist()
       || e.getResult() != PlayerLoginEvent.Result.KICK_WHITELIST) {
       return;
     }
-    if (e.getPlayer().hasPermission(PermissionsManager.getJoinFullGames())) {
+    if(e.getPlayer().hasPermission(PermissionsManager.getJoinFullGames())) {
       e.setResult(PlayerLoginEvent.Result.ALLOWED);
     }
   }
@@ -64,35 +63,35 @@ public class JoinEvent implements Listener {
     //Load statistics first
     plugin.getUserManager().loadStatistics(plugin.getUserManager().getUser(event.getPlayer()));
     //Teleport to lobby on bungee mode
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()).teleportToLobby(event.getPlayer());
       return;
     }
-    for (Player player : plugin.getServer().getOnlinePlayers()) {
-      if (ArenaRegistry.getArena(player) == null) {
+    for(Player player : plugin.getServer().getOnlinePlayers()) {
+      if(ArenaRegistry.getArena(player) == null) {
         continue;
       }
-      MiscUtils.hidePlayer(plugin, player, event.getPlayer());
-      MiscUtils.hidePlayer(plugin, event.getPlayer(), player);
+      VersionUtils.hidePlayer(plugin, player, event.getPlayer());
+      VersionUtils.hidePlayer(plugin, event.getPlayer(), player);
     }
     //load player inventory in case of server crash, file is deleted once loaded so if file was already
     //deleted player won't receive his backup, in case of crash he will get it back
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, event.getPlayer());
     }
   }
 
   @EventHandler
   public void onJoinCheckVersion(final PlayerJoinEvent event) {
-    if (!plugin.getConfig().getBoolean("Update-Notifier.Enabled", true) || !event.getPlayer().hasPermission("murdermystery.updatenotify")) {
+    if(!plugin.getConfig().getBoolean("Update-Notifier.Enabled", true) || !event.getPlayer().hasPermission("murdermystery.updatenotify")) {
       return;
     }
     //we want to be the first :)
     Bukkit.getScheduler().runTaskLater(plugin, () -> UpdateChecker.init(plugin, 66614).requestUpdateCheck().whenComplete((result, exception) -> {
-      if (!result.requiresUpdate()) {
+      if(!result.requiresUpdate()) {
         return;
       }
-      if (result.getNewestVersion().contains("b")) {
+      if(result.getNewestVersion().contains("b")) {
         event.getPlayer().sendMessage("");
         event.getPlayer().sendMessage(ChatColor.BOLD + "MURDER MYSTERY UPDATE NOTIFY");
         event.getPlayer().sendMessage(ChatColor.RED + "BETA version of software is ready for update! Proceed with caution.");

@@ -24,14 +24,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
@@ -42,6 +42,7 @@ import plugily.projects.murdermystery.api.events.game.MMGameJoinAttemptEvent;
 import plugily.projects.murdermystery.api.events.game.MMGameLeaveAttemptEvent;
 import plugily.projects.murdermystery.api.events.game.MMGameStopEvent;
 import plugily.projects.murdermystery.arena.role.Role;
+import plugily.projects.murdermystery.arena.special.SpecialBlock;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.PermissionsManager;
 import plugily.projects.murdermystery.handlers.items.SpecialItemManager;
@@ -83,30 +84,30 @@ public class ArenaManager {
     MMGameJoinAttemptEvent gameJoinAttemptEvent = new MMGameJoinAttemptEvent(player, arena);
     Bukkit.getPluginManager().callEvent(gameJoinAttemptEvent);
 
-    if (!arena.isReady()) {
+    if(!arena.isReady()) {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Arena-Not-Configured"));
       return;
     }
-    if (gameJoinAttemptEvent.isCancelled()) {
+    if(gameJoinAttemptEvent.isCancelled()) {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Join-Cancelled-Via-API"));
       return;
     }
-    if (ArenaRegistry.isInArena(player)) {
+    if(ArenaRegistry.isInArena(player)) {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Already-Playing"));
       return;
     }
 
     //check if player is in party and send party members to the game
-    if (plugin.getPartyHandler().isPlayerInParty(player)) {
+    if(plugin.getPartyHandler().isPlayerInParty(player)) {
       GameParty party = plugin.getPartyHandler().getParty(player);
-      if (party.getLeader().equals(player)) {
-        if (arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
-          for (Player partyPlayer : party.getPlayers()) {
-            if (partyPlayer == player) {
+      if(party.getLeader().equals(player)) {
+        if(arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
+          for(Player partyPlayer : party.getPlayers()) {
+            if(player.equals(partyPlayer)) {
               continue;
             }
-            if (ArenaRegistry.isInArena(partyPlayer)) {
-              if (ArenaRegistry.getArena(partyPlayer).getArenaState() == ArenaState.IN_GAME) {
+            if(ArenaRegistry.isInArena(partyPlayer)) {
+              if(ArenaRegistry.getArena(partyPlayer).getArenaState() == ArenaState.IN_GAME) {
                 continue;
               }
               leaveAttempt(partyPlayer, ArenaRegistry.getArena(partyPlayer));
@@ -121,24 +122,24 @@ public class ArenaManager {
       }
     }
 
-    if (!(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
+    if(!(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
       || player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
       || player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())))) {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Join-No-Permission").replace("%permission%",
         PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())));
       return;
     }
-    if (arena.getArenaState() == ArenaState.RESTARTING) {
+    if(arena.getArenaState() == ArenaState.RESTARTING) {
       return;
     }
-    if (arena.getPlayers().size() >= arena.getMaximumPlayers() && arena.getArenaState() == ArenaState.STARTING) {
-      if (!player.hasPermission(PermissionsManager.getJoinFullGames())) {
+    if(arena.getPlayers().size() >= arena.getMaximumPlayers() && arena.getArenaState() == ArenaState.STARTING) {
+      if(!player.hasPermission(PermissionsManager.getJoinFullGames())) {
         player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Full-Game-No-Permission"));
         return;
       }
       boolean foundSlot = false;
-      for (Player loopPlayer : arena.getPlayers()) {
-        if (loopPlayer.hasPermission(PermissionsManager.getJoinFullGames())) {
+      for(Player loopPlayer : arena.getPlayers()) {
+        if(loopPlayer.hasPermission(PermissionsManager.getJoinFullGames())) {
           continue;
         }
         leaveAttempt(loopPlayer, arena);
@@ -147,7 +148,7 @@ public class ArenaManager {
         foundSlot = true;
         break;
       }
-      if (!foundSlot) {
+      if(!foundSlot) {
         player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.No-Slots-For-Premium"));
         return;
       }
@@ -155,7 +156,7 @@ public class ArenaManager {
     Debugger.debug("[{0}] Checked join attempt for {1} initialized", arena.getId(), player.getName());
     User user = plugin.getUserManager().getUser(player);
     arena.getScoreboardManager().createScoreboard(user);
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.saveInventoryToFile(plugin, player);
     }
 
@@ -169,9 +170,9 @@ public class ArenaManager {
     arena.addPlayer(player);
     player.setLevel(0);
     player.setExp(1);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+    player.setHealth(VersionUtils.getMaxHealth(player));
     player.setFoodLevel(20);
-    if ((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)) {
+    if((arena.getArenaState() == ArenaState.IN_GAME || arena.getArenaState() == ArenaState.ENDING)) {
       arena.teleportToStartLocation(player);
       player.sendMessage(chatManager.colorMessage("In-Game.You-Are-Spectator"));
       player.getInventory().clear();
@@ -187,16 +188,16 @@ public class ArenaManager {
       user.setSpectator(true);
 
       arena.addSpectatorPlayer(player);
-      player.setCollidable(false);
+      VersionUtils.setCollidable(player,false);
       player.setGameMode(GameMode.SURVIVAL);
       player.setAllowFlight(true);
       player.setFlying(true);
 
-      for (Player spectator : arena.getPlayers()) {
-        if (plugin.getUserManager().getUser(spectator).isSpectator()) {
-          MiscUtils.showPlayer(plugin, player, spectator);
+      for(Player spectator : arena.getPlayers()) {
+        if(plugin.getUserManager().getUser(spectator).isSpectator()) {
+          VersionUtils.showPlayer(plugin, player, spectator);
         } else {
-          MiscUtils.hidePlayer(plugin, player, spectator);
+          VersionUtils.hidePlayer(plugin, player, spectator);
         }
       }
       ArenaUtils.hidePlayersOutsideTheGame(player, arena);
@@ -209,14 +210,14 @@ public class ArenaManager {
     player.setAllowFlight(false);
     player.getInventory().clear();
     arena.doBarAction(Arena.BarAction.ADD, player);
-    if (!plugin.getUserManager().getUser(player).isSpectator()) {
+    if(!user.isSpectator()) {
       chatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
     }
-    if (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+    if(arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
     }
     player.updateInventory();
-    for (Player arenaPlayer : arena.getPlayers()) {
+    for(Player arenaPlayer : arena.getPlayers()) {
       ArenaUtils.showPlayer(arenaPlayer, arena);
     }
     arena.showPlayers();
@@ -239,7 +240,7 @@ public class ArenaManager {
     MMGameLeaveAttemptEvent event = new MMGameLeaveAttemptEvent(player, arena);
     Bukkit.getPluginManager().callEvent(event);
     User user = plugin.getUserManager().getUser(player);
-    if (user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) > user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE)) {
+    if(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) > user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE)) {
       user.setStat(StatsStorage.StatisticType.HIGHEST_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE));
     }
 
@@ -249,33 +250,33 @@ public class ArenaManager {
     int detectiveDecrease = player.getEffectivePermissions().stream().filter(permAttach -> permAttach.getPermission().startsWith("murdermystery.role.detective."))
       .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(29 /* remove the permission node to obtain the number*/))).max().orElse(0);
     user.addStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, -murderDecrease);
-    if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) <= 0) {
+    if(user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) <= 0) {
       user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
     }
     user.addStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, -detectiveDecrease);
-    if (user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) <= 0) {
+    if(user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) <= 0) {
       user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
     }
 
-    if (arena.getArenaState() == ArenaState.IN_GAME) {
-      if (Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
+    if(arena.getArenaState() == ArenaState.IN_GAME) {
+      if(Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
         user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, ThreadLocalRandom.current().nextInt(4) + 1);
         user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, ThreadLocalRandom.current().nextInt(4) + 1);
       }
     }
 
     arena.getScoreboardManager().removeScoreboard(user);
-    if (Role.isRole(Role.MURDERER, player)) {
+    if(Role.isRole(Role.MURDERER, player)) {
       arena.removeFromMurdererList(player);
     }
     //-1 cause we didn't remove player yet
-    if (arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {
-      if (arena.getPlayersLeft().size() - 1 > 1) {
-        if (Role.isRole(Role.MURDERER, player)) {
-          if (arena.getMurdererList().isEmpty()) {
+    if(arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {
+      if(arena.getPlayersLeft().size() - 1 > 1) {
+        if(Role.isRole(Role.MURDERER, player)) {
+          if(arena.getMurdererList().isEmpty()) {
             List<Player> players = new ArrayList<>();
-            for (Player gamePlayer : arena.getPlayersLeft()) {
-              if (gamePlayer == player || Role.isRole(Role.ANY_DETECTIVE, gamePlayer) || Role.isRole(Role.MURDERER, gamePlayer)) {
+            for(Player gamePlayer : arena.getPlayersLeft()) {
+              if(gamePlayer == player || Role.isRole(Role.ANY_DETECTIVE, gamePlayer) || Role.isRole(Role.MURDERER, gamePlayer)) {
                 continue;
               }
               players.add(gamePlayer);
@@ -288,19 +289,19 @@ public class ArenaManager {
               chatManager.colorMessage("Scoreboard.Roles.Murderer", player));
             String subtitle = chatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle", player).replace("%role%",
               chatManager.colorMessage("Scoreboard.Roles.Murderer", player));
-            for (Player gamePlayer : arena.getPlayers()) {
-              gamePlayer.sendTitle(title, subtitle, 5, 40, 5);
+            for(Player gamePlayer : arena.getPlayers()) {
+              VersionUtils.sendTitles(gamePlayer, title, subtitle, 5, 40, 5);
             }
-            newMurderer.sendTitle(chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title", player),
+            VersionUtils.sendTitles(newMurderer, chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title", player),
               chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle", player), 5, 40, 5);
             ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
           } else {
             Debugger.debug("No new murderer added as there are some");
           }
-        } else if (Role.isRole(Role.ANY_DETECTIVE, player) && arena.lastAliveDetective()) {
+        } else if(Role.isRole(Role.ANY_DETECTIVE, player) && arena.lastAliveDetective()) {
           arena.setDetectiveDead(true);
-          if (Role.isRole(Role.FAKE_DETECTIVE, player)) {
+          if(Role.isRole(Role.FAKE_DETECTIVE, player)) {
             arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
           } else {
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
@@ -318,21 +319,21 @@ public class ArenaManager {
     player.getInventory().setArmorContents(null);
     arena.removePlayer(player);
     arena.teleportToEndLocation(player);
-    if (!user.isSpectator() && !arena.isSpectatorPlayer(player)) {
+    if(!user.isSpectator() && !arena.isSpectatorPlayer(player)) {
       chatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
     }
-    player.setGlowing(false);
+    VersionUtils.setGlowing(player, false);
     user.setSpectator(false);
-    if (arena.isDeathPlayer(player)) {
+    if(arena.isDeathPlayer(player)) {
       arena.removeDeathPlayer(player);
     }
-    if (arena.isSpectatorPlayer(player)) {
+    if(arena.isSpectatorPlayer(player)) {
       arena.removeSpectatorPlayer(player);
     }
-    player.setCollidable(true);
-    user.removeScoreboard();
+    VersionUtils.setCollidable(player,true);
+    user.removeScoreboard(arena);
     arena.doBarAction(Arena.BarAction.REMOVE, player);
-    player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+    player.setHealth(VersionUtils.getMaxHealth(player));
     player.setFoodLevel(20);
     player.setLevel(0);
     player.setExp(0);
@@ -341,20 +342,20 @@ public class ArenaManager {
     player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
     player.setWalkSpeed(0.2f);
     player.setFireTicks(0);
-    if (arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS && arena.getArenaState() != ArenaState.STARTING && arena.getPlayers().isEmpty()) {
+    if(arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS && arena.getArenaState() != ArenaState.STARTING && arena.getPlayers().isEmpty()) {
       arena.setArenaState(ArenaState.ENDING);
       arena.setTimer(0);
     }
 
     player.setGameMode(GameMode.SURVIVAL);
-    for (Player players : plugin.getServer().getOnlinePlayers()) {
-      if (!ArenaRegistry.isInArena(players)) {
-        MiscUtils.showPlayer(plugin, players, player);
+    for(Player players : plugin.getServer().getOnlinePlayers()) {
+      if(!ArenaRegistry.isInArena(players)) {
+        VersionUtils.showPlayer(plugin, players, player);
       }
-      MiscUtils.showPlayer(plugin, player, players);
+      VersionUtils.showPlayer(plugin, player, players);
     }
     arena.teleportToEndLocation(player);
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
+    if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
       && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, player);
     }
@@ -376,11 +377,17 @@ public class ArenaManager {
     MMGameStopEvent gameStopEvent = new MMGameStopEvent(arena);
     Bukkit.getPluginManager().callEvent(gameStopEvent);
     arena.setArenaState(ArenaState.ENDING);
-    if (quickStop) {
+    if(quickStop) {
       arena.setTimer(2);
       chatManager.broadcast(arena, chatManager.colorRawMessage("&cThe game has been force stopped by command"));
     } else {
       arena.setTimer(10);
+    }
+
+    for (SpecialBlock specialBlock : arena.getSpecialBlocks()) {
+      if (specialBlock.getArmorStandHologram() != null) {
+        specialBlock.getArmorStandHologram().delete();
+      }
     }
 
     List<String> summaryMessages = LanguageManager.getLanguageList("In-Game.Messages.Game-End-Messages.Summary-Message");
@@ -388,30 +395,30 @@ public class ArenaManager {
 
     boolean murderWon = arena.getPlayersLeft().size() == arena.aliveMurderer();
 
-    for (final Player player : arena.getPlayers()) {
+    for(final Player player : arena.getPlayers()) {
       User user = plugin.getUserManager().getUser(player);
-      if (!quickStop && Role.isAnyRole(player)) {
-        if (!Role.isRole(Role.DEATH, player) && !Role.isRole(Role.SPECTATOR, player)) {
-          if (Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
+      if(!quickStop && Role.isAnyRole(player)) {
+        if(!Role.isRole(Role.DEATH, player) && !Role.isRole(Role.SPECTATOR, player)) {
+          if(Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, ThreadLocalRandom.current().nextInt(4) + 1);
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, ThreadLocalRandom.current().nextInt(4) + 1);
           }
-          if (murderWon) {
-            if (Role.isRole(Role.MURDERER, player)) {
+          if(murderWon) {
+            if(Role.isRole(Role.MURDERER, player)) {
               user.addStat(StatsStorage.StatisticType.WINS, 1);
               plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
             } else {
               user.addStat(StatsStorage.StatisticType.LOSES, 1);
               plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
             }
-          } else if (!Role.isRole(Role.MURDERER, player)) {
+          } else if(!Role.isRole(Role.MURDERER, player)) {
             user.addStat(StatsStorage.StatisticType.WINS, 1);
             plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
           } else {
             user.addStat(StatsStorage.StatisticType.LOSES, 1);
             plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
           }
-        } else if (Role.isRole(Role.DEATH, player)) {
+        } else if(Role.isRole(Role.DEATH, player)) {
           user.addStat(StatsStorage.StatisticType.LOSES, 1);
           plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
         }
@@ -422,19 +429,19 @@ public class ArenaManager {
 
       player.getInventory().clear();
       player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
-      if (!quickStop) {
-        for (String msg : summaryMessages) {
+      if(!quickStop) {
+        for(String msg : summaryMessages) {
           MiscUtils.sendCenteredMessage(player, formatSummaryPlaceholders(msg, arena, player));
         }
       }
-      user.removeScoreboard();
-      if (!quickStop && plugin.getConfig().getBoolean("Firework-When-Game-Ends", true) && !user.isSpectator() && !user.isPermanentSpectator()) {
+      user.removeScoreboard(arena);
+      if(!quickStop && plugin.getConfig().getBoolean("Firework-When-Game-Ends", true) && !user.isSpectator() && !user.isPermanentSpectator()) {
         new BukkitRunnable() {
           int i = 0;
 
           @Override
           public void run() {
-            if (i == 4 || !arena.getPlayers().contains(player)) {
+            if(i == 4 || !arena.getPlayers().contains(player)) {
               cancel();
             }
             MiscUtils.spawnRandomFirework(player.getLocation());
@@ -451,24 +458,24 @@ public class ArenaManager {
 
     StringBuilder murders = new StringBuilder(), detectives = new StringBuilder();
     int murdererKills = 0;
-    for (Player p : arena.getMurdererList()) {
-      if (arena.getMurdererList().size() > 1) {
+    for(Player p : arena.getMurdererList()) {
+      if(arena.getMurdererList().size() > 1) {
         murders.append(p.getName()).append(" (").append(plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS)).append("), ");
       } else {
         murders.append(p.getName());
       }
       murdererKills += plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS);
     }
-    if (arena.getMurdererList().size() > 1) {
+    if(arena.getMurdererList().size() > 1) {
       murders.deleteCharAt(murders.length() - 2);
     }
-    for (Player p : arena.getDetectiveList()) {
+    for(Player p : arena.getDetectiveList()) {
       detectives.append(p.getName()).append(", ");
     }
 
     detectives.deleteCharAt(detectives.length() - 2);
 
-    if (arena.getPlayersLeft().size() == arena.aliveMurderer()) {
+    if(arena.getPlayersLeft().size() == arena.aliveMurderer()) {
       formatted = StringUtils.replace(formatted, "%winner%", chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Murderer"));
     } else {
       formatted = StringUtils.replace(formatted, "%winner%", chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Players"));
@@ -482,7 +489,7 @@ public class ArenaManager {
     formatted = StringUtils.replace(formatted, "%hero%", arena.isCharacterSet(Arena.CharacterType.HERO)
       ? arena.getCharacter(Arena.CharacterType.HERO).getName() : chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody"));
 
-    if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+    if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formatted = PlaceholderAPI.setPlaceholders(player, formatted);
     }
 

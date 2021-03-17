@@ -23,7 +23,7 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.murdermystery.Main;
@@ -59,13 +59,13 @@ public class PlayerAmountComponents implements SetupComponent {
       .lore(ChatColor.DARK_GRAY + "for game to start lobby countdown)")
       .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".minimumplayers"))
       .build(), e -> {
-      if (e.getClick().isRightClick()) {
+      if(e.getClick().isRightClick()) {
         e.getInventory().getItem(e.getSlot()).setAmount(e.getCurrentItem().getAmount() + 1);
       }
-      if (e.getClick().isLeftClick()) {
+      if(e.getClick().isLeftClick()) {
         e.getInventory().getItem(e.getSlot()).setAmount(e.getCurrentItem().getAmount() - 1);
       }
-      if (e.getInventory().getItem(e.getSlot()).getAmount() <= 1) {
+      if(e.getInventory().getItem(e.getSlot()).getAmount() <= 1) {
         e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 2! Game is designed for 2 or more players!"));
         e.getInventory().getItem(e.getSlot()).setAmount(2);
       }
@@ -83,13 +83,13 @@ public class PlayerAmountComponents implements SetupComponent {
       .lore(ChatColor.DARK_GRAY + "(how many players arena can hold)")
       .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".maximumplayers"))
       .build(), e -> {
-      if (e.getClick().isRightClick()) {
+      if(e.getClick().isRightClick()) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
       }
-      if (e.getClick().isLeftClick()) {
+      if(e.getClick().isLeftClick()) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
       }
-      if (e.getInventory().getItem(e.getSlot()).getAmount() <= 1) {
+      if(e.getInventory().getItem(e.getSlot()).getAmount() <= 1) {
         e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 2! Game is designed for 2 or more players!"));
         e.getInventory().getItem(e.getSlot()).setAmount(2);
       }
@@ -111,13 +111,13 @@ public class PlayerAmountComponents implements SetupComponent {
       .lore(ChatColor.DARK_GRAY + "Set it to 1 if you want only one murderer ")
       .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".playerpermurderer"))
       .build(), e -> {
-      if (e.getClick().isRightClick()) {
+      if(e.getClick().isRightClick()) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
       }
-      if (e.getClick().isLeftClick() && e.getCurrentItem().getAmount() > 1) {
+      if(e.getClick().isLeftClick() && e.getCurrentItem().getAmount() > 1) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
       }
-      if (e.getInventory().getItem(e.getSlot()).getAmount() < 1) {
+      if(e.getInventory().getItem(e.getSlot()).getAmount() < 1) {
         e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 1! Game is not designed for more murderers than players!"));
         e.getInventory().getItem(e.getSlot()).setAmount(1);
       }
@@ -140,13 +140,13 @@ public class PlayerAmountComponents implements SetupComponent {
       .lore(ChatColor.DARK_GRAY + "Set it to 1 if you want only one detectives ")
       .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".playerperdetective"))
       .build(), e -> {
-      if (e.getClick().isRightClick()) {
+      if(e.getClick().isRightClick()) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
       }
-      if (e.getClick().isLeftClick() && e.getCurrentItem().getAmount() > 1) {
+      if(e.getClick().isLeftClick() && e.getCurrentItem().getAmount() > 1) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
       }
-      if (e.getInventory().getItem(e.getSlot()).getAmount() < 1) {
+      if(e.getInventory().getItem(e.getSlot()).getAmount() < 1) {
         e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 1! Game is not designed for more detectives than players!"));
         e.getInventory().getItem(e.getSlot()).setAmount(1);
       }

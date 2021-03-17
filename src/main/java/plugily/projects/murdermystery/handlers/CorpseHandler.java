@@ -18,10 +18,6 @@
 
 package plugily.projects.murdermystery.handlers;
 
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -34,6 +30,9 @@ import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import plugily.projects.murdermystery.HookManager;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
@@ -61,16 +60,12 @@ public class CorpseHandler implements Listener {
   public CorpseHandler(Main plugin) {
     this.plugin = plugin;
     chatManager = plugin.getChatManager();
-    registerLastWord("murdermystery.lastwords.meme", chatManager.colorMessage("In-Game.Messages.Last-Words.Meme"));
-    registerLastWord("murdermystery.lastwords.rage", chatManager.colorMessage("In-Game.Messages.Last-Words.Rage"));
-    registerLastWord("murdermystery.lastwords.pro", chatManager.colorMessage("In-Game.Messages.Last-Words.Pro"));
-    registerLastWord("default", chatManager.colorMessage("In-Game.Messages.Last-Words.Default"));
     //run bit later than hook manager to ensure it's not null
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      if (plugin.getHookManager() != null && plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+      if(plugin.getHookManager() != null && plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
       }
-    }, 25L * 5);
+    }, 20 * 5);
   }
 
   public void registerLastWord(String permission, String lastWord) {
@@ -79,15 +74,15 @@ public class CorpseHandler implements Listener {
 
   @SuppressWarnings("deprecation")
   public void spawnCorpse(Player p, Arena arena) {
-    if (plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+    if(plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
       ArmorStand stand = p.getLocation().getWorld().spawn(p.getLocation().add(0.0D, -1.25D, 0.0D), ArmorStand.class);
       ItemStack head = XMaterial.PLAYER_HEAD.parseItem();
       SkullMeta meta = (SkullMeta) head.getItemMeta();
-      meta = MiscUtils.setPlayerHead(p, meta);
+      meta = VersionUtils.setPlayerHead(p, meta);
       head.setItemMeta(meta);
 
       stand.setVisible(false);
-      if (Version.isCurrentEqualOrHigher(Version.v1_16_R1)) {
+      if(Version.isCurrentEqualOrHigher(Version.v1_16_R1)) {
         stand.getEquipment().setHelmet(head);
       } else {
         stand.setHelmet(head);
@@ -116,36 +111,26 @@ public class CorpseHandler implements Listener {
     }, 15 * 20);
   }
 
-  private ArmorStandHologram getLastWordsHologram(Player p) {
-    ArmorStandHologram hologram = new ArmorStandHologram(p.getLocation());
-    hologram.appendLine(chatManager.colorMessage("In-Game.Messages.Corpse-Last-Words", p).replace("%player%", p.getName()));
-    boolean found = false;
-    for (Map.Entry<String, String> map : registeredLastWords.entrySet()) {
-      if (p.hasPermission(map.getKey())) {
-        hologram.appendLine(map.getValue());
-        found = true;
-        break;
-      }
-    }
-    if (!found) {
-      hologram.appendLine(registeredLastWords.get("default"));
-    }
+  private ArmorStandHologram getLastWordsHologram(Player player) {
+    ArmorStandHologram hologram = new ArmorStandHologram(player.getLocation());
+    hologram.appendLine(chatManager.colorMessage("In-Game.Messages.Corpse-Last-Words", player).replace("%player%", player.getName()));
+    hologram.appendLine(plugin.getLastWordsManager().getRandomLastWord(player));
     return hologram;
   }
 
   @EventHandler
   public void onCorpseSpawn(CorpseSpawnEvent e) {
-    if (!plugin.getConfig().getBoolean("Override-Corpses-Spawn", true) || lastSpawnedCorpse == null) {
+    if(!plugin.getConfig().getBoolean("Override-Corpses-Spawn", true) || lastSpawnedCorpse == null) {
       return;
     }
-    if (!lastSpawnedCorpse.equals(e.getCorpse())) {
+    if(!lastSpawnedCorpse.equals(e.getCorpse())) {
       e.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onCorpseClick(CorpseClickEvent e) {
-    if (ArenaRegistry.isInArena(e.getClicker())) {
+    if(ArenaRegistry.isInArena(e.getClicker())) {
       e.setCancelled(true);
       e.getClicker().closeInventory();
     }

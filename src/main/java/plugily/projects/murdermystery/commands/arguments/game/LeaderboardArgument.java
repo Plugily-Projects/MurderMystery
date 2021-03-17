@@ -53,28 +53,27 @@ public class LeaderboardArgument {
     this.chatManager = chatManager;
 
     List<String> stats = new ArrayList<>();
-    for (StatsStorage.StatisticType value : StatsStorage.StatisticType.values()) {
-      if (!value.isPersistent()) {
-        continue;
+    for(StatsStorage.StatisticType value : StatsStorage.StatisticType.values()) {
+      if(value.isPersistent()) {
+        stats.add(value.name().toLowerCase());
       }
-      stats.add(value.name().toLowerCase());
     }
     registry.getTabCompletion().registerCompletion(new CompletableArgument("murdermystery", "top", stats));
     registry.mapArgument("murdermystery", new CommandArgument("top", "", CommandArgument.ExecutorType.PLAYER) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if (args.length == 1) {
+        if(args.length == 1) {
           sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Statistics.Type-Name"));
           return;
         }
         try {
           StatsStorage.StatisticType statisticType = StatsStorage.StatisticType.valueOf(args[1].toUpperCase());
-          if (!statisticType.isPersistent()) {
+          if(!statisticType.isPersistent()) {
             sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Statistics.Invalid-Name"));
             return;
           }
           printLeaderboard(sender, statisticType);
-        } catch (IllegalArgumentException e) {
+        } catch(IllegalArgumentException e) {
           sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Statistics.Invalid-Name"));
         }
       }
@@ -82,27 +81,27 @@ public class LeaderboardArgument {
   }
 
   private void printLeaderboard(CommandSender sender, StatsStorage.StatisticType statisticType) {
-    LinkedHashMap<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
+    java.util.Map<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
     sender.sendMessage(chatManager.colorMessage("Commands.Statistics.Header"));
     String statistic = StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "));
-    for (int i = 0; i < 10; i++) {
+    for(int i = 0; i < 10; i++) {
       try {
         UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
         sender.sendMessage(formatMessage(statistic, Bukkit.getOfflinePlayer(current).getName(), i + 1, stats.get(current)));
         stats.remove(current);
-      } catch (IndexOutOfBoundsException ex) {
+      } catch(IndexOutOfBoundsException ex) {
         sender.sendMessage(formatMessage(statistic, "Empty", i + 1, 0));
-      } catch (NullPointerException ex) {
+      } catch(NullPointerException ex) {
         UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
-        if (registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-          try (Connection connection = registry.getPlugin().getMysqlDatabase().getConnection()) {
+        if(registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+          try(Connection connection = registry.getPlugin().getMysqlDatabase().getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery("SELECT name FROM " + ((MysqlManager) registry.getPlugin().getUserManager().getDatabase()).getTableName() + " WHERE UUID='" + current.toString() + "'");
-            if (set.next()) {
+            if(set.next()) {
               sender.sendMessage(formatMessage(statistic, set.getString(1), i + 1, stats.get(current)));
               continue;
             }
-          } catch (SQLException ignored) {
+          } catch(SQLException ignored) {
             //it has failed second time, cannot continue
           }
         }

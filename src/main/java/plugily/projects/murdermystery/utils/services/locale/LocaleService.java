@@ -24,7 +24,12 @@ import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.utils.services.ServiceRegistry;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -41,19 +46,19 @@ public class LocaleService {
   private FileConfiguration localeData;
 
   public LocaleService(JavaPlugin plugin) {
-    if (ServiceRegistry.getRegisteredService() == null || !ServiceRegistry.getRegisteredService().equals(plugin)) {
+    if(ServiceRegistry.getRegisteredService() == null || !ServiceRegistry.getRegisteredService().equals(plugin)) {
       throw new IllegalArgumentException("LocaleService cannot be used without registering service via ServiceRegistry first!");
     }
-    if (!ServiceRegistry.isServiceEnabled()) {
+    if(!ServiceRegistry.isServiceEnabled()) {
       return;
     }
     this.plugin = plugin;
-    try (Scanner scanner = new Scanner(requestLocaleFetch(null), "UTF-8").useDelimiter("\\A")) {
+    try(Scanner scanner = new Scanner(requestLocaleFetch(null), "UTF-8").useDelimiter("\\A")) {
       String data = scanner.hasNext() ? scanner.next() : "";
       File file = new File(plugin.getDataFolder().getPath() + "/locales/locale_data.yml");
-      if (!file.exists()) {
+      if(!file.exists()) {
         new File(plugin.getDataFolder().getPath() + "/locales").mkdir();
-        if (!file.createNewFile()) {
+        if(!file.createNewFile()) {
           plugin.getLogger().log(Level.WARNING, "Couldn't create locales folder! We must disable locales support.");
           return;
         }
@@ -61,7 +66,7 @@ public class LocaleService {
       Files.write(file.toPath(), data.getBytes());
       this.localeData = ConfigUtils.getConfig(plugin, "/locales/locale_data");
       plugin.getLogger().log(Level.INFO, "Fetched latest localization file from repository.");
-    } catch (IOException ignored) {
+    } catch(IOException ignored) {
       //ignore exceptions
       plugin.getLogger().log(Level.WARNING, "Couldn't access locale fetcher service or there is other problem! You should notify author!");
     }
@@ -70,7 +75,7 @@ public class LocaleService {
   private static String toReadable(String version) {
     String[] split = Pattern.compile(".", Pattern.LITERAL).split(version.replace("v", ""));
     StringBuilder versionBuilder = new StringBuilder();
-    for (String s : split) {
+    for(String s : split) {
       versionBuilder.append(String.format("%4s", s));
     }
     version = versionBuilder.toString();
@@ -88,7 +93,7 @@ public class LocaleService {
       conn.setDoOutput(true);
 
       OutputStream os = conn.getOutputStream();
-      if (locale == null) {
+      if(locale == null) {
         os.write(("pass=localeservice&type=" + plugin.getName()).getBytes(StandardCharsets.UTF_8));
       } else {
         os.write(("pass=localeservice&type=" + plugin.getName() + "&locale=" + locale.getPrefix()).getBytes(StandardCharsets.UTF_8));
@@ -96,7 +101,7 @@ public class LocaleService {
       os.flush();
       os.close();
       return conn.getInputStream();
-    } catch (Exception e) {
+    } catch(Exception e) {
       e.printStackTrace();
       return new InputStream() {
         @Override
@@ -116,24 +121,24 @@ public class LocaleService {
    */
   public DownloadStatus demandLocaleDownload(Locale locale) {
     //service fault
-    if (localeData == null) {
+    if(localeData == null) {
       return DownloadStatus.FAIL;
     }
     File localeFile = new File(plugin.getDataFolder() + "/locales/" + locale.getPrefix() + ".properties");
-    if (!localeFile.exists() || !isExact(locale, localeFile)) {
+    if(!localeFile.exists() || !isExact(locale, localeFile)) {
       return writeFile(locale);
     }
     return DownloadStatus.LATEST;
   }
 
   private DownloadStatus writeFile(Locale locale) {
-    try (Scanner scanner = new Scanner(requestLocaleFetch(locale), "UTF-8").useDelimiter("\\A")) {
+    try(Scanner scanner = new Scanner(requestLocaleFetch(locale), "UTF-8").useDelimiter("\\A")) {
       String data = scanner.hasNext() ? scanner.next() : "";
-      try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(plugin.getDataFolder().getPath() + "/locales/" + locale.getPrefix() + ".properties")), StandardCharsets.UTF_8)) {
+      try(OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(plugin.getDataFolder().getPath() + "/locales/" + locale.getPrefix() + ".properties")), StandardCharsets.UTF_8)) {
         writer.write(data);
       }
       return DownloadStatus.SUCCESS;
-    } catch (IOException ignored) {
+    } catch(IOException ignored) {
       plugin.getLogger().log(Level.WARNING, "Demanded locale " + locale.getPrefix() + " cannot be downloaded! You should notify author!");
       return DownloadStatus.FAIL;
     }
@@ -146,21 +151,21 @@ public class LocaleService {
    */
   public boolean isValidVersion() {
     //service fault
-    if (localeData == null) {
+    if(localeData == null) {
       return false;
     }
     return !checkHigher(plugin.getDescription().getVersion(), localeData.getString("locales.valid-version", plugin.getDescription().getVersion()));
   }
 
   private boolean isExact(Locale locale, File file) {
-    try (Scanner scanner = new Scanner(requestLocaleFetch(locale), "UTF-8").useDelimiter("\\A")) {
+    try(Scanner scanner = new Scanner(requestLocaleFetch(locale), "UTF-8").useDelimiter("\\A")) {
       String onlineData = scanner.hasNext() ? scanner.next() : "";
       Scanner localScanner = new Scanner(file, "UTF-8").useDelimiter("\\A");
       String localData = localScanner.hasNext() ? localScanner.next() : "";
       localScanner.close();
 
       return onlineData.equals(localData);
-    } catch (IOException ignored) {
+    } catch(IOException ignored) {
       return false;
     }
   }

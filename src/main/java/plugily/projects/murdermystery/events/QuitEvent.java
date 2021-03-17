@@ -52,7 +52,7 @@ public class QuitEvent implements Listener {
   }
 
   private void onQuit(Player player) {
-  if (ArenaRegistry.isInArena(player)) {
+    if(ArenaRegistry.isInArena(player)) {
       ArenaManager.leaveAttempt(player, ArenaRegistry.getArena(player));
     }
     plugin.getUserManager().removeUser(plugin.getUserManager().getUser(player));

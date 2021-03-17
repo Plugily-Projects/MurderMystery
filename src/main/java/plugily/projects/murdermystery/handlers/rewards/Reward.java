@@ -38,10 +38,10 @@ public class Reward {
     String processedCode = rawCode;
 
     //set reward executor based on provided code
-    if (rawCode.contains("p:")) {
+    if(rawCode.contains("p:")) {
       this.executor = RewardExecutor.PLAYER;
       processedCode = StringUtils.replace(processedCode, "p:", "");
-    } else if (rawCode.contains("script:")) {
+    } else if(rawCode.contains("script:")) {
       this.executor = RewardExecutor.SCRIPT;
       processedCode = StringUtils.replace(processedCode, "script:", "");
     } else {
@@ -49,10 +49,10 @@ public class Reward {
     }
 
     //search for chance modifier
-    if (processedCode.contains("chance(")) {
+    if(processedCode.contains("chance(")) {
       int loc = processedCode.indexOf(")");
       //modifier is invalid
-      if (loc == -1) {
+      if(loc == -1) {
         Bukkit.getLogger().warning("rewards.yml configuration is broken! Make sure you don't forget using ')' character in chance condition! Command: " + rawCode);
         //invalid code, 0% chance to execute
         this.chance = 0.0;
@@ -86,7 +86,7 @@ public class Reward {
   }
 
   public enum RewardType {
-    DETECTIVE_KILL("detectivekill"), MURDERER_KILL("murdererkill"), END_GAME("endgame"), LOSE("lose"), WIN("win"), DEATH("death"), GOLD_PICKUP("gold_pickup");
+    DETECTIVE_KILL("detectivekill"), MURDERER_KILL("murdererkill"), END_GAME("endgame"), LOSE("lose"), WIN("win"), DEATH("death"), GOLD_PICKUP("gold_pickup"), SCOREBOARD_REMOVED("scoreboard_remove");
 
     private final String path;
 

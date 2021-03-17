@@ -217,10 +217,20 @@ In-Game:
       Bow-Shot-For-Gold: "&a+1 Bow Shot!"
       Bow-Shot-Subtitle: "&eYou collected 10 gold and got an arrow!"
     Last-Words:
-      Default: "&fPlease respawn :("
-      Meme: "&fDespacito 2 is confirmed by God"
-      Rage: "&fWHY YOU KILLED ME?!!?"
-      Pro: "&fIt was lagging..."
+      'default':
+        Message: "&fPlease respawn :("
+      'meme':
+        Message: "&fDespacito 2 is confirmed by God"
+        Permission: "murdermystery.lastwords.meme"
+      'rage':
+        Message: "&fWHY YOU KILLED ME?!!?"
+        Permission: "murdermystery.lastwords.rage"
+      'pro':
+        Message: "&fIt was lagging..."
+        Permission: "murdermystery.lastwords.pro"
+      'hacker':
+        Message: "Turn off your hacks..."
+        Permission: "murdermystery.lastwords.hacker"
     Game-End-Messages:
       Titles:
         Win: "&aYOU WIN!"
@@ -299,6 +309,14 @@ Validator:
   Instance-Started: "[Murder Mystery] Arena %arena% instance successfully started!"
   No-Instances-Created: "[Murder Mystery] There are no arena instances created in configuration!"
 
+Placeholders:
+  Game-States:
+    Waiting: "&lWaiting for players..."
+    Starting: "&e&lStarting"
+    In-Game: "&lIn-game"
+    Ending: "&lEnding"
+    Restarting: "&c&lRestarting"
+
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p
-File-Version-Do-Not-Edit: 5
+File-Version-Do-Not-Edit: 7

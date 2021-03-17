@@ -24,7 +24,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.murdermystery.arena.Arena;
@@ -53,36 +53,37 @@ public class SpecialBlockRemoverArgument {
         //no need for check as argument is only for players
         Player player = (Player) sender;
         Block targetBlock = player.getTargetBlock(null, 7);
-        if (targetBlock.getType() == Material.CAULDRON || targetBlock.getType() == XMaterial.ENCHANTING_TABLE.parseMaterial()) {
-          for (Arena arena : ArenaRegistry.getArenas()) {
+        if(targetBlock.getType() == Material.CAULDRON || targetBlock.getType() == XMaterial.ENCHANTING_TABLE.parseMaterial()) {
+          for(Arena arena : ArenaRegistry.getArenas()) {
             //do not check arenas that could not be the case
-            if (arena.getSpecialBlocks().isEmpty()){
+            if(arena.getSpecialBlocks().isEmpty()) {
               continue;
             }
-            if (arena.getPlayerSpawnPoints().get(0).getWorld() != player.getWorld()){
+            if(arena.getPlayerSpawnPoints().get(0).getWorld() != player.getWorld()) {
               continue;
             }
             //get all special blocks
-            for (SpecialBlock specialBlock : arena.getSpecialBlocks()) {
+            for(SpecialBlock specialBlock : new ArrayList<>(arena.getSpecialBlocks())) {
               //check if targetBlock is specialblock
-              if (specialBlock.getLocation().getBlock().equals(targetBlock)) {
+              if(specialBlock.getLocation().getBlock().equals(targetBlock)) {
                 //get special blocks from config
                 FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
                 //remove special block from arena
                 arena.getSpecialBlocks().remove(specialBlock);
                 //remove hologram
-                if (specialBlock.getArmorStandHologram() != null){
+                if(specialBlock.getArmorStandHologram() != null) {
                   specialBlock.getArmorStandHologram().delete();
                 }
                 //remove special block from arena file
                 String path = targetBlock.getType() == Material.CAULDRON ? ".mystery-cauldrons" : ".confessionals";
-                List<String> specialBlocksType = new ArrayList<>(config.getStringList("instances." + arena.getId() + path));
-                specialBlocksType.remove(LocationSerializer.locationToString(specialBlock.getLocation()));
+                String serializedLoc = LocationSerializer.locationToString(specialBlock.getLocation());
+                List<String> specialBlocksType = config.getStringList("instances." + arena.getId() + path);
+                specialBlocksType.remove(serializedLoc);
                 config.set("instances." + arena.getId() + path, specialBlocksType);
                 //save arena config after removing special block
                 ConfigUtils.saveConfig(registry.getPlugin(), config, "arenas");
 
-                player.sendMessage(ChatColor.RED + "Removed special block at loc " + LocationSerializer.locationToString(specialBlock.getLocation()) + " from arena " + arena.getId());
+                player.sendMessage(ChatColor.RED + "Removed special block at loc " + serializedLoc + " from arena " + arena.getId());
                 return;
               }
             }

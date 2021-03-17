@@ -24,7 +24,7 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>murdermystery</artifactId>
-    <version>1.7.4</version>
+    <version>1.7.5</version>
     <name>MurderMystery</name>
 
     <properties>
@@ -39,36 +39,6 @@
         </license>
     </licenses>
 
-    <developers>
-        <developer>
-            <name>Tigerpanzer</name>
-            <url>https://www.spigotmc.org/members/414545/</url>
-            <roles>
-                <role>maintainer</role>
-                <role>translator - German language</role>
-                <role>tester</role>
-            </roles>
-        </developer>
-        <developer>
-            <name>Plajer</name>
-            <url>https://www.spigotmc.org/members/423193/</url>
-            <roles>
-                <role>developer</role>
-                <role>translator - Polish language</role>
-            </roles>
-        </developer>
-    </developers>
-
-    <contributors>
-        <contributor>
-            <name>montlikadani</name>
-            <url>https://www.spigotmc.org/members/251100/</url>
-            <roles>
-                <role>code contributor</role>
-            </roles>
-        </contributor>
-    </contributors>
-
     <repositories>
         <repository>
             <id>papermc</id>
@@ -79,7 +49,7 @@
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
-            <id>plajerlair-repo</id>
+            <id>plugilyprojects</id>
             <url>https://maven.plugily.xyz/</url>
         </repository>
         <!-- repository is dead, contents moved to maven.plajer.xyz
@@ -108,35 +78,36 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
     </repositories>
+
     <dependencies>
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.16.4-R0.1-SNAPSHOT</version>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-classic</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.5</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-database</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.5</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-minecraft</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.5</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.tigerhix.lib</groupId>
             <artifactId>scoreboard</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -157,11 +128,11 @@
             <version>2.6.14</version>
             <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.bstats/bstats-bukkit -->
         <dependency>
-            <groupId>org.bstats.bStats-Metrics</groupId>
+            <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>1.5</version>
-            <scope>compile</scope>
+            <version>2.1.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
         <dependency>
@@ -310,12 +281,12 @@
     <distributionManagement>
         <repository>
             <id>plugily-projects-repo</id>
-            <url>ftp://46.249.204.191</url>
+            <url>ftp://81.19.211.8</url>
         </repository>
         <site>
             <id>plugily-projects-java-docs</id>
-            <name>MurderMystery</name>
-            <url>ftp://46.249.204.191</url>
+            <name>thebridge</name>
+            <url>ftp://81.19.211.8</url>
         </site>
     </distributionManagement>
 

@@ -1,3 +1,16 @@
+### 1.7.5 Release (01.02.2021 - 14.03.2021)
+* Added modifiable arena state names to language
+* Added configurable map selector items
+* Added legacy support
+* Added support for multiple last words that will randomize
+* Added a lot of new Trails (Should support every particle name that is supported since 1.8)
+* Added TeleportArgument (/mma tp)
+* Added new RewardType scoreboard_remove
+* Changed trails will now randomize if you got perms for more than one  
+* Cached armor stands will be removed after block break if type is matches
+* Now special block holograms will get removed after game stop, after game start, it will show again
+* Fixed CME error when removing special blocks
+
 ### 1.7.4 Release (25.01.2021 - 28.01.2021)
 * Fix stack trace array length is 0 when trying to send exception to service
 * Updated commonsbox to fix actionbar problems

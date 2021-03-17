@@ -20,6 +20,8 @@ package plugily.projects.murdermystery.commands.arguments.admin.arena;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaManager;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.ArenaState;
@@ -41,11 +43,12 @@ public class StopArgument {
       new LabelData("/mma stop", "/mma stop", "&7Stops the arena you're in\n&7&lYou must be in target arena!\n&6Permission: &7murdermystery.admin.stop")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if (!Utils.checkIsInGameInstance((Player) sender)) {
+        if(!Utils.checkIsInGameInstance((Player) sender)) {
           return;
         }
-        if (ArenaRegistry.getArena((Player) sender).getArenaState() != ArenaState.ENDING) {
-          ArenaManager.stopGame(true, ArenaRegistry.getArena((Player) sender));
+        Arena arena = ArenaRegistry.getArena((Player) sender);
+        if(arena.getArenaState() != ArenaState.ENDING) {
+          ArenaManager.stopGame(true, arena);
           //todo execute success command message
         }
       }

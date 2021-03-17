@@ -24,8 +24,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.handlers.ChatManager;
 
@@ -47,12 +48,12 @@ public class SpecialItem {
   private final String name;
 
   private final Set<XMaterial> beds = EnumSet.of(
-      XMaterial.BLACK_BED, XMaterial.BLUE_BED, XMaterial.BROWN_BED, 
-      XMaterial.CYAN_BED, XMaterial.GRAY_BED, XMaterial.LIGHT_BLUE_BED, 
-      XMaterial.GREEN_BED, XMaterial.LIGHT_GRAY_BED, XMaterial.LIME_BED,
-      XMaterial.MAGENTA_BED, XMaterial.ORANGE_BED, XMaterial.PINK_BED, 
-      XMaterial.PURPLE_BED, XMaterial.RED_BED, XMaterial.WHITE_BED, 
-      XMaterial.YELLOW_BED
+    XMaterial.BLACK_BED, XMaterial.BLUE_BED, XMaterial.BROWN_BED,
+    XMaterial.CYAN_BED, XMaterial.GRAY_BED, XMaterial.LIGHT_BLUE_BED,
+    XMaterial.GREEN_BED, XMaterial.LIGHT_GRAY_BED, XMaterial.LIME_BED,
+    XMaterial.MAGENTA_BED, XMaterial.ORANGE_BED, XMaterial.PINK_BED,
+    XMaterial.PURPLE_BED, XMaterial.RED_BED, XMaterial.WHITE_BED,
+    XMaterial.YELLOW_BED
   );
 
   public SpecialItem(String name) {
@@ -72,7 +73,7 @@ public class SpecialItem {
 
     List<SpecialItem> items = new java.util.ArrayList<>();
 
-    if (!config.contains(name)) {
+    if(!config.contains(name)) {
       config.set(name + ".data", 0);
       config.set(name + ".displayname", displayName);
       config.set(name + ".lore", Arrays.asList(lore));
@@ -80,16 +81,16 @@ public class SpecialItem {
       config.set(name + ".slot", slot);
     }
     ConfigUtils.saveConfig(plugin, config, "lobbyitems");
-    if (config.getString(name + ".material-name", "STONE").equalsIgnoreCase("RAINBOW_BED")) {
-      beds.forEach(xmaterial ->{
+    if(config.getString(name + ".material-name", "STONE").equalsIgnoreCase("RAINBOW_BED")) {
+      beds.forEach(xmaterial -> {
         ItemStack stack = xmaterial.parseItem();
         ItemMeta meta = stack.getItemMeta();
-        if (meta != null) {
-          meta.setDisplayName(chatManager.colorRawMessage(config.getString(name + ".displayname", "")));
+        if(meta != null) {
+          ComplementAccessor.getComplement().setDisplayName(meta, chatManager.colorRawMessage(config.getString(name + ".displayname", "")));
 
           List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(chatManager::colorRawMessage)
-              .collect(Collectors.toList());
-          meta.setLore(colorizedLore);
+            .collect(Collectors.toList());
+          ComplementAccessor.getComplement().setLore(meta, colorizedLore);
           stack.setItemMeta(meta);
         }
 
@@ -100,14 +101,14 @@ public class SpecialItem {
       });
     } else {
       ItemStack stack = XMaterial.matchXMaterial(config.getString(name + ".material-name", "STONE").toUpperCase())
-          .orElse(XMaterial.STONE).parseItem();
+        .orElse(XMaterial.STONE).parseItem();
       ItemMeta meta = stack.getItemMeta();
-      if (meta != null) {
-        meta.setDisplayName(chatManager.colorRawMessage(config.getString(name + ".displayname")));
+      if(meta != null) {
+        ComplementAccessor.getComplement().setDisplayName(meta, chatManager.colorRawMessage(config.getString(name + ".displayname")));
 
         List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(chatManager::colorRawMessage)
-            .collect(Collectors.toList());
-        meta.setLore(colorizedLore);
+          .collect(Collectors.toList());
+        ComplementAccessor.getComplement().setLore(meta, colorizedLore);
         stack.setItemMeta(meta);
       }
 

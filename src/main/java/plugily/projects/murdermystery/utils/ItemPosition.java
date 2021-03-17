@@ -30,7 +30,7 @@ import plugily.projects.murdermystery.arena.role.Role;
  */
 public enum ItemPosition {
 
-  ARROWS(2, 2), BOW(0, 1), BOW_LOCATOR(-1, 4), MURDERER_SWORD(1, -1), INNOCENTS_LOCATOR(4, -1), INFINITE_ARROWS(9, 9), GOLD_INGOTS(8, 8),
+  ARROWS(2, 2), BOW(0, 1), BOW_LOCATOR(4, 4), MURDERER_SWORD(1, 1), INNOCENTS_LOCATOR(4, 4), INFINITE_ARROWS(9, 9), GOLD_INGOTS(8, 8),
   POTION(3, 3);
 
   private final int murdererItemPosition;
@@ -50,22 +50,31 @@ public enum ItemPosition {
    * @param itemStack    itemstack to be added at itemPostion or set at itemPosition
    */
   public static void addItem(Player player, ItemPosition itemPosition, ItemStack itemStack) {
-    if (player == null) {
+    if(player == null) {
       return;
     }
     Inventory inv = player.getInventory();
-    if (Role.isRole(Role.MURDERER, player)) {
-      if (inv.getItem(itemPosition.getMurdererItemPosition()) != null) {
-        inv.getItem(itemPosition.getMurdererItemPosition()).setAmount(inv.getItem(itemPosition.getMurdererItemPosition()).getAmount() + itemStack.getAmount());
+    if(Role.isRole(Role.MURDERER, player)) {
+      int itemPos = itemPosition.getMurdererItemPosition();
+      if (itemPos < 0) {
         return;
       }
-      inv.setItem(itemPosition.getMurdererItemPosition(), itemStack);
+      if(inv.getItem(itemPos) != null) {
+        inv.getItem(itemPos).setAmount(inv.getItem(itemPos).getAmount() + itemStack.getAmount());
+        return;
+      }
+      inv.setItem(itemPos, itemStack);
     } else {
-      if (inv.getItem(itemPosition.getOtherRolesItemPosition()) != null) {
-        inv.getItem(itemPosition.getOtherRolesItemPosition()).setAmount(inv.getItem(itemPosition.getOtherRolesItemPosition()).getAmount() + itemStack.getAmount());
+      int itemPos = itemPosition.getOtherRolesItemPosition();
+      if (itemPos < 0) {
         return;
       }
-      inv.setItem(itemPosition.getOtherRolesItemPosition(), itemStack);
+
+      if(inv.getItem(itemPos) != null) {
+        inv.getItem(itemPos).setAmount(inv.getItem(itemPos).getAmount() + itemStack.getAmount());
+        return;
+      }
+      inv.setItem(itemPos, itemStack);
     }
   }
 
@@ -78,13 +87,13 @@ public enum ItemPosition {
    * @param itemStack    itemstack to set at itemPosition
    */
   public static void setItem(Player player, ItemPosition itemPosition, ItemStack itemStack) {
-    if (player == null) {
+    if(player == null) {
       return;
     }
     Inventory inv = player.getInventory();
-    if (Role.isRole(Role.MURDERER, player)) {
+    if(Role.isRole(Role.MURDERER, player) && itemPosition.getMurdererItemPosition() >= 0) {
       inv.setItem(itemPosition.getMurdererItemPosition(), itemStack);
-    } else {
+    } else if (itemPosition.getOtherRolesItemPosition() >= 0) {
       inv.setItem(itemPosition.getOtherRolesItemPosition(), itemStack);
     }
   }

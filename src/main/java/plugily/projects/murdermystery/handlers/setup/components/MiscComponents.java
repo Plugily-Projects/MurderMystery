@@ -33,7 +33,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
@@ -70,7 +70,7 @@ public class MiscComponents implements SetupComponent {
     Main plugin = setupInventory.getPlugin();
     ChatManager chatManager = plugin.getChatManager();
     ItemStack bungeeItem;
-    if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+    if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
       bungeeItem = new ItemBuilder(XMaterial.OAK_SIGN.parseMaterial())
         .name(chatManager.colorRawMessage("&e&lAdd Game Sign"))
         .lore(ChatColor.GRAY + "Target a sign and click this.")
@@ -85,16 +85,16 @@ public class MiscComponents implements SetupComponent {
         .build();
     }
     pane.addItem(new GuiItem(bungeeItem, e -> {
-      if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
+      if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         return;
       }
       e.getWhoClicked().closeInventory();
       Location location = player.getTargetBlock(null, 10).getLocation();
-      if (!(location.getBlock().getState() instanceof Sign)) {
+      if(!(location.getBlock().getState() instanceof Sign)) {
         player.sendMessage(chatManager.colorMessage("Commands.Look-Sign"));
         return;
       }
-      if (location.distance(e.getWhoClicked().getWorld().getSpawnLocation()) <= Bukkit.getServer().getSpawnRadius()
+      if(location.distance(e.getWhoClicked().getWorld().getSpawnLocation()) <= Bukkit.getServer().getSpawnRadius()
         && e.getClick() != ClickType.SHIFT_LEFT) {
         e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&c&l✖ &cWarning | Server spawn protection is set to &6" + Bukkit.getServer().getSpawnRadius()
           + " &cand sign you want to place is in radius of this protection! &c&lNon opped players won't be able to interact with this sign and can't join the game so."));
@@ -145,7 +145,7 @@ public class MiscComponents implements SetupComponent {
       .lore("", chatManager.colorRawMessage("&8Shift + Right Click to remove all spawns"))
       .build(), e -> {
       e.getWhoClicked().closeInventory();
-      if (e.getClick() == ClickType.SHIFT_RIGHT) {
+      if(e.getClick() == ClickType.SHIFT_RIGHT) {
         config.set("instances." + arena.getId() + ".goldspawnpoints", new ArrayList<>());
         arena.setGoldSpawnPoints(new ArrayList<>());
         player.sendMessage(chatManager.colorRawMessage("&eDone | &aGold spawn points deleted, you can add them again now!"));
@@ -158,7 +158,7 @@ public class MiscComponents implements SetupComponent {
       config.set("instances." + arena.getId() + ".goldspawnpoints", goldSpawns);
       String goldProgress = goldSpawns.size() >= 4 ? "&e✔ Completed | " : "&c✘ Not completed | ";
       player.sendMessage(chatManager.colorRawMessage(goldProgress + "&aGold spawn added! &8(&7" + goldSpawns.size() + "/4&8)"));
-      if (goldSpawns.size() == 4) {
+      if(goldSpawns.size() == 4) {
         player.sendMessage(chatManager.colorRawMessage("&eInfo | &aYou can add more than 4 gold spawns! Four is just a minimum!"));
       }
       List<Location> spawns = new ArrayList<>(arena.getGoldSpawnPoints());
@@ -178,13 +178,13 @@ public class MiscComponents implements SetupComponent {
       .lore(ChatColor.DARK_GRAY + "Every 5 seconds it will spawn 1 gold")
       .lore("", setupInventory.getSetupUtilities().isOptionDone("instances." + arena.getId() + ".spawngoldtime"))
       .build(), e -> {
-      if (e.getClick().isRightClick()) {
+      if(e.getClick().isRightClick()) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() + 1);
       }
-      if (e.getClick().isLeftClick() && e.getCurrentItem().getAmount() > 1) {
+      if(e.getClick().isLeftClick() && e.getCurrentItem().getAmount() > 1) {
         e.getCurrentItem().setAmount(e.getCurrentItem().getAmount() - 1);
       }
-      if (e.getInventory().getItem(e.getSlot()).getAmount() < 1) {
+      if(e.getInventory().getItem(e.getSlot()).getAmount() < 1) {
         e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&c&l✖ &cWarning | Please do not set amount lower than 1! Game is not designed without gold!"));
         e.getInventory().getItem(e.getSlot()).setAmount(1);
       }

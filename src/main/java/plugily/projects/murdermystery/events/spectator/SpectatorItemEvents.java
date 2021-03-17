@@ -19,7 +19,9 @@
 package plugily.projects.murdermystery.events.spectator;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.SkullType;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,8 +32,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
@@ -63,18 +66,18 @@ public class SpectatorItemEvents implements Listener {
 
   @EventHandler
   public void onSpectatorItemClick(PlayerInteractEvent e) {
-    if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() != Action.PHYSICAL) {
-      if (ArenaRegistry.getArena(e.getPlayer()) == null) {
+    if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() != Action.PHYSICAL) {
+      if(ArenaRegistry.getArena(e.getPlayer()) == null) {
         return;
       }
-      ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
-      if (!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
+      ItemStack stack = VersionUtils.getItemInHand(e.getPlayer());
+      if(!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
         return;
       }
-      if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
+      if(ComplementAccessor.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
         e.setCancelled(true);
         openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
-      } else if (stack.getItemMeta().getDisplayName().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
+      } else if(ComplementAccessor.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
         e.setCancelled(true);
         spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
       }
@@ -82,7 +85,7 @@ public class SpectatorItemEvents implements Listener {
   }
 
   private void openSpectatorMenu(World world, Player p) {
-    Inventory inventory = plugin.getServer().createInventory(null, Utils.serializeInt(ArenaRegistry.getArena(p).getPlayers().size()),
+    Inventory inventory = ComplementAccessor.getComplement().createInventory(null, Utils.serializeInt(ArenaRegistry.getArena(p).getPlayers().size()),
       chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
     Set<Player> players = ArenaRegistry.getArena(p).getPlayers();
 
@@ -90,23 +93,23 @@ public class SpectatorItemEvents implements Listener {
     String roleRaw = chatManager.colorMessage("In-Game.Spectator.Target-Player-Role", p);
     roleRaw = StringUtils.replace(roleRaw, "%ROLE%", "%role%");
 
-    for (Player player : world.getPlayers()) {
-      if (players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
+    for(Player player : world.getPlayers()) {
+      if(players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
         ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
-        meta = MiscUtils.setPlayerHead(player, meta);
-        meta.setDisplayName(player.getName());
+        meta = VersionUtils.setPlayerHead(player, meta);
+        ComplementAccessor.getComplement().setDisplayName(meta, player.getName());
 
         String role = roleRaw;
-        if (Role.isRole(Role.MURDERER, player)) {
+        if(Role.isRole(Role.MURDERER, player)) {
           role = StringUtils.replace(role, "%role%", chatManager.colorMessage("Scoreboard.Roles.Murderer"));
-        } else if (Role.isRole(Role.ANY_DETECTIVE, player)) {
+        } else if(Role.isRole(Role.ANY_DETECTIVE, player)) {
           role = StringUtils.replace(role, "%role%", chatManager.colorMessage("Scoreboard.Roles.Detective"));
         } else {
           role = StringUtils.replace(role, "%role%", chatManager.colorMessage("Scoreboard.Roles.Innocent"));
         }
-        meta.setLore(Collections.singletonList(role));
-        MiscUtils.setDurability(skull, (short) SkullType.PLAYER.ordinal());
+        ComplementAccessor.getComplement().setLore(meta, Collections.singletonList(role));
+        VersionUtils.setDurability(skull, (short) SkullType.PLAYER.ordinal());
         skull.setItemMeta(meta);
         inventory.addItem(skull);
       }
@@ -118,17 +121,18 @@ public class SpectatorItemEvents implements Listener {
   public void onSpectatorInventoryClick(InventoryClickEvent e) {
     Player p = (Player) e.getWhoClicked();
     Arena arena = ArenaRegistry.getArena(p);
-    if (arena == null || e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
+    if(arena == null || e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
       || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
       return;
     }
-    if (!e.getView().getTitle().equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name", p))) {
+    if(!ComplementAccessor.getComplement().getTitle(e.getView()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name", p))) {
       return;
     }
     e.setCancelled(true);
     ItemMeta meta = e.getCurrentItem().getItemMeta();
-    for (Player player : arena.getPlayers()) {
-      if (player.getName().equalsIgnoreCase(meta.getDisplayName()) || ChatColor.stripColor(meta.getDisplayName()).contains(player.getName())) {
+    for(Player player : arena.getPlayers()) {
+      if(player.getName().equalsIgnoreCase(ComplementAccessor.getComplement().getDisplayName(meta))
+          || ChatColor.stripColor(ComplementAccessor.getComplement().getDisplayName(meta)).contains(player.getName())) {
         p.sendMessage(chatManager.formatMessage(arena, chatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), player));
         p.teleport(player);
         p.closeInventory();

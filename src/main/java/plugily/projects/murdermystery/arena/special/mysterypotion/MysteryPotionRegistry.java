@@ -40,11 +40,11 @@ public class MysteryPotionRegistry {
   public static void init(Main plugin) {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "specialblocks");
     String path = "Special-Blocks.Cauldron-Potions";
-    if (!config.isConfigurationSection(path)) {
+    if(!config.isConfigurationSection(path)) {
       return;
     }
 
-    for (String key : config.getConfigurationSection(path).getKeys(false)) {
+    for(String key : config.getConfigurationSection(path).getKeys(false)) {
       //amplifiers are counted from 0 so -1
       PotionEffect effect = new PotionEffect(PotionEffectType.getByName(config.getString(path + "." + key + ".Type").toUpperCase()),
         config.getInt(path + "." + key + ".Duration") * 20, config.getInt(path + "." + key + ".Amplifier") - 1, false, false);

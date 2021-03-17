@@ -54,19 +54,19 @@ public class CreateArgument {
       new LabelData("/mm create &6<arena>", "/mm create <arena>", "&7Create new arena\n&6Permission: &7murdermystery.admin.create")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if (args.length == 1) {
+        if(args.length == 1) {
           sender.sendMessage(chatManager.colorMessage("Commands.Type-Arena-Name"));
           return;
         }
         Player player = (Player) sender;
-        for (Arena arena : ArenaRegistry.getArenas()) {
-          if (arena.getId().equalsIgnoreCase(args[1])) {
+        for(Arena arena : ArenaRegistry.getArenas()) {
+          if(arena.getId().equalsIgnoreCase(args[1])) {
             player.sendMessage(ChatColor.DARK_RED + "Arena with that ID already exists!");
             player.sendMessage(ChatColor.DARK_RED + "Usage: /mm create <ID>");
             return;
           }
         }
-        if (ConfigUtils.getConfig(registry.getPlugin(), "arenas").contains("instances." + args[1])) {
+        if(ConfigUtils.getConfig(registry.getPlugin(), "arenas").contains("instances." + args[1])) {
           player.sendMessage(ChatColor.DARK_RED + "Instance/Arena already exists! Use another ID or delete it first!");
         } else {
           createInstanceInConfig(args[1], player.getWorld().getName());
@@ -85,9 +85,10 @@ public class CreateArgument {
   private void createInstanceInConfig(String id, String worldName) {
     String path = "instances." + id + ".";
     FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
-    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "lobbylocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Startlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Endlocation", Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+    Location worldSpawn = Bukkit.getServer().getWorlds().get(0).getSpawnLocation();
+    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "lobbylocation", worldSpawn);
+    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Startlocation", worldSpawn);
+    LocationSerializer.saveLoc(registry.getPlugin(), config, "arenas", path + "Endlocation", worldSpawn);
     config.set(path + "playerspawnpoints", new ArrayList<>());
     config.set(path + "goldspawnpoints", new ArrayList<>());
     config.set(path + "minimumplayers", 2);
@@ -107,19 +108,19 @@ public class CreateArgument {
     Arena arena = new Arena(id);
 
     List<Location> playerSpawnPoints = new ArrayList<>();
-    for (String loc : config.getStringList(path + "playerspawnpoints")) {
+    for(String loc : config.getStringList(path + "playerspawnpoints")) {
       playerSpawnPoints.add(LocationSerializer.getLocation(loc));
     }
     arena.setPlayerSpawnPoints(playerSpawnPoints);
     List<Location> goldSpawnPoints = new ArrayList<>();
-    for (String loc : config.getStringList(path + "goldspawnpoints")) {
+    for(String loc : config.getStringList(path + "goldspawnpoints")) {
       goldSpawnPoints.add(LocationSerializer.getLocation(loc));
     }
     arena.setGoldSpawnPoints(goldSpawnPoints);
 
     List<SpecialBlock> specialBlocks = new ArrayList<>();
-    if (config.isSet("instances." + arena.getId() + ".mystery-cauldrons")) {
-      for (String loc : config.getStringList("instances." + arena.getId() + ".mystery-cauldrons")) {
+    if(config.isSet("instances." + arena.getId() + ".mystery-cauldrons")) {
+      for(String loc : config.getStringList("instances." + arena.getId() + ".mystery-cauldrons")) {
         specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
       }
     }

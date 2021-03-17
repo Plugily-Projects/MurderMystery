@@ -19,7 +19,7 @@
 package plugily.projects.murdermystery;
 
 import org.bukkit.inventory.ItemStack;
-import pl.plajerlair.commonsbox.minecraft.compat.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.MessageUtils;
 
@@ -46,7 +46,7 @@ public class ConfigPreferences {
   private void loadMurdererSword() {
     try {
       murdererSword = XMaterial.matchXMaterial(plugin.getConfig().getString("Murderer-Sword-Material", "IRON_SWORD").toUpperCase()).get().parseItem();
-    } catch (Exception ex) {
+    } catch(Exception ex) {
       MessageUtils.errorOccurred();
       Debugger.sendConsoleMsg("Can not found Material " + plugin.getConfig().getString("Murderer-Sword-Material"));
       //Set the murdererSword to avoid errors
@@ -65,7 +65,7 @@ public class ConfigPreferences {
   }
 
   private void loadOptions() {
-    for (Option option : Option.values()) {
+    for(Option option : Option.values()) {
       options.put(option, plugin.getConfig().getBoolean(option.getPath(), option.getDefault()));
     }
   }

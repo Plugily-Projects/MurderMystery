@@ -64,7 +64,7 @@ public class ReporterService {
 
       plugin.getLogger().log(Level.WARNING, "[Reporter service] Error reported!");
       Debugger.debug(Level.INFO, "[Reporter service] Code: {0} ({1})", conn.getResponseCode(), conn.getResponseMessage());
-    } catch (IOException ignored) {/*cannot connect or there is a problem*/
+    } catch(IOException ignored) {/*cannot connect or there is a problem*/
     }
   }
 

@@ -47,7 +47,7 @@ public class ArenaSign {
 
   private void setBehindBlock() {
     this.behind = null;
-    if (sign.getBlock().getType() == Material.getMaterial("WALL_SIGN")) {
+    if(sign.getBlock().getType() == Material.getMaterial("WALL_SIGN")) {
       this.behind = ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_14_R1) ? getBlockBehind() : getBlockBehindLegacy();
     }
   }
@@ -61,7 +61,7 @@ public class ArenaSign {
       Location location = new Location(sign.getWorld(), loc.getBlockX() - face.getModX(), loc.getBlockY() - face.getModY(),
         loc.getBlockZ() - face.getModZ());
       return location.getBlock();
-    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+    } catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
       e.printStackTrace();
       return null;
     }

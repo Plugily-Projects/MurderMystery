@@ -35,7 +35,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.UUID;
 import java.util.logging.Level;
 
 /**
@@ -57,16 +61,16 @@ public class StatsStorage {
   @NotNull
   @Contract("null -> fail")
   public static Map<UUID, Integer> getStats(StatisticType stat) {
-    if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-      try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
+    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+      try(Connection connection = plugin.getMysqlDatabase().getConnection()) {
         Statement statement = connection.createStatement();
         ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.getName());
-        Map<java.util.UUID, java.lang.Integer> column = new LinkedHashMap<>();
-        while (set.next()) {
-          column.put(java.util.UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
+        Map<UUID, Integer> column = new LinkedHashMap<>();
+        while(set.next()) {
+          column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
         }
         return column;
-      } catch (SQLException e) {
+      } catch(SQLException e) {
         plugin.getLogger().log(Level.WARNING, "SQLException occurred! " + e.getSQLState() + " (" + e.getErrorCode() + ")");
         MessageUtils.errorOccurred();
         Bukkit.getConsoleSender().sendMessage("Cannot get contents from MySQL database!");
@@ -76,8 +80,8 @@ public class StatsStorage {
     }
     FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
     Map<UUID, Integer> stats = new TreeMap<>();
-    for (String string : config.getKeys(false)) {
-      if (string.equals("data-version")) {
+    for(String string : config.getKeys(false)) {
+      if(string.equals("data-version")) {
         continue;
       }
       stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
@@ -102,7 +106,7 @@ public class StatsStorage {
    *
    * @param player        Online player to get data from
    * @param statisticType Statistic type to get (kills, deaths etc.)
-   * @param value        int of statistic
+   * @param value         int of statistic
    * @see StatisticType
    */
   public static void setUserStat(Player player, StatisticType statisticType, int value) {
@@ -113,9 +117,7 @@ public class StatsStorage {
    * Available statistics to get.
    */
   public enum StatisticType {
-    @Deprecated //subject to remove and merge with randomized game points
     CONTRIBUTION_DETECTIVE("contribdetective", true),
-    @Deprecated //subject to remove and merge with randomized game points
     CONTRIBUTION_MURDERER("contribmurderer", true), DEATHS("deaths", true), GAMES_PLAYED("gamesplayed", true), HIGHEST_SCORE("highestscore", true),
     KILLS("kills", true), LOSES("loses", true), WINS("wins", true), LOCAL_CURRENT_PRAY("local_pray", false), LOCAL_GOLD("gold", false), LOCAL_KILLS("local_kills", false),
     LOCAL_PRAISES("local_praises", false), LOCAL_SCORE("local_score", false);

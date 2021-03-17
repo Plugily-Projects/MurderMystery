@@ -34,11 +34,11 @@ public class ReportedException {
   public ReportedException(JavaPlugin plugin, Exception e) {
     Exception exception = e.getCause() != null ? (Exception) e.getCause() : e;
     StringBuilder stacktrace = new StringBuilder(exception.getClass().getSimpleName());
-    if (exception.getMessage() != null) {
+    if(exception.getMessage() != null) {
       stacktrace.append(" (").append(exception.getMessage()).append(")");
     }
     stacktrace.append("\n");
-    for (StackTraceElement str : exception.getStackTrace()) {
+    for(StackTraceElement str : exception.getStackTrace()) {
       stacktrace.append(str.toString()).append("\n");
     }
 
@@ -46,7 +46,7 @@ public class ReportedException {
     plugin.getLogger().log(Level.WARNING, stacktrace.toString());
     plugin.getLogger().log(Level.WARNING, "[Reporter service] <<------------------------------[END]------------------------------>>");
 
-    if (!ServiceRegistry.isServiceEnabled() || System.currentTimeMillis() - ServiceRegistry.getServiceCooldown() < 900000) {
+    if(!ServiceRegistry.isServiceEnabled() || System.currentTimeMillis() - ServiceRegistry.getServiceCooldown() < 900000) {
       return;
     }
     ServiceRegistry.setServiceCooldown(System.currentTimeMillis());

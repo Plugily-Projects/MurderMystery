@@ -42,20 +42,20 @@ public class ForceStartArgument {
       new LabelData("/mma forcestart", "/mma forcestart", "&7Force starts arena you're in\n&6Permission: &7murdermystery.admin.forcestart")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if (!Utils.checkIsInGameInstance((Player) sender)) {
+        if(!Utils.checkIsInGameInstance((Player) sender)) {
           return;
         }
 
         Arena arena = ArenaRegistry.getArena((Player) sender);
-        if (arena.getPlayers().size() < 2) {
+        if(arena.getPlayers().size() < 2) {
           chatManager.broadcast(arena, chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), arena.getMinimumPlayers()));
           return;
         }
-        if (arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
+        if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
           arena.setArenaState(ArenaState.STARTING);
           arena.setForceStart(true);
           arena.setTimer(0);
-          for (Player player : ArenaRegistry.getArena((Player) sender).getPlayers()) {
+          for(Player player : arena.getPlayers()) {
             player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
           }
         }

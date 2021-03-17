@@ -58,10 +58,10 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
   @Override
   public String onPlaceholderRequest(Player player, String id) {
-    if (player == null) {
+    if(player == null) {
       return null;
     }
-    switch (id.toLowerCase()) {
+    switch(id.toLowerCase()) {
       case "kills":
         return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.KILLS));
       case "deaths":
@@ -80,15 +80,15 @@ public class PlaceholderManager extends PlaceholderExpansion {
   }
 
   private String handleArenaPlaceholderRequest(String id) {
-    if (!id.contains(":")) {
+    if(!id.contains(":")) {
       return null;
     }
     String[] data = id.split(":");
     Arena arena = ArenaRegistry.getArena(data[0]);
-    if (arena == null) {
+    if(arena == null) {
       return null;
     }
-    switch (data[1].toLowerCase()) {
+    switch(data[1].toLowerCase()) {
       case "players":
         return String.valueOf(arena.getPlayers().size());
       case "max_players":
