@@ -17,7 +17,9 @@
  */
 package plugily.projects.murdermystery.handlers.trails;
 
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
+import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XParticleLegacy;
 import plugily.projects.murdermystery.Main;
 
@@ -41,8 +43,14 @@ public class TrailsManager {
   }
 
   public void registerTrails(Main plugin) {
-    for(XParticleLegacy particle : XParticleLegacy.values()) {
-      addTrail(new Trail(particle.getName(), "murdermystery.trails." + particle.getName().toLowerCase()));
+    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_11_R1)) {
+      for(Particle particle : Particle.values()) {
+        addTrail(new Trail(particle.toString(), "murdermystery.trails." + particle.toString().toLowerCase()));
+      }
+    } else {
+      for(XParticleLegacy particle : XParticleLegacy.values()) {
+        addTrail(new Trail(particle.getName(), "murdermystery.trails." + particle.getName().toLowerCase()));
+      }
     }
   }
 
