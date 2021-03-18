@@ -190,10 +190,10 @@ public class LanguageMigrator {
           break;
         case 20:
           MigratorUtils.addNewLines(file, "Arena-Selector:\r\n" +
-              "  Items:\r\n" +
-              "    waiting-for-players: lime_concrete\r\n" +
-              "    starting: yellow_concrete\r\n" +
-              "    other: red_concrete\r\n");
+              "Items:\r\n" +
+              "  waiting-for-players: lime_concrete\r\n" +
+              "  starting: yellow_concrete\r\n" +
+              "  other: red_concrete\r\n");
           break;
         default:
           break;
