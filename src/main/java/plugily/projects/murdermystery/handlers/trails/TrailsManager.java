@@ -48,7 +48,7 @@ public class TrailsManager {
       if(blacklistedTrails.contains(particle.toLowerCase())) {
         continue;
       }
-      addTrail(new Trail(particle, "murdermystery.trails." + particle.toString().toLowerCase()));
+      addTrail(new Trail(particle, "murdermystery.trails." + particle.toLowerCase()));
     }
   }
 
