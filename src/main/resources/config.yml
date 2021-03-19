@@ -174,7 +174,9 @@ Nametags-Hidden: true
 # - black (restarting) stained glass
 Signs-Block-States-Enabled: true
 
+
 Arena-Selector:
+  # Change items of arena selector
   State-Item:
     Waiting: LIME_CONCRETE
     Starting: YELLOW_CONCRETE
