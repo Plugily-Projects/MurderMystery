@@ -24,7 +24,7 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>murdermystery</artifactId>
-    <version>1.7.5</version>
+    <version>1.7.5-b2-debug</version>
     <name>MurderMystery</name>
 
     <properties>
@@ -89,19 +89,19 @@
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-classic</artifactId>
-            <version>1.2.5</version>
+            <version>1.2.6</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-database</artifactId>
-            <version>1.2.5</version>
+            <version>1.2.6</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>pl.plajer</groupId>
             <artifactId>commons-box-minecraft</artifactId>
-            <version>1.2.5</version>
+            <version>1.2.6</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

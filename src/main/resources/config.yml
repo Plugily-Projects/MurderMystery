@@ -175,10 +175,12 @@ Nametags-Hidden: true
 Signs-Block-States-Enabled: true
 
 Arena-Selector:
-  Items:
-    waiting-for-players: lime_concrete
-    starting: yellow_concrete
-    other: red_concrete
+  State-Item:
+    Waiting: LIME_CONCRETE
+    Starting: YELLOW_CONCRETE
+    In-Game: RED_CONCRETE
+    Ending: RED_CONCRETE
+    Restarting: RED_CONCRETE
 
 Update-Notifier:
   # Should we check for updates on plugin start/after admin join?
@@ -192,6 +194,6 @@ Update-Notifier:
 Disable-Parties: true
 
 # Don't modify.
-Version: 21
+Version: 22
 
 # No way! You've reached the end! But... where's the dragon!?

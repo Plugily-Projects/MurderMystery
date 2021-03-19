@@ -123,10 +123,10 @@ public class ArenaManager {
     }
 
     if(!(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-      || player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
-      || player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())))) {
+        || player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", "*"))
+        || player.hasPermission(PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())))) {
       player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Join-No-Permission").replace("%permission%",
-        PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())));
+          PermissionsManager.getJoinPerm().replace("<arena>", arena.getId())));
       return;
     }
     if(arena.getArenaState() == ArenaState.RESTARTING) {
@@ -161,9 +161,9 @@ public class ArenaManager {
     }
 
     int murderIncrease = player.getEffectivePermissions().stream().filter(permAttach -> permAttach.getPermission().startsWith("murdermystery.role.murderer."))
-      .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(28 /* remove the permission node to obtain the number*/))).max().orElse(0);
+        .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(28 /* remove the permission node to obtain the number*/))).max().orElse(0);
     int detectiveIncrease = player.getEffectivePermissions().stream().filter(permAttach -> permAttach.getPermission().startsWith("murdermystery.role.detective."))
-      .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(29 /* remove the permission node to obtain the number*/))).max().orElse(0);
+        .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(29 /* remove the permission node to obtain the number*/))).max().orElse(0);
     user.addStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, murderIncrease);
     user.addStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, detectiveIncrease);
 
@@ -188,7 +188,7 @@ public class ArenaManager {
       user.setSpectator(true);
 
       arena.addSpectatorPlayer(player);
-      VersionUtils.setCollidable(player,false);
+      VersionUtils.setCollidable(player, false);
       player.setGameMode(GameMode.SURVIVAL);
       player.setAllowFlight(true);
       player.setFlying(true);
@@ -197,7 +197,7 @@ public class ArenaManager {
         if(plugin.getUserManager().getUser(spectator).isSpectator()) {
           VersionUtils.showPlayer(plugin, player, spectator);
         } else {
-          VersionUtils.hidePlayer(plugin, player, spectator);
+          VersionUtils.hidePlayer(plugin, /*not spectator*/ spectator, /*joined spectator*/ player);
         }
       }
       ArenaUtils.hidePlayersOutsideTheGame(player, arena);
@@ -246,9 +246,9 @@ public class ArenaManager {
 
     //todo change later
     int murderDecrease = player.getEffectivePermissions().stream().filter(permAttach -> permAttach.getPermission().startsWith("murdermystery.role.murderer."))
-      .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(28 /* remove the permission node to obtain the number*/))).max().orElse(0);
+        .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(28 /* remove the permission node to obtain the number*/))).max().orElse(0);
     int detectiveDecrease = player.getEffectivePermissions().stream().filter(permAttach -> permAttach.getPermission().startsWith("murdermystery.role.detective."))
-      .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(29 /* remove the permission node to obtain the number*/))).max().orElse(0);
+        .mapToInt(pai -> Integer.parseInt(pai.getPermission().substring(29 /* remove the permission node to obtain the number*/))).max().orElse(0);
     user.addStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, -murderDecrease);
     if(user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) <= 0) {
       user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
@@ -286,14 +286,14 @@ public class ArenaManager {
             arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
             arena.addToMurdererList(newMurderer);
             String title = chatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title", player).replace("%role%",
-              chatManager.colorMessage("Scoreboard.Roles.Murderer", player));
+                chatManager.colorMessage("Scoreboard.Roles.Murderer", player));
             String subtitle = chatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle", player).replace("%role%",
-              chatManager.colorMessage("Scoreboard.Roles.Murderer", player));
+                chatManager.colorMessage("Scoreboard.Roles.Murderer", player));
             for(Player gamePlayer : arena.getPlayers()) {
               VersionUtils.sendTitles(gamePlayer, title, subtitle, 5, 40, 5);
             }
             VersionUtils.sendTitles(newMurderer, chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title", player),
-              chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle", player), 5, 40, 5);
+                chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle", player), 5, 40, 5);
             ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
           } else {
@@ -330,7 +330,7 @@ public class ArenaManager {
     if(arena.isSpectatorPlayer(player)) {
       arena.removeSpectatorPlayer(player);
     }
-    VersionUtils.setCollidable(player,true);
+    VersionUtils.setCollidable(player, true);
     user.removeScoreboard(arena);
     arena.doBarAction(Arena.BarAction.REMOVE, player);
     player.setHealth(VersionUtils.getMaxHealth(player));
@@ -356,7 +356,7 @@ public class ArenaManager {
     }
     arena.teleportToEndLocation(player);
     if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
-      && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+        && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.loadInventory(plugin, player);
     }
     plugin.getUserManager().saveAllStatistic(user);
@@ -384,8 +384,8 @@ public class ArenaManager {
       arena.setTimer(10);
     }
 
-    for (SpecialBlock specialBlock : arena.getSpecialBlocks()) {
-      if (specialBlock.getArmorStandHologram() != null) {
+    for(SpecialBlock specialBlock : arena.getSpecialBlocks()) {
+      if(specialBlock.getArmorStandHologram() != null) {
         specialBlock.getArmorStandHologram().delete();
       }
     }
@@ -487,7 +487,7 @@ public class ArenaManager {
 
     formatted = StringUtils.replace(formatted, "%murderer_kills%", String.valueOf(murdererKills));
     formatted = StringUtils.replace(formatted, "%hero%", arena.isCharacterSet(Arena.CharacterType.HERO)
-      ? arena.getCharacter(Arena.CharacterType.HERO).getName() : chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody"));
+        ? arena.getCharacter(Arena.CharacterType.HERO).getName() : chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody"));
 
     if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formatted = PlaceholderAPI.setPlaceholders(player, formatted);
