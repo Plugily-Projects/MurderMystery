@@ -193,7 +193,14 @@ Update-Notifier:
 #Disable Party features of external party plugins (such as PAF, Parties ...)
 Disable-Parties: true
 
+#Add trails that you want to blacklist from all trails(particles)
+Blacklisted-Trails:
+  - "elder_guardian"
+  - "block_crack"
+  - "item_crack"
+  - "block_dust"
+
 # Don't modify.
-Version: 22
+Version: 23
 
 # No way! You've reached the end! But... where's the dragon!?

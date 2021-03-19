@@ -24,6 +24,7 @@ import pl.plajerlair.commonsbox.minecraft.compat.xseries.XParticleLegacy;
 import plugily.projects.murdermystery.Main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -38,23 +39,32 @@ public class TrailsManager {
 
   private final ArrayList<Trail> registeredTrails = new ArrayList<>();
 
+  private List<String> blacklistedTrails;
+
   public TrailsManager(Main plugin) {
     registerTrails(plugin);
+    blacklistedTrails = plugin.getConfig().getStringList("Blacklisted-Trails");
   }
 
   public void registerTrails(Main plugin) {
     if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_11_R1)) {
       for(Particle particle : Particle.values()) {
+        if(blacklistedTrails.contains(particle.toString().toLowerCase())) {
+          continue;
+        }
         addTrail(new Trail(particle.toString(), "murdermystery.trails." + particle.toString().toLowerCase()));
       }
     } else {
       for(XParticleLegacy particle : XParticleLegacy.values()) {
+        if(blacklistedTrails.contains(particle.getName().toLowerCase())) {
+          continue;
+        }
         addTrail(new Trail(particle.getName(), "murdermystery.trails." + particle.getName().toLowerCase()));
       }
     }
   }
 
-  public ArrayList<Trail> getregisteredTrails() {
+  public ArrayList<Trail> getRegisteredTrails() {
     return registeredTrails;
   }
 

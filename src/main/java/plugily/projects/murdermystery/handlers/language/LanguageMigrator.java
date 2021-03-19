@@ -34,7 +34,7 @@ import java.io.File;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 22;
+  public static final int CONFIG_FILE_VERSION = 23;
   public static final int LANGUAGE_FILE_VERSION = 7;
   private final Main plugin;
 
@@ -203,6 +203,13 @@ public class LanguageMigrator {
               "    Ending: RED_CONCRETE\r\n" +
               "    Restarting: RED_CONCRETE\r\n");
           break;
+        case 22:
+          MigratorUtils.addNewLines(file, "\r\n#Add trails that you want to blacklist from all trails(particles)\r\n" +
+              "Blacklisted-Trails:\r\n" +
+              "  - \"elder_guardian\"\r\n" +
+              "  - \"block_crack\"\r\n" +
+              "  - \"item_crack\"\r\n" +
+              "  - \"block_dust\"\r\n");
         default:
           break;
       }
