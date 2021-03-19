@@ -17,14 +17,11 @@
  */
 package plugily.projects.murdermystery.handlers.trails;
 
-import org.bukkit.Particle;
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XParticleLegacy;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.murdermystery.Main;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -39,28 +36,19 @@ public class TrailsManager {
 
   private final ArrayList<Trail> registeredTrails = new ArrayList<>();
 
-  private List<String> blacklistedTrails;
+  private final List<String> blacklistedTrails;
 
   public TrailsManager(Main plugin) {
     blacklistedTrails = plugin.getConfig().getStringList("Blacklisted-Trails");
-    registerTrails(plugin);
+    registerTrails();
   }
 
-  public void registerTrails(Main plugin) {
-    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_11_R1)) {
-      for(Particle particle : Particle.values()) {
-        if(blacklistedTrails.contains(particle.toString().toLowerCase())) {
-          continue;
-        }
-        addTrail(new Trail(particle.toString(), "murdermystery.trails." + particle.toString().toLowerCase()));
+  public void registerTrails() {
+    for(String particle : VersionUtils.getParticleValues()) {
+      if(blacklistedTrails.contains(particle.toLowerCase())) {
+        continue;
       }
-    } else {
-      for(XParticleLegacy particle : XParticleLegacy.values()) {
-        if(blacklistedTrails.contains(particle.getName().toLowerCase())) {
-          continue;
-        }
-        addTrail(new Trail(particle.getName(), "murdermystery.trails." + particle.getName().toLowerCase()));
-      }
+      addTrail(new Trail(particle, "murdermystery.trails." + particle.toString().toLowerCase()));
     }
   }
 
