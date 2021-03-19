@@ -194,11 +194,10 @@ public class ArenaManager {
       player.setFlying(true);
 
       for(Player spectator : arena.getPlayers()) {
-        if(plugin.getUserManager().getUser(spectator).isSpectator()) {
-          VersionUtils.showPlayer(plugin, player, spectator);
-        } else {
+        if(!plugin.getUserManager().getUser(spectator).isSpectator()) {
           VersionUtils.hidePlayer(plugin, /*not spectator*/ spectator, /*joined spectator*/ player);
         }
+        VersionUtils.showPlayer(plugin, player, spectator);
       }
       ArenaUtils.hidePlayersOutsideTheGame(player, arena);
       Debugger.debug("[{0}] Join attempt as spectator finished for {1} took {2}ms", arena.getId(), player.getName(), System.currentTimeMillis() - start);

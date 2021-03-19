@@ -192,7 +192,11 @@ public class ArenaUtils {
 
   public static void hidePlayer(Player p, Arena arena) {
     for(Player player : arena.getPlayers()) {
-      VersionUtils.hidePlayer(plugin, player, p);
+      if(plugin.getUserManager().getUser(player).isSpectator()) {
+        VersionUtils.showPlayer(plugin, player, p);
+      } else {
+        VersionUtils.hidePlayer(plugin, player, p);
+      }
     }
   }
 
