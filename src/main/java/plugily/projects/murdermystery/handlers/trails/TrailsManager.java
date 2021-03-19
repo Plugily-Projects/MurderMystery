@@ -42,8 +42,8 @@ public class TrailsManager {
   private List<String> blacklistedTrails;
 
   public TrailsManager(Main plugin) {
-    registerTrails(plugin);
     blacklistedTrails = plugin.getConfig().getStringList("Blacklisted-Trails");
+    registerTrails(plugin);
   }
 
   public void registerTrails(Main plugin) {
