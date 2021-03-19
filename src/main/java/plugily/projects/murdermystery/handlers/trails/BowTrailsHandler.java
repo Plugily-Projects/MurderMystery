@@ -57,14 +57,15 @@ public class BowTrailsHandler implements Listener {
     if(!plugin.getTrailsManager().gotAnyTrails(player)) {
       return;
     }
+    Trail trail = plugin.getTrailsManager().getRandomTrail(player);
+    Debugger.debug("Spawning particle with perm {0} for player {1}", trail.getPermission(), player.getName());
     new BukkitRunnable() {
       @Override
       public void run() {
         if(projectile.isDead() || projectile.isOnGround()) {
+          Debugger.debug("Stopped spawning particle with perm {0} for player {1}", trail.getPermission(), player.getName());
           this.cancel();
         }
-        Trail trail = plugin.getTrailsManager().getRandomTrail(player);
-        Debugger.debug("Spawned particle with perm {0} for player {1}", trail.getPermission(), player.getName());
         VersionUtils.sendParticles(trail.getName(), player, player.getLocation(), 3);
       }
     }.runTaskTimer(plugin, 0, 0);
