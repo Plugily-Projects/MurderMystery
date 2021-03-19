@@ -1,3 +1,11 @@
+### 1.7.6 Release (19.03.2021)
+* Fixed Last words & trails for non op players
+* Fixed particle issues
+* Fixed invisible bug for spectators that joined while ingame
+* Fixed trail particle are random even on bow shoot  
+* Changed config.yml Item values of states and added all states
+* Added trails blacklist
+
 ### 1.7.5 Release (01.02.2021 - 14.03.2021)
 * Added modifiable arena state names to language
 * Added configurable map selector items

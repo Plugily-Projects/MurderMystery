@@ -18,7 +18,7 @@
 package plugily.projects.murdermystery.handlers.trails;
 
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XParticleLegacy;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.murdermystery.Main;
 
 import java.util.ArrayList;
@@ -36,17 +36,23 @@ public class TrailsManager {
 
   private final ArrayList<Trail> registeredTrails = new ArrayList<>();
 
+  private final List<String> blacklistedTrails;
+
   public TrailsManager(Main plugin) {
-    registerTrails(plugin);
+    blacklistedTrails = plugin.getConfig().getStringList("Blacklisted-Trails");
+    registerTrails();
   }
 
-  public void registerTrails(Main plugin) {
-    for(XParticleLegacy particle : XParticleLegacy.values()) {
-      addTrail(new Trail(particle.getName(), "murdermystery.trails." + particle.getName().toLowerCase()));
+  public void registerTrails() {
+    for(String particle : VersionUtils.getParticleValues()) {
+      if(blacklistedTrails.contains(particle.toLowerCase())) {
+        continue;
+      }
+      addTrail(new Trail(particle, "murdermystery.trails." + particle.toLowerCase()));
     }
   }
 
-  public ArrayList<Trail> getregisteredTrails() {
+  public ArrayList<Trail> getRegisteredTrails() {
     return registeredTrails;
   }
 
@@ -61,8 +67,8 @@ public class TrailsManager {
   public Trail getRandomTrail(Player player) {
     //check perms
     List<Trail> perms = registeredTrails.stream().filter(trail -> player.hasPermission(trail.getPermission())).collect(Collectors.toList());
-    if(perms.size() > 0) {
-      return perms.get(ThreadLocalRandom.current().nextInt(perms.size() - 1));
+    if(!perms.isEmpty()) {
+      return perms.get(ThreadLocalRandom.current().nextInt(perms.size()));
     }
     //fallback
     return registeredTrails.get(0);

@@ -71,13 +71,13 @@ public class LastWordsManager {
   public String getRandomLastWord(Player player) {
     //check perms
     List<LastWord> perms = registeredLastWords.stream().filter(lastWord -> player.hasPermission(lastWord.getPermission())).collect(Collectors.toList());
-    if(perms.size() > 0) {
-      return perms.get(ThreadLocalRandom.current().nextInt(perms.size() - 1)).getMessage();
+    if(!perms.isEmpty()) {
+      return perms.get(ThreadLocalRandom.current().nextInt(perms.size())).getMessage();
     }
     //check default
     List<LastWord> noPerms = registeredLastWords.stream().filter(lastWord -> !lastWord.hasPermission()).collect(Collectors.toList());
-    if(noPerms.size() > 0) {
-      return noPerms.get(ThreadLocalRandom.current().nextInt(noPerms.size() - 1)).getMessage();
+    if(!noPerms.isEmpty()) {
+      return noPerms.get(ThreadLocalRandom.current().nextInt(noPerms.size())).getMessage();
     }
     //fallback
     return registeredLastWords.get(0).getMessage();

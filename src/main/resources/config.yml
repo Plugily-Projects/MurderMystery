@@ -174,11 +174,15 @@ Nametags-Hidden: true
 # - black (restarting) stained glass
 Signs-Block-States-Enabled: true
 
+
 Arena-Selector:
-  Items:
-    waiting-for-players: lime_concrete
-    starting: yellow_concrete
-    other: red_concrete
+  # Change items of arena selector
+  State-Item:
+    Waiting: LIME_CONCRETE
+    Starting: YELLOW_CONCRETE
+    In-Game: RED_CONCRETE
+    Ending: RED_CONCRETE
+    Restarting: RED_CONCRETE
 
 Update-Notifier:
   # Should we check for updates on plugin start/after admin join?
@@ -191,7 +195,14 @@ Update-Notifier:
 #Disable Party features of external party plugins (such as PAF, Parties ...)
 Disable-Parties: true
 
+#Add trails that you want to blacklist from all trails(particles)
+Blacklisted-Trails:
+  - "elder_guardian"
+  - "block_crack"
+  - "item_crack"
+  - "block_dust"
+
 # Don't modify.
-Version: 21
+Version: 23
 
 # No way! You've reached the end! But... where's the dragon!?

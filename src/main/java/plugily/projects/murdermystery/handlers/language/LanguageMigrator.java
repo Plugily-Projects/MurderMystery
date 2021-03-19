@@ -34,7 +34,7 @@ import java.io.File;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 21;
+  public static final int CONFIG_FILE_VERSION = 23;
   public static final int LANGUAGE_FILE_VERSION = 7;
   private final Main plugin;
 
@@ -189,12 +189,27 @@ public class LanguageMigrator {
               "\r\n");
           break;
         case 20:
-          MigratorUtils.addNewLines(file, "Arena-Selector:\r\n" +
-              "  Items:" +
-              "    waiting-for-players: lime_concrete" +
-              "    starting: yellow_concrete" +
-              "    other: red_concrete");
+          MigratorUtils.addNewLines(file, "\r\nArena-Selector:\r\n" +
+              "  Items:\r\n" +
+              "    waiting-for-players: lime_concrete\r\n" +
+              "    starting: yellow_concrete\r\n" +
+              "    other: red_concrete\r\n");
           break;
+        case 21:
+          MigratorUtils.insertAfterLine(file, "Arena-Selector:", "  State-Item:\r\n" +
+              "    Waiting: LIME_CONCRETE\r\n" +
+              "    Starting: YELLOW_CONCRETE\r\n" +
+              "    In-Game: RED_CONCRETE\r\n" +
+              "    Ending: RED_CONCRETE\r\n" +
+              "    Restarting: RED_CONCRETE\r\n");
+          break;
+        case 22:
+          MigratorUtils.addNewLines(file, "\r\n#Add trails that you want to blacklist from all trails(particles)\r\n" +
+              "Blacklisted-Trails:\r\n" +
+              "  - \"elder_guardian\"\r\n" +
+              "  - \"block_crack\"\r\n" +
+              "  - \"item_crack\"\r\n" +
+              "  - \"block_dust\"\r\n");
         default:
           break;
       }
@@ -255,7 +270,7 @@ public class LanguageMigrator {
               "  Game-States:\r\n" +
               "    Waiting: \"&lWaiting for players...\"\r\n" +
               "    Starting: \"&e&lStarting\"\r\n" +
-              "    Playing: \"&lPlaying\"\r\n" +
+              "    In-Game: \"&lPlaying\"\r\n" +
               "    Ending: \"&lEnding\"\r\n" +
               "    Restarting: \"&c&lRestarting\"\r\n");
           break;
