@@ -51,32 +51,27 @@ public class TabCompletion implements TabCompleter {
   @Override
   public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
     List<String> cmds = new ArrayList<>();
-    String partOfCommand = null;
 
     if(cmd.getName().equalsIgnoreCase("murdermysteryadmin")) {
       if(args.length == 1) {
         cmds.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
           .collect(Collectors.toList()));
-        partOfCommand = args[0];
       } else if(args.length == 2 && args[0].equalsIgnoreCase("delete")) {
         cmds.addAll(ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList()));
-        partOfCommand = args[1];
       }
     }
 
     if(cmd.getName().equalsIgnoreCase("murdermystery")) {
       if(args.length == 2 && args[0].equalsIgnoreCase("join")) {
         cmds.addAll(ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList()));
-        partOfCommand = args[1];
       } else if(args.length == 1) {
         cmds.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
           .collect(Collectors.toList()));
-        partOfCommand = args[0];
       }
     }
 
     // Completes the player names
-    if(cmds.isEmpty() || partOfCommand == null) {
+    if(cmds.isEmpty()) {
       for(CompletableArgument completion : registeredCompletions) {
         if(!cmd.getName().equalsIgnoreCase(completion.getMainCommand()) || !completion.getArgument().equalsIgnoreCase(args[0])) {
           continue;

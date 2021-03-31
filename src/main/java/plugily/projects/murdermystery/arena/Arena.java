@@ -142,13 +142,13 @@ public class Arena extends BukkitRunnable {
   @Override
   public void run() {
     //idle task
-    if(players.isEmpty() && getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+    if(players.isEmpty() && arenaState == ArenaState.WAITING_FOR_PLAYERS) {
       return;
     }
     Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Running game task", getId());
     long start = System.currentTimeMillis();
 
-    switch(getArenaState()) {
+    switch(arenaState) {
       case WAITING_FOR_PLAYERS:
         if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           plugin.getServer().setWhitelist(false);
@@ -173,10 +173,10 @@ public class Arena extends BukkitRunnable {
       case STARTING:
         if(players.size() == getMaximumPlayers() && getTimer() >= plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15) && !forceStart) {
           setTimer(plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15));
-          chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Start-In").replace("%TIME%", String.valueOf(getTimer())));
+          chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Start-In").replace("%TIME%", Integer.toString(getTimer())));
         }
         if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
-          gameBar.setTitle(chatManager.colorMessage("Bossbar.Starting-In").replace("%time%", String.valueOf(getTimer())));
+          gameBar.setTitle(chatManager.colorMessage("Bossbar.Starting-In").replace("%time%", Integer.toString(getTimer())));
           gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 60));
         }
         for(Player player : players) {
@@ -214,8 +214,7 @@ public class Arena extends BukkitRunnable {
           }
         }
         if(getTimer() == 0 || forceStart) {
-          MMGameStartEvent gameStartEvent = new MMGameStartEvent(this);
-          Bukkit.getPluginManager().callEvent(gameStartEvent);
+          Bukkit.getPluginManager().callEvent(new MMGameStartEvent(this));
           setArenaState(ArenaState.IN_GAME);
           if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
             gameBar.setProgress(1.0);
@@ -425,8 +424,7 @@ public class Arena extends BukkitRunnable {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Game-Ended"));
           }
 
-          List<Player> playersToQuit = new ArrayList<>(players);
-          for(Player player : playersToQuit) {
+          for(Player player : new ArrayList<>(players)) {
             plugin.getUserManager().getUser(player).removeScoreboard(this);
             player.setGameMode(GameMode.SURVIVAL);
             for(Player players : Bukkit.getOnlinePlayers()) {
@@ -611,7 +609,10 @@ public class Arena extends BukkitRunnable {
       for(Location goldLocations : goldSpawnPoints) {
         Location goldLocation = goldLocations.clone();
         goldLocation.add(0, 0.4, 0);
-        VersionUtils.sendParticles("REDSTONE", Bukkit.getOnlinePlayers().iterator().next(), goldLocation, 10);
+        java.util.Iterator<? extends Player> iterator = Bukkit.getOnlinePlayers().iterator();
+        if (iterator.hasNext()) {
+          VersionUtils.sendParticles("REDSTONE", iterator.next(), goldLocation, 10);
+        }
       }
     }, 20L, 20L);
   }
@@ -736,8 +737,7 @@ public class Arena extends BukkitRunnable {
   public void setArenaState(@NotNull ArenaState arenaState) {
     this.arenaState = arenaState;
 
-    MMGameStateChangeEvent gameStateChangeEvent = new MMGameStateChangeEvent(this, getArenaState());
-    Bukkit.getPluginManager().callEvent(gameStateChangeEvent);
+    Bukkit.getPluginManager().callEvent(new MMGameStateChangeEvent(this, arenaState));
 
     plugin.getSignManager().updateSigns();
   }
@@ -890,8 +890,7 @@ public class Arena extends BukkitRunnable {
 
     switch(block.getSpecialBlockType()) {
       case MYSTERY_CAULDRON:
-        ArmorStandHologram cauldron = new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()), chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram"));
-        block.setArmorStandHologram(cauldron);
+        block.setArmorStandHologram(new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()), chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram")));
         break;
       case PRAISE_DEVELOPER:
         ArmorStandHologram prayer = new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()));

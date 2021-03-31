@@ -154,22 +154,14 @@ public class SpectatorEvents implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onDamageByBlock(EntityDamageByBlockEvent event) {
-    if(!(event.getEntity() instanceof Player)) {
-      return;
-    }
-    Player player = (Player) event.getEntity();
-    if(plugin.getUserManager().getUser(player).isSpectator()) {
+    if(event.getEntity() instanceof Player && plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onDamageByEntity(EntityDamageByEntityEvent event) {
-    if(!(event.getDamager() instanceof Player)) {
-      return;
-    }
-    Player player = (Player) event.getDamager();
-    if(plugin.getUserManager().getUser(player).isSpectator()) {
+    if(event.getDamager() instanceof Player && plugin.getUserManager().getUser((Player) event.getDamager()).isSpectator()) {
       event.setCancelled(true);
     }
   }

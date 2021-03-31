@@ -69,12 +69,8 @@ public class BungeeManager implements Listener {
     }
     ByteArrayDataOutput out = ByteStreams.newDataOutput();
     out.writeUTF("Connect");
-    out.writeUTF(getHubServerName());
+    out.writeUTF(ConfigUtils.getConfig(plugin, "bungee").getString("Hub"));
     player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
-  }
-
-  private String getHubServerName() {
-    return ConfigUtils.getConfig(plugin, "bungee").getString("Hub");
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)

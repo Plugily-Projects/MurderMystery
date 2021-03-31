@@ -85,14 +85,15 @@ public class LeaderboardArgument {
     sender.sendMessage(chatManager.colorMessage("Commands.Statistics.Header"));
     String statistic = StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "));
     for(int i = 0; i < 10; i++) {
+      Object[] array = stats.keySet().toArray();
       try {
-        UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
+        UUID current = (UUID) array[array.length - 1];
         sender.sendMessage(formatMessage(statistic, Bukkit.getOfflinePlayer(current).getName(), i + 1, stats.get(current)));
         stats.remove(current);
       } catch(IndexOutOfBoundsException ex) {
         sender.sendMessage(formatMessage(statistic, "Empty", i + 1, 0));
       } catch(NullPointerException ex) {
-        UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
+        UUID current = (UUID) array[array.length - 1];
         if(registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
           try(Connection connection = registry.getPlugin().getMysqlDatabase().getConnection()) {
             Statement statement = connection.createStatement();

@@ -96,20 +96,16 @@ public class User {
     stats.put(stat, i);
 
     //statistics manipulation events are called async when using mysql
-    Bukkit.getScheduler().runTask(plugin, () -> {
-      MMPlayerStatisticChangeEvent playerStatisticChangeEvent = new MMPlayerStatisticChangeEvent(getArena(), player, stat, i);
-      Bukkit.getPluginManager().callEvent(playerStatisticChangeEvent);
-    });
+    Bukkit.getScheduler().runTask(plugin, () ->
+      Bukkit.getPluginManager().callEvent(new MMPlayerStatisticChangeEvent(getArena(), player, stat, i)));
   }
 
   public void addStat(StatsStorage.StatisticType stat, int i) {
     stats.put(stat, getStat(stat) + i);
 
     //statistics manipulation events are called async when using mysql
-    Bukkit.getScheduler().runTask(plugin, () -> {
-      MMPlayerStatisticChangeEvent playerStatisticChangeEvent = new MMPlayerStatisticChangeEvent(getArena(), player, stat, getStat(stat));
-      Bukkit.getPluginManager().callEvent(playerStatisticChangeEvent);
-    });
+    Bukkit.getScheduler().runTask(plugin, () ->
+      Bukkit.getPluginManager().callEvent(new MMPlayerStatisticChangeEvent(getArena(), player, stat, getStat(stat))));
   }
 
   public void setCooldown(String s, double seconds) {

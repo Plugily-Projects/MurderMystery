@@ -61,13 +61,14 @@ public class SpectatorSettingsMenu implements Listener {
     if(!ComplementAccessor.getComplement().getTitle(e.getView()).equals(plugin.getChatManager().colorRawMessage(inventoryName))) {
       return;
     }
-    if(e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
+    org.bukkit.inventory.ItemStack currentItem = e.getCurrentItem();
+    if(currentItem == null || !currentItem.hasItemMeta()) {
       return;
     }
     Player p = (Player) e.getWhoClicked();
     p.closeInventory();
 
-    switch(e.getCurrentItem().getType()) {
+    switch(currentItem.getType()) {
       case LEATHER_BOOTS:
         p.removePotionEffect(PotionEffectType.SPEED);
         p.setFlySpeed(0.15f);

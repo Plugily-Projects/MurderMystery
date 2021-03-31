@@ -1,3 +1,6 @@
+### 1.7.7 Release (00.00.2021)
+* Fixed NoSuchElementException when iterating through players in gold locations but there is no player available.
+
 ### 1.7.6 Release (19.03.2021)
 * Fixed Last words & trails for non op players
 * Fixed particle issues

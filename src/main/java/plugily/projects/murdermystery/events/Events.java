@@ -154,17 +154,15 @@ public class Events implements Listener {
         initialise.getWorld().getNearbyEntities(initialise, maxHitRange, maxHitRange, maxHitRange).forEach(entity -> {
           if(entity instanceof Player) {
             Player victim = (Player) entity;
-            if(ArenaRegistry.isInArena(victim) && !plugin.getUserManager().getUser(victim).isSpectator()) {
-              if(!victim.equals(attacker)) {
-                killBySword(arena, attackerUser, victim);
-                this.cancel();
-                stand.remove();
-              }
+            if(ArenaRegistry.isInArena(victim) && !plugin.getUserManager().getUser(victim).isSpectator() && !victim.equals(attacker)) {
+              killBySword(arena, attackerUser, victim);
+              cancel();
+              stand.remove();
             }
           }
         });
         if(loc.distance(initialise) > maxRange || initialise.getBlock().getType().isSolid()) {
-          this.cancel();
+          cancel();
           stand.remove();
         }
       }

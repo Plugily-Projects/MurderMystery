@@ -44,12 +44,12 @@ public class StatsArgument {
           sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
           return;
         }
-        User user = registry.getPlugin().getUserManager().getUser(player);
         if(player.equals(sender)) {
           sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Header", player));
         } else {
           sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Header-Other", player).replace("%player%", player.getName()));
         }
+        User user = registry.getPlugin().getUserManager().getUser(player);
         sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Kills", player) + user.getStat(StatsStorage.StatisticType.KILLS));
         sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Deaths", player) + user.getStat(StatsStorage.StatisticType.DEATHS));
         sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Wins", player) + user.getStat(StatsStorage.StatisticType.WINS));

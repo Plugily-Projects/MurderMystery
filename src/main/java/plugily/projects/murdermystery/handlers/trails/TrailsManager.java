@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 public class TrailsManager {
 
-  private final ArrayList<Trail> registeredTrails = new ArrayList<>();
+  private final List<Trail> registeredTrails = new ArrayList<>();
 
   private final List<String> blacklistedTrails;
 
@@ -52,7 +52,7 @@ public class TrailsManager {
     }
   }
 
-  public ArrayList<Trail> getRegisteredTrails() {
+  public List<Trail> getRegisteredTrails() {
     return registeredTrails;
   }
 

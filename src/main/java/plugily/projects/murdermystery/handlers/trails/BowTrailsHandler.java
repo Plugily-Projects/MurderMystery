@@ -64,7 +64,7 @@ public class BowTrailsHandler implements Listener {
       public void run() {
         if(projectile.isDead() || projectile.isOnGround()) {
           Debugger.debug("Stopped spawning particle with perm {0} for player {1}", trail.getPermission(), player.getName());
-          this.cancel();
+          cancel();
         }
         VersionUtils.sendParticles(trail.getName(), player, player.getLocation(), 3);
       }

@@ -236,8 +236,7 @@ public class ArenaManager {
     Debugger.debug("[{0}] Initial leave attempt for {1}", arena.getId(), player.getName());
     long start = System.currentTimeMillis();
 
-    MMGameLeaveAttemptEvent event = new MMGameLeaveAttemptEvent(player, arena);
-    Bukkit.getPluginManager().callEvent(event);
+    Bukkit.getPluginManager().callEvent(new MMGameLeaveAttemptEvent(player, arena));
     User user = plugin.getUserManager().getUser(player);
     if(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) > user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE)) {
       user.setStat(StatsStorage.StatisticType.HIGHEST_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE));

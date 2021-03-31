@@ -92,8 +92,7 @@ public class SetupInventory {
   private void sendProTip(Player p) {
     ChatManager chatManager = plugin.getChatManager();
 
-    int rand = random.nextInt(16 + 1);
-    switch(rand) {
+    switch(random.nextInt(16 + 1)) {
       case 0:
         p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plugily.xyz"));
         break;
