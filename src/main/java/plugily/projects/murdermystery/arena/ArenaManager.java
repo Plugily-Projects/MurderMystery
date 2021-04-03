@@ -264,13 +264,15 @@ public class ArenaManager {
     }
 
     arena.getScoreboardManager().removeScoreboard(user);
-    if(Role.isRole(Role.MURDERER, player)) {
+
+    boolean playerHasMurdererRole = Role.isRole(Role.MURDERER, player);
+    if(playerHasMurdererRole) {
       arena.removeFromMurdererList(player);
     }
     //-1 cause we didn't remove player yet
     if(arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {
       if(arena.getPlayersLeft().size() - 1 > 1) {
-        if(Role.isRole(Role.MURDERER, player)) {
+        if(playerHasMurdererRole) {
           if(arena.getMurdererList().isEmpty()) {
             List<Player> players = new ArrayList<>();
             for(Player gamePlayer : arena.getPlayersLeft()) {
