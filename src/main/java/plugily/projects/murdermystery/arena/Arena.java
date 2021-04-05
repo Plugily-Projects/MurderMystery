@@ -814,7 +814,7 @@ public class Arena extends BukkitRunnable {
 
   private void teleportAllToStartLocation() {
     for(Player player : players) {
-      player.teleport(playerSpawnPoints.get(random.nextInt(playerSpawnPoints.size())));
+      teleportToStartLocation(player);
     }
   }
 

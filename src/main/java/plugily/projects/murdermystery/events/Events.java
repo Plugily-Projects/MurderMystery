@@ -105,10 +105,10 @@ public class Events implements Listener {
       return;
     }
     Player attacker = e.getPlayer();
-    User attackerUser = plugin.getUserManager().getUser(attacker);
     if(VersionUtils.getItemInHand(attacker).getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
       return;
     }
+    User attackerUser = plugin.getUserManager().getUser(attacker);
     if(attackerUser.getCooldown("sword_shoot") > 0) {
       return;
     }

@@ -197,11 +197,11 @@ public class LanguageMigrator {
           break;
         case 21:
           MigratorUtils.insertAfterLine(file, "Arena-Selector:", "  State-Item:\r\n" +
-              "    Waiting: LIME_CONCRETE\r\n" +
-              "    Starting: YELLOW_CONCRETE\r\n" +
-              "    In-Game: RED_CONCRETE\r\n" +
-              "    Ending: RED_CONCRETE\r\n" +
-              "    Restarting: RED_CONCRETE\r\n");
+              "    Waiting: LIME_wool\r\n" +
+              "    Starting: YELLOW_wool\r\n" +
+              "    In-Game: RED_wool\r\n" +
+              "    Ending: RED_wool\r\n" +
+              "    Restarting: RED_wool\r\n");
           break;
         case 22:
           MigratorUtils.addNewLines(file, "\r\n#Add trails that you want to blacklist from all trails(particles)\r\n" +

@@ -20,7 +20,6 @@ package plugily.projects.murdermystery;
 
 import me.tigerhix.lib.scoreboard.ScoreboardLib;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
@@ -133,10 +132,10 @@ public class Main extends JavaPlugin {
 
     Debugger.debug("Plugin loaded! Hooking into soft-dependencies in a while!");
     //start hook manager later in order to allow soft-dependencies to fully load
-    Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
+    getServer().getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
     if(configPreferences.getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
-      Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () ->
-        Bukkit.getOnlinePlayers().forEach(ArenaUtils::updateNameTagsVisibility), 60, 140);
+      getServer().getScheduler().scheduleSyncRepeatingTask(this, () ->
+        getServer().getOnlinePlayers().forEach(ArenaUtils::updateNameTagsVisibility), 60, 140);
     }
   }
 
@@ -170,7 +169,7 @@ public class Main extends JavaPlugin {
     Debugger.debug("System disable initialized");
     long start = System.currentTimeMillis();
 
-    Bukkit.getLogger().removeHandler(exceptionLogHandler);
+    getLogger().removeHandler(exceptionLogHandler);
     saveAllUserStatistics();
     if(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
       getMysqlDatabase().shutdownConnPool();
@@ -248,7 +247,7 @@ public class Main extends JavaPlugin {
     long start = System.currentTimeMillis();
 
     startPluginMetrics();
-    if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+    if(getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       Debugger.debug("Hooking into PlaceholderAPI");
       new PlaceholderManager().register();
     }
