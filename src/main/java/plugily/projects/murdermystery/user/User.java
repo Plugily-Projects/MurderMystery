@@ -30,6 +30,7 @@ import plugily.projects.murdermystery.arena.ArenaRegistry;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Plajer
@@ -42,12 +43,21 @@ public class User {
   private static long cooldownCounter = 0;
   private final Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
   private final Map<String, Double> cooldowns = new HashMap<>();
-  private final Player player;
+  private final UUID uuid;
   private boolean spectator = false;
   private boolean permanentSpectator = false;
 
+  @Deprecated
   public User(Player player) {
-    this.player = player;
+    this(player.getUniqueId());
+  }
+
+  public User(UUID uuid) {
+    this.uuid = uuid;
+  }
+
+  public UUID getUniqueId() {
+    return uuid;
   }
 
   public static void cooldownHandlerTask() {
@@ -55,11 +65,11 @@ public class User {
   }
 
   public Arena getArena() {
-    return ArenaRegistry.getArena(player);
+    return ArenaRegistry.getArena(getPlayer());
   }
 
   public Player getPlayer() {
-    return player;
+    return Bukkit.getPlayer(uuid);
   }
 
   public boolean isSpectator() {
@@ -97,7 +107,7 @@ public class User {
 
     //statistics manipulation events are called async when using mysql
     Bukkit.getScheduler().runTask(plugin, () ->
-      Bukkit.getPluginManager().callEvent(new MMPlayerStatisticChangeEvent(getArena(), player, stat, i)));
+      Bukkit.getPluginManager().callEvent(new MMPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, i)));
   }
 
   public void addStat(StatsStorage.StatisticType stat, int i) {
@@ -105,7 +115,7 @@ public class User {
 
     //statistics manipulation events are called async when using mysql
     Bukkit.getScheduler().runTask(plugin, () ->
-      Bukkit.getPluginManager().callEvent(new MMPlayerStatisticChangeEvent(getArena(), player, stat, getStat(stat))));
+      Bukkit.getPluginManager().callEvent(new MMPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, getStat(stat))));
   }
 
   public void setCooldown(String s, double seconds) {

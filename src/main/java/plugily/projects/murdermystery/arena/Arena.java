@@ -114,7 +114,7 @@ public class Arena extends BukkitRunnable {
     for(ArenaOption option : ArenaOption.values()) {
       arenaOptions.put(option, option.getDefaultValue());
     }
-    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1) && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
       gameBar = Bukkit.createBossBar(chatManager.colorMessage("Bossbar.Main-Title"), BarColor.BLUE, BarStyle.SOLID);
     }
     scoreboardManager = new ScoreboardManager(this);
@@ -148,25 +148,28 @@ public class Arena extends BukkitRunnable {
     Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Running game task", getId());
     long start = System.currentTimeMillis();
 
+    boolean bossBarEnabled = ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1) && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED);
+
     switch(arenaState) {
       case WAITING_FOR_PLAYERS:
         if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
           plugin.getServer().setWhitelist(false);
         }
-        if(players.size() < getMinimumPlayers()) {
+        int minPlayers = getMinimumPlayers();
+        if(players.size() < minPlayers) {
           if(getTimer() <= 0) {
             setTimer(45);
-            chatManager.broadcast(this, chatManager.formatMessage(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), getMinimumPlayers()));
+            chatManager.broadcast(this, chatManager.formatMessage(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), minPlayers));
             break;
           }
         } else {
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+          if(bossBarEnabled) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
           }
           chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
           setArenaState(ArenaState.STARTING);
           setTimer(plugin.getConfig().getInt("Starting-Waiting-Time", 60));
-          this.showPlayers();
+          showPlayers();
         }
         setTimer(getTimer() - 1);
         break;
@@ -175,7 +178,7 @@ public class Arena extends BukkitRunnable {
           setTimer(plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15));
           chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Start-In").replace("%TIME%", Integer.toString(getTimer())));
         }
-        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+        if(bossBarEnabled) {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Starting-In").replace("%time%", Integer.toString(getTimer())));
           gameBar.setProgress(getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 60));
         }
@@ -183,12 +186,13 @@ public class Arena extends BukkitRunnable {
           player.setExp((float) (getTimer() / plugin.getConfig().getDouble("Starting-Waiting-Time", 60)));
           player.setLevel(getTimer());
         }
-        if(players.size() < getMinimumPlayers() && !forceStart) {
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+        int minimumPlayers = getMinimumPlayers();
+        if(players.size() < minimumPlayers && !forceStart) {
+          if(bossBarEnabled) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
             gameBar.setProgress(1.0);
           }
-          chatManager.broadcast(this, chatManager.formatMessage(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), getMinimumPlayers()));
+          chatManager.broadcast(this, chatManager.formatMessage(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), minimumPlayers));
           setArenaState(ArenaState.WAITING_FOR_PLAYERS);
           Bukkit.getPluginManager().callEvent(new MMGameStartEvent(this));
           setTimer(15);
@@ -216,7 +220,7 @@ public class Arena extends BukkitRunnable {
         if(getTimer() == 0 || forceStart) {
           Bukkit.getPluginManager().callEvent(new MMGameStartEvent(this));
           setArenaState(ArenaState.IN_GAME);
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+          if(bossBarEnabled) {
             gameBar.setProgress(1.0);
           }
           setTimer(5);
@@ -313,7 +317,7 @@ public class Arena extends BukkitRunnable {
             VersionUtils.sendTitles(p, chatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"),
                 chatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
           }
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+          if(bossBarEnabled) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.In-Game-Info"));
           }
 
@@ -364,8 +368,8 @@ public class Arena extends BukkitRunnable {
         }
 
         if(getTimer() == 30 || getTimer() == 60) {
-          String title = chatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", String.valueOf(getTimer()));
-          String subtitle = chatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle").replace("%time%", String.valueOf(getTimer()));
+          String title = chatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", Integer.toString(getTimer()));
+          String subtitle = chatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle").replace("%time%", Integer.toString(getTimer()));
           for(Player p : players) {
             VersionUtils.sendTitles(p, title, subtitle, 5, 40, 5);
           }
@@ -379,7 +383,7 @@ public class Arena extends BukkitRunnable {
         //no players - stop game
         if(playersLeft.isEmpty()) {
           ArenaManager.stopGame(false, this);
-        } else
+        } else {
           //winner check
           if(playersLeft.size() == aliveMurderer()) {
             for(Player p : players) {
@@ -390,21 +394,19 @@ public class Arena extends BukkitRunnable {
               }
             }
             ArenaManager.stopGame(false, this);
-          } else
-            //murderer speed add
-            if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.MURDERER_SPEED_ENABLED)) {
-              if(playersLeft.size() == aliveMurderer() + 1) {
-                for(Player p : allMurderer) {
-                  if(isMurderAlive(p)) {
-                    //no potion because it adds particles which can be identified
-                    int multiplier = plugin.getConfig().getInt("Speed-Effect-Murderer.Speed", 3);
-                    if(multiplier > 1 && multiplier <= 10) {
-                      p.setWalkSpeed(0.1f * plugin.getConfig().getInt("Speed-Effect-Murderer.Speed", 3));
-                    }
-                  }
+          //murderer speed add
+          } else if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.MURDERER_SPEED_ENABLED) && playersLeft.size() == aliveMurderer() + 1) {
+            for(Player p : allMurderer) {
+              if(isMurderAlive(p)) {
+                //no potion because it adds particles which can be identified
+                int multiplier = plugin.getConfig().getInt("Speed-Effect-Murderer.Speed", 3);
+                if(multiplier > 1 && multiplier <= 10) {
+                  p.setWalkSpeed(0.1f * plugin.getConfig().getInt("Speed-Effect-Murderer.Speed", 3));
                 }
               }
             }
+          }
+        }
         //don't spawn it every time
         if(spawnGoldTimer == spawnGoldTime) {
           spawnSomeGold();
@@ -420,7 +422,7 @@ public class Arena extends BukkitRunnable {
           plugin.getServer().setWhitelist(false);
         }
         if(getTimer() <= 0) {
-          if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+          if(bossBarEnabled) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Game-Ended"));
           }
 
@@ -485,7 +487,7 @@ public class Arena extends BukkitRunnable {
             ArenaManager.joinAttempt(player, ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
           }
         }
-        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED) && ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1)) {
+        if(bossBarEnabled) {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
         }
 

@@ -367,7 +367,7 @@ public class Main extends JavaPlugin {
         String finalUpdate = update.toString();
         //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
         ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE " + ((MysqlManager) getUserManager().getDatabase()).getTableName()
-          + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+          + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
         continue;
       }
       for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {

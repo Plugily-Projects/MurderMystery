@@ -350,7 +350,7 @@ public class ArenaEvents implements Listener {
     VersionUtils.sendTitles(victim, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", victim), null, 5, 40, 50);
 
     if(Role.isRole(Role.MURDERER, victim)) {
-      ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.KILL_MURDERER, 0);
+      ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_MURDERER, 0);
     } else if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.ENABLE_KILL_DETECTIVE_IF_INNOCENT_KILLED) && (Role.isRole(Role.ANY_DETECTIVE, victim) || Role.isRole(Role.INNOCENT, victim))) {
       if(Role.isRole(Role.MURDERER, attacker)) {
         VersionUtils.sendTitles(victim, null, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Killed-You", victim), 5, 40, 5);
@@ -363,7 +363,7 @@ public class ArenaEvents implements Listener {
         VersionUtils.sendTitles(attacker, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Died", attacker),
             chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Killed-Innocent", attacker), 5, 40, 5);
         attacker.damage(100.0);
-        ArenaUtils.addScore(plugin.getUserManager().getUser(attacker), ArenaUtils.ScoreAction.INNOCENT_KILL, 0);
+        ArenaUtils.addScore(user, ArenaUtils.ScoreAction.INNOCENT_KILL, 0);
         plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.DETECTIVE_KILL);
         if(Role.isRole(Role.ANY_DETECTIVE, attacker) && arena.lastAliveDetective()) {
           arena.setDetectiveDead(true);

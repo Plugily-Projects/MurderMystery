@@ -20,6 +20,8 @@ package plugily.projects.murdermystery.handlers;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -48,34 +50,37 @@ public class BungeeManager implements Listener {
   private final Main plugin;
   private final Map<ArenaState, String> gameStateToString = new EnumMap<>(ArenaState.class);
   private final String motd;
+  private final FileConfiguration bungee;
 
   public BungeeManager(Main plugin) {
     this.plugin = plugin;
+    bungee = ConfigUtils.getConfig(plugin, "bungee");
+
     ChatManager chatManager = plugin.getChatManager();
 
-    gameStateToString.put(ArenaState.WAITING_FOR_PLAYERS, chatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Inactive", "Inactive")));
-    gameStateToString.put(ArenaState.STARTING, chatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Starting", "Starting")));
-    gameStateToString.put(ArenaState.IN_GAME, chatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.In-Game", "In-Game")));
-    gameStateToString.put(ArenaState.ENDING, chatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Ending", "Ending")));
-    gameStateToString.put(ArenaState.RESTARTING, chatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Game-States.Restarting", "Restarting")));
-    motd = chatManager.colorRawMessage(ConfigUtils.getConfig(plugin, "bungee").getString("MOTD.Message", "The actual game state of mm is %state%"));
+    gameStateToString.put(ArenaState.WAITING_FOR_PLAYERS, chatManager.colorRawMessage(bungee.getString("MOTD.Game-States.Inactive", "Inactive")));
+    gameStateToString.put(ArenaState.STARTING, chatManager.colorRawMessage(bungee.getString("MOTD.Game-States.Starting", "Starting")));
+    gameStateToString.put(ArenaState.IN_GAME, chatManager.colorRawMessage(bungee.getString("MOTD.Game-States.In-Game", "In-Game")));
+    gameStateToString.put(ArenaState.ENDING, chatManager.colorRawMessage(bungee.getString("MOTD.Game-States.Ending", "Ending")));
+    gameStateToString.put(ArenaState.RESTARTING, chatManager.colorRawMessage(bungee.getString("MOTD.Game-States.Restarting", "Restarting")));
+    motd = chatManager.colorRawMessage(bungee.getString("MOTD.Message", "The actual game state of mm is %state%"));
     plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
   public void connectToHub(Player player) {
-    if(!ConfigUtils.getConfig(plugin, "bungee").getBoolean("Connect-To-Hub", true)) {
+    if(!bungee.getBoolean("Connect-To-Hub", true)) {
       return;
     }
     ByteArrayDataOutput out = ByteStreams.newDataOutput();
     out.writeUTF("Connect");
-    out.writeUTF(ConfigUtils.getConfig(plugin, "bungee").getString("Hub"));
+    out.writeUTF(bungee.getString("Hub"));
     player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onServerListPing(ServerListPingEvent event) {
-    if(!ConfigUtils.getConfig(plugin, "bungee").getBoolean("MOTD.Manager") || ArenaRegistry.getArenas().isEmpty()) {
+    if(!bungee.getBoolean("MOTD.Manager") || ArenaRegistry.getArenas().isEmpty()) {
       return;
     }
     Arena arena = ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena());

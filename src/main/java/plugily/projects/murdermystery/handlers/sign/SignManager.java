@@ -83,12 +83,13 @@ public class SignManager implements Listener {
       || !ComplementAccessor.getComplement().getLine(e, 0).equalsIgnoreCase("[murdermystery]")) {
       return;
     }
-    if(ComplementAccessor.getComplement().getLine(e, 1).isEmpty()) {
+    String line1 = ComplementAccessor.getComplement().getLine(e, 1);
+    if(line1.isEmpty()) {
       e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Signs.Please-Type-Arena-Name"));
       return;
     }
     for(Arena arena : ArenaRegistry.getArenas()) {
-      if(!arena.getId().equalsIgnoreCase(ComplementAccessor.getComplement().getLine(e, 1))) {
+      if(!arena.getId().equalsIgnoreCase(line1)) {
         continue;
       }
       for(int i = 0; i < signLines.size(); i++) {

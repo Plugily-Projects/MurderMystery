@@ -87,10 +87,11 @@ public class ScoreboardManager {
    */
   public void removeScoreboard(User user) {
     for(Scoreboard board : scoreboards) {
-      if(board.getHolder().equals(user.getPlayer())) {
+      Player player = user.getPlayer();
+      if(board.getHolder().equals(player)) {
         scoreboards.remove(board);
         board.deactivate();
-        plugin.getRewardsHandler().performReward(user.getPlayer(), Reward.RewardType.SCOREBOARD_REMOVED);
+        plugin.getRewardsHandler().performReward(player, Reward.RewardType.SCOREBOARD_REMOVED);
         return;
       }
     }
@@ -143,12 +144,13 @@ public class ScoreboardManager {
       innocents++;
     }
     ChatManager chatManager = plugin.getChatManager();
-    if(!playersLeft.contains(user.getPlayer())) {
+    Player player = user.getPlayer();
+    if(!playersLeft.contains(player)) {
       formattedLine = StringUtils.replace(formattedLine, "%ROLE%", chatManager.colorMessage("Scoreboard.Roles.Dead"));
     } else {
-      if(Role.isRole(Role.MURDERER, user.getPlayer())) {
+      if(Role.isRole(Role.MURDERER, player)) {
         formattedLine = StringUtils.replace(formattedLine, "%ROLE%", chatManager.colorMessage("Scoreboard.Roles.Murderer"));
-      } else if(Role.isRole(Role.ANY_DETECTIVE, user.getPlayer())) {
+      } else if(Role.isRole(Role.ANY_DETECTIVE, player)) {
         formattedLine = StringUtils.replace(formattedLine, "%ROLE%", chatManager.colorMessage("Scoreboard.Roles.Detective"));
       } else {
         formattedLine = StringUtils.replace(formattedLine, "%ROLE%", chatManager.colorMessage("Scoreboard.Roles.Innocent"));
@@ -172,7 +174,7 @@ public class ScoreboardManager {
     formattedLine = StringUtils.replace(formattedLine, "%SCORE%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE)));
     formattedLine = chatManager.colorRawMessage(formattedLine);
     if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-      formattedLine = PlaceholderAPI.setPlaceholders(user.getPlayer(), formattedLine);
+      formattedLine = PlaceholderAPI.setPlaceholders(player, formattedLine);
     }
     return formattedLine;
   }

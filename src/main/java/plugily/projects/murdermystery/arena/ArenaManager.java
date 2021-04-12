@@ -269,8 +269,8 @@ public class ArenaManager {
     if(playerHasMurdererRole) {
       arena.removeFromMurdererList(player);
     }
-    //-1 cause we didn't remove player yet
     if(arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {
+      //-1 cause we didn't remove player yet
       if(arena.getPlayersLeft().size() - 1 > 1) {
         if(playerHasMurdererRole) {
           if(arena.getMurdererList().isEmpty()) {
@@ -374,8 +374,7 @@ public class ArenaManager {
     Debugger.debug("[{0}] Stop game event initialized with quickStop {1}", arena.getId(), quickStop);
     long start = System.currentTimeMillis();
 
-    MMGameStopEvent gameStopEvent = new MMGameStopEvent(arena);
-    Bukkit.getPluginManager().callEvent(gameStopEvent);
+    Bukkit.getPluginManager().callEvent(new MMGameStopEvent(arena));
     arena.setArenaState(ArenaState.ENDING);
     if(quickStop) {
       arena.setTimer(2);
@@ -485,7 +484,7 @@ public class ArenaManager {
 
     formatted = StringUtils.replace(formatted, "%murderer%", (arena.lastAliveMurderer() ? "" : ChatColor.STRIKETHROUGH) + murders.toString());
 
-    formatted = StringUtils.replace(formatted, "%murderer_kills%", String.valueOf(murdererKills));
+    formatted = StringUtils.replace(formatted, "%murderer_kills%", Integer.toString(murdererKills));
     formatted = StringUtils.replace(formatted, "%hero%", arena.isCharacterSet(Arena.CharacterType.HERO)
         ? arena.getCharacter(Arena.CharacterType.HERO).getName() : chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody"));
 

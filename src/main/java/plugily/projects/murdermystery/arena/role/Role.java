@@ -77,11 +77,7 @@ public enum Role {
       case DETECTIVE:
         return arena.isCharacterSet(Arena.CharacterType.DETECTIVE) && arena.getDetectiveList().contains(player);
       case FAKE_DETECTIVE:
-        if(!arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
-          return false;
-        }
-        Player fakeDetective = arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE);
-        return player.equals(fakeDetective);
+        return arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE) && player.equals(arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE));
       case MURDERER:
         return arena.isCharacterSet(Arena.CharacterType.MURDERER) && arena.getMurdererList().contains(player);
       case ANY_DETECTIVE:

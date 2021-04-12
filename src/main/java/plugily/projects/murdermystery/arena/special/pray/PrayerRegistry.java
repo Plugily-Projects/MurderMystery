@@ -51,7 +51,7 @@ public class PrayerRegistry {
   private static Main plugin;
   private static ChatManager chatManager;
   private static final List<Prayer> prayers = new ArrayList<>();
-  private static final ArrayList<Player> ban = new ArrayList<>(), rush = new ArrayList<>();
+  private static final List<Player> ban = new ArrayList<>(), rush = new ArrayList<>();
 
   private PrayerRegistry() {
   }
@@ -84,7 +84,7 @@ public class PrayerRegistry {
     Prayer prayer = getRandomPray();
     user.setStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY, prayer.getPrayerType().ordinal());
     Player player = user.getPlayer();
-    Arena arena = ArenaRegistry.getArena(user.getPlayer());
+    Arena arena = ArenaRegistry.getArena(player);
     List<String> prayMessage = LanguageManager.getLanguageList("In-Game.Messages.Special-Blocks.Praises.Message");
     if(prayer.isGoodPray()) {
       prayMessage = prayMessage.stream().map(msg -> msg.replace("%feeling%", chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings.Blessed", player))).collect(Collectors.toList());
@@ -97,7 +97,7 @@ public class PrayerRegistry {
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
         break;
       case BOW_TIME:
-        if(!Role.isRole(Role.ANY_DETECTIVE, user.getPlayer())) {
+        if(!Role.isRole(Role.ANY_DETECTIVE, player)) {
           ItemPosition.addItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
         }
         ItemPosition.setItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Prayer-Arrows", 2)));
@@ -120,13 +120,13 @@ public class PrayerRegistry {
           @Override
           public void run() {
             if(arena == null || arena.getArenaState() != ArenaState.IN_GAME || !arena.getPlayersLeft().contains(player)) {
-              this.cancel();
+              cancel();
               return;
             }
             time--;
             if(time == 0) {
               player.damage(1000);
-              this.cancel();
+              cancel();
             }
           }
         }.runTaskTimer(plugin, 20, 20);
@@ -152,11 +152,11 @@ public class PrayerRegistry {
     }
   }
 
-  public static ArrayList<Player> getBan() {
+  public static List<Player> getBan() {
     return ban;
   }
 
-  public static ArrayList<Player> getRush() {
+  public static List<Player> getRush() {
     return rush;
   }
 }
