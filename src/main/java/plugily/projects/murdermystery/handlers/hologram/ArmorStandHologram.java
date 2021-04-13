@@ -1,6 +1,5 @@
 package plugily.projects.murdermystery.handlers.hologram;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
@@ -8,6 +7,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
+import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -124,7 +124,7 @@ public class ArmorStandHologram {
     if(item != null && item.getType() != org.bukkit.Material.AIR) {
       Location l = location.clone();
       entityItem = location.getWorld().dropItem(l, item);
-      if(Bukkit.getServer().getVersion().contains("Paper"))
+      if(VersionUtils.isPaper())
         entityItem.setCanMobPickup(false);
       entityItem.setCustomNameVisible(false);
       if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_8_R3)) {

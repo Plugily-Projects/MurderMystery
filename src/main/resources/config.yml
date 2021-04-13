@@ -178,11 +178,11 @@ Signs-Block-States-Enabled: true
 Arena-Selector:
   # Change items of arena selector
   State-Item:
-    Waiting: LIME_CONCRETE
-    Starting: YELLOW_CONCRETE
-    In-Game: RED_CONCRETE
-    Ending: RED_CONCRETE
-    Restarting: RED_CONCRETE
+    Waiting: LIME_wool
+    Starting: YELLOW_wool
+    In-Game: RED_wool
+    Ending: RED_wool
+    Restarting: RED_wool
 
 Update-Notifier:
   # Should we check for updates on plugin start/after admin join?

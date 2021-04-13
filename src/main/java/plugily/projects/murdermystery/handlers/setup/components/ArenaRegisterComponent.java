@@ -83,16 +83,14 @@ public class ArenaRegisterComponent implements SetupComponent {
         return;
       }
       String path = "instances." + arena.getId() + ".";
-      String[] locations = {"lobbylocation", "Endlocation"};
-      String[] spawns = {"goldspawnpoints", "playerspawnpoints"};
       FileConfiguration arenasConfig = ConfigUtils.getConfig(plugin, "arenas");
-      for(String s : locations) {
+      for(String s : new String[]{"lobbylocation", "Endlocation"}) {
         if(!arenasConfig.isSet(path + s) || arenasConfig.getString(path + s).equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
           e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&c&l✘ &cArena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)"));
           return;
         }
       }
-      for(String s : spawns) {
+      for(String s : new String[]{"goldspawnpoints", "playerspawnpoints"}) {
         if(!arenasConfig.isSet(path + s) || arenasConfig.getStringList(path + s).size() < 4) {
           e.getWhoClicked().sendMessage(chatManager.colorRawMessage("&c&l✘ &cArena validation failed! Please configure following spawns properly: " + s + " (must be minimum 4 spawns)"));
           return;

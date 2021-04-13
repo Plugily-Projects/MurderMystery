@@ -63,17 +63,17 @@ public class PlaceholderManager extends PlaceholderExpansion {
     }
     switch(id.toLowerCase()) {
       case "kills":
-        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.KILLS));
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.KILLS));
       case "deaths":
-        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.DEATHS));
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.DEATHS));
       case "games_played":
-        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.GAMES_PLAYED));
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.GAMES_PLAYED));
       case "highest_score":
-        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.HIGHEST_SCORE));
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.HIGHEST_SCORE));
       case "wins":
-        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.WINS));
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.WINS));
       case "loses":
-        return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOSES));
+        return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOSES));
       default:
         return handleArenaPlaceholderRequest(id);
     }
@@ -90,11 +90,11 @@ public class PlaceholderManager extends PlaceholderExpansion {
     }
     switch(data[1].toLowerCase()) {
       case "players":
-        return String.valueOf(arena.getPlayers().size());
+        return Integer.toString(arena.getPlayers().size());
       case "max_players":
-        return String.valueOf(arena.getMaximumPlayers());
+        return Integer.toString(arena.getMaximumPlayers());
       case "state":
-        return String.valueOf(arena.getArenaState().getFormattedName());
+        return arena.getArenaState().getFormattedName();
       case "state_pretty":
         return arena.getArenaState().getPlaceholder();
       case "mapname":

@@ -105,10 +105,10 @@ public class Events implements Listener {
       return;
     }
     Player attacker = e.getPlayer();
-    User attackerUser = plugin.getUserManager().getUser(attacker);
     if(VersionUtils.getItemInHand(attacker).getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
       return;
     }
+    User attackerUser = plugin.getUserManager().getUser(attacker);
     if(attackerUser.getCooldown("sword_shoot") > 0) {
       return;
     }
@@ -154,17 +154,15 @@ public class Events implements Listener {
         initialise.getWorld().getNearbyEntities(initialise, maxHitRange, maxHitRange, maxHitRange).forEach(entity -> {
           if(entity instanceof Player) {
             Player victim = (Player) entity;
-            if(ArenaRegistry.isInArena(victim) && !plugin.getUserManager().getUser(victim).isSpectator()) {
-              if(!victim.equals(attacker)) {
-                killBySword(arena, attackerUser, victim);
-                this.cancel();
-                stand.remove();
-              }
+            if(ArenaRegistry.isInArena(victim) && !plugin.getUserManager().getUser(victim).isSpectator() && !victim.equals(attacker)) {
+              killBySword(arena, attackerUser, victim);
+              cancel();
+              stand.remove();
             }
           }
         });
         if(loc.distance(initialise) > maxRange || initialise.getBlock().getType().isSolid()) {
-          this.cancel();
+          cancel();
           stand.remove();
         }
       }

@@ -58,25 +58,24 @@ public class CreateArgument {
           sender.sendMessage(chatManager.colorMessage("Commands.Type-Arena-Name"));
           return;
         }
-        Player player = (Player) sender;
         for(Arena arena : ArenaRegistry.getArenas()) {
           if(arena.getId().equalsIgnoreCase(args[1])) {
-            player.sendMessage(ChatColor.DARK_RED + "Arena with that ID already exists!");
-            player.sendMessage(ChatColor.DARK_RED + "Usage: /mm create <ID>");
+            sender.sendMessage(ChatColor.DARK_RED + "Arena with that ID already exists!");
+            sender.sendMessage(ChatColor.DARK_RED + "Usage: /mm create <ID>");
             return;
           }
         }
         if(ConfigUtils.getConfig(registry.getPlugin(), "arenas").contains("instances." + args[1])) {
-          player.sendMessage(ChatColor.DARK_RED + "Instance/Arena already exists! Use another ID or delete it first!");
+          sender.sendMessage(ChatColor.DARK_RED + "Instance/Arena already exists! Use another ID or delete it first!");
         } else {
-          createInstanceInConfig(args[1], player.getWorld().getName());
-          player.sendMessage(ChatColor.BOLD + "------------------------------------------");
-          player.sendMessage(ChatColor.YELLOW + "      Instance " + args[1] + " created!");
-          player.sendMessage("");
-          player.sendMessage(ChatColor.GREEN + "Edit this arena via " + ChatColor.GOLD + "/mm " + args[1] + " edit" + ChatColor.GREEN + "!");
-          player.sendMessage(ChatColor.GOLD + "Don't know where to start? Check out tutorial video:");
-          player.sendMessage(ChatColor.GOLD + SetupInventory.VIDEO_LINK);
-          player.sendMessage(ChatColor.BOLD + "------------------------------------------- ");
+          createInstanceInConfig(args[1], ((Player) sender).getWorld().getName());
+          sender.sendMessage(ChatColor.BOLD + "------------------------------------------");
+          sender.sendMessage(ChatColor.YELLOW + "      Instance " + args[1] + " created!");
+          sender.sendMessage("");
+          sender.sendMessage(ChatColor.GREEN + "Edit this arena via " + ChatColor.GOLD + "/mm " + args[1] + " edit" + ChatColor.GREEN + "!");
+          sender.sendMessage(ChatColor.GOLD + "Don't know where to start? Check out tutorial video:");
+          sender.sendMessage(ChatColor.GOLD + SetupInventory.VIDEO_LINK);
+          sender.sendMessage(ChatColor.BOLD + "------------------------------------------- ");
         }
       }
     });

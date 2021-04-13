@@ -29,7 +29,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
-import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaManager;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
@@ -63,11 +62,12 @@ public class ArenaSelectorArgument implements Listener {
         new LabelData("/mm arenas", "/mm arenas", "&7Select an arena\n&6Permission: &7murdermystery.arenas")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        Player player = (Player) sender;
         if(ArenaRegistry.getArenas().size() == 0) {
-          player.sendMessage(chatManager.colorMessage("Validator.No-Instances-Created"));
+          sender.sendMessage(chatManager.colorMessage("Validator.No-Instances-Created"));
           return;
         }
+
+        Player player = (Player) sender;
         Inventory inventory = ComplementAccessor.getComplement().createInventory(player, Utils.serializeInt(ArenaRegistry.getArenas().size()), chatManager.colorMessage("Arena-Selector.Inv-Title"));
 
         int sloti = 0;
@@ -75,45 +75,41 @@ public class ArenaSelectorArgument implements Listener {
 
         for(Arena arena : ArenaRegistry.getArenas()) {
           arenaMappings.put(sloti, arena);
-
-          ItemStack itemStack = XMaterial.matchXMaterial(registry.getPlugin().getConfig().getString("Arena-Selector.State-Item." + arena.getArenaState().getFormattedName(), "YELLOW_CONCRETE").toUpperCase()).orElse(XMaterial.YELLOW_WOOL).parseItem();
-
+          ItemStack itemStack = XMaterial.matchXMaterial(registry.getPlugin().getConfig().getString("Arena-Selector.State-Item." + arena.getArenaState().getFormattedName(), "YELLOW_WOOL").toUpperCase()).orElse(XMaterial.YELLOW_WOOL).parseItem();
           if(itemStack == null)
-            return;
+            continue;
 
           ItemMeta itemMeta = itemStack.getItemMeta();
-          if(itemMeta == null) {
-            return;
+          if(itemMeta != null) {
+            ComplementAccessor.getComplement().setDisplayName(itemMeta, formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena));
+
+            java.util.List<String> lore = new ArrayList<>();
+            for(String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
+              lore.add(formatItem(string, arena));
+            }
+
+            ComplementAccessor.getComplement().setLore(itemMeta, lore);
+            itemStack.setItemMeta(itemMeta);
           }
-
-          ComplementAccessor.getComplement().setDisplayName(itemMeta, formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena, registry.getPlugin()));
-
-          ArrayList<String> lore = new ArrayList<>();
-          for(String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
-            lore.add(formatItem(string, arena, registry.getPlugin()));
-          }
-
-          ComplementAccessor.getComplement().setLore(itemMeta, lore);
-          itemStack.setItemMeta(itemMeta);
           inventory.addItem(itemStack);
           sloti++;
         }
         player.openInventory(inventory);
       }
     });
-
   }
 
-  private String formatItem(String string, Arena arena, Main plugin) {
+  private String formatItem(String string, Arena arena) {
     String formatted = string;
     formatted = StringUtils.replace(formatted, "%mapname%", arena.getMapName());
-    if(arena.getPlayers().size() >= arena.getMaximumPlayers()) {
+    int maxPlayers = arena.getMaximumPlayers();
+    if(arena.getPlayers().size() >= maxPlayers) {
       formatted = StringUtils.replace(formatted, "%state%", chatManager.colorMessage("Signs.Game-States.Full-Game"));
     } else {
       formatted = StringUtils.replace(formatted, "%state%", arena.getArenaState().getPlaceholder());
     }
-    formatted = StringUtils.replace(formatted, "%playersize%", String.valueOf(arena.getPlayers().size()));
-    formatted = StringUtils.replace(formatted, "%maxplayers%", String.valueOf(arena.getMaximumPlayers()));
+    formatted = StringUtils.replace(formatted, "%playersize%", Integer.toString(arena.getPlayers().size()));
+    formatted = StringUtils.replace(formatted, "%maxplayers%", Integer.toString(maxPlayers));
     formatted = chatManager.colorRawMessage(formatted);
     return formatted;
   }
@@ -123,7 +119,8 @@ public class ArenaSelectorArgument implements Listener {
     if(!ComplementAccessor.getComplement().getTitle(e.getView()).equals(chatManager.colorMessage("Arena-Selector.Inv-Title"))) {
       return;
     }
-    if(e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()) {
+    ItemStack currentItem = e.getCurrentItem();
+    if(currentItem == null || !currentItem.hasItemMeta()) {
       return;
     }
     Player player = (Player) e.getWhoClicked();

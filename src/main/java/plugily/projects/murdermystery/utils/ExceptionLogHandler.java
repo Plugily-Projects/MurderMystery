@@ -55,15 +55,14 @@ public class ExceptionLogHandler extends Handler {
   @Override
   public void publish(LogRecord record) {
     Throwable throwable = record.getThrown();
-    if(!(throwable instanceof Exception) || !throwable.getClass().getSimpleName().contains("Exception")) {
+    if(!(throwable instanceof Exception) || !throwable.getClass().getSimpleName().contains("Exception") || throwable.getCause() == null) {
       return;
     }
-    if(throwable.getStackTrace().length == 0 || throwable.getCause() == null ||
-      throwable.getCause().getStackTrace().length == 0 ||
-      !throwable.getCause().getStackTrace()[0].getClassName().contains("plugily.projects.murdermystery")) {
+    StackTraceElement[] element = throwable.getCause().getStackTrace();
+    if(element.length == 0 || element[0] == null || !element[0].getClassName().contains("plugily.projects.murdermystery")) {
       return;
     }
-    if(!throwable.getStackTrace()[0].getClassName().contains("plugily.projects.murdermystery") || containsBlacklistedClass(throwable)) {
+    if(containsBlacklistedClass(throwable)) {
       return;
     }
     new ReportedException(plugin, (Exception) throwable);

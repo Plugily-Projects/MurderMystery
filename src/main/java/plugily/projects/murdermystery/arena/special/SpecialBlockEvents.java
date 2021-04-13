@@ -107,7 +107,7 @@ public class SpecialBlockEvents implements Listener {
       return;
     }
     if(user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < 1) {
-      e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold", e.getPlayer()).replace("%amount%", String.valueOf(1)));
+      e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold", e.getPlayer()).replace("%amount%", Integer.toString(1)));
       return;
     }
     VersionUtils.sendParticles("FIREWORKS_SPARK", e.getPlayer(), e.getClickedBlock().getLocation(), 10);
@@ -126,7 +126,7 @@ public class SpecialBlockEvents implements Listener {
     e.setCancelled(true);
     User user = plugin.getUserManager().getUser(e.getPlayer());
     if(user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < 1) {
-      e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold", e.getPlayer()).replace("%amount%", String.valueOf(1)));
+      e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold", e.getPlayer()).replace("%amount%", Integer.toString(1)));
       return;
     }
     e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Special-Blocks.Prayed-Message", e.getPlayer()));
@@ -148,7 +148,8 @@ public class SpecialBlockEvents implements Listener {
 
   @EventHandler
   public void onMysteryPotionDrink(PlayerItemConsumeEvent e) {
-    if(e.getItem().getType() != XMaterial.POTION.parseMaterial() || !ItemUtils.isItemStackNamed(e.getItem())) {
+    ItemStack item = e.getItem();
+    if(item.getType() != XMaterial.POTION.parseMaterial() || !ItemUtils.isItemStackNamed(item)) {
       return;
     }
     Arena arena = ArenaRegistry.getArena(e.getPlayer());
@@ -156,7 +157,7 @@ public class SpecialBlockEvents implements Listener {
       return;
     }
     for(MysteryPotion potion : MysteryPotionRegistry.getMysteryPotions()) {
-      if(ComplementAccessor.getComplement().getDisplayName(e.getItem().getItemMeta()).equals(potion.getName())) {
+      if(ComplementAccessor.getComplement().getDisplayName(item.getItemMeta()).equals(potion.getName())) {
         e.setCancelled(true);
         e.getPlayer().sendMessage(potion.getSubtitle());
         VersionUtils.sendTitles(e.getPlayer(), "", potion.getSubtitle(), 5, 40, 5);

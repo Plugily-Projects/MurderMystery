@@ -43,7 +43,7 @@ public class LeaveArgument {
       public void execute(CommandSender sender, String[] args) {
         if(!registry.getPlugin().getConfig().getBoolean("Disable-Leave-Command", false)) {
           Player player = (Player) sender;
-          if(!Utils.checkIsInGameInstance((Player) sender)) {
+          if(!Utils.checkIsInGameInstance(player)) {
             return;
           }
           player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Teleported-To-The-Lobby", player));

@@ -1,3 +1,9 @@
+### 1.7.7 Release (31.03.2021 - 13.04.2021)
+* Fixed NoSuchElementException when iterating through players in gold locations but there is no player available.
+* Fixed issue when there was no murderer in game and it caused to not choose another one.
+* Fix when arena selector GUI does not opened
+* Fixed NPE on ArrowEvents and other version improvements
+
 ### 1.7.6 Release (19.03.2021)
 * Fixed Last words & trails for non op players
 * Fixed particle issues
