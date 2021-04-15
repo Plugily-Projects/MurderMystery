@@ -73,7 +73,6 @@ import plugily.projects.murdermystery.utils.Utils;
 import plugily.projects.murdermystery.utils.services.ServiceRegistry;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 
@@ -119,7 +118,7 @@ public class Main extends JavaPlugin {
     if(getConfig().getBoolean("Developer-Mode")) {
       Debugger.deepDebug(true);
       Debugger.debug(Level.FINE, "Deep debug enabled");
-      for(String listenable : new ArrayList<>(getConfig().getStringList("Performance-Listenable"))) {
+      for(String listenable : getConfig().getStringList("Performance-Listenable")) {
         Debugger.monitorPerformance(listenable);
       }
     }

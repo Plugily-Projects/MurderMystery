@@ -28,12 +28,10 @@ import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
 import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.murdermystery.Main;
-import plugily.projects.murdermystery.handlers.ChatManager;
 
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -46,15 +44,6 @@ public class SpecialItem {
   private ItemStack itemStack;
   private int slot;
   private final String name;
-
-  private final Set<XMaterial> beds = EnumSet.of(
-    XMaterial.BLACK_BED, XMaterial.BLUE_BED, XMaterial.BROWN_BED,
-    XMaterial.CYAN_BED, XMaterial.GRAY_BED, XMaterial.LIGHT_BLUE_BED,
-    XMaterial.GREEN_BED, XMaterial.LIGHT_GRAY_BED, XMaterial.LIME_BED,
-    XMaterial.MAGENTA_BED, XMaterial.ORANGE_BED, XMaterial.PINK_BED,
-    XMaterial.PURPLE_BED, XMaterial.RED_BED, XMaterial.WHITE_BED,
-    XMaterial.YELLOW_BED
-  );
 
   public SpecialItem(String name) {
     this.name = name;
@@ -69,7 +58,6 @@ public class SpecialItem {
   public void load(String displayName, String[] lore, Material material, int slot) {
     Main plugin = JavaPlugin.getPlugin(Main.class);
     FileConfiguration config = ConfigUtils.getConfig(plugin, "lobbyitems");
-    ChatManager chatManager = plugin.getChatManager();
 
     List<SpecialItem> items = new java.util.ArrayList<>();
 
@@ -79,34 +67,39 @@ public class SpecialItem {
       config.set(name + ".lore", Arrays.asList(lore));
       config.set(name + ".material-name", material.toString());
       config.set(name + ".slot", slot);
+      ConfigUtils.saveConfig(plugin, config, "lobbyitems");
     }
-    ConfigUtils.saveConfig(plugin, config, "lobbyitems");
     if(config.getString(name + ".material-name", "STONE").equalsIgnoreCase("RAINBOW_BED")) {
-      beds.forEach(xmaterial -> {
-        ItemStack stack = xmaterial.parseItem();
-        ItemMeta meta = stack.getItemMeta();
-        if(meta != null) {
-          ComplementAccessor.getComplement().setDisplayName(meta, chatManager.colorRawMessage(config.getString(name + ".displayname", "")));
+      EnumSet.of(XMaterial.BLACK_BED, XMaterial.BLUE_BED, XMaterial.BROWN_BED,
+        XMaterial.CYAN_BED, XMaterial.GRAY_BED, XMaterial.LIGHT_BLUE_BED,
+        XMaterial.GREEN_BED, XMaterial.LIGHT_GRAY_BED, XMaterial.LIME_BED,
+        XMaterial.MAGENTA_BED, XMaterial.ORANGE_BED, XMaterial.PINK_BED,
+        XMaterial.PURPLE_BED, XMaterial.RED_BED, XMaterial.WHITE_BED,
+        XMaterial.YELLOW_BED).forEach(xmaterial -> {
+          ItemStack stack = xmaterial.parseItem();
+          ItemMeta meta = stack.getItemMeta();
+          if(meta != null) {
+            ComplementAccessor.getComplement().setDisplayName(meta, plugin.getChatManager().colorRawMessage(config.getString(name + ".displayname", "")));
 
-          List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(chatManager::colorRawMessage)
-            .collect(Collectors.toList());
-          ComplementAccessor.getComplement().setLore(meta, colorizedLore);
-          stack.setItemMeta(meta);
-        }
+            List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(plugin.getChatManager()::colorRawMessage)
+              .collect(Collectors.toList());
+            ComplementAccessor.getComplement().setLore(meta, colorizedLore);
+            stack.setItemMeta(meta);
+          }
 
-        SpecialItem item = new SpecialItem(name);
-        item.itemStack = stack;
-        item.slot = config.getInt(name + ".slot");
-        items.add(item);
+          SpecialItem item = new SpecialItem(name);
+          item.itemStack = stack;
+          item.slot = config.getInt(name + ".slot");
+          items.add(item);
       });
     } else {
       ItemStack stack = XMaterial.matchXMaterial(config.getString(name + ".material-name", "STONE").toUpperCase())
         .orElse(XMaterial.STONE).parseItem();
       ItemMeta meta = stack.getItemMeta();
       if(meta != null) {
-        ComplementAccessor.getComplement().setDisplayName(meta, chatManager.colorRawMessage(config.getString(name + ".displayname")));
+        ComplementAccessor.getComplement().setDisplayName(meta, plugin.getChatManager().colorRawMessage(config.getString(name + ".displayname")));
 
-        List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(chatManager::colorRawMessage)
+        List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(plugin.getChatManager()::colorRawMessage)
           .collect(Collectors.toList());
         ComplementAccessor.getComplement().setLore(meta, colorizedLore);
         stack.setItemMeta(meta);

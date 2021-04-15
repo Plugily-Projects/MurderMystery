@@ -36,7 +36,6 @@ import plugily.projects.murdermystery.utils.Debugger;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
 
 /**
  * @author Plajer
@@ -59,14 +58,14 @@ public class ReloadArgument {
           return;
         }
         confirmations.remove(sender);
-        Debugger.debug(Level.INFO, "Initiated plugin reload by {0}", sender.getName());
+        Debugger.debug("Initiated plugin reload by {0}", sender.getName());
         long start = System.currentTimeMillis();
 
         registry.getPlugin().reloadConfig();
         LanguageManager.reloadConfig();
 
         for(Arena arena : ArenaRegistry.getArenas()) {
-          Debugger.debug(Level.INFO, "[Reloader] Stopping {0} instance.");
+          Debugger.debug("[Reloader] Stopping {0} instance.");
           long stopTime = System.currentTimeMillis();
           for(Player player : arena.getPlayers()) {
             arena.doBarAction(Arena.BarAction.REMOVE, player);
@@ -81,11 +80,11 @@ public class ReloadArgument {
             }
           }
           ArenaManager.stopGame(true, arena);
-          Debugger.debug(Level.INFO, "[Reloader] Instance {0} stopped took {1}ms", arena.getId(), System.currentTimeMillis() - stopTime);
+          Debugger.debug("[Reloader] Instance {0} stopped took {1}ms", arena.getId(), System.currentTimeMillis() - stopTime);
         }
         ArenaRegistry.registerArenas();
         sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Admin-Commands.Success-Reload"));
-        Debugger.debug(Level.INFO, "[Reloader] Finished reloading took {0}ms", System.currentTimeMillis() - start);
+        Debugger.debug("[Reloader] Finished reloading took {0}ms", System.currentTimeMillis() - start);
       }
     });
   }

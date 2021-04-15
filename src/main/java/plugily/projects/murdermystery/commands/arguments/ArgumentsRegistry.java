@@ -31,6 +31,7 @@ import org.bukkit.entity.Player;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.string.StringMatcher;
 import plugily.projects.murdermystery.Main;
+import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.commands.arguments.admin.ListArenasArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.TeleportArgument;
@@ -118,12 +119,13 @@ public class ArgumentsRegistry implements CommandExecutor {
                 || !Utils.hasPermission(sender, "murdermystery.admin.create")) {
               return true;
             }
-            if(ArenaRegistry.getArena(args[0]) == null) {
+            Arena arena = ArenaRegistry.getArena(args[0]);
+            if(arena == null) {
               sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Arena-Like-That"));
               return true;
             }
 
-            new SetupInventory(ArenaRegistry.getArena(args[0]), (Player) sender).openInventory();
+            new SetupInventory(arena, (Player) sender).openInventory();
             return true;
           }
         }

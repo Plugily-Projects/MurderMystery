@@ -49,7 +49,7 @@ public class JoinEvent implements Listener {
 
   @EventHandler
   public void onLogin(PlayerLoginEvent e) {
-    if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED) && !plugin.getServer().hasWhitelist()
+    if(!plugin.getServer().hasWhitelist() && !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)
       || e.getResult() != PlayerLoginEvent.Result.KICK_WHITELIST) {
       return;
     }

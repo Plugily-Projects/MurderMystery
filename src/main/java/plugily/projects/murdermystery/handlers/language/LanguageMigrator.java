@@ -223,7 +223,7 @@ public class LanguageMigrator {
 
   private void languageFileUpdate() {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "language");
-    if(config.getString("File-Version-Do-Not-Edit", "").equals(String.valueOf(LANGUAGE_FILE_VERSION))) {
+    if(config.getString("File-Version-Do-Not-Edit", "").equals(Integer.toString(LANGUAGE_FILE_VERSION))) {
       return;
     }
     Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[Murder Mystery] [System notify] Your language file is outdated! Updating...");

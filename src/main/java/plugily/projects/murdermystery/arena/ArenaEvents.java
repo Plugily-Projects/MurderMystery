@@ -378,16 +378,16 @@ public class ArenaEvents implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onPlayerDie(PlayerDeathEvent e) {
-    Arena arena = ArenaRegistry.getArena(e.getEntity());
+    Player player = e.getEntity();
+    Arena arena = ArenaRegistry.getArena(player);
     if(arena == null) {
       return;
     }
     ComplementAccessor.getComplement().setDeathMessage(e, "");
     e.getDrops().clear();
     e.setDroppedExp(0);
-    plugin.getCorpseHandler().spawnCorpse(e.getEntity(), arena);
-    e.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
-    Player player = e.getEntity();
+    plugin.getCorpseHandler().spawnCorpse(player, arena);
+    player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
     if(arena.getArenaState() == ArenaState.STARTING) {
       return;
     } else if(arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
@@ -423,7 +423,7 @@ public class ArenaEvents implements Listener {
     }
     //we must call it ticks later due to instant respawn bug
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      e.getEntity().spigot().respawn();
+      player.spigot().respawn();
       player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name", player)).build());
       player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name", player)).build());
       player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());

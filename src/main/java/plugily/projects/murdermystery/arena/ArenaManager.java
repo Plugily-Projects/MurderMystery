@@ -106,11 +106,12 @@ public class ArenaManager {
             if(player.equals(partyPlayer)) {
               continue;
             }
-            if(ArenaRegistry.isInArena(partyPlayer)) {
-              if(ArenaRegistry.getArena(partyPlayer).getArenaState() == ArenaState.IN_GAME) {
+            Arena partyArena = ArenaRegistry.getArena(partyPlayer);
+            if(partyArena != null) {
+              if(partyArena.getArenaState() == ArenaState.IN_GAME) {
                 continue;
               }
-              leaveAttempt(partyPlayer, ArenaRegistry.getArena(partyPlayer));
+              leaveAttempt(partyPlayer, partyArena);
             }
             partyPlayer.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Join-As-Party-Member"), partyPlayer));
             joinAttempt(partyPlayer, arena);
@@ -458,12 +459,13 @@ public class ArenaManager {
     StringBuilder murders = new StringBuilder(), detectives = new StringBuilder();
     int murdererKills = 0;
     for(Player p : arena.getMurdererList()) {
+      User user = plugin.getUserManager().getUser(p);
       if(arena.getMurdererList().size() > 1) {
-        murders.append(p.getName()).append(" (").append(plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS)).append("), ");
+        murders.append(p.getName()).append(" (").append(user.getStat(StatsStorage.StatisticType.LOCAL_KILLS)).append("), ");
       } else {
         murders.append(p.getName());
       }
-      murdererKills += plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS);
+      murdererKills += user.getStat(StatsStorage.StatisticType.LOCAL_KILLS);
     }
     if(arena.getMurdererList().size() > 1) {
       murders.deleteCharAt(murders.length() - 2);

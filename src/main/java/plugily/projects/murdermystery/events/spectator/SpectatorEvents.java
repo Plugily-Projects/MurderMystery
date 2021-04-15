@@ -127,11 +127,7 @@ public class SpectatorEvents implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onFoodLevelChange(FoodLevelChangeEvent event) {
-    if(!(event.getEntity() instanceof Player)) {
-      return;
-    }
-    Player player = (Player) event.getEntity();
-    if(plugin.getUserManager().getUser(player).isSpectator()) {
+    if(event.getEntity() instanceof Player && plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
       event.setCancelled(true);
     }
   }

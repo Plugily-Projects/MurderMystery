@@ -129,10 +129,9 @@ public class Arena extends BukkitRunnable {
   }
 
   public void addCorpse(Corpse corpse) {
-    if(plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
-      return;
+    if(plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+      corpses.add(corpse);
     }
-    corpses.add(corpse);
   }
 
   public void addHead(Stand stand) {
@@ -401,7 +400,7 @@ public class Arena extends BukkitRunnable {
                 //no potion because it adds particles which can be identified
                 int multiplier = plugin.getConfig().getInt("Speed-Effect-Murderer.Speed", 3);
                 if(multiplier > 1 && multiplier <= 10) {
-                  p.setWalkSpeed(0.1f * plugin.getConfig().getInt("Speed-Effect-Murderer.Speed", 3));
+                  p.setWalkSpeed(0.1f * multiplier);
                 }
               }
             }
@@ -969,7 +968,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void clearCorpses() {
-    if(plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+    if(!plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
       for(Stand stand : stands) {
         if(!stand.getHologram().isDeleted()) {
           stand.getHologram().delete();
