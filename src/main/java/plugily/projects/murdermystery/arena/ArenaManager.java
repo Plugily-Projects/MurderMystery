@@ -390,6 +390,8 @@ public class ArenaManager {
       }
     }
 
+    arena.removeBowHolo();
+
     List<String> summaryMessages = LanguageManager.getLanguageList("In-Game.Messages.Game-End-Messages.Summary-Message");
     arena.getScoreboardManager().stopAllScoreboards();
 

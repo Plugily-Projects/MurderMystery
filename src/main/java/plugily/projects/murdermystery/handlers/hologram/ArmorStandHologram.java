@@ -111,6 +111,11 @@ public class ArmorStandHologram {
 
   private void append() {
     delete();
+
+    if (location.getWorld() == null) {
+      return;
+    }
+
     double distanceAbove = -0.27, y = location.getY();
 
     for(int i = 0; i <= lines.size() - 1; i++) {

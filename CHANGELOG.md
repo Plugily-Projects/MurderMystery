@@ -1,3 +1,6 @@
+### 1.7.8
+* Now the arena will get removed entirely if the world is not exist, after the plugin loaded.
+
 ### 1.7.7 Release (31.03.2021 - 13.04.2021)
 * Fixed NoSuchElementException when iterating through players in gold locations but there is no player available.
 * Fixed issue when there was no murderer in game and it caused to not choose another one.

@@ -31,8 +31,8 @@ public class ReportedException {
 
   private ReporterService reporterService;
 
-  public ReportedException(JavaPlugin plugin, Exception e) {
-    Exception exception = e.getCause() != null ? (Exception) e.getCause() : e;
+  public ReportedException(JavaPlugin plugin, Throwable e) {
+    Throwable exception = e.getCause() != null ? e.getCause() : e;
     StringBuilder stacktrace = new StringBuilder(exception.getClass().getSimpleName());
     if(exception.getMessage() != null) {
       stacktrace.append(" (").append(exception.getMessage()).append(")");
