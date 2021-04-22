@@ -119,20 +119,19 @@ public class ArenaRegistry {
         continue;
       }
 
+      Arena arena = new Arena(id);
+
       List<Location> playerSpawnPoints = new ArrayList<>();
       for(String loc : section.getStringList(id + ".playerspawnpoints")) {
         org.bukkit.Location serialized = LocationSerializer.getLocation(loc);
 
-        // Remove the arena entirely if world is not exist at least in spawn points
+        // Ignore the arena if world is not exist at least in spawn points
         if (serialized == null || serialized.getWorld() == null) {
-          section.set(id, null);
-          return;
+          section.set(id + ".isdone", false);
+        } else {
+          playerSpawnPoints.add(serialized);
         }
-
-        playerSpawnPoints.add(serialized);
       }
-
-      Arena arena = new Arena(id);
 
       arena.setPlayerSpawnPoints(playerSpawnPoints);
       arena.setMinimumPlayers(section.getInt(id + ".minimumplayers", 2));
@@ -142,6 +141,23 @@ public class ArenaRegistry {
       arena.setHideChances(section.getBoolean(id + ".hidechances"));
       arena.setMurderers(section.getInt(id + ".playerpermurderer", 5));
       arena.setDetectives(section.getInt(id + ".playerperdetective", 7));
+      arena.setGoldVisuals(section.getBoolean(id + ".goldvisuals"));
+
+      Location endLoc = LocationSerializer.getLocation(section.getString(id + ".Endlocation", "world,364.0,63.0,-72.0,0.0,0.0"));
+      Location lobbyLoc = LocationSerializer.getLocation(section.getString(id + ".lobbylocation", "world,364.0,63.0,-72.0,0.0,0.0"));
+      if (lobbyLoc == null || lobbyLoc.getWorld() == null || endLoc == null || endLoc.getWorld() == null) {
+        section.set(id + ".isdone", false);
+      } else {
+        arena.setLobbyLocation(lobbyLoc);
+        arena.setEndLocation(endLoc);
+      }
+
+      if(!section.getBoolean(id + ".isdone")) {
+        Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
+        arena.setReady(false);
+        registerArena(arena);
+        continue;
+      }
 
       List<Location> goldSpawnPoints = new ArrayList<>();
       for(String loc : section.getStringList(id + ".goldspawnpoints")) {
@@ -159,16 +175,6 @@ public class ArenaRegistry {
 
       specialBlocks.forEach(arena::loadSpecialBlock);
 
-      arena.setLobbyLocation(LocationSerializer.getLocation(section.getString(id + ".lobbylocation", "world,364.0,63.0,-72.0,0.0,0.0")));
-      arena.setEndLocation(LocationSerializer.getLocation(section.getString(id + ".Endlocation", "world,364.0,63.0,-72.0,0.0,0.0")));
-      arena.setGoldVisuals(section.getBoolean(id + ".goldvisuals"));
-
-      if(!section.getBoolean(id + ".isdone")) {
-        Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
-        arena.setReady(false);
-        registerArena(arena);
-        continue;
-      }
       registerArena(arena);
       arena.start();
       Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Instance-Started").replace("%arena%", id));

@@ -271,12 +271,14 @@ public class ArenaManager {
       arena.removeFromMurdererList(player);
     }
     if(arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {
+      List<Player> playersLeft = arena.getPlayersLeft();
+
       //-1 cause we didn't remove player yet
-      if(arena.getPlayersLeft().size() - 1 > 1) {
+      if(playersLeft.size() - 1 > 1) {
         if(playerHasMurdererRole) {
           if(arena.getMurdererList().isEmpty()) {
             List<Player> players = new ArrayList<>();
-            for(Player gamePlayer : arena.getPlayersLeft()) {
+            for(Player gamePlayer : playersLeft) {
               if(gamePlayer == player || Role.isRole(Role.ANY_DETECTIVE, gamePlayer) || Role.isRole(Role.MURDERER, gamePlayer)) {
                 continue;
               }
