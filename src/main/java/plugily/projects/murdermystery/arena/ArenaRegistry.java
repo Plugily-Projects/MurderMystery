@@ -108,7 +108,8 @@ public class ArenaRegistry {
       }
     }
 
-    org.bukkit.configuration.ConfigurationSection section = ConfigUtils.getConfig(plugin, "arenas").getConfigurationSection("instances");
+    org.bukkit.configuration.file.FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+    org.bukkit.configuration.ConfigurationSection section = config.getConfigurationSection("instances");
     if(section == null) {
       Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.No-Instances-Created"));
       return;
@@ -179,6 +180,7 @@ public class ArenaRegistry {
       arena.start();
       Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Instance-Started").replace("%arena%", id));
     }
+    ConfigUtils.saveConfig(plugin, config, "arenas.yml");
     Debugger.debug("Arenas registration completed, took {0}ms", System.currentTimeMillis() - start);
   }
 
