@@ -1,5 +1,8 @@
-### 1.7.8
-* Now the arena will get removed entirely if the world is not exist, after the plugin loaded.
+### 1.7.8 Release (15.04.2021 - XX.XX.2021)
+* Now the arena will be set to isDone false if the world is not exist, after the plugin loaded.
+* Changed randomjoin mechanics -> Searches for starting -> random join -> Searches for waiting -> random join
+* Added /mm join maxplayers which tries to get the arena with the highest amount of players
+* Added placeholder arena_players_online
 
 ### 1.7.7 Release (31.03.2021 - 13.04.2021)
 * Fixed NoSuchElementException when iterating through players in gold locations but there is no player available.

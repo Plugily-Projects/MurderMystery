@@ -83,8 +83,16 @@ public class ArenaRegistry {
         return loopArena;
       }
     }
-
     return null;
+  }
+
+
+  public static Integer getArenaPlayersOnline() {
+    int players = 0;
+    for(Arena arena : arenas){
+      players =+ arena.getPlayers().size();
+    }
+    return players;
   }
 
   public static void registerArena(Arena arena) {
