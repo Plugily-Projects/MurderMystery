@@ -75,7 +75,14 @@ public class ArenaUtils {
   public static void addScore(User user, ScoreAction action, int amount) {
     String s = plugin.getConfig().getString("AddScore-Sound", "");
     if(!s.isEmpty()) {
-      XSound.matchXSound(Sound.valueOf(s.toUpperCase())).play(user.getPlayer().getLocation(), 1F, 2F);
+      Sound sound = XSound.ENTITY_EXPERIENCE_ORB_PICKUP.parseSound();
+
+      try {
+        sound = Sound.valueOf(s.toUpperCase());
+      } catch (IllegalArgumentException e) {
+      }
+
+      XSound.matchXSound(sound).play(user.getPlayer().getLocation(), 1F, 2F);
     }
 
     String msg = chatManager.colorMessage("In-Game.Messages.Bonus-Score");
