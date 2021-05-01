@@ -134,6 +134,10 @@ public class Arena extends BukkitRunnable {
     }
   }
 
+  public List<Corpse> getCorpses() {
+    return corpses;
+  }
+
   public void addHead(Stand stand) {
     stands.add(stand);
   }

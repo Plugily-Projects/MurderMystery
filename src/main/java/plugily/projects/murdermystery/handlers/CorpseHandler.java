@@ -103,7 +103,9 @@ public class CorpseHandler implements Listener {
       return;
     }
     ArmorStandHologram hologram = getLastWordsHologram(p);
-    Corpses.CorpseData corpse = lastSpawnedCorpse = CorpseAPI.spawnCorpse(p, p.getLocation());
+    Corpses.CorpseData corpse = CorpseAPI.spawnCorpse(p, p.getLocation());
+    lastSpawnedCorpse = corpse;
+    //spawns 2 corpses - Corpses.CorpseData corpse = lastSpawnedCorpse = CorpseAPI.spawnCorpse(p, p.getLocation());
     arena.addCorpse(new Corpse(hologram, corpse));
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       hologram.delete();
