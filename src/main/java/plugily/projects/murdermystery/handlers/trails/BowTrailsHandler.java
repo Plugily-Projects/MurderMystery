@@ -66,7 +66,7 @@ public class BowTrailsHandler implements Listener {
           Debugger.debug("Stopped spawning particle with perm {0} for player {1}", trail.getPermission(), player.getName());
           cancel();
         }
-        VersionUtils.sendParticles(trail.getName(), player, player.getLocation(), 3);
+        VersionUtils.sendParticles(trail.getName(), player, projectile.getLocation(), 3);
       }
     }.runTaskTimer(plugin, 0, 0);
   }
