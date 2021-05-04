@@ -343,7 +343,7 @@ public class Arena extends BukkitRunnable {
             && getTimer() > (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15)) {
           for(Player p : players) {
             p.sendMessage(chatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword")
-                .replace("%time%", String.valueOf(getTimer() - (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15))));
+                .replace("%time%", Integer.toString(getTimer() - (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15))));
             XSound.UI_BUTTON_CLICK.play(p.getLocation(), 1, 1);
           }
           if(getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
@@ -1077,7 +1077,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public int getOption(@NotNull ArenaOption option) {
-    return arenaOptions.get(option);
+    return arenaOptions.getOrDefault(option, 0);
   }
 
   public void setOptionValue(ArenaOption option, int value) {
@@ -1085,7 +1085,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void addOptionValue(ArenaOption option, int value) {
-    arenaOptions.put(option, arenaOptions.get(option) + value);
+    arenaOptions.put(option, getOption(option) + value);
   }
 
   public enum BarAction {

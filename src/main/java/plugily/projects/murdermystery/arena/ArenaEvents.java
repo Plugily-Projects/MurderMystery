@@ -130,14 +130,16 @@ public class ArenaEvents implements Listener {
     if(!(e.getEntity() instanceof Player)) {
       return;
     }
-    if(!Role.isRole(Role.ANY_DETECTIVE, (Player) e.getEntity())) {
+    Player player = (Player) e.getEntity();
+    if(!Role.isRole(Role.ANY_DETECTIVE, player)) {
       return;
     }
-    User user = plugin.getUserManager().getUser((Player) e.getEntity());
+    User user = plugin.getUserManager().getUser(player);
     if(user.getCooldown("bow_shot") == 0) {
-      user.setCooldown("bow_shot", plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
-      Player player = (Player) e.getEntity();
-      Utils.applyActionBarCooldown(player, plugin.getConfig().getInt("Detective-Bow-Cooldown", 5));
+      int bowCooldown = plugin.getConfig().getInt("Detective-Bow-Cooldown", 5);
+
+      user.setCooldown("bow_shot", bowCooldown);
+      Utils.applyActionBarCooldown(player, bowCooldown);
       VersionUtils.setDurability(e.getBow(), (short) 0);
     } else {
       e.setCancelled(true);

@@ -491,8 +491,9 @@ public class ArenaManager {
     formatted = StringUtils.replace(formatted, "%murderer%", (arena.lastAliveMurderer() ? "" : ChatColor.STRIKETHROUGH) + murders.toString());
 
     formatted = StringUtils.replace(formatted, "%murderer_kills%", Integer.toString(murdererKills));
-    formatted = StringUtils.replace(formatted, "%hero%", arena.isCharacterSet(Arena.CharacterType.HERO)
-        ? arena.getCharacter(Arena.CharacterType.HERO).getName() : chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody"));
+
+    Player hero = arena.getCharacter(Arena.CharacterType.HERO);
+    formatted = StringUtils.replace(formatted, "%hero%", hero != null ? hero.getName() : chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody"));
 
     if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formatted = PlaceholderAPI.setPlaceholders(player, formatted);

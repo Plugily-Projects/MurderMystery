@@ -86,8 +86,7 @@ public class ArenaRegistry {
     return null;
   }
 
-
-  public static Integer getArenaPlayersOnline() {
+  public static int getArenaPlayersOnline() {
     int players = 0;
     for(Arena arena : arenas){
       players =+ arena.getPlayers().size();

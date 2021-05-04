@@ -52,15 +52,16 @@ public class TeleportArgument {
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + ChatColor.RED + "Please type location type: " + Arrays.toString(LocationType.values()).replace("[", "").replace("]", ""));
           return;
         }
+        LocationType locType;
         try {
-          LocationType.valueOf(args[2].toUpperCase());
+          locType = LocationType.valueOf(args[2].toUpperCase());
         } catch(IllegalArgumentException e) {
           sender.sendMessage(registry.getPlugin().getChatManager().getPrefix() + ChatColor.RED + "Please type location type: " + Arrays.toString(LocationType.values()).replace("[", "").replace("]", ""));
           return;
         }
         for(Arena arena : ArenaRegistry.getArenas()) {
           if(arena.getId().equalsIgnoreCase(args[1])) {
-            teleport((Player) sender, arena, LocationType.valueOf(args[2].toUpperCase()));
+            teleport((Player) sender, arena, locType);
             break;
           }
         }
