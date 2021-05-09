@@ -58,7 +58,7 @@ public class HookManager {
 
   public boolean isFeatureEnabled(HookFeature feature) {
     Boolean b = hooks.get(feature);
-    return b != null && b.booleanValue();
+    return b != null && b;
   }
 
   public enum HookFeature {

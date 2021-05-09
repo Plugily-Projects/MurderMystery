@@ -67,7 +67,7 @@ public class CorpseHandler implements Listener {
       if(plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
       }
-    }, 20 * 5);
+    }, 20 * 7);
   }
 
   public void registerLastWord(String permission, String lastWord) {

@@ -275,7 +275,7 @@ public class Arena extends BukkitRunnable {
             maxdetectives = (players.size() / detectives);
           }
           if(players.size() - (maxmurderer + maxdetectives) < 1) {
-            Debugger.debug("{0} Murderers and detectives amount was reduced because there are not enough players", this);
+            Debugger.debug("{0} Murderers and detectives amount was reduced because there are not enough players", getId());
             //Make sure to have one innocent!
             if(maxdetectives > 1) {
               maxdetectives--;
