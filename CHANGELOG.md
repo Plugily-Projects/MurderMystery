@@ -4,6 +4,7 @@
 * Added /mm join maxplayers which tries to get the arena with the highest amount of players
 * Added placeholder arena_players_online
 * Fixed arrow trails are only on player
+* Added new RewardType scoreboard_add
 
 ### 1.7.7 Release (31.03.2021 - 13.04.2021)
 * Fixed NoSuchElementException when iterating through players in gold locations but there is no player available.

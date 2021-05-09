@@ -60,3 +60,5 @@ rewards:
   #Helpful for servers that are using more than one scoreboard!
   scoreboard_remove:
     - p:sb on
+  scoreboard_add:
+    - p:sb off
