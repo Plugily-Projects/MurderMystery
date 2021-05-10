@@ -41,7 +41,7 @@ public class LeaveArgument {
     registry.mapArgument("murdermystery", new CommandArgument("leave", "", CommandArgument.ExecutorType.PLAYER) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if(!registry.getPlugin().getConfig().getBoolean("Disable-Leave-Command", false)) {
+        if(!registry.getPlugin().getConfig().getBoolean("Disable-Leave-Command")) {
           Player player = (Player) sender;
           if(!Utils.checkIsInGameInstance(player)) {
             return;

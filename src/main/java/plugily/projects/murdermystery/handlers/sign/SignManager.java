@@ -126,22 +126,26 @@ public class SignManager implements Listener {
 
   @EventHandler
   public void onSignDestroy(BlockBreakEvent e) {
+    if (!e.getPlayer().hasPermission("murdermystery.admin.sign.break"))
+      return;
+
     ArenaSign arenaSign = getArenaSignByBlock(e.getBlock());
-    if(!e.getPlayer().hasPermission("murdermystery.admin.sign.break") || arenaSign == null) {
+    if(arenaSign == null) {
       return;
     }
     arenaSigns.remove(arenaSign);
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    if(!config.isConfigurationSection("instances")) {
+    org.bukkit.configuration.ConfigurationSection section = config.getConfigurationSection("instances");
+    if (section == null)
       return;
-    }
+
     String location = e.getBlock().getWorld().getName() + "," + e.getBlock().getX() + "," + e.getBlock().getY() + "," + e.getBlock().getZ() + "," + "0.0,0.0";
-    for(String arena : config.getConfigurationSection("instances").getKeys(false)) {
-      for(String sign : config.getStringList("instances." + arena + ".signs")) {
+    for(String arena : section.getKeys(false)) {
+      for(String sign : section.getStringList(arena + ".signs")) {
         if(!sign.equals(location)) {
           continue;
         }
-        List<String> signs = config.getStringList("instances." + arena + ".signs");
+        List<String> signs = section.getStringList(arena + ".signs");
         signs.remove(location);
         config.set(arena + ".signs", signs);
         ConfigUtils.saveConfig(plugin, config, "arenas");
@@ -154,8 +158,12 @@ public class SignManager implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onJoinAttempt(PlayerInteractEvent e) {
+    if (e.getAction() != Action.RIGHT_CLICK_BLOCK || e.getClickedBlock() == null || !(e.getClickedBlock().getState() instanceof Sign)) {
+      return;
+    }
+
     ArenaSign arenaSign = getArenaSignByBlock(e.getClickedBlock());
-    if(e.getAction() == Action.RIGHT_CLICK_BLOCK && arenaSign != null && e.getClickedBlock().getState() instanceof Sign) {
+    if(arenaSign != null) {
       Arena arena = arenaSign.getArena();
       if(arena != null) {
         ArenaManager.joinAttempt(e.getPlayer(), arena);

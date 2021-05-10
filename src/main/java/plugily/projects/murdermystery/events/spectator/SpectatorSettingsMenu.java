@@ -24,7 +24,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
@@ -101,7 +100,7 @@ public class SpectatorSettingsMenu implements Listener {
 
   private Inventory initInventory() {
     Inventory inv = ComplementAccessor.getComplement().createInventory(null, 9 * 3, inventoryName);
-    ChatManager chatManager = JavaPlugin.getPlugin(Main.class).getChatManager();
+    ChatManager chatManager = plugin.getChatManager();
     inv.setItem(11, new ItemBuilder(Material.LEATHER_BOOTS)
       .name(chatManager.colorRawMessage(speedOptionName + " I")).build());
     inv.setItem(12, new ItemBuilder(Material.CHAINMAIL_BOOTS)

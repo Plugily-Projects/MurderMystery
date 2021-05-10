@@ -20,6 +20,7 @@ package plugily.projects.murdermystery.handlers;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
@@ -37,23 +38,18 @@ public class PlaceholderManager extends PlaceholderExpansion {
   }
 
   @Override
-  public String getIdentifier() {
+  public @NotNull String getIdentifier() {
     return "murdermystery";
   }
 
   @Override
-  public String getPlugin() {
-    return null;
+  public @NotNull String getAuthor() {
+    return "Plugily Projects";
   }
 
   @Override
-  public String getAuthor() {
-    return "Plajer";
-  }
-
-  @Override
-  public String getVersion() {
-    return "1.0.1";
+  public @NotNull String getVersion() {
+    return "1.0.2";
   }
 
   @Override
@@ -74,6 +70,8 @@ public class PlaceholderManager extends PlaceholderExpansion {
         return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.WINS));
       case "loses":
         return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOSES));
+      case "arena_players_online":
+        return Integer.toString(ArenaRegistry.getArenaPlayersOnline());
       default:
         return handleArenaPlaceholderRequest(id);
     }
@@ -83,7 +81,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
     if(!id.contains(":")) {
       return null;
     }
-    String[] data = id.split(":");
+    String[] data = id.split(":", 2);
     Arena arena = ArenaRegistry.getArena(data[0]);
     if(arena == null) {
       return null;

@@ -129,10 +129,13 @@ public class Arena extends BukkitRunnable {
   }
 
   public void addCorpse(Corpse corpse) {
-    if(plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
-      return;
+    if(plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+      corpses.add(corpse);
     }
-    corpses.add(corpse);
+  }
+
+  public List<Corpse> getCorpses() {
+    return corpses;
   }
 
   public void addHead(Stand stand) {
@@ -272,7 +275,7 @@ public class Arena extends BukkitRunnable {
             maxdetectives = (players.size() / detectives);
           }
           if(players.size() - (maxmurderer + maxdetectives) < 1) {
-            Debugger.debug("{0} Murderers and detectives amount was reduced because there are not enough players", this);
+            Debugger.debug("{0} Murderers and detectives amount was reduced because there are not enough players", getId());
             //Make sure to have one innocent!
             if(maxdetectives > 1) {
               maxdetectives--;
@@ -340,7 +343,7 @@ public class Arena extends BukkitRunnable {
             && getTimer() > (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15)) {
           for(Player p : players) {
             p.sendMessage(chatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword")
-                .replace("%time%", String.valueOf(getTimer() - (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15))));
+                .replace("%time%", Integer.toString(getTimer() - (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15))));
             XSound.UI_BUTTON_CLICK.play(p.getLocation(), 1, 1);
           }
           if(getTimer() == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
@@ -401,7 +404,7 @@ public class Arena extends BukkitRunnable {
                 //no potion because it adds particles which can be identified
                 int multiplier = plugin.getConfig().getInt("Speed-Effect-Murderer.Speed", 3);
                 if(multiplier > 1 && multiplier <= 10) {
-                  p.setWalkSpeed(0.1f * plugin.getConfig().getInt("Speed-Effect-Murderer.Speed", 3));
+                  p.setWalkSpeed(0.1f * multiplier);
                 }
               }
             }
@@ -969,7 +972,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void clearCorpses() {
-    if(plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+    if(!plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
       for(Stand stand : stands) {
         if(!stand.getHologram().isDeleted()) {
           stand.getHologram().delete();
@@ -1074,7 +1077,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public int getOption(@NotNull ArenaOption option) {
-    return arenaOptions.get(option);
+    return arenaOptions.getOrDefault(option, 0);
   }
 
   public void setOptionValue(ArenaOption option, int value) {
@@ -1082,7 +1085,7 @@ public class Arena extends BukkitRunnable {
   }
 
   public void addOptionValue(ArenaOption option, int value) {
-    arenaOptions.put(option, arenaOptions.get(option) + value);
+    arenaOptions.put(option, getOption(option) + value);
   }
 
   public enum BarAction {

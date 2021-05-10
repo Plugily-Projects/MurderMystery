@@ -89,12 +89,13 @@ public class User {
   }
 
   public int getStat(StatsStorage.StatisticType stat) {
-    if(!stats.containsKey(stat)) {
+    Integer st = stats.get(stat);
+    if(st == null) {
       stats.put(stat, 0);
       return 0;
     }
 
-    return stats.getOrDefault(stat, 0);
+    return st.intValue();
   }
 
   public void removeScoreboard(Arena arena) {
@@ -123,7 +124,8 @@ public class User {
   }
 
   public double getCooldown(String s) {
-    return (!cooldowns.containsKey(s) || cooldowns.get(s) <= cooldownCounter) ? 0 : cooldowns.get(s) - cooldownCounter;
+    Double coold = cooldowns.get(s);
+    return (coold == null || coold.doubleValue() <= cooldownCounter) ? 0 : coold.doubleValue() - cooldownCounter;
   }
 
 }

@@ -39,11 +39,9 @@ import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.role.Role;
-import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.utils.Utils;
 
 import java.util.Collections;
-import java.util.Set;
 
 /**
  * @author Plajer
@@ -53,15 +51,13 @@ import java.util.Set;
 public class SpectatorItemEvents implements Listener {
 
   private final Main plugin;
-  private final ChatManager chatManager;
   private final SpectatorSettingsMenu spectatorSettingsMenu;
 
   public SpectatorItemEvents(Main plugin) {
     this.plugin = plugin;
-    chatManager = plugin.getChatManager();
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    spectatorSettingsMenu = new SpectatorSettingsMenu(plugin, chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Inventory-Name"),
-      chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Speed-Name"));
+    spectatorSettingsMenu = new SpectatorSettingsMenu(plugin, plugin.getChatManager().colorMessage("In-Game.Spectator.Settings-Menu.Inventory-Name"),
+      plugin.getChatManager().colorMessage("In-Game.Spectator.Settings-Menu.Speed-Name"));
   }
 
   @EventHandler
@@ -74,10 +70,10 @@ public class SpectatorItemEvents implements Listener {
       if(!stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
         return;
       }
-      if(ComplementAccessor.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
+      if(ComplementAccessor.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(plugin.getChatManager().colorMessage("In-Game.Spectator.Spectator-Item-Name"))) {
         e.setCancelled(true);
         openSpectatorMenu(e.getPlayer().getWorld(), e.getPlayer());
-      } else if(ComplementAccessor.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
+      } else if(ComplementAccessor.getComplement().getDisplayName(stack.getItemMeta()).equalsIgnoreCase(plugin.getChatManager().colorMessage("In-Game.Spectator.Settings-Menu.Item-Name"))) {
         e.setCancelled(true);
         spectatorSettingsMenu.openSpectatorSettingsMenu(e.getPlayer());
       }
@@ -85,16 +81,16 @@ public class SpectatorItemEvents implements Listener {
   }
 
   private void openSpectatorMenu(World world, Player p) {
-    Inventory inventory = ComplementAccessor.getComplement().createInventory(null, Utils.serializeInt(ArenaRegistry.getArena(p).getPlayers().size()),
-      chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
-    Set<Player> players = ArenaRegistry.getArena(p).getPlayers();
+    Arena arena = ArenaRegistry.getArena(p);
+    Inventory inventory = ComplementAccessor.getComplement().createInventory(null, Utils.serializeInt(arena.getPlayers().size()),
+      plugin.getChatManager().colorMessage("In-Game.Spectator.Spectator-Menu-Name"));
 
     //Get the raw role message and replace old placeholder, we don't want to do this inside the for loop.
-    String roleRaw = chatManager.colorMessage("In-Game.Spectator.Target-Player-Role", p);
+    String roleRaw = plugin.getChatManager().colorMessage("In-Game.Spectator.Target-Player-Role", p);
     roleRaw = StringUtils.replace(roleRaw, "%ROLE%", "%role%");
 
     for(Player player : world.getPlayers()) {
-      if(players.contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
+      if(arena.getPlayers().contains(player) && !plugin.getUserManager().getUser(player).isSpectator()) {
         ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
         meta = VersionUtils.setPlayerHead(player, meta);
@@ -102,11 +98,11 @@ public class SpectatorItemEvents implements Listener {
 
         String role = roleRaw;
         if(Role.isRole(Role.MURDERER, player)) {
-          role = StringUtils.replace(role, "%role%", chatManager.colorMessage("Scoreboard.Roles.Murderer"));
+          role = StringUtils.replace(role, "%role%", plugin.getChatManager().colorMessage("Scoreboard.Roles.Murderer"));
         } else if(Role.isRole(Role.ANY_DETECTIVE, player)) {
-          role = StringUtils.replace(role, "%role%", chatManager.colorMessage("Scoreboard.Roles.Detective"));
+          role = StringUtils.replace(role, "%role%", plugin.getChatManager().colorMessage("Scoreboard.Roles.Detective"));
         } else {
-          role = StringUtils.replace(role, "%role%", chatManager.colorMessage("Scoreboard.Roles.Innocent"));
+          role = StringUtils.replace(role, "%role%", plugin.getChatManager().colorMessage("Scoreboard.Roles.Innocent"));
         }
         ComplementAccessor.getComplement().setLore(meta, Collections.singletonList(role));
         VersionUtils.setDurability(skull, (short) SkullType.PLAYER.ordinal());
@@ -121,25 +117,26 @@ public class SpectatorItemEvents implements Listener {
   public void onSpectatorInventoryClick(InventoryClickEvent e) {
     Player p = (Player) e.getWhoClicked();
     Arena arena = ArenaRegistry.getArena(p);
-    if(arena == null || e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta()
-      || !e.getCurrentItem().getItemMeta().hasDisplayName() || !e.getCurrentItem().getItemMeta().hasLore()) {
+    ItemStack currentItem = e.getCurrentItem();
+    if(arena == null || currentItem == null || !currentItem.hasItemMeta()
+      || !currentItem.getItemMeta().hasDisplayName() || !currentItem.getItemMeta().hasLore()) {
       return;
     }
-    if(!ComplementAccessor.getComplement().getTitle(e.getView()).equalsIgnoreCase(chatManager.colorMessage("In-Game.Spectator.Spectator-Menu-Name", p))) {
+    if(!ComplementAccessor.getComplement().getTitle(e.getView()).equalsIgnoreCase(plugin.getChatManager().colorMessage("In-Game.Spectator.Spectator-Menu-Name", p))) {
       return;
     }
     e.setCancelled(true);
-    ItemMeta meta = e.getCurrentItem().getItemMeta();
+    ItemMeta meta = currentItem.getItemMeta();
+    String dName = ComplementAccessor.getComplement().getDisplayName(meta);
     for(Player player : arena.getPlayers()) {
-      if(player.getName().equalsIgnoreCase(ComplementAccessor.getComplement().getDisplayName(meta))
-          || ChatColor.stripColor(ComplementAccessor.getComplement().getDisplayName(meta)).contains(player.getName())) {
-        p.sendMessage(chatManager.formatMessage(arena, chatManager.colorMessage("Commands.Admin-Commands.Teleported-To-Player"), player));
+      if(player.getName().equalsIgnoreCase(dName) || ChatColor.stripColor(dName).contains(player.getName())) {
+        p.sendMessage(plugin.getChatManager().formatMessage(arena, plugin.getChatManager().colorMessage("Commands.Admin-Commands.Teleported-To-Player"), player));
         p.teleport(player);
         p.closeInventory();
         return;
       }
     }
-    p.sendMessage(chatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
+    p.sendMessage(plugin.getChatManager().colorMessage("Commands.Admin-Commands.Player-Not-Found"));
   }
 
 }

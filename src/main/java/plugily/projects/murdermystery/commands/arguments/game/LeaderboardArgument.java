@@ -113,9 +113,9 @@ public class LeaderboardArgument {
 
   private String formatMessage(String statisticName, String playerName, int position, int value) {
     String message = chatManager.colorMessage("Commands.Statistics.Format");
-    message = StringUtils.replace(message, "%position%", String.valueOf(position));
+    message = StringUtils.replace(message, "%position%", Integer.toString(position));
     message = StringUtils.replace(message, "%name%", playerName);
-    message = StringUtils.replace(message, "%value%", String.valueOf(value));
+    message = StringUtils.replace(message, "%value%", Integer.toString(value));
     message = StringUtils.replace(message, "%statistic%", statisticName);
     return message;
   }

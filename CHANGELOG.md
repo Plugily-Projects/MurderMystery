@@ -1,3 +1,11 @@
+### 1.7.8 Release (15.04.2021 - 10.05.2021)
+* Added /mm join maxplayers which tries to get the arena with the highest amount of players
+* Added placeholder arena_players_online
+* Added new RewardType scoreboard_add
+* Changed Now the arena will be set to isDone false if the world is not exist, after the plugin loaded.
+* Changed randomjoin mechanics -> Searches for starting -> random join -> Searches for waiting -> random join
+* Fixed arrow trails are only on player
+
 ### 1.7.7 Release (31.03.2021 - 13.04.2021)
 * Fixed NoSuchElementException when iterating through players in gold locations but there is no player available.
 * Fixed issue when there was no murderer in game and it caused to not choose another one.

@@ -40,7 +40,6 @@ import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.utils.Utils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,9 +82,9 @@ public class ArenaSelectorArgument implements Listener {
           if(itemMeta != null) {
             ComplementAccessor.getComplement().setDisplayName(itemMeta, formatItem(LanguageManager.getLanguageMessage("Arena-Selector.Item.Name"), arena));
 
-            java.util.List<String> lore = new ArrayList<>();
-            for(String string : LanguageManager.getLanguageList("Arena-Selector.Item.Lore")) {
-              lore.add(formatItem(string, arena));
+            java.util.List<String> lore = LanguageManager.getLanguageList("Arena-Selector.Item.Lore");
+            for(int a = 0; a < lore.size(); a++) {
+              lore.set(a, formatItem(lore.get(a), arena));
             }
 
             ComplementAccessor.getComplement().setLore(itemMeta, lore);

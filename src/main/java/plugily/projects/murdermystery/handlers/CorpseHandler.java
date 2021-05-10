@@ -55,17 +55,19 @@ public class CorpseHandler implements Listener {
   private final Main plugin;
   private final ChatManager chatManager;
   private Corpses.CorpseData lastSpawnedCorpse;
+
   private final Map<String, String> registeredLastWords = new HashMap<>();
+  private final ItemStack head = XMaterial.PLAYER_HEAD.parseItem();
 
   public CorpseHandler(Main plugin) {
     this.plugin = plugin;
     chatManager = plugin.getChatManager();
     //run bit later than hook manager to ensure it's not null
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      if(plugin.getHookManager() != null && plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+      if(plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
       }
-    }, 20 * 5);
+    }, 20 * 7);
   }
 
   public void registerLastWord(String permission, String lastWord) {
@@ -74,9 +76,8 @@ public class CorpseHandler implements Listener {
 
   @SuppressWarnings("deprecation")
   public void spawnCorpse(Player p, Arena arena) {
-    if(plugin.getHookManager() != null && !plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+    if(!plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
       ArmorStand stand = p.getLocation().getWorld().spawn(p.getLocation().add(0.0D, -1.25D, 0.0D), ArmorStand.class);
-      ItemStack head = XMaterial.PLAYER_HEAD.parseItem();
       SkullMeta meta = (SkullMeta) head.getItemMeta();
       meta = VersionUtils.setPlayerHead(p, meta);
       head.setItemMeta(meta);
@@ -104,6 +105,7 @@ public class CorpseHandler implements Listener {
     ArmorStandHologram hologram = getLastWordsHologram(p);
     Corpses.CorpseData corpse = CorpseAPI.spawnCorpse(p, p.getLocation());
     lastSpawnedCorpse = corpse;
+    //spawns 2 corpses - Corpses.CorpseData corpse = lastSpawnedCorpse = CorpseAPI.spawnCorpse(p, p.getLocation());
     arena.addCorpse(new Corpse(hologram, corpse));
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       hologram.delete();

@@ -246,10 +246,7 @@ public class Events implements Listener {
       return;
     }
     String key = SpecialItemManager.getRelatedSpecialItem(itemStack);
-    if(key == null) {
-      return;
-    }
-    if(SpecialItemManager.getRelatedSpecialItem(itemStack).equalsIgnoreCase("Leave")) {
+    if(key != null && key.equalsIgnoreCase("Leave")) {
       event.setCancelled(true);
       if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         plugin.getBungeeManager().connectToHub(event.getPlayer());
@@ -268,15 +265,25 @@ public class Events implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGH)
-  //highest priority to fully protect our game (i didn't set it because my test server was destroyed, n-no......)
+  //highest priority to fully protect our game
   public void onBlockBreakEvent(BlockBreakEvent event) {
+    HologramManager.getArmorStands().removeIf(armorStand -> {
+      boolean isSameType = armorStand.getLocation().getBlock().getType() == event.getBlock().getType();
+      if (isSameType) {
+        armorStand.remove();
+        armorStand.setCustomNameVisible(false);
+      }
+
+      return isSameType;
+    });
+
     if(ArenaRegistry.isInArena(event.getPlayer())) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler(priority = EventPriority.HIGH)
-  //highest priority to fully protect our game (i didn't set it because my test server was destroyed, n-no......)
+  //highest priority to fully protect our game
   public void onBuild(BlockPlaceEvent event) {
     if(ArenaRegistry.isInArena(event.getPlayer())) {
       event.setCancelled(true);
@@ -284,7 +291,7 @@ public class Events implements Listener {
   }
 
   @EventHandler(priority = EventPriority.HIGH)
-  //highest priority to fully protect our game (i didn't set it because my test server was destroyed, n-no......)
+  //highest priority to fully protect our game
   public void onHangingBreakEvent(HangingBreakByEntityEvent event) {
     if(event.getEntity() instanceof ItemFrame || event.getEntity() instanceof Painting) {
       if(event.getRemover() instanceof Player && ArenaRegistry.isInArena((Player) event.getRemover())) {
@@ -314,19 +321,6 @@ public class Events implements Listener {
         || (e.getDamager() instanceof Player && ArenaRegistry.isInArena((Player) e.getDamager()))) {
       e.setCancelled(true);
     }
-  }
-
-  @EventHandler
-  public void onHopperBreak(BlockBreakEvent event) {
-    HologramManager.getArmorStands().removeIf(armorStand -> {
-        boolean isSameType = armorStand.getLocation().getBlock().getType() == event.getBlock().getType();
-        if (isSameType) {
-          armorStand.remove();
-          armorStand.setCustomNameVisible(false);
-        }
-
-        return isSameType;
-    });
   }
 
   @EventHandler(priority = EventPriority.HIGH)

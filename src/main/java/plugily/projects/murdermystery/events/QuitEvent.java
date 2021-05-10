@@ -24,6 +24,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import plugily.projects.murdermystery.Main;
+import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaManager;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 
@@ -52,8 +53,9 @@ public class QuitEvent implements Listener {
   }
 
   private void onQuit(Player player) {
-    if(ArenaRegistry.isInArena(player)) {
-      ArenaManager.leaveAttempt(player, ArenaRegistry.getArena(player));
+    Arena arena = ArenaRegistry.getArena(player);
+    if(arena != null) {
+      ArenaManager.leaveAttempt(player, arena);
     }
     plugin.getUserManager().removeUser(plugin.getUserManager().getUser(player));
   }

@@ -106,11 +106,12 @@ public class ArenaManager {
             if(player.equals(partyPlayer)) {
               continue;
             }
-            if(ArenaRegistry.isInArena(partyPlayer)) {
-              if(ArenaRegistry.getArena(partyPlayer).getArenaState() == ArenaState.IN_GAME) {
+            Arena partyArena = ArenaRegistry.getArena(partyPlayer);
+            if(partyArena != null) {
+              if(partyArena.getArenaState() == ArenaState.IN_GAME) {
                 continue;
               }
-              leaveAttempt(partyPlayer, ArenaRegistry.getArena(partyPlayer));
+              leaveAttempt(partyPlayer, partyArena);
             }
             partyPlayer.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Join-As-Party-Member"), partyPlayer));
             joinAttempt(partyPlayer, arena);
@@ -270,12 +271,14 @@ public class ArenaManager {
       arena.removeFromMurdererList(player);
     }
     if(arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {
+      List<Player> playersLeft = arena.getPlayersLeft();
+
       //-1 cause we didn't remove player yet
-      if(arena.getPlayersLeft().size() - 1 > 1) {
+      if(playersLeft.size() - 1 > 1) {
         if(playerHasMurdererRole) {
           if(arena.getMurdererList().isEmpty()) {
             List<Player> players = new ArrayList<>();
-            for(Player gamePlayer : arena.getPlayersLeft()) {
+            for(Player gamePlayer : playersLeft) {
               if(gamePlayer == player || Role.isRole(Role.ANY_DETECTIVE, gamePlayer) || Role.isRole(Role.MURDERER, gamePlayer)) {
                 continue;
               }
@@ -389,6 +392,8 @@ public class ArenaManager {
       }
     }
 
+    arena.removeBowHolo();
+
     List<String> summaryMessages = LanguageManager.getLanguageList("In-Game.Messages.Game-End-Messages.Summary-Message");
     arena.getScoreboardManager().stopAllScoreboards();
 
@@ -458,12 +463,13 @@ public class ArenaManager {
     StringBuilder murders = new StringBuilder(), detectives = new StringBuilder();
     int murdererKills = 0;
     for(Player p : arena.getMurdererList()) {
+      User user = plugin.getUserManager().getUser(p);
       if(arena.getMurdererList().size() > 1) {
-        murders.append(p.getName()).append(" (").append(plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS)).append("), ");
+        murders.append(p.getName()).append(" (").append(user.getStat(StatsStorage.StatisticType.LOCAL_KILLS)).append("), ");
       } else {
         murders.append(p.getName());
       }
-      murdererKills += plugin.getUserManager().getUser(p).getStat(StatsStorage.StatisticType.LOCAL_KILLS);
+      murdererKills += user.getStat(StatsStorage.StatisticType.LOCAL_KILLS);
     }
     if(arena.getMurdererList().size() > 1) {
       murders.deleteCharAt(murders.length() - 2);
@@ -485,8 +491,9 @@ public class ArenaManager {
     formatted = StringUtils.replace(formatted, "%murderer%", (arena.lastAliveMurderer() ? "" : ChatColor.STRIKETHROUGH) + murders.toString());
 
     formatted = StringUtils.replace(formatted, "%murderer_kills%", Integer.toString(murdererKills));
-    formatted = StringUtils.replace(formatted, "%hero%", arena.isCharacterSet(Arena.CharacterType.HERO)
-        ? arena.getCharacter(Arena.CharacterType.HERO).getName() : chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody"));
+
+    Player hero = arena.getCharacter(Arena.CharacterType.HERO);
+    formatted = StringUtils.replace(formatted, "%hero%", hero != null ? hero.getName() : chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Nobody"));
 
     if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formatted = PlaceholderAPI.setPlaceholders(player, formatted);

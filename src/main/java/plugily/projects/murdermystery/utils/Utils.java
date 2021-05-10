@@ -28,6 +28,7 @@ import org.bukkit.util.Vector;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.string.StringFormatUtils;
 import plugily.projects.murdermystery.Main;
+import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.ArenaState;
 
@@ -70,7 +71,8 @@ public class Utils {
 
       @Override
       public void run() {
-        if(!ArenaRegistry.isInArena(p) || ArenaRegistry.getArena(p).getArenaState() != ArenaState.IN_GAME) {
+        Arena arena = ArenaRegistry.getArena(p);
+        if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
           cancel();
         }
         if(ticks >= seconds * 20) {
