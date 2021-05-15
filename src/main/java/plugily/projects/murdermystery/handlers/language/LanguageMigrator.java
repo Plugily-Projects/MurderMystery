@@ -34,8 +34,8 @@ import java.io.File;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 23;
-  public static final int LANGUAGE_FILE_VERSION = 7;
+  public static final int CONFIG_FILE_VERSION = 24;
+  public static final int LANGUAGE_FILE_VERSION = 8;
   private final Main plugin;
 
   public LanguageMigrator(Main plugin) {
