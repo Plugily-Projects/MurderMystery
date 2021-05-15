@@ -28,7 +28,7 @@ import plugily.projects.murdermystery.Main;
  * Contains all GameStates.
  */
 public enum ArenaState {
-  WAITING_FOR_PLAYERS("Waiting"), STARTING("Starting"), IN_GAME("In-Game"), ENDING("Ending"), RESTARTING("Restarting");
+  WAITING_FOR_PLAYERS("Waiting"), STARTING("Starting"), IN_GAME("In-Game"), ENDING("Ending"), RESTARTING("Restarting"), SHUTTING_DOWN ("Shutting Down");
 
   private final String formattedName;
   private final String placeholder;

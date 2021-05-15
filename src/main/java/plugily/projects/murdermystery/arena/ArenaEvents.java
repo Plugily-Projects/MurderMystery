@@ -392,7 +392,7 @@ public class ArenaEvents implements Listener {
     player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
     if(arena.getArenaState() == ArenaState.STARTING) {
       return;
-    } else if(arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
+    } else if(arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING || arena.getArenaState() == ArenaState.SHUTTING_DOWN) {
       player.getInventory().clear();
       player.setFlying(false);
       player.setAllowFlight(false);
@@ -420,7 +420,7 @@ public class ArenaEvents implements Listener {
     player.setFlying(true);
     player.getInventory().clear();
     chatManager.broadcastAction(arena, player, ChatManager.ActionType.DEATH);
-    if(arena.getArenaState() != ArenaState.ENDING && arena.getArenaState() != ArenaState.RESTARTING) {
+    if(arena.getArenaState() != ArenaState.ENDING && arena.getArenaState() != ArenaState.RESTARTING && arena.getArenaState() != ArenaState.SHUTTING_DOWN) {
       arena.addDeathPlayer(player);
     }
     //we must call it ticks later due to instant respawn bug
@@ -442,7 +442,7 @@ public class ArenaEvents implements Listener {
     if(arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       e.setRespawnLocation(arena.getLobbyLocation());
       return;
-    } else if(arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
+    } else if(arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING || arena.getArenaState() == ArenaState.SHUTTING_DOWN) {
       e.setRespawnLocation(arena.getEndLocation());
       return;
     }

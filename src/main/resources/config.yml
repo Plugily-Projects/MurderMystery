@@ -171,7 +171,7 @@ Nametags-Hidden: true
 # - yellow (starting) stained glass
 # - orange (in game) stained glass
 # - gray (ending) stained glass
-# - black (restarting) stained glass
+# - black (restarting/shutting down) stained glass
 Signs-Block-States-Enabled: true
 
 
@@ -183,6 +183,7 @@ Arena-Selector:
     In-Game: RED_wool
     Ending: RED_wool
     Restarting: RED_wool
+    Shutting-Down: RED_wool
 
 Update-Notifier:
   # Should we check for updates on plugin start/after admin join?

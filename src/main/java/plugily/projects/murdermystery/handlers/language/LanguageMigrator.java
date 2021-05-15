@@ -117,7 +117,8 @@ public class LanguageMigrator {
               "    Starting: \"&e&lStarting\"\r\n" +
               "    Full-Game: \"&4&lFULL\"\r\n" +
               "    Ending: \"&lEnding\"\r\n" +
-              "    Restarting: \"&c&lRestarting\"\r\n");
+              "    Restarting: \"&c&lRestarting\"\r\n" +
+              "    Shutting-Down: \"&c&lShutting down\"\r\n");
           break;
         case 9:
           MigratorUtils.addNewLines(file, "\r\n" +
@@ -201,7 +202,8 @@ public class LanguageMigrator {
               "    Starting: YELLOW_wool\r\n" +
               "    In-Game: RED_wool\r\n" +
               "    Ending: RED_wool\r\n" +
-              "    Restarting: RED_wool\r\n");
+              "    Restarting: RED_wool\r\n" +
+              "    Shutting-Down: RED_wool\r\n");
           break;
         case 22:
           MigratorUtils.addNewLines(file, "\r\n#Add trails that you want to blacklist from all trails(particles)\r\n" +
@@ -272,7 +274,8 @@ public class LanguageMigrator {
               "    Starting: \"&e&lStarting\"\r\n" +
               "    In-Game: \"&lPlaying\"\r\n" +
               "    Ending: \"&lEnding\"\r\n" +
-              "    Restarting: \"&c&lRestarting\"\r\n");
+              "    Restarting: \"&c&lRestarting\"\r\n" +
+              "    Shutting-Down: \"&c&lShutting down\"\r\n");
           break;
         case 6:
           //No migrator as we can't handle that

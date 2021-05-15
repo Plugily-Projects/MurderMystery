@@ -268,6 +268,7 @@ Signs:
     Full-Game: "&4&lFULL"
     Ending: "&lEnding"
     Restarting: "&c&lRestarting"
+    Shutting-Down: "&c&lShutting down"
   Lines:
     - "&4&lMurder Mystery"
     - "%state%"
@@ -312,6 +313,7 @@ Placeholders:
     In-Game: "&lIn-game"
     Ending: "&lEnding"
     Restarting: "&c&lRestarting"
+    Shutting-Down: "&c&lShutting down"
 
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p

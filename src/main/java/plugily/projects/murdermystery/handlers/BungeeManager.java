@@ -63,6 +63,7 @@ public class BungeeManager implements Listener {
     gameStateToString.put(ArenaState.IN_GAME, chatManager.colorRawMessage(bungee.getString("MOTD.Game-States.In-Game", "In-Game")));
     gameStateToString.put(ArenaState.ENDING, chatManager.colorRawMessage(bungee.getString("MOTD.Game-States.Ending", "Ending")));
     gameStateToString.put(ArenaState.RESTARTING, chatManager.colorRawMessage(bungee.getString("MOTD.Game-States.Restarting", "Restarting")));
+    gameStateToString.put(ArenaState.SHUTTING_DOWN, chatManager.colorRawMessage(bungee.getString("MOTD.Game-States.Shutting-Down", "Shutting-Down")));
     motd = chatManager.colorRawMessage(bungee.getString("MOTD.Message", "The actual game state of mm is %state%"));
     plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
     plugin.getServer().getPluginManager().registerEvents(this, plugin);

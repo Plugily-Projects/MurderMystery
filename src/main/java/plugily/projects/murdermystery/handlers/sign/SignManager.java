@@ -73,6 +73,7 @@ public class SignManager implements Listener {
     gameStateToString.put(ArenaState.IN_GAME, chatManager.colorMessage("Signs.Game-States.In-Game"));
     gameStateToString.put(ArenaState.ENDING, chatManager.colorMessage("Signs.Game-States.Ending"));
     gameStateToString.put(ArenaState.RESTARTING, chatManager.colorMessage("Signs.Game-States.Restarting"));
+    gameStateToString.put(ArenaState.SHUTTING_DOWN, chatManager.colorMessage("Signs.Game-States.Shutting-Down"));
     signLines = LanguageManager.getLanguageList("Signs.Lines");
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
@@ -246,6 +247,7 @@ public class SignManager implements Listener {
               }
               break;
             case RESTARTING:
+            case SHUTTING_DOWN:
               behind.setType(XMaterial.BLACK_STAINED_GLASS.parseMaterial());
               if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_13_R1)) {
                 Block.class.getMethod("setData", byte.class).invoke(behind, (byte) 15);

@@ -481,10 +481,16 @@ public class Arena extends BukkitRunnable {
                 Bukkit.shutdown ();
               }
             }, 5, 5);
+            
+            setArenaState (ArenaState.SHUTTING_DOWN);
+          } else {
+            setArenaState (ArenaState.RESTARTING);
           }
-          setArenaState(ArenaState.RESTARTING);
         }
         setTimer(getTimer() - 1);
+        break;
+      case SHUTTING_DOWN:
+        // nothing to do here but i'll put it in the switch just in case
         break;
       case RESTARTING:
         players.clear();
