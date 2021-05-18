@@ -193,7 +193,6 @@ public class Main extends JavaPlugin {
           InventorySerializer.loadInventory(this, player);
         }
       }
-      arena.teleportAllToEndLocation();
       arena.cleanUpArena();
     }
     Debugger.debug("System disable finished took {0}ms", System.currentTimeMillis() - start);

@@ -69,7 +69,7 @@ public class BungeeManager implements Listener {
   }
 
   public void connectToHub(Player player) {
-    if(!bungee.getBoolean("Connect-To-Hub", true)) {
+    if(!plugin.isEnabled() || !bungee.getBoolean("Connect-To-Hub", true)) {
       return;
     }
     ByteArrayDataOutput out = ByteStreams.newDataOutput();
