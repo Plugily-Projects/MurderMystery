@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Plajer
@@ -52,28 +51,34 @@ public class JoinArguments {
           sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Type-Arena-Name"));
           return;
         }
-        if(args[1].equalsIgnoreCase("maxplayers") && ArenaRegistry.getArena("maxplayers") == null) {
-          Map<Arena, Integer> arenas = new HashMap<>();
-          for(Arena arena : ArenaRegistry.getArenas()) {
-            arenas.put(arena, arena.getPlayers().size());
-          }
+
+        if(!ArenaRegistry.getArenas().isEmpty() && args[1].equalsIgnoreCase("maxplayers")) {
           if(ArenaRegistry.getArenaPlayersOnline() == 0) {
             ArenaManager.joinAttempt((Player) sender, ArenaRegistry.getArenas().get(ThreadLocalRandom.current().nextInt(ArenaRegistry.getArenas().size())));
             return;
           }
-          Stream<Map.Entry<Arena, Integer>> sorted = arenas.entrySet().stream().sorted(Map.Entry.comparingByValue());
-          if(sorted.findFirst().isPresent()) {
-            Arena arena = sorted.findFirst().get().getKey();
+
+          Map<Arena, Integer> arenas = new HashMap<>();
+          for(Arena arena : ArenaRegistry.getArenas()) {
+            arenas.put(arena, arena.getPlayers().size());
+          }
+
+          java.util.Optional<Map.Entry<Arena, Integer>> sorted = arenas.entrySet().stream().sorted(Map.Entry.comparingByValue()).findFirst();
+
+          if(sorted.isPresent()) {
+            Arena arena = sorted.get().getKey();
             ArenaManager.joinAttempt((Player) sender, arena);
             return;
           }
         }
+
         for(Arena arena : ArenaRegistry.getArenas()) {
           if(args[1].equalsIgnoreCase(arena.getId())) {
             ArenaManager.joinAttempt((Player) sender, arena);
             return;
           }
         }
+
         sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Arena-Like-That"));
       }
     });

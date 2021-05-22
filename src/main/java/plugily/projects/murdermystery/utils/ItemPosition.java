@@ -53,29 +53,23 @@ public enum ItemPosition {
     if(player == null) {
       return;
     }
-    Inventory inv = player.getInventory();
-    if(Role.isRole(Role.MURDERER, player)) {
-      int itemPos = itemPosition.getMurdererItemPosition();
-      if (itemPos < 0) {
-        return;
-      }
-      if(inv.getItem(itemPos) != null) {
-        inv.getItem(itemPos).setAmount(inv.getItem(itemPos).getAmount() + itemStack.getAmount());
-        return;
-      }
-      inv.setItem(itemPos, itemStack);
-    } else {
-      int itemPos = itemPosition.getOtherRolesItemPosition();
-      if (itemPos < 0) {
-        return;
-      }
 
-      if(inv.getItem(itemPos) != null) {
-        inv.getItem(itemPos).setAmount(inv.getItem(itemPos).getAmount() + itemStack.getAmount());
-        return;
-      }
-      inv.setItem(itemPos, itemStack);
+    int itemPos = Role.isRole(Role.MURDERER, player) ? itemPosition.getMurdererItemPosition()
+        : itemPosition.getOtherRolesItemPosition();
+
+    if (itemPos < 0) {
+      return;
     }
+
+    Inventory inv = player.getInventory();
+    ItemStack item = inv.getItem(itemPos);
+
+    if(item != null) {
+      item.setAmount(item.getAmount() + itemStack.getAmount());
+      return;
+    }
+
+    inv.setItem(itemPos, itemStack);
   }
 
   /**
@@ -90,11 +84,11 @@ public enum ItemPosition {
     if(player == null) {
       return;
     }
-    Inventory inv = player.getInventory();
-    if(Role.isRole(Role.MURDERER, player) && itemPosition.getMurdererItemPosition() >= 0) {
-      inv.setItem(itemPosition.getMurdererItemPosition(), itemStack);
+
+    if(itemPosition.getMurdererItemPosition() >= 0 && Role.isRole(Role.MURDERER, player)) {
+      player.getInventory().setItem(itemPosition.getMurdererItemPosition(), itemStack);
     } else if (itemPosition.getOtherRolesItemPosition() >= 0) {
-      inv.setItem(itemPosition.getOtherRolesItemPosition(), itemStack);
+      player.getInventory().setItem(itemPosition.getOtherRolesItemPosition(), itemStack);
     }
   }
 
