@@ -63,13 +63,18 @@ public class SpecialBlockEvents implements Listener {
 
   @EventHandler
   public void onSpecialBlockClick(PlayerInteractEvent e) {
-    Arena arena = ArenaRegistry.getArena(e.getPlayer());
-    if(arena == null || e.getClickedBlock() == null) {
+    if (e.getClickedBlock() == null)
       return;
-    }
+
     if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_11_R1) && e.getHand() == org.bukkit.inventory.EquipmentSlot.OFF_HAND) {
       return;
     }
+
+    Arena arena = ArenaRegistry.getArena(e.getPlayer());
+    if(arena == null) {
+      return;
+    }
+
     if(arena.getArenaState() != ArenaState.IN_GAME || plugin.getUserManager().getUser(e.getPlayer()).isSpectator()) {
       return;
     }

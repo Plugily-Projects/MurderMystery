@@ -129,9 +129,8 @@ public class Main extends JavaPlugin {
     checkUpdate();
     Debugger.debug("[System] Initialization finished took {0}ms", System.currentTimeMillis() - start);
 
-    Debugger.debug("Plugin loaded! Hooking into soft-dependencies in a while!");
-    //start hook manager later in order to allow soft-dependencies to fully load
-    getServer().getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
+    Debugger.debug("Plugin loaded!");
+
     if(configPreferences.getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
       getServer().getScheduler().scheduleSyncRepeatingTask(this, () ->
         getServer().getOnlinePlayers().forEach(ArenaUtils::updateNameTagsVisibility), 60, 140);
@@ -193,7 +192,6 @@ public class Main extends JavaPlugin {
           InventorySerializer.loadInventory(this, player);
         }
       }
-      arena.teleportAllToEndLocation();
       arena.cleanUpArena();
     }
     Debugger.debug("System disable finished took {0}ms", System.currentTimeMillis() - start);
@@ -211,6 +209,7 @@ public class Main extends JavaPlugin {
     }
     argumentsRegistry = new ArgumentsRegistry(this);
     userManager = new UserManager(this);
+    hookManager = new HookManager();
     Utils.init(this);
     SpecialItem.loadAll();
     PermissionsManager.init();

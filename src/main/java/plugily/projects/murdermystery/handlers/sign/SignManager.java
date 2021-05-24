@@ -23,6 +23,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -135,7 +136,7 @@ public class SignManager implements Listener {
     }
     arenaSigns.remove(arenaSign);
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    org.bukkit.configuration.ConfigurationSection section = config.getConfigurationSection("instances");
+    ConfigurationSection section = config.getConfigurationSection("instances");
     if (section == null)
       return;
 
@@ -190,13 +191,13 @@ public class SignManager implements Listener {
 
     arenaSigns.clear();
 
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    if(!config.isConfigurationSection("instances")) {
+    ConfigurationSection section = ConfigUtils.getConfig(plugin, "arenas").getConfigurationSection("instances");
+    if(section == null) {
       return;
     }
 
-    for(String path : config.getConfigurationSection("instances").getKeys(false)) {
-      for(String sign : config.getStringList("instances." + path + ".signs")) {
+    for(String path : section.getKeys(false)) {
+      for(String sign : section.getStringList(path + ".signs")) {
         Location loc = LocationSerializer.getLocation(sign);
         if(loc.getBlock().getState() instanceof Sign) {
           arenaSigns.add(new ArenaSign((Sign) loc.getBlock().getState(), ArenaRegistry.getArena(path)));

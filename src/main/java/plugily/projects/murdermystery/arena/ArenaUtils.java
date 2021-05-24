@@ -58,10 +58,10 @@ public class ArenaUtils {
       }
       User loopUser = plugin.getUserManager().getUser(player);
       if(Role.isRole(Role.INNOCENT, player)) {
-        ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.SURVIVE_GAME, 0);
+        addScore(loopUser, ScoreAction.SURVIVE_GAME, 0);
       } else if(Role.isRole(Role.ANY_DETECTIVE, player)) {
-        ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.WIN_GAME, 0);
-        ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.DETECTIVE_WIN_GAME, 0);
+        addScore(loopUser, ScoreAction.WIN_GAME, 0);
+        addScore(loopUser, ScoreAction.DETECTIVE_WIN_GAME, 0);
       }
     }
     for(Player murderer : arena.getMurdererList()) {
@@ -86,12 +86,14 @@ public class ArenaUtils {
     }
 
     String msg = chatManager.colorMessage("In-Game.Messages.Bonus-Score");
-    msg = StringUtils.replace(msg, "%score%", Integer.toString(action.getPoints()));
 
     if(action == ScoreAction.GOLD_PICKUP && amount > 1) {
-      msg = StringUtils.replace(msg, "%score%", Integer.toString(action.getPoints() * amount));
+      int score = action.getPoints() * amount;
+
+      msg = StringUtils.replace(msg, "%score%", Integer.toString(score));
       msg = StringUtils.replace(msg, "%action%", action.getAction());
-      user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + (action.getPoints() * amount));
+
+      user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + (score));
       user.getPlayer().sendMessage(msg);
       return;
     }
@@ -104,9 +106,13 @@ public class ArenaUtils {
         }
       }
 
-      user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + (100 * innocents));
-      msg = StringUtils.replace(msg, "%score%", Integer.toString(100 * innocents));
+      int overallInnocents = 100 * innocents;
+
+      user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + overallInnocents);
+
+      msg = StringUtils.replace(msg, "%score%", Integer.toString(overallInnocents));
       msg = StringUtils.replace(msg, "%action%", action.getAction().replace("%amount%", Integer.toString(innocents)));
+
       user.getPlayer().sendMessage(msg);
       return;
     }

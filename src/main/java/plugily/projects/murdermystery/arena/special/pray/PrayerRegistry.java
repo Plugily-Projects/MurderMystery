@@ -39,7 +39,6 @@ import plugily.projects.murdermystery.utils.ItemPosition;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -82,16 +81,20 @@ public class PrayerRegistry {
 
   public static void applyRandomPrayer(User user) {
     Prayer prayer = getRandomPray();
+
     user.setStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY, prayer.getPrayerType().ordinal());
+
     Player player = user.getPlayer();
     Arena arena = ArenaRegistry.getArena(player);
     List<String> prayMessage = LanguageManager.getLanguageList("In-Game.Messages.Special-Blocks.Praises.Message");
-    if(prayer.isGoodPray()) {
-      prayMessage = prayMessage.stream().map(msg -> msg.replace("%feeling%", chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings.Blessed", player))).collect(Collectors.toList());
-    } else {
-      prayMessage = prayMessage.stream().map(msg -> msg.replace("%feeling%", chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings.Cursed", player))).collect(Collectors.toList());
+
+    String feeling = chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings." + (prayer.isGoodPray() ? "Blessed" : "Cursed"), player);
+    int praySize = prayMessage.size();
+
+    for (int a = 0; a < praySize; a++) {
+      prayMessage.set(a, prayMessage.get(a).replace("%feeling%", feeling).replace("%praise%", prayer.getPrayerDescription()));
     }
-    prayMessage = prayMessage.stream().map(msg -> msg.replace("%praise%", prayer.getPrayerDescription())).collect(Collectors.toList());
+
     switch(prayer.getPrayerType()) {
       case BLINDNESS_CURSE:
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
@@ -103,15 +106,18 @@ public class PrayerRegistry {
         ItemPosition.setItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Prayer-Arrows", 2)));
         break;
       case DETECTIVE_REVELATION:
-        String detectiveName;
-        if(arena.isCharacterSet(Arena.CharacterType.DETECTIVE)) {
-          detectiveName = arena.getCharacter(Arena.CharacterType.DETECTIVE).getName();
-        } else if(arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
-          detectiveName = arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE).getName();
-        } else {
-          detectiveName = "????";
+        Player characterType = arena.getCharacter(Arena.CharacterType.DETECTIVE);
+
+        if (characterType == null) {
+          characterType = arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE);
         }
-        prayMessage = prayMessage.stream().map(msg -> msg.replace("%detective%", detectiveName)).collect(Collectors.toList());
+
+        String charName = characterType == null ? "????" : characterType.getName();
+
+        for (int a = 0; a < praySize; a++) {
+          prayMessage.set(a, prayMessage.get(a).replace("%detective%", charName));
+        }
+
         break;
       case INCOMING_DEATH:
         new BukkitRunnable() {
@@ -123,8 +129,8 @@ public class PrayerRegistry {
               cancel();
               return;
             }
-            time--;
-            if(time == 0) {
+
+            if(time-- == 0) {
               player.damage(1000);
               cancel();
             }
