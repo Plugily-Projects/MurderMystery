@@ -68,7 +68,7 @@ public class TrailsManager {
     //check perms
     List<Trail> perms = registeredTrails.stream().filter(trail -> player.hasPermission(trail.getPermission())).collect(Collectors.toList());
     if(!perms.isEmpty()) {
-      return perms.get(ThreadLocalRandom.current().nextInt(perms.size()));
+      return perms.get(perms.size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(perms.size()));
     }
     //fallback
     return registeredTrails.get(0);

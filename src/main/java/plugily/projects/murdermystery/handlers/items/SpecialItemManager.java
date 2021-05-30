@@ -42,7 +42,7 @@ public class SpecialItemManager {
 
   public static SpecialItem getSpecialItem(String name) {
     List<SpecialItem> specialitem = specialItems.getOrDefault(name, new java.util.ArrayList<>());
-    return specialitem.get(ThreadLocalRandom.current().nextInt(specialitem.size()));
+    return specialitem.get(specialitem.size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(specialitem.size()));
   }
 
   public static String getRelatedSpecialItem(ItemStack itemStack) {

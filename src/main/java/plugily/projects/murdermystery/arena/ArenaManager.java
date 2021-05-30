@@ -138,7 +138,7 @@ public class ArenaManager {
     if(arena.getArenaState() == ArenaState.RESTARTING) {
       return;
     }
-    if(arena.getPlayers().size() >= arena.getMaximumPlayers() && arena.getArenaState() == ArenaState.STARTING) {
+    if(arena.getArenaState() == ArenaState.STARTING && arena.getPlayers().size() >= arena.getMaximumPlayers()) {
       if(!player.hasPermission(PermissionsManager.getJoinFullGames())) {
         player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Full-Game-No-Permission"));
         return;
@@ -244,8 +244,10 @@ public class ArenaManager {
 
     Bukkit.getPluginManager().callEvent(new MMGameLeaveAttemptEvent(player, arena));
     User user = plugin.getUserManager().getUser(player);
-    if(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) > user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE)) {
-      user.setStat(StatsStorage.StatisticType.HIGHEST_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE));
+
+    int localScore = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
+    if(localScore > user.getStat(StatsStorage.StatisticType.HIGHEST_SCORE)) {
+      user.setStat(StatsStorage.StatisticType.HIGHEST_SCORE, localScore);
     }
 
     //todo change later
@@ -326,18 +328,17 @@ public class ArenaManager {
     player.getInventory().clear();
     player.getInventory().setArmorContents(null);
     arena.removePlayer(player);
-    arena.teleportToEndLocation(player);
+
     if(!user.isSpectator() && !arena.isSpectatorPlayer(player)) {
       chatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
     }
+
     VersionUtils.setGlowing(player, false);
     user.setSpectator(false);
-    if(arena.isDeathPlayer(player)) {
-      arena.removeDeathPlayer(player);
-    }
-    if(arena.isSpectatorPlayer(player)) {
-      arena.removeSpectatorPlayer(player);
-    }
+
+    arena.removeDeathPlayer(player);
+    arena.removeSpectatorPlayer(player);
+
     VersionUtils.setCollidable(player, true);
     user.removeScoreboard(arena);
     arena.doBarAction(Arena.BarAction.REMOVE, player);
@@ -406,28 +407,26 @@ public class ArenaManager {
 
     for(final Player player : arena.getPlayers()) {
       User user = plugin.getUserManager().getUser(player);
+
       if(!quickStop && Role.isAnyRole(player)) {
-        if(!Role.isRole(Role.DEATH, player) && !Role.isRole(Role.SPECTATOR, player)) {
+        boolean hasDeathRole = Role.isRole(Role.DEATH, player);
+
+        if(!hasDeathRole && !Role.isRole(Role.SPECTATOR, player)) {
           if(Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, ThreadLocalRandom.current().nextInt(4) + 1);
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, ThreadLocalRandom.current().nextInt(4) + 1);
           }
-          if(murderWon) {
-            if(Role.isRole(Role.MURDERER, player)) {
-              user.addStat(StatsStorage.StatisticType.WINS, 1);
-              plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
-            } else {
-              user.addStat(StatsStorage.StatisticType.LOSES, 1);
-              plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
-            }
-          } else if(!Role.isRole(Role.MURDERER, player)) {
+
+          boolean hasMurdererRole = Role.isRole(Role.MURDERER, player);
+
+          if((murderWon && hasMurdererRole) || !hasMurdererRole) {
             user.addStat(StatsStorage.StatisticType.WINS, 1);
             plugin.getRewardsHandler().performReward(player, Reward.RewardType.WIN);
           } else {
             user.addStat(StatsStorage.StatisticType.LOSES, 1);
             plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
           }
-        } else if(Role.isRole(Role.DEATH, player)) {
+        } else if(hasDeathRole) {
           user.addStat(StatsStorage.StatisticType.LOSES, 1);
           plugin.getRewardsHandler().performReward(player, Reward.RewardType.LOSE);
         }
@@ -485,7 +484,9 @@ public class ArenaManager {
 
     detectives.deleteCharAt(detectives.length() - 2);
 
-    if(arena.getPlayersLeft().size() == arena.aliveMurderer()) {
+    int aliveMurderer = arena.aliveMurderer();
+
+    if(arena.getPlayersLeft().size() == aliveMurderer) {
       formatted = StringUtils.replace(formatted, "%winner%", chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Murderer"));
     } else {
       formatted = StringUtils.replace(formatted, "%winner%", chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Winners.Players"));
@@ -493,7 +494,7 @@ public class ArenaManager {
 
     formatted = StringUtils.replace(formatted, "%detective%", (arena.isDetectiveDead() ? ChatColor.STRIKETHROUGH : "") + detectives.toString());
 
-    formatted = StringUtils.replace(formatted, "%murderer%", (arena.lastAliveMurderer() ? "" : ChatColor.STRIKETHROUGH) + murders.toString());
+    formatted = StringUtils.replace(formatted, "%murderer%", (aliveMurderer == 1 ? "" : ChatColor.STRIKETHROUGH) + murders.toString());
 
     formatted = StringUtils.replace(formatted, "%murderer_kills%", Integer.toString(murdererKills));
 

@@ -183,14 +183,15 @@ public class Arena extends BukkitRunnable {
         }
 
         int timer = getTimer();
+        double startWaitingTime = plugin.getConfig().getDouble("Starting-Waiting-Time", 60);
 
         if(bossBarEnabled) {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Starting-In").replace("%time%", Integer.toString(timer)));
-          gameBar.setProgress(timer / plugin.getConfig().getDouble("Starting-Waiting-Time", 60));
+          gameBar.setProgress(timer / startWaitingTime);
         }
 
         for(Player player : players) {
-          player.setExp((float) (timer / plugin.getConfig().getDouble("Starting-Waiting-Time", 60)));
+          player.setExp((float) (timer / startWaitingTime));
           player.setLevel(timer);
         }
 
@@ -236,8 +237,10 @@ public class Arena extends BukkitRunnable {
           if(players.isEmpty()) {
             break;
           }
-          teleportAllToStartLocation();
+
           for(Player player : players) {
+            teleportToStartLocation(player);
+
             //reset local variables to be 100% sure
             User user = plugin.getUserManager().getUser(player);
             user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
@@ -356,16 +359,16 @@ public class Arena extends BukkitRunnable {
         }
 
         int currentTimer = getTimer();
+        int classicGameplayTime = plugin.getConfig().getInt("Classic-Gameplay-Time", 270);
 
-        if(currentTimer <= (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 10)
-            && currentTimer > (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15)) {
+        if(currentTimer <= (classicGameplayTime - 10) && currentTimer > (classicGameplayTime - 15)) {
           for(Player p : players) {
             p.sendMessage(chatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword")
-                .replace("%time%", Integer.toString(currentTimer - (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 15))));
+                .replace("%time%", Integer.toString(currentTimer - (classicGameplayTime - 15))));
             XSound.UI_BUTTON_CLICK.play(p.getLocation(), 1, 1);
           }
 
-          if(currentTimer == (plugin.getConfig().getInt("Classic-Gameplay-Time", 270) - 14)) {
+          if(currentTimer == (classicGameplayTime - 14)) {
             if(allMurderer.isEmpty()) ArenaManager.stopGame(false, this);
 
             for(Player p : allMurderer) {
@@ -843,12 +846,6 @@ public class Arena extends BukkitRunnable {
   public void teleportToStartLocation(Player player) {
     int size = playerSpawnPoints.size();
     player.teleport(playerSpawnPoints.get(size == 1 ? 0 : random.nextInt(playerSpawnPoints.size())));
-  }
-
-  private void teleportAllToStartLocation() {
-    for(Player player : players) {
-      teleportToStartLocation(player);
-    }
   }
 
   public void teleportAllToEndLocation() {

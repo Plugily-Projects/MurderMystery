@@ -199,7 +199,8 @@ public class Events implements Listener {
       return;
     }
     String command = event.getMessage().substring(1);
-    command = (command.indexOf(' ') >= 0 ? command.substring(0, command.indexOf(' ')) : command);
+    int index = command.indexOf(' ');
+    command = (index >= 0 ? command.substring(0, index) : command);
     for(String msg : plugin.getConfig().getStringList("Whitelisted-Commands")) {
       if(command.equalsIgnoreCase(msg)) {
         return;
