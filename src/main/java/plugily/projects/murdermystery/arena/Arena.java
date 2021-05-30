@@ -145,7 +145,7 @@ public class Arena extends BukkitRunnable {
   @Override
   public void run() {
     //idle task
-    if(players.isEmpty() && arenaState == ArenaState.WAITING_FOR_PLAYERS) {
+    if(arenaState == ArenaState.WAITING_FOR_PLAYERS && players.isEmpty()) {
       return;
     }
     Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Running game task", getId());
@@ -177,8 +177,10 @@ public class Arena extends BukkitRunnable {
         setTimer(getTimer() - 1);
         break;
       case STARTING:
-        if(players.size() == getMaximumPlayers() && getTimer() >= plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15) && !forceStart) {
-          setTimer(plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15));
+        int startTimeFull = plugin.getConfig().getInt("Start-Time-On-Full-Lobby", 15);
+
+        if(!forceStart && players.size() == getMaximumPlayers() && getTimer() >= startTimeFull) {
+          setTimer(startTimeFull);
           chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Start-In").replace("%TIME%", Integer.toString(getTimer())));
         }
 
@@ -197,43 +199,54 @@ public class Arena extends BukkitRunnable {
 
         int minimumPlayers = getMinimumPlayers();
 
-        if(players.size() < minimumPlayers && !forceStart) {
+        if(!forceStart && players.size() < minimumPlayers) {
           if(bossBarEnabled) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
             gameBar.setProgress(1.0);
           }
+
           chatManager.broadcast(this, chatManager.formatMessage(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), minimumPlayers));
           setArenaState(ArenaState.WAITING_FOR_PLAYERS);
           Bukkit.getPluginManager().callEvent(new MMGameStartEvent(this));
           setTimer(15);
+
           for(Player player : players) {
             player.setExp(1);
             player.setLevel(0);
           }
+
           if(forceStart) {
             forceStart = false;
           }
+
           break;
         }
+
         int totalMurderer = 0;
         int totalDetective = 0;
+
         for(Player p : players) {
           User user = plugin.getUserManager().getUser(p);
           totalMurderer += user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER);
           totalDetective += user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE);
         }
+
         if(!hideChances) {
           for(Player p : players) {
             VersionUtils.sendActionBar(p, formatRoleChance(plugin.getUserManager().getUser(p), totalMurderer, totalDetective));
           }
         }
-        if(getTimer() == 0 || forceStart) {
+
+        if(forceStart || getTimer() == 0) {
           Bukkit.getPluginManager().callEvent(new MMGameStartEvent(this));
           setArenaState(ArenaState.IN_GAME);
+
           if(bossBarEnabled) {
             gameBar.setProgress(1.0);
           }
+
           setTimer(5);
+
           if(players.isEmpty()) {
             break;
           }
@@ -845,7 +858,7 @@ public class Arena extends BukkitRunnable {
 
   public void teleportToStartLocation(Player player) {
     int size = playerSpawnPoints.size();
-    player.teleport(playerSpawnPoints.get(size == 1 ? 0 : random.nextInt(playerSpawnPoints.size())));
+    player.teleport(playerSpawnPoints.get(size == 1 ? 0 : random.nextInt(size)));
   }
 
   public void teleportAllToEndLocation() {

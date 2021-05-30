@@ -88,10 +88,19 @@ public class Utils {
 
   public static List<Block> getNearbyBlocks(Location location, int radius) {
     List<Block> blocks = new ArrayList<>();
-    for(int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
-      for(int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
-        for(int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
-          blocks.add(location.getWorld().getBlockAt(x, y, z));
+
+    org.bukkit.World world = location.getWorld();
+    if (world == null)
+      return blocks;
+
+    int blockX = location.getBlockX();
+    int blockY = location.getBlockY();
+    int blockZ = location.getBlockZ();
+
+    for(int x = blockX - radius; x <= blockX + radius; x++) {
+      for(int y = blockY - radius; y <= blockY + radius; y++) {
+        for(int z = blockZ - radius; z <= blockZ + radius; z++) {
+          blocks.add(world.getBlockAt(x, y, z));
         }
       }
     }

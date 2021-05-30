@@ -39,22 +39,29 @@ public class MysteryPotionRegistry {
 
   public static void init(Main plugin) {
     FileConfiguration config = ConfigUtils.getConfig(plugin, "specialblocks");
-    String path = "Special-Blocks.Cauldron-Potions";
-    if(!config.isConfigurationSection(path)) {
+    org.bukkit.configuration.ConfigurationSection section = config.getConfigurationSection("Special-Blocks.Cauldron-Potions");
+    if(section == null) {
       return;
     }
 
-    for(String key : config.getConfigurationSection(path).getKeys(false)) {
+    for(String key : section.getKeys(false)) {
+      PotionEffectType effectType = PotionEffectType.getByName(section.getString(key + ".Type", "").toUpperCase());
+
+      if (effectType == null) {
+        effectType = PotionEffectType.HEAL;
+      }
+
       //amplifiers are counted from 0 so -1
-      PotionEffect effect = new PotionEffect(PotionEffectType.getByName(config.getString(path + "." + key + ".Type").toUpperCase()),
-        config.getInt(path + "." + key + ".Duration") * 20, config.getInt(path + "." + key + ".Amplifier") - 1, false, false);
-      mysteryPotions.add(new MysteryPotion(plugin.getChatManager().colorRawMessage(config.getString(path + "." + key + ".Name")),
-        plugin.getChatManager().colorRawMessage(config.getString(path + "." + key + ".Subtitle")), effect));
+      PotionEffect effect = new PotionEffect(effectType,
+          section.getInt(key + ".Duration") * 20, section.getInt(key + ".Amplifier") - 1, false, false);
+
+      mysteryPotions.add(new MysteryPotion(plugin.getChatManager().colorRawMessage(section.getString(key + ".Name")),
+        plugin.getChatManager().colorRawMessage(section.getString(key + ".Subtitle")), effect));
     }
   }
 
   public static MysteryPotion getRandomPotion() {
-    return mysteryPotions.get(ThreadLocalRandom.current().nextInt(mysteryPotions.size()));
+    return mysteryPotions.get(mysteryPotions.size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(mysteryPotions.size()));
   }
 
   public static List<MysteryPotion> getMysteryPotions() {
