@@ -1,3 +1,6 @@
+### 1.7.9 Release (30.05.2021 - XX.XX.2021)
+* Fixed party (parties v3.1.0) not working anymore
+
 ### 1.7.8 Release (15.04.2021 - 10.05.2021)
 * Added /mm join maxplayers which tries to get the arena with the highest amount of players
 * Added placeholder arena_players_online

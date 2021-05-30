@@ -38,7 +38,7 @@ public class PartiesPartyHandlerImpl implements PartyHandler {
     PartyPlayer partyPlayer = api.getPartyPlayer(player.getUniqueId());
     if(partyPlayer == null) return false;
 
-    Party party = api.getParty(partyPlayer.getPartyName());
+    Party party = api.getParty(partyPlayer.getPartyId());
     return party != null && party.getMembers().size() > 1;
   }
 
@@ -46,7 +46,7 @@ public class PartiesPartyHandlerImpl implements PartyHandler {
   public GameParty getParty(Player player) {
     PartiesAPI api = Parties.getApi();
     PartyPlayer partyPlayer = api.getPartyPlayer(player.getUniqueId());
-    Party party = api.getParty(partyPlayer.getPartyName());
+    Party party = api.getParty(partyPlayer.getPartyId());
 
     java.util.List<Player> players = new java.util.ArrayList<>();
 
