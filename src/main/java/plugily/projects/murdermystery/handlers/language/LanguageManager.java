@@ -193,9 +193,9 @@ public class LanguageManager {
 
   private static List<String> getStrings(String path) {
     if(!languageConfig.isSet(path)) {
-      Debugger.sendConsoleMsg("&c[MurderMystery] Game message not found in your locale!");
-      Debugger.sendConsoleMsg("&c[MurderMystery] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
-      Debugger.sendConsoleMsg("&c[MurderMystery] Path: " + path);
+      Debugger.sendConsoleMsg("&c[Murder Mystery] Game message not found in your locale!");
+      Debugger.sendConsoleMsg("&c[Murder Mystery] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
+      Debugger.sendConsoleMsg("&c[Murder Mystery] Path: " + path);
       return Collections.singletonList("ERR_MESSAGE_" + path + "_NOT_FOUND");
     }
     List<String> list = languageConfig.getStringList(path);
@@ -206,9 +206,9 @@ public class LanguageManager {
 
   private static String getString(String path) {
     if(!languageConfig.isSet(path)) {
-      Debugger.sendConsoleMsg("&c[MurderMystery] Game message not found in your locale!");
-      Debugger.sendConsoleMsg("&c[MurderMystery] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
-      Debugger.sendConsoleMsg("&c[MurderMystery] Path: " + path);
+      Debugger.sendConsoleMsg("&c[Murder Mystery] Game message not found in your locale!");
+      Debugger.sendConsoleMsg("&c[Murder Mystery] Please regenerate your language.yml file! If error still occurs report it to the developer on discord!");
+      Debugger.sendConsoleMsg("&c[Murder Mystery] Path: " + path);
       return "ERR_MESSAGE_" + path + "_NOT_FOUND";
     }
     return languageConfig.getString(path, "not found");

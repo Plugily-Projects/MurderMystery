@@ -51,7 +51,7 @@ public class LastWordsManager {
       addLastWord(new LastWord(plugin.getChatManager().colorMessage("In-Game.Messages.Last-Words.Rage"), "murdermystery.lastwords.rage"));
       addLastWord(new LastWord(plugin.getChatManager().colorMessage("In-Game.Messages.Last-Words.Pro"), "murdermystery.lastwords.pro"));
       addLastWord(new LastWord(plugin.getChatManager().colorMessage("In-Game.Messages.Last-Words.Default"), ""));
-      Debugger.sendConsoleMsg("[MurderMystery] Please check your language.yml and update it to the new last words design that can be found on the latest language.yml");
+      Debugger.sendConsoleMsg("[Murder Mystery] Please check your language.yml and update it to the new last words design that can be found on the latest language.yml");
       return;
     }
     String path = "In-Game.Messages.Last-Words.";
