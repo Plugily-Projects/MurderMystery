@@ -111,15 +111,18 @@ public class SpecialBlockEvents implements Listener {
       e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Drink-Potion", e.getPlayer()));
       return;
     }
-    if(user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < 1) {
-      e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold", e.getPlayer()).replace("%amount%", Integer.toString(1)));
+
+    int localGold = user.getStat(StatsStorage.StatisticType.LOCAL_GOLD);
+    if(localGold < 1) {
+      e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold", e.getPlayer()).replace("%amount%", "1"));
       return;
     }
+
     VersionUtils.sendParticles("FIREWORKS_SPARK", e.getPlayer(), e.getClickedBlock().getLocation(), 10);
     Item item = e.getClickedBlock().getWorld().dropItemNaturally(e.getClickedBlock().getLocation().clone().add(0, 1, 0), new ItemStack(Material.POTION, 1));
     item.setPickupDelay(10000);
     Bukkit.getScheduler().runTaskLater(plugin, item::remove, 20);
-    user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) - 1);
+    user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, localGold - 1);
     ItemPosition.addItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, -1));
     ItemPosition.setItem(e.getPlayer(), ItemPosition.POTION, new ItemBuilder(XMaterial.POTION.parseItem()).name(MysteryPotionRegistry.getRandomPotion().getName()).build());
   }
@@ -128,16 +131,21 @@ public class SpecialBlockEvents implements Listener {
     if(e.getClickedBlock().getType() != XMaterial.ENCHANTING_TABLE.parseMaterial()) {
       return;
     }
+
     e.setCancelled(true);
+
     User user = plugin.getUserManager().getUser(e.getPlayer());
-    if(user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) < 1) {
-      e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold", e.getPlayer()).replace("%amount%", Integer.toString(1)));
+    int localGold = user.getStat(StatsStorage.StatisticType.LOCAL_GOLD);
+
+    if(localGold < 1) {
+      e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Special-Blocks.Not-Enough-Gold", e.getPlayer()).replace("%amount%", "1"));
       return;
     }
+
     e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Special-Blocks.Prayed-Message", e.getPlayer()));
     user.setStat(StatsStorage.StatisticType.LOCAL_PRAISES, user.getStat(StatsStorage.StatisticType.LOCAL_PRAISES) + 1);
     VersionUtils.sendParticles("FIREWORKS_SPARK", e.getPlayer(), e.getClickedBlock().getLocation(), 10);
-    user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) - 1);
+    user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, localGold - 1);
     ItemPosition.addItem(e.getPlayer(), ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, -1));
   }
 
