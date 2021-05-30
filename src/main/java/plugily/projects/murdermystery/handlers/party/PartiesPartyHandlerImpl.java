@@ -25,8 +25,6 @@ import com.alessiodp.parties.api.interfaces.PartyPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.stream.Collectors;
-
 /**
  * @author Plajer
  * <p>
@@ -39,6 +37,7 @@ public class PartiesPartyHandlerImpl implements PartyHandler {
     PartiesAPI api = Parties.getApi();
     PartyPlayer partyPlayer = api.getPartyPlayer(player.getUniqueId());
     if(partyPlayer == null) return false;
+
     Party party = api.getParty(partyPlayer.getPartyName());
     return party != null && party.getMembers().size() > 1;
   }
@@ -48,7 +47,17 @@ public class PartiesPartyHandlerImpl implements PartyHandler {
     PartiesAPI api = Parties.getApi();
     PartyPlayer partyPlayer = api.getPartyPlayer(player.getUniqueId());
     Party party = api.getParty(partyPlayer.getPartyName());
-    return new GameParty(party.getOnlineMembers(true).stream().map(localPlayer -> Bukkit.getPlayer(localPlayer.getPlayerUUID())).collect(Collectors.toList()), Bukkit.getPlayer(party.getLeader()));
+
+    java.util.List<Player> players = new java.util.ArrayList<>();
+
+    for (PartyPlayer localPlayer : party.getOnlineMembers(true)) {
+      Player pl = Bukkit.getPlayer(localPlayer.getPlayerUUID());
+
+      if (pl != null)
+        players.add(pl);
+    }
+
+    return new GameParty(players, Bukkit.getPlayer(party.getLeader()));
   }
 
   @Override

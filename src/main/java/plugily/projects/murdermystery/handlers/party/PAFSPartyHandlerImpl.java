@@ -18,12 +18,11 @@
 
 package plugily.projects.murdermystery.handlers.party;
 
+import de.simonsator.partyandfriends.api.pafplayers.OnlinePAFPlayer;
 import de.simonsator.partyandfriends.api.party.PartyManager;
 import de.simonsator.partyandfriends.api.party.PlayerParty;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import java.util.stream.Collectors;
 
 /**
  * @author Plajer
@@ -41,7 +40,17 @@ public class PAFSPartyHandlerImpl implements PartyHandler {
   public GameParty getParty(Player player) {
     PartyManager api = PartyManager.getInstance();
     PlayerParty party = api.getParty(player.getUniqueId());
-    return new GameParty(party.getAllPlayers().stream().map(localPlayer -> Bukkit.getPlayer(localPlayer.getUniqueId())).collect(Collectors.toList()), Bukkit.getPlayer(party.getLeader().getUniqueId()));
+
+    java.util.List<Player> players = new java.util.ArrayList<>();
+
+    for (OnlinePAFPlayer localPlayer : party.getAllPlayers()) {
+      Player pl = Bukkit.getPlayer(localPlayer.getUniqueId());
+
+      if (pl != null)
+        players.add(pl);
+    }
+
+    return new GameParty(players, Bukkit.getPlayer(party.getLeader().getUniqueId()));
   }
 
   @Override
