@@ -99,8 +99,10 @@ public class ArenaManager {
 
     //check if player is in party and send party members to the game
     if(plugin.getPartyHandler().isPlayerInParty(player)) {
+      Debugger.debug("{0} is in a party", player.getName());
       GameParty party = plugin.getPartyHandler().getParty(player);
       if(party.getLeader().equals(player)) {
+        Debugger.debug("{0} is partyleader", player.getName());
         if(arena.getMaximumPlayers() - arena.getPlayers().size() >= party.getPlayers().size()) {
           for(Player partyPlayer : party.getPlayers()) {
             if(player.equals(partyPlayer)) {
@@ -111,12 +113,15 @@ public class ArenaManager {
               if(partyArena.getArenaState() == ArenaState.IN_GAME) {
                 continue;
               }
+              Debugger.debug("[Partyleader: {0}] Found party member {1} on other arena", player.getName(), partyPlayer.getName());
               leaveAttempt(partyPlayer, partyArena);
             }
             partyPlayer.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Join-As-Party-Member"), partyPlayer));
+            Debugger.debug("Let party member {0} join the arena of {1}", partyPlayer.getName(), player.getName());
             joinAttempt(partyPlayer, arena);
           }
         } else {
+          Debugger.debug("[Partyleader: {0}] The arena got not enough space for the party", player.getName());
           player.sendMessage(chatManager.getPrefix() + chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Not-Enough-Space-For-Party"), player));
           return;
         }
