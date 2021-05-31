@@ -33,14 +33,14 @@ import org.golde.bukkit.corpsereborn.nms.Corpses;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
+import pl.plajerlair.commonsbox.minecraft.hologram.ArmorStandHologram;
+import pl.plajerlair.commonsbox.minecraft.hologram.HologramManager;
 import plugily.projects.murdermystery.HookManager;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.corpse.Corpse;
 import plugily.projects.murdermystery.arena.corpse.Stand;
-import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
-import plugily.projects.murdermystery.handlers.hologram.HologramManager;
 
 import java.util.HashMap;
 import java.util.Map;

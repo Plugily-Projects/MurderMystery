@@ -19,7 +19,7 @@
 package plugily.projects.murdermystery.arena.corpse;
 
 import org.golde.bukkit.corpsereborn.nms.Corpses;
-import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
+import pl.plajerlair.commonsbox.minecraft.hologram.ArmorStandHologram;
 
 /**
  * @author Plajer

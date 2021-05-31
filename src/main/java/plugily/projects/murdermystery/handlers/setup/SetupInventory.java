@@ -18,7 +18,7 @@
 
 package plugily.projects.murdermystery.handlers.setup;
 
-import com.github.stefvanschie.inventoryframework.Gui;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -48,7 +48,7 @@ public class SetupInventory {
   private final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
   private final Arena arena;
   private final Player player;
-  private Gui gui;
+  private ChestGui gui;
   private final SetupUtilities setupUtilities;
 
   public SetupInventory(Arena arena, Player player) {
@@ -59,7 +59,7 @@ public class SetupInventory {
   }
 
   private void prepareGui() {
-    this.gui = new Gui(plugin, 4, "Murder Mystery Arena Setup");
+    this.gui = new ChestGui(4, "Murder Mystery Arena Setup");
     this.gui.setOnGlobalClick(e -> e.setCancelled(true));
     StaticPane pane = new StaticPane(9, 4);
     this.gui.addPane(pane);
@@ -134,7 +134,7 @@ public class SetupInventory {
     return player;
   }
 
-  public Gui getGui() {
+  public ChestGui getGui() {
     return gui;
   }
 

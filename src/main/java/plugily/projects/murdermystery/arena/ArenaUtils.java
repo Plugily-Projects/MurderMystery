@@ -29,13 +29,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
+import pl.plajerlair.commonsbox.minecraft.hologram.ArmorStandHologram;
 import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.handlers.ChatManager;
-import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.ItemPosition;
 
