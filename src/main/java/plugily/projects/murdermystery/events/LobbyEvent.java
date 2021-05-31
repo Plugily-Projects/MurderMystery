@@ -18,11 +18,17 @@
 
 package plugily.projects.murdermystery.events;
 
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
@@ -40,6 +46,17 @@ public class LobbyEvent implements Listener {
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onFoodLose(FoodLevelChangeEvent event) {
+    if(event.getEntity().getType() != EntityType.PLAYER) {
+      return;
+    }
+    Arena arena = ArenaRegistry.getArena((Player) event.getEntity());
+    if(arena != null && (arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS)) {
+      event.setCancelled(true);
+    }
+  }
+
   @EventHandler
   public void onLobbyDamage(EntityDamageEvent event) {
     if(event.getEntity().getType() != EntityType.PLAYER) {
@@ -53,6 +70,31 @@ public class LobbyEvent implements Listener {
     event.setCancelled(true);
     player.setFireTicks(0);
     player.setHealth(VersionUtils.getMaxHealth(player));
+  }
+
+  @EventHandler
+  public void onItemFrameRotate(PlayerInteractEntityEvent event) {
+    Player player = event.getPlayer();
+    Arena arena = ArenaRegistry.getArena(player);
+    if(arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
+      return;
+    }
+    if(event.getRightClicked() instanceof ItemFrame && !((ItemFrame) event.getRightClicked()).getItem().getType().equals(Material.AIR)) {
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler
+  public void onHangingBreak(HangingBreakByEntityEvent event) {
+    if(event.getEntity().getType() != EntityType.PLAYER) {
+      return;
+    }
+    Player player = (Player) event.getEntity();
+    Arena arena = ArenaRegistry.getArena(player);
+    if(arena == null || arena.getArenaState() == ArenaState.IN_GAME) {
+      return;
+    }
+    event.setCancelled(true);
   }
 
 }
