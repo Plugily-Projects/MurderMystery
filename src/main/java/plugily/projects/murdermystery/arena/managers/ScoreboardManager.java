@@ -187,11 +187,12 @@ public class ScoreboardManager {
     //should be for murderer only
     formattedLine = StringUtils.replace(formattedLine, "%KILLS%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_KILLS)));
     formattedLine = StringUtils.replace(formattedLine, "%SCORE%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE)));
-    formattedLine = chatManager.colorRawMessage(formattedLine);
+
     if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formattedLine = PlaceholderAPI.setPlaceholders(player, formattedLine);
     }
-    return formattedLine;
+
+    return chatManager.colorRawMessage(formattedLine);
   }
 
 }
