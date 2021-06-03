@@ -63,9 +63,10 @@ public class ScoreboardManager {
    * @see User
    */
   public void createScoreboard(User user) {
-    plugin.getRewardsHandler().performReward(user.getPlayer(), Reward.RewardType.SCOREBOARD_ADD);
+    Player player = user.getPlayer();
+    plugin.getRewardsHandler().performReward(player, Reward.RewardType.SCOREBOARD_ADD);
     final String boardTitle = plugin.getChatManager().colorMessage("Scoreboard.Title");
-    Scoreboard scoreboard = ScoreboardLib.createScoreboard(user.getPlayer()).setHandler(new ScoreboardHandler() {
+    Scoreboard scoreboard = ScoreboardLib.createScoreboard(player).setHandler(new ScoreboardHandler() {
       @Override
       public String getTitle(Player player) {
         return boardTitle;

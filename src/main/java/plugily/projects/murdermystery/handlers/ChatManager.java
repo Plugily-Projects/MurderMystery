@@ -116,9 +116,6 @@ public class ChatManager {
   }
 
   public void broadcastAction(Arena a, Player p, ActionType action) {
-    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_DEATH_MESSAGE)) {
-      return;
-    }
     String message;
     switch(action) {
       case JOIN:
@@ -128,6 +125,10 @@ public class ChatManager {
         message = formatMessage(a, colorMessage("In-Game.Messages.Leave"), p);
         break;
       case DEATH:
+        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_DEATH_MESSAGE)) {
+          return;
+        }
+
         message = formatMessage(a, colorMessage("In-Game.Messages.Death"), p);
         break;
       default:
