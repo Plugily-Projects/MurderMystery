@@ -165,6 +165,9 @@ public class ArenaManager {
     User user = plugin.getUserManager().getUser(player);
     user.lastBoard = player.getScoreboard();
 
+    //reset scoreboard
+    player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+
     arena.getScoreboardManager().createScoreboard(user);
 
     if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
@@ -276,7 +279,7 @@ public class ArenaManager {
       }
     }
 
-    arena.getScoreboardManager().removeScoreboard(user);
+    user.removeScoreboard(arena);
 
     boolean playerHasMurdererRole = Role.isRole(Role.MURDERER, player);
     if(playerHasMurdererRole) {
