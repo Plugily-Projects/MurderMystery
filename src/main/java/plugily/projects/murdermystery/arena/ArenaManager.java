@@ -159,9 +159,14 @@ public class ArenaManager {
         return;
       }
     }
+
     Debugger.debug("[{0}] Checked join attempt for {1} initialized", arena.getId(), player.getName());
+
     User user = plugin.getUserManager().getUser(player);
+    user.lastBoard = player.getScoreboard();
+
     arena.getScoreboardManager().createScoreboard(user);
+
     if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
       InventorySerializer.saveInventoryToFile(plugin, player);
     }
@@ -291,7 +296,7 @@ public class ArenaManager {
               }
               players.add(gamePlayer);
             }
-            Player newMurderer = players.get(ThreadLocalRandom.current().nextInt(players.size()));
+            Player newMurderer = players.get(players.size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(players.size()));
             Debugger.debug("A murderer left the game. New murderer: {0}", newMurderer.getName());
             arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
             arena.addToMurdererList(newMurderer);
@@ -443,13 +448,13 @@ public class ArenaManager {
         }
       }
       user.removeScoreboard(arena);
-      if(!quickStop && plugin.getConfig().getBoolean("Firework-When-Game-Ends", true) && !user.isSpectator() && !user.isPermanentSpectator()) {
+      if(!quickStop && !user.isSpectator() && !user.isPermanentSpectator() && plugin.getConfig().getBoolean("Firework-When-Game-Ends", true)) {
         new BukkitRunnable() {
           int i = 0;
 
           @Override
           public void run() {
-            if(i == 4 || !arena.getPlayers().contains(player)) {
+            if(i >= 4 || !arena.getPlayers().contains(player)) {
               cancel();
             }
             MiscUtils.spawnRandomFirework(player.getLocation());
@@ -468,12 +473,15 @@ public class ArenaManager {
     int murdererKills = 0;
     for(Player p : arena.getMurdererList()) {
       User user = plugin.getUserManager().getUser(p);
+      int localKills = user.getStat(StatsStorage.StatisticType.LOCAL_KILLS);
+
       if(arena.getMurdererList().size() > 1) {
-        murders.append(p.getName()).append(" (").append(user.getStat(StatsStorage.StatisticType.LOCAL_KILLS)).append("), ");
+        murders.append(p.getName()).append(" (").append(localKills).append("), ");
       } else {
         murders.append(p.getName());
       }
-      murdererKills += user.getStat(StatsStorage.StatisticType.LOCAL_KILLS);
+
+      murdererKills += localKills;
     }
     if(arena.getMurdererList().size() > 1) {
       murders.deleteCharAt(murders.length() - 2);

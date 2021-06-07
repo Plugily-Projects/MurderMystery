@@ -20,6 +20,8 @@ package plugily.projects.murdermystery.user;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
+
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.api.events.player.MMPlayerStatisticChangeEvent;
@@ -45,6 +47,8 @@ public class User {
   private final UUID uuid;
   private boolean spectator = false;
   private boolean permanentSpectator = false;
+
+  public Scoreboard lastBoard;
 
   @Deprecated
   public User(Player player) {
@@ -99,23 +103,33 @@ public class User {
 
   public void removeScoreboard(Arena arena) {
     arena.getScoreboardManager().removeScoreboard(this);
-    //player.setScoreboard(scoreboardManager.getNewScoreboard());
+
+    if (lastBoard != null) {
+      getPlayer().setScoreboard(lastBoard);
+      lastBoard = null;
+    }
   }
 
   public void setStat(StatsStorage.StatisticType stat, int i) {
     stats.put(stat, i);
 
     //statistics manipulation events are called async when using mysql
-    plugin.getServer().getScheduler().runTask(plugin, () ->
-      plugin.getServer().getPluginManager().callEvent(new MMPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, i)));
+    plugin.getServer().getScheduler().runTask(plugin, () -> {
+      Player player = getPlayer();
+      plugin.getServer().getPluginManager().callEvent(new MMPlayerStatisticChangeEvent(
+          ArenaRegistry.getArena(player), player, stat, i));
+    });
   }
 
   public void addStat(StatsStorage.StatisticType stat, int i) {
     stats.put(stat, getStat(stat) + i);
 
     //statistics manipulation events are called async when using mysql
-    plugin.getServer().getScheduler().runTask(plugin, () ->
-      plugin.getServer().getPluginManager().callEvent(new MMPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, getStat(stat))));
+    plugin.getServer().getScheduler().runTask(plugin, () -> {
+      Player player = getPlayer();
+      plugin.getServer().getPluginManager().callEvent(new MMPlayerStatisticChangeEvent(
+          ArenaRegistry.getArena(player), player, stat, getStat(stat)));
+    });
   }
 
   public void setCooldown(String s, double seconds) {

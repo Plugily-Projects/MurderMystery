@@ -109,7 +109,7 @@ public class SetupInventory {
         p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Suggest new ideas for the plugin or vote on current ones! https://app.feedbacky.net/b/MurderMystery"));
         break;
       case 5:
-        p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Achievements, ranks and replay ability are things available in our paid addon for this minigame! https://wiki.plugily.xyz/murdermystery/addon/overview"));
+        p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Achievements, ranks and replay ability are things available in our paid addon for this minigame! https://wiki.plugily.xyz/murdermystery/addon/overview"));
         break;
       default:
         break;

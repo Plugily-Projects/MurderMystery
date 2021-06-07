@@ -63,9 +63,10 @@ public class ScoreboardManager {
    * @see User
    */
   public void createScoreboard(User user) {
-    plugin.getRewardsHandler().performReward(user.getPlayer(), Reward.RewardType.SCOREBOARD_ADD);
+    Player player = user.getPlayer();
+    plugin.getRewardsHandler().performReward(player, Reward.RewardType.SCOREBOARD_ADD);
     final String boardTitle = plugin.getChatManager().colorMessage("Scoreboard.Title");
-    Scoreboard scoreboard = ScoreboardLib.createScoreboard(user.getPlayer()).setHandler(new ScoreboardHandler() {
+    Scoreboard scoreboard = ScoreboardLib.createScoreboard(player).setHandler(new ScoreboardHandler() {
       @Override
       public String getTitle(Player player) {
         return boardTitle;
@@ -186,11 +187,12 @@ public class ScoreboardManager {
     //should be for murderer only
     formattedLine = StringUtils.replace(formattedLine, "%KILLS%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_KILLS)));
     formattedLine = StringUtils.replace(formattedLine, "%SCORE%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE)));
-    formattedLine = chatManager.colorRawMessage(formattedLine);
+
     if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formattedLine = PlaceholderAPI.setPlaceholders(player, formattedLine);
     }
-    return formattedLine;
+
+    return chatManager.colorRawMessage(formattedLine);
   }
 
 }
