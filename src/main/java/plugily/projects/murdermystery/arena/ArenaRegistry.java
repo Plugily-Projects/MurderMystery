@@ -88,8 +88,8 @@ public class ArenaRegistry {
 
   public static int getArenaPlayersOnline() {
     int players = 0;
-    for(Arena arena : arenas){
-      players =+ arena.getPlayers().size();
+    for(Arena arena : arenas) {
+      players += arena.getPlayers().size();
     }
     return players;
   }
@@ -109,7 +109,7 @@ public class ArenaRegistry {
     long start = System.currentTimeMillis();
 
     if(!arenas.isEmpty()) {
-      for (Arena arena : new ArrayList<>(arenas)) {
+      for(Arena arena : new ArrayList<>(arenas)) {
         arena.cleanUpArena();
         unregisterArena(arena);
       }
@@ -134,7 +134,7 @@ public class ArenaRegistry {
         org.bukkit.Location serialized = LocationSerializer.getLocation(loc);
 
         // Ignore the arena if world is not exist at least in spawn points
-        if (serialized == null || serialized.getWorld() == null) {
+        if(serialized == null || serialized.getWorld() == null) {
           section.set(id + ".isdone", false);
         } else {
           playerSpawnPoints.add(serialized);
@@ -153,7 +153,7 @@ public class ArenaRegistry {
 
       Location endLoc = LocationSerializer.getLocation(section.getString(id + ".Endlocation", "world,364.0,63.0,-72.0,0.0,0.0"));
       Location lobbyLoc = LocationSerializer.getLocation(section.getString(id + ".lobbylocation", "world,364.0,63.0,-72.0,0.0,0.0"));
-      if (lobbyLoc == null || lobbyLoc.getWorld() == null || endLoc == null || endLoc.getWorld() == null) {
+      if(lobbyLoc == null || lobbyLoc.getWorld() == null || endLoc == null || endLoc.getWorld() == null) {
         section.set(id + ".isdone", false);
       } else {
         arena.setLobbyLocation(lobbyLoc);

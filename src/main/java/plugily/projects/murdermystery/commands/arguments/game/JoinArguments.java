@@ -29,7 +29,9 @@ import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
 import plugily.projects.murdermystery.commands.arguments.data.CommandArgument;
 import plugily.projects.murdermystery.handlers.ChatManager;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -52,7 +54,7 @@ public class JoinArguments {
           return;
         }
 
-        if(!ArenaRegistry.getArenas().isEmpty() && args[1].equalsIgnoreCase("maxplayers")) {
+        if(!ArenaRegistry.getArenas().isEmpty() && args[1].equalsIgnoreCase("maxplayers") && ArenaRegistry.getArena("maxplayers") == null) {
           if(ArenaRegistry.getArenaPlayersOnline() == 0) {
             ArenaManager.joinAttempt((Player) sender, ArenaRegistry.getArenas().get(ThreadLocalRandom.current().nextInt(ArenaRegistry.getArenas().size())));
             return;
@@ -63,13 +65,18 @@ public class JoinArguments {
             arenas.put(arena, arena.getPlayers().size());
           }
 
-          java.util.Optional<Map.Entry<Arena, Integer>> sorted = arenas.entrySet().stream().sorted(Map.Entry.comparingByValue()).findFirst();
+          LinkedHashMap<Arena, Integer> orderedArenas = new LinkedHashMap<>();
+          arenas.entrySet()
+              .stream()
+              .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+              .forEachOrdered(x -> orderedArenas.put(x.getKey(), x.getValue()));
 
-          if(sorted.isPresent()) {
-            Arena arena = sorted.get().getKey();
+          if(!orderedArenas.isEmpty()) {
+            Arena arena = orderedArenas.keySet().stream().findFirst().get();
             ArenaManager.joinAttempt((Player) sender, arena);
             return;
           }
+          return;
         }
 
         for(Arena arena : ArenaRegistry.getArenas()) {

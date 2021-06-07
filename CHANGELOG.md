@@ -2,6 +2,7 @@
 * Fixed party (parties v3.1.0) not working anymore
 * Fixed when plugins scoreboards not re-appeared after game end
 * Removed temp added scoreboard rewards
+* Fixed join maxplayers did not match the arena with highest player amount
 
 ### 1.7.8 Release (15.04.2021 - 10.05.2021)
 * Added /mm join maxplayers which tries to get the arena with the highest amount of players
