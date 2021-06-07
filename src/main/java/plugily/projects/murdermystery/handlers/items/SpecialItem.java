@@ -26,12 +26,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.murdermystery.Main;
 
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +41,7 @@ import java.util.stream.Collectors;
  * <p>
  * Created at 03.08.2018
  */
+//todo use new item registry with spectator items
 public class SpecialItem {
 
   private ItemStack itemStack;
@@ -51,7 +54,7 @@ public class SpecialItem {
 
   public static void loadAll() {
     new SpecialItem("Leave").load(ChatColor.RED + "Leave", new String[]{
-      ChatColor.GRAY + "Click to teleport to hub"
+        ChatColor.GRAY + "Click to teleport to hub"
     }, XMaterial.WHITE_BED.parseMaterial(), 8);
   }
 
@@ -71,43 +74,51 @@ public class SpecialItem {
     }
     if(config.getString(name + ".material-name", "STONE").equalsIgnoreCase("RAINBOW_BED")) {
       EnumSet.of(XMaterial.BLACK_BED, XMaterial.BLUE_BED, XMaterial.BROWN_BED,
-        XMaterial.CYAN_BED, XMaterial.GRAY_BED, XMaterial.LIGHT_BLUE_BED,
-        XMaterial.GREEN_BED, XMaterial.LIGHT_GRAY_BED, XMaterial.LIME_BED,
-        XMaterial.MAGENTA_BED, XMaterial.ORANGE_BED, XMaterial.PINK_BED,
-        XMaterial.PURPLE_BED, XMaterial.RED_BED, XMaterial.WHITE_BED,
-        XMaterial.YELLOW_BED).forEach(xmaterial -> {
-          ItemStack stack = xmaterial.parseItem();
-          ItemMeta meta = stack.getItemMeta();
-          if(meta != null) {
-            ComplementAccessor.getComplement().setDisplayName(meta, plugin.getChatManager().colorRawMessage(config.getString(name + ".displayname", "")));
+          XMaterial.CYAN_BED, XMaterial.GRAY_BED, XMaterial.LIGHT_BLUE_BED,
+          XMaterial.GREEN_BED, XMaterial.LIGHT_GRAY_BED, XMaterial.LIME_BED,
+          XMaterial.MAGENTA_BED, XMaterial.ORANGE_BED, XMaterial.PINK_BED,
+          XMaterial.PURPLE_BED, XMaterial.RED_BED, XMaterial.WHITE_BED,
+          XMaterial.YELLOW_BED).forEach(xmaterial -> {
+        ItemStack stack = xmaterial.parseItem();
+        ItemMeta meta = stack.getItemMeta();
+        if(meta != null) {
+          ComplementAccessor.getComplement().setDisplayName(meta, plugin.getChatManager().colorRawMessage(config.getString(name + ".displayname", "")));
 
-            List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(plugin.getChatManager()::colorRawMessage)
+          List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(plugin.getChatManager()::colorRawMessage)
               .collect(Collectors.toList());
-            ComplementAccessor.getComplement().setLore(meta, colorizedLore);
-            stack.setItemMeta(meta);
-          }
-
-          SpecialItem item = new SpecialItem(name);
-          item.itemStack = stack;
-          item.slot = config.getInt(name + ".slot");
-          items.add(item);
+          ComplementAccessor.getComplement().setLore(meta, colorizedLore);
+          stack.setItemMeta(meta);
+        }
+        SpecialItem item = new SpecialItem(name);
+        item.itemStack = stack;
+        item.slot = config.getInt(name + ".slot");
+        items.add(item);
       });
     } else {
-      ItemStack stack = XMaterial.matchXMaterial(config.getString(name + ".material-name", "STONE").toUpperCase())
-        .orElse(XMaterial.STONE).parseItem();
-      ItemMeta meta = stack.getItemMeta();
-      if(meta != null) {
-        ComplementAccessor.getComplement().setDisplayName(meta, plugin.getChatManager().colorRawMessage(config.getString(name + ".displayname")));
-
-        List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(plugin.getChatManager()::colorRawMessage)
-          .collect(Collectors.toList());
-        ComplementAccessor.getComplement().setLore(meta, colorizedLore);
-        stack.setItemMeta(meta);
+      Material mat;
+      String display;
+      List<String> description;
+      int position;
+      try {
+        try {
+          mat = Material.valueOf(config.getString(name + ".material-name", "BEDROCK").toUpperCase());
+        } catch(IllegalArgumentException e) {
+          mat = Material.BEDROCK;
+        }
+        display = plugin.getChatManager().colorRawMessage(config.getString(name + ".displayname"));
+        description = config.getStringList(name + ".lore").stream()
+            .map(itemLore -> itemLore = plugin.getChatManager().colorRawMessage(itemLore))
+            .collect(Collectors.toList());
+        position = config.getInt(name + ".slot");
+      } catch(Exception ex) {
+        plugin.getLogger().log(Level.WARNING, "Configuration of " + name + "is missing a value. (displayname, lore or slot)");
+        return;
       }
+      ItemStack stack = new ItemBuilder(mat).name(display).lore(description).build();
 
       SpecialItem item = new SpecialItem(name);
       item.itemStack = stack;
-      item.slot = config.getInt(name + ".slot");
+      item.slot = position;
       items.add(item);
     }
 
