@@ -187,7 +187,7 @@ public class ArenaRegistry {
       arena.start();
       Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Instance-Started").replace("%arena%", id));
     }
-    ConfigUtils.saveConfig(plugin, config, "arenas.yml");
+    ConfigUtils.saveConfig(plugin, config, "arenas");
     Debugger.debug("Arenas registration completed, took {0}ms", System.currentTimeMillis() - start);
   }
 
