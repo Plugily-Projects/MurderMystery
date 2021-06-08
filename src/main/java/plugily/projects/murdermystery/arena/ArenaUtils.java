@@ -79,7 +79,7 @@ public class ArenaUtils {
 
       try {
         sound = Sound.valueOf(s.toUpperCase());
-      } catch (IllegalArgumentException e) {
+      } catch(IllegalArgumentException e) {
       }
 
       XSound.matchXSound(sound).play(user.getPlayer().getLocation(), 1F, 2F);

@@ -1,4 +1,5 @@
 ### 1.7.9 Release (30.05.2021 - XX.XX.2021)
+>>> beta1 
 * Fixed party (parties v3.1.0) not working anymore
 * Fixed when plugins scoreboards not re-appeared after game end
 * Removed temp added scoreboard rewards
