@@ -284,7 +284,7 @@
         </repository>
         <site>
             <id>plugily-projects-java-docs</id>
-            <name>thebridge</name>
+            <name>murdermystery</name>
             <url>ftp://81.19.211.8</url>
         </site>
     </distributionManagement>

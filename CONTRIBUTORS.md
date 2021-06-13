@@ -21,7 +21,7 @@
 * [zuhir](https://www.spigotmc.org/members/zuhir.31452/) - Spanish translator
 * 壁灯 - Chinese (Simplified) translator
 
-**Thanks to these companies for providing free licenses for Village Defense open source work:**
+**Thanks to these companies for providing free licenses for MurderMystery open source work:**
 * Code Whale Inc. - POEditor open source project license
 
 **Also thanks to every bug reporters for reporting us those nasty bugs, and code contributors for making Murder Mystery better!**
