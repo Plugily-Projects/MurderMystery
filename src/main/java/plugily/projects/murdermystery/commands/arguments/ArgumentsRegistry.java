@@ -34,6 +34,7 @@ import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.commands.arguments.admin.ListArenasArgument;
+import plugily.projects.murdermystery.commands.arguments.admin.RolePassArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.TeleportArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.arena.DeleteArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.arena.ForceStartArgument;
@@ -97,12 +98,13 @@ public class ArgumentsRegistry implements CommandExecutor {
 
     //register admin related arguments
     new DeleteArgument(this, chatManager);
-    new ForceStartArgument(this, chatManager);
+    new ForceStartArgument(this);
     new ListArenasArgument(this, chatManager);
     new SpecialBlockRemoverArgument(this);
     new ReloadArgument(this, chatManager);
     new StopArgument(this);
     new TeleportArgument(this);
+    new RolePassArgument(this, chatManager);
   }
 
   @Override

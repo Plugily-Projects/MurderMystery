@@ -45,7 +45,7 @@ import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.PermissionsManager;
-import plugily.projects.murdermystery.handlers.items.SpecialItemManager;
+import plugily.projects.murdermystery.handlers.items.SpecialItem;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.handlers.party.GameParty;
 import plugily.projects.murdermystery.handlers.rewards.Reward;
@@ -191,9 +191,12 @@ public class ArenaManager {
       player.sendMessage(chatManager.colorMessage("In-Game.You-Are-Spectator"));
       player.getInventory().clear();
 
-      player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name")).build());
-      player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name")).build());
-      player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
+      for(SpecialItem item : plugin.getSpecialItemManager().getSpecialItems()) {
+        if(item.getDisplayStage() != SpecialItem.DisplayStage.SPECTATOR) {
+          continue;
+        }
+        player.getInventory().setItem(item.getSlot(), item.getItemStack());
+      }
 
       player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
       player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
@@ -227,7 +230,12 @@ public class ArenaManager {
       chatManager.broadcastAction(arena, player, ChatManager.ActionType.JOIN);
     }
     if(arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
-      player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
+      for(SpecialItem item : plugin.getSpecialItemManager().getSpecialItems()) {
+        if(item.getDisplayStage() != SpecialItem.DisplayStage.LOBBY) {
+          continue;
+        }
+        player.getInventory().setItem(item.getSlot(), item.getItemStack());
+      }
     }
     player.updateInventory();
     for(Player arenaPlayer : arena.getPlayers()) {
@@ -444,7 +452,12 @@ public class ArenaManager {
       player.setWalkSpeed(0.2f);
 
       player.getInventory().clear();
-      player.getInventory().setItem(SpecialItemManager.getSpecialItem("Leave").getSlot(), SpecialItemManager.getSpecialItem("Leave").getItemStack());
+      for(SpecialItem item : plugin.getSpecialItemManager().getSpecialItems()) {
+        if(item.getDisplayStage() != SpecialItem.DisplayStage.SPECTATOR) {
+          continue;
+        }
+        player.getInventory().setItem(item.getSlot(), item.getItemStack());
+      }
       if(!quickStop) {
         for(String msg : summaryMessages) {
           MiscUtils.sendCenteredMessage(player, formatSummaryPlaceholders(msg, arena, player));

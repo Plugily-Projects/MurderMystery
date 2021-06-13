@@ -1,4 +1,10 @@
 ### 1.7.9 Release (30.05.2021 - XX.XX.2021)
+* Added forcestart item
+* Added murderer and detective pass (Command and Item to activate)
+* Added new stat (new tables one mysql needs to be manually added murderer_pass, detective_pass)  
+* Added special_items.yml
+* Removed lobbyitems.yml
+* Removed Rainbow Bed option
 >>> beta1 
 * Fixed party (parties v3.1.0) not working anymore
 * Fixed when plugins scoreboards not re-appeared after game end

@@ -18,6 +18,9 @@
 
 package plugily.projects.murdermystery.events;
 
+import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
@@ -47,11 +50,12 @@ import org.bukkit.util.Vector;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
 import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerSwapHandItemsEvent;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
 import pl.plajerlair.commonsbox.minecraft.hologram.HologramManager;
-import pl.plajerlair.commonsbox.minecraft.item.ItemUtils;
+import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
@@ -61,8 +65,11 @@ import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.ArenaUtils;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.handlers.items.SpecialItemManager;
+import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Utils;
+
+import static plugily.projects.murdermystery.arena.ArenaUtils.arenaForceStart;
 
 /**
  * @author Plajer
@@ -237,17 +244,30 @@ public class Events implements Listener {
   }
 
   @EventHandler
-  public void onLeave(PlayerInteractEvent event) {
+  public void onSpecialItem(CBPlayerInteractEvent event) {
     if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
       return;
     }
     Arena arena = ArenaRegistry.getArena(event.getPlayer());
     ItemStack itemStack = VersionUtils.getItemInHand(event.getPlayer());
-    if(arena == null || !ItemUtils.isItemStackNamed(itemStack)) {
+    if(arena == null || !Utils.isNamed(itemStack)) {
       return;
     }
-    String key = SpecialItemManager.getRelatedSpecialItem(itemStack);
-    if(key != null && key.equalsIgnoreCase("Leave")) {
+    String key = plugin.getSpecialItemManager().getRelatedSpecialItem(itemStack).getName();
+    if(key == null) {
+      return;
+    }
+    if(key.equalsIgnoreCase(SpecialItemManager.SpecialItems.ROLE_PASS.getName())) {
+      event.setCancelled(true);
+      openRolePassMenu(event.getPlayer());
+      return;
+    }
+    if(key.equalsIgnoreCase(SpecialItemManager.SpecialItems.FORCESTART.getName())) {
+      event.setCancelled(true);
+      arenaForceStart(event.getPlayer());
+      return;
+    }
+    if(key.equals(SpecialItemManager.SpecialItems.LOBBY_LEAVE_ITEM.getName()) || key.equals(SpecialItemManager.SpecialItems.SPECTATOR_LEAVE_ITEM.getName())) {
       event.setCancelled(true);
       if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
         plugin.getBungeeManager().connectToHub(event.getPlayer());
@@ -255,6 +275,46 @@ public class Events implements Listener {
         ArenaManager.leaveAttempt(event.getPlayer(), arena);
       }
     }
+  }
+
+  private void openRolePassMenu(Player player) {
+    int rows = Utils.serializeInt(Role.values().length) / 9;
+    ChestGui gui = new ChestGui(rows, plugin.getChatManager().colorMessage("In-Game.Role-Pass.Menu-Name"));
+    gui.setOnGlobalClick(event -> event.setCancelled(true));
+    OutlinePane pane = new OutlinePane(9, rows);
+    gui.addPane(pane);
+
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.IRON_SWORD.parseMaterial())
+        .name(plugin.getChatManager().colorMessage("In-Game.Role-Pass.Murderer.Name"))
+        .lore(LanguageManager.getLanguageList("In-Game.Role-Pass.Murderer.Lore"))
+        .build(), event -> {
+      event.setCancelled(true);
+      User user = plugin.getUserManager().getUser(player);
+      if(user.getStat(StatsStorage.StatisticType.MURDERER_PASS) <= 0) {
+        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Role-Pass.Fail").replace("%role%", Role.MURDERER.name()));
+        return;
+      }
+      user.addStat(StatsStorage.StatisticType.MURDERER_PASS, -1);
+      user.addStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 999);
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Role-Pass.Success").replace("%role%", Role.MURDERER.name()));
+    }));
+
+    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.BOW.parseMaterial())
+        .name(plugin.getChatManager().colorMessage("In-Game.Role-Pass.Detective.Name"))
+        .lore(LanguageManager.getLanguageList("In-Game.Role-Pass.Detective.Lore"))
+        .build(), event -> {
+      event.setCancelled(true);
+      User user = plugin.getUserManager().getUser(player);
+      if(user.getStat(StatsStorage.StatisticType.DETECTIVE_PASS) <= 0) {
+        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Role-Pass.Fail").replace("%role%", Role.DETECTIVE.name()));
+        return;
+      }
+      user.addStat(StatsStorage.StatisticType.DETECTIVE_PASS, -1);
+      user.addStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 999);
+      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Role-Pass.Success").replace("%role%", Role.DETECTIVE.name()));
+    }));
+
+    gui.show(player);
   }
 
   @EventHandler(priority = EventPriority.HIGH)
@@ -270,7 +330,7 @@ public class Events implements Listener {
   public void onBlockBreakEvent(BlockBreakEvent event) {
     HologramManager.getArmorStands().removeIf(armorStand -> {
       boolean isSameType = armorStand.getLocation().getBlock().getType() == event.getBlock().getType();
-      if (isSameType) {
+      if(isSameType) {
         armorStand.remove();
         armorStand.setCustomNameVisible(false);
       }

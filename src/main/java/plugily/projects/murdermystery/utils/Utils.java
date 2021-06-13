@@ -23,6 +23,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
@@ -127,6 +128,14 @@ public class Utils {
     return false;
   }
 
+  public static boolean hasPermission(Player sender, String perm) {
+    if(sender.hasPermission(perm)) {
+      return true;
+    }
+    sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Permission"));
+    return false;
+  }
+
   public static Vector rotateAroundAxisX(Vector v, double angle) {
     angle = Math.toRadians(angle);
     double cos = Math.cos(angle),
@@ -144,6 +153,29 @@ public class Utils {
       x = v.getX() * cos + v.getZ() * sin,
       z = v.getX() * -sin + v.getZ() * cos;
     return v.setX(x).setZ(z);
+  }
+
+  /**
+   * Checks whether itemstack is named (not null, has meta and display name)
+   *
+   * @param stack item stack to check
+   * @return true if named, false otherwise
+   */
+  public static boolean isNamed(ItemStack stack) {
+    return stack != null && stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
+  }
+
+  /**
+   * @param s string to check whether is integer number
+   * @return true if it is, false otherwise, like 12a, 12.03 33333333333333 etc.
+   */
+  public static boolean isInteger(String s) {
+    try {
+      Integer.parseInt(s);
+      return true;
+    } catch(NumberFormatException ex) {
+      return false;
+    }
   }
 
 }

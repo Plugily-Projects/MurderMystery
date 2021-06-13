@@ -48,19 +48,19 @@ import plugily.projects.murdermystery.events.LobbyEvent;
 import plugily.projects.murdermystery.events.QuitEvent;
 import plugily.projects.murdermystery.events.spectator.SpectatorEvents;
 import plugily.projects.murdermystery.events.spectator.SpectatorItemEvents;
-import plugily.projects.murdermystery.handlers.trails.BowTrailsHandler;
 import plugily.projects.murdermystery.handlers.BungeeManager;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.CorpseHandler;
 import plugily.projects.murdermystery.handlers.PermissionsManager;
 import plugily.projects.murdermystery.handlers.PlaceholderManager;
-import plugily.projects.murdermystery.handlers.items.SpecialItem;
+import plugily.projects.murdermystery.handlers.items.SpecialItemManager;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.handlers.lastwords.LastWordsManager;
 import plugily.projects.murdermystery.handlers.party.PartyHandler;
 import plugily.projects.murdermystery.handlers.party.PartySupportInitializer;
 import plugily.projects.murdermystery.handlers.rewards.RewardsFactory;
 import plugily.projects.murdermystery.handlers.sign.SignManager;
+import plugily.projects.murdermystery.handlers.trails.BowTrailsHandler;
 import plugily.projects.murdermystery.handlers.trails.TrailsManager;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.user.UserManager;
@@ -98,6 +98,7 @@ public class Main extends JavaPlugin {
   private ChatManager chatManager;
   private LastWordsManager lastWordsManager;
   private TrailsManager trailsManager;
+  private SpecialItemManager specialItemManager;
 
   @Override
   public void onEnable() {
@@ -133,7 +134,7 @@ public class Main extends JavaPlugin {
 
     if(configPreferences.getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
       getServer().getScheduler().scheduleSyncRepeatingTask(this, () ->
-        getServer().getOnlinePlayers().forEach(ArenaUtils::updateNameTagsVisibility), 60, 140);
+          getServer().getOnlinePlayers().forEach(ArenaUtils::updateNameTagsVisibility), 60, 140);
     }
   }
 
@@ -211,7 +212,6 @@ public class Main extends JavaPlugin {
     userManager = new UserManager(this);
     hookManager = new HookManager();
     Utils.init(this);
-    SpecialItem.loadAll();
     PermissionsManager.init();
     new ArenaEvents(this);
     new SpectatorEvents(this);
@@ -228,6 +228,7 @@ public class Main extends JavaPlugin {
     new LobbyEvent(this);
     new SpectatorItemEvents(this);
     rewardsHandler = new RewardsFactory(this);
+    specialItemManager = new SpecialItemManager(this);
     corpseHandler = new CorpseHandler(this);
     partyHandler = new PartySupportInitializer().initialize(this);
     new BowTrailsHandler(this);
@@ -237,7 +238,7 @@ public class Main extends JavaPlugin {
     new EventsInitializer().initialize(this);
     lastWordsManager = new LastWordsManager(this);
     trailsManager = new TrailsManager(this);
-    MiscUtils.sendStartUpMessage(this, "MurderMystery", getDescription(),true, true);
+    MiscUtils.sendStartUpMessage(this, "MurderMystery", getDescription(), true, true);
   }
 
   private void registerSoftDependenciesAndServices() {
@@ -278,7 +279,7 @@ public class Main extends JavaPlugin {
         if(getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
           Debugger.sendConsoleMsg("&c[Murder Mystery] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
           Debugger.sendConsoleMsg("&c[Murder Mystery] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
-            result.getNewestVersion()));
+              result.getNewestVersion()));
         }
         return;
       }
@@ -290,7 +291,7 @@ public class Main extends JavaPlugin {
   }
 
   private void setupFiles() {
-    for(String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks")) {
+    for(String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "special_items", "mysql", "specialblocks")) {
       File file = new File(getDataFolder() + File.separator + fileName + ".yml");
       if(!file.exists()) {
         saveResource(fileName + ".yml", false);
@@ -350,6 +351,10 @@ public class Main extends JavaPlugin {
     return trailsManager;
   }
 
+  public SpecialItemManager getSpecialItemManager() {
+    return specialItemManager;
+  }
+
   private void saveAllUserStatistics() {
     for(Player player : getServer().getOnlinePlayers()) {
       User user = userManager.getUser(player);
@@ -365,7 +370,7 @@ public class Main extends JavaPlugin {
         String finalUpdate = update.toString();
         //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
         ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE " + ((MysqlManager) getUserManager().getDatabase()).getTableName()
-          + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
+            + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
         continue;
       }
       for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {

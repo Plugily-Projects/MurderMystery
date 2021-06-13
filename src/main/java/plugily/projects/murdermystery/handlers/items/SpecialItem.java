@@ -1,6 +1,6 @@
 /*
- * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * TheBridge - Defend your base and try to wipe out the others
+ * Copyright (C)  2021  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,122 +14,54 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package plugily.projects.murdermystery.handlers.items;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
-import plugily.projects.murdermystery.Main;
-
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 /**
- * @author Plajer
- * <p>
- * Created at 03.08.2018
+ * Created by Tom on 5/02/2016.
  */
-//todo use new item registry with spectator items
 public class SpecialItem {
 
-  private ItemStack itemStack;
-  private int slot;
+  public static final SpecialItem INVALID_ITEM = new SpecialItem("INVALID", new ItemStack(Material.BEDROCK), -1, DisplayStage.LOBBY);
   private final String name;
+  private final ItemStack itemStack;
+  private int slot;
+  private final DisplayStage displayStage;
 
-  public SpecialItem(String name) {
+  public SpecialItem(String name, ItemStack itemStack, int slot, DisplayStage displayStage) {
     this.name = name;
+    this.itemStack = itemStack;
+    this.slot = slot;
+    this.displayStage = displayStage;
   }
 
-  public static void loadAll() {
-    new SpecialItem("Leave").load(ChatColor.RED + "Leave", new String[]{
-        ChatColor.GRAY + "Click to teleport to hub"
-    }, XMaterial.WHITE_BED.parseMaterial(), 8);
+  public String getName() {
+    return name;
   }
 
-  public void load(String displayName, String[] lore, Material material, int slot) {
-    Main plugin = JavaPlugin.getPlugin(Main.class);
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "lobbyitems");
-
-    List<SpecialItem> items = new java.util.ArrayList<>();
-
-    if(!config.contains(name)) {
-      config.set(name + ".data", 0);
-      config.set(name + ".displayname", displayName);
-      config.set(name + ".lore", Arrays.asList(lore));
-      config.set(name + ".material-name", material.toString());
-      config.set(name + ".slot", slot);
-      ConfigUtils.saveConfig(plugin, config, "lobbyitems");
-    }
-    if(config.getString(name + ".material-name", "STONE").equalsIgnoreCase("RAINBOW_BED")) {
-      EnumSet.of(XMaterial.BLACK_BED, XMaterial.BLUE_BED, XMaterial.BROWN_BED,
-          XMaterial.CYAN_BED, XMaterial.GRAY_BED, XMaterial.LIGHT_BLUE_BED,
-          XMaterial.GREEN_BED, XMaterial.LIGHT_GRAY_BED, XMaterial.LIME_BED,
-          XMaterial.MAGENTA_BED, XMaterial.ORANGE_BED, XMaterial.PINK_BED,
-          XMaterial.PURPLE_BED, XMaterial.RED_BED, XMaterial.WHITE_BED,
-          XMaterial.YELLOW_BED).forEach(xmaterial -> {
-        ItemStack stack = xmaterial.parseItem();
-        ItemMeta meta = stack.getItemMeta();
-        if(meta != null) {
-          ComplementAccessor.getComplement().setDisplayName(meta, plugin.getChatManager().colorRawMessage(config.getString(name + ".displayname", "")));
-
-          List<String> colorizedLore = config.getStringList(name + ".lore").stream().map(plugin.getChatManager()::colorRawMessage)
-              .collect(Collectors.toList());
-          ComplementAccessor.getComplement().setLore(meta, colorizedLore);
-          stack.setItemMeta(meta);
-        }
-        SpecialItem item = new SpecialItem(name);
-        item.itemStack = stack;
-        item.slot = config.getInt(name + ".slot");
-        items.add(item);
-      });
-    } else {
-      Material mat;
-      String display;
-      List<String> description;
-      int position;
-      try {
-        try {
-          mat = Material.valueOf(config.getString(name + ".material-name", "BEDROCK").toUpperCase());
-        } catch(IllegalArgumentException e) {
-          mat = Material.BEDROCK;
-        }
-        display = plugin.getChatManager().colorRawMessage(config.getString(name + ".displayname"));
-        description = config.getStringList(name + ".lore").stream()
-            .map(itemLore -> itemLore = plugin.getChatManager().colorRawMessage(itemLore))
-            .collect(Collectors.toList());
-        position = config.getInt(name + ".slot");
-      } catch(Exception ex) {
-        plugin.getLogger().log(Level.WARNING, "Configuration of " + name + "is missing a value. (displayname, lore or slot)");
-        return;
-      }
-      ItemStack stack = new ItemBuilder(mat).name(display).lore(description).build();
-
-      SpecialItem item = new SpecialItem(name);
-      item.itemStack = stack;
-      item.slot = position;
-      items.add(item);
-    }
-
-    SpecialItemManager.addItem(name, items);
+  public ItemStack getItemStack() {
+    return itemStack;
   }
 
   public int getSlot() {
     return slot;
   }
 
-  public ItemStack getItemStack() {
-    return itemStack;
+  public void setSlot(int slot) {
+    this.slot = slot;
   }
+
+  public DisplayStage getDisplayStage() {
+    return displayStage;
+  }
+
+  public enum DisplayStage {
+    LOBBY, SPECTATOR
+  }
+
 }

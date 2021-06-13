@@ -38,6 +38,7 @@ import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.ItemPosition;
+import plugily.projects.murdermystery.utils.Utils;
 
 /**
  * @author Plajer
@@ -240,6 +241,28 @@ public class ArenaUtils {
         continue;
       }
       VersionUtils.updateNameTagsVisibility(p, players, "MMHide", arena.getArenaState() != ArenaState.IN_GAME);
+    }
+  }
+
+  public static void arenaForceStart(Player player) {
+    if(!Utils.hasPermission(player, "murdermystery.admin.forcestart")) {
+      return;
+    }
+    if(!Utils.checkIsInGameInstance(player)) {
+      return;
+    }
+    Arena arena = ArenaRegistry.getArena(player);
+    if(arena.getPlayers().size() < 2) {
+      chatManager.broadcast(arena, chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), arena.getMinimumPlayers()));
+      return;
+    }
+    if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
+      arena.setArenaState(ArenaState.STARTING);
+      arena.setForceStart(true);
+      arena.setTimer(0);
+      for(Player arenaPlayers : arena.getPlayers()) {
+        arenaPlayers.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
+      }
     }
   }
 

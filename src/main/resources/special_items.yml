@@ -1,0 +1,57 @@
+# Custom in-game items.
+# Probably you will only translate displayname and lore so don't mess with it.
+#
+# Please don't modify 'Leave-Lobby', 'Leave-Spectator', 'Player-List' and 'Spectator-Options'
+# nodes as they are hardcoded in code!
+
+Forcestart:
+  displayname: "&c&lClick to start the game &7(Right Click)"
+  lore:
+    - "&7You need the following permission for it"
+    - "&7murdermystery.admin.forcestart"
+  material-name: EMERALD
+  slot: 0
+  stage: lobby
+
+Role-Pass:
+  displayname: "&c&lClick to open role pass menu &7(Right Click)"
+  lore:
+    - "&7Enjoy one round of guaranteed role with pass"
+  material-name: CHEST
+  slot: 4
+  stage: lobby
+
+Leave-Lobby:
+  displayname: "&c&lReturn to Lobby &7(Right Click)"
+  lore:
+    - "&7Right-click to leave to the lobby"
+  material-name: BED
+  slot: 8
+  stage: lobby
+
+Leave-Spectator:
+  displayname: "&c&lLeave the Game &7(Right Click)"
+  lore:
+    - "&7Right-click to leave to the lobby"
+  material-name: BED
+  slot: 8
+  stage: spectator
+
+Player-List:
+  displayname: "&a&lAlive Players &7(Right Click)"
+  lore:
+    - "&7Right-click to see alive players list"
+  material-name: PLAYER_HEAD
+  slot: 0
+  stage: spectator
+
+Spectator-Options:
+  displayname: "&b&lSpectator Settings &7(Right Click)"
+  lore:
+    - "&7Right-click to adjust spectator settings"
+  material-name: COMPARATOR
+  slot: 4
+  stage: spectator
+
+# Don't touch this
+Version: 1

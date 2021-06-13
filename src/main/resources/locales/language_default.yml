@@ -132,12 +132,25 @@ In-Game:
   Innocent-Locator-Item-Name: "&6Innocent locator"
   Watch-Out-Title: "&cWatch out!"
   Watch-Out-Subtitle: "&eThe Murderer can now find survivors easily"
+  Role-Pass:
+    Menu-Name: "Role pass menu"
+    Role:
+      Murderer:
+        Name: "Be murderer"
+        Lore:
+          - "Cost 1 murderer pass"
+      Detective:
+        Name: "Be detective"
+        Lore:
+          - "Cost 1 detective pass"
+    Fail: "You do not got enough passes for %role% role"
+    Success: "You will be %role% next round!"
+    Change: "You now got %amount% %role% passes!"
   Spectator:
-    Spectator-Item-Name: "&7Players list"
     Spectator-Menu-Name: "Alive players list"
     Target-Player-Role: "&7Role: %role%"
+    Target-Player-Health: "&cHealth: &7%health%"
     Settings-Menu:
-      Item-Name: "&7Spectator settings"
       Inventory-Name: "&7Spectator settings"
       Speed-Name: "&aSpeed"
   Messages:
@@ -315,4 +328,4 @@ Placeholders:
 
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p
-File-Version-Do-Not-Edit: 7
+File-Version-Do-Not-Edit: 8
