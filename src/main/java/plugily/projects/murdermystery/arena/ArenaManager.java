@@ -31,8 +31,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
 import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
 import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.murdermystery.ConfigPreferences;
@@ -307,20 +305,29 @@ public class ArenaManager {
               }
               players.add(gamePlayer);
             }
+
             Player newMurderer = players.get(players.size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(players.size()));
-            Debugger.debug("A murderer left the game. New murderer: {0}", newMurderer.getName());
-            arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
-            arena.addToMurdererList(newMurderer);
+            if (newMurderer != null) {
+              Debugger.debug("A murderer left the game. New murderer: {0}", newMurderer.getName());
+              arena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
+              arena.addToMurdererList(newMurderer);
+            }
+
             String title = chatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Title", player).replace("%role%",
                 chatManager.colorMessage("Scoreboard.Roles.Murderer", player));
             String subtitle = chatManager.colorMessage("In-Game.Messages.Previous-Role-Left-Subtitle", player).replace("%role%",
                 chatManager.colorMessage("Scoreboard.Roles.Murderer", player));
+
             for(Player gamePlayer : arena.getPlayers()) {
               VersionUtils.sendTitles(gamePlayer, title, subtitle, 5, 40, 5);
             }
-            VersionUtils.sendTitles(newMurderer, chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title", player),
-                chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle", player), 5, 40, 5);
-            ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
+
+            if (newMurderer != null) {
+              VersionUtils.sendTitles(newMurderer, chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title", player),
+                  chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle", player), 5, 40, 5);
+              ItemPosition.setItem(newMurderer, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
+            }
+
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
           } else {
             Debugger.debug("No new murderer added as there are some");

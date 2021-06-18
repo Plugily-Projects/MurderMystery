@@ -35,7 +35,6 @@ import plugily.projects.murdermystery.arena.ArenaState;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
-import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 
 import java.util.ArrayList;

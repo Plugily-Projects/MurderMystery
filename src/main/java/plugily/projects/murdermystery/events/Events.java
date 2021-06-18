@@ -119,14 +119,19 @@ public class Events implements Listener {
     if(attackerUser.getCooldown("sword_shoot") > 0) {
       return;
     }
-    attackerUser.setCooldown("sword_shoot", plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5));
+
+    int swordFlyCooldown = plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5);
+
+    attackerUser.setCooldown("sword_shoot", swordFlyCooldown);
+
     if(ServerVersion.Version.isCurrentLower(Version.v1_9_R1)) {
       attackerUser.setCooldown("sword_attack", (plugin.getConfig().getInt("Murderer-Sword-Attack-Cooldown", 1)));
     } else {
       attacker.setCooldown(plugin.getConfigPreferences().getMurdererSword().getType(), 20 * (plugin.getConfig().getInt("Murderer-Sword-Attack-Cooldown", 1)));
     }
+
     createFlyingSword(arena, attacker, attackerUser);
-    Utils.applyActionBarCooldown(attacker, plugin.getConfig().getInt("Murderer-Sword-Fly-Cooldown", 5));
+    Utils.applyActionBarCooldown(attacker, swordFlyCooldown);
   }
 
   private void createFlyingSword(Arena arena, Player attacker, User attackerUser) {
@@ -205,6 +210,11 @@ public class Events implements Listener {
     if(!plugin.getConfig().getBoolean("Block-Commands-In-Game", true)) {
       return;
     }
+
+    if(event.getPlayer().isOp() || event.getPlayer().hasPermission("murdermystery.admin") || event.getPlayer().hasPermission("murdermystery.command.bypass")) {
+      return;
+    }
+
     String command = event.getMessage().substring(1);
     int index = command.indexOf(' ');
     command = (index >= 0 ? command.substring(0, index) : command);
@@ -213,9 +223,7 @@ public class Events implements Listener {
         return;
       }
     }
-    if(event.getPlayer().isOp() || event.getPlayer().hasPermission("murdermystery.admin") || event.getPlayer().hasPermission("murdermystery.command.bypass")) {
-      return;
-    }
+
     if(command.equalsIgnoreCase("mm") || command.equalsIgnoreCase("murdermystery")
         || event.getMessage().contains("murdermysteryadmin") || event.getMessage().contains("leave")
         || command.equalsIgnoreCase("stats") || command.equalsIgnoreCase("mma")) {
