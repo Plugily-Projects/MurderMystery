@@ -56,10 +56,6 @@
             <url>https://maven.plugily.xyz/</url>
         </repository>
         <repository>
-            <id>bstats-repo</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <repository>
             <id>filoghost-repo</id>
             <url>https://ci.filoghost.me/plugin/repository/everything/</url>
         </repository>
@@ -151,13 +147,6 @@
             <systemPath>${project.basedir}/lib/CorpseReborn.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>de.simonsator</groupId>
-            <artifactId>partyandfriends</artifactId>
-            <version>1.0.52</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/PAFSpigot.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
             <version>3.0.2</version>
@@ -172,15 +161,34 @@
         </dependency>
         <dependency>
             <groupId>de.simonsator</groupId>
+            <artifactId>partyandfriends</artifactId>
+            <version>1.0.52</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/PAFSpigot.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>de.simonsator</groupId>
             <artifactId>Party-and-Friends-MySQL-Edition-Spigot-API</artifactId>
             <version>1.3.2</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>be.maximvdw</groupId>
+                    <artifactId>MVdWPlaceholderAPI</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.simonsator</groupId>
             <artifactId>Spigot-Party-API-For-RedisBungee</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>redis.clients</groupId>
+                    <artifactId>jedis</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     <build>
@@ -191,6 +199,11 @@
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.9.1</version>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -210,7 +223,8 @@
                 <configuration>
                     <windowtitle>Murder Mystery API docs for v${project.version}</windowtitle>
                     <description>Minecraft survival minigame.
-                        Be the murderer, innocent or the detective! Don't be killed during the game to win! API documentation for hooking Murder Mystery with your plugin.
+                        Be the murderer, innocent or the detective! Don't be killed during the game to win! API
+                        documentation for hooking Murder Mystery with your plugin.
                     </description>
                     <destDir>minecraft/murdermystery</destDir>
                     <isOffline>false</isOffline>
@@ -235,7 +249,8 @@
                             <relocations>
                                 <relocation>
                                     <pattern>com.github.stefvanschie.inventoryframework</pattern>
-                                    <shadedPattern>plugily.projects.murdermystery.utils.inventoryframework</shadedPattern>
+                                    <shadedPattern>plugily.projects.murdermystery.utils.inventoryframework
+                                    </shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.zaxxer.hikari</pattern>
