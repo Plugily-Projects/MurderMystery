@@ -18,7 +18,7 @@
 
 package plugily.projects.murdermystery.handlers.setup.components;
 
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import plugily.projects.inventoryframework.pane.StaticPane;
 import plugily.projects.murdermystery.handlers.setup.SetupInventory;
 
 /**

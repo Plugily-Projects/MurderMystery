@@ -20,12 +20,11 @@ package plugily.projects.murdermystery.commands.arguments.admin.arena;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import plugily.projects.murdermystery.arena.ArenaUtils;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
 import plugily.projects.murdermystery.commands.arguments.data.CommandArgument;
 import plugily.projects.murdermystery.commands.arguments.data.LabelData;
 import plugily.projects.murdermystery.commands.arguments.data.LabeledCommandArgument;
-
-import static plugily.projects.murdermystery.arena.ArenaUtils.arenaForceStart;
 
 /**
  * @author Plajer
@@ -39,7 +38,7 @@ public class ForceStartArgument {
         new LabelData("/mma forcestart", "/mma forcestart", "&7Force starts arena you're in\n&6Permission: &7murdermystery.admin.forcestart")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        arenaForceStart((Player) sender);
+        ArenaUtils.arenaForceStart((Player) sender);
       }
     });
   }

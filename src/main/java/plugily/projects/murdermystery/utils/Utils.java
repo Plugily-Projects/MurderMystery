@@ -81,7 +81,7 @@ public class Utils {
         }
         String progress = StringFormatUtils.getProgressBar(ticks, seconds * 20, 10, "■", ChatColor.COLOR_CHAR + "a", ChatColor.COLOR_CHAR + "c");
         VersionUtils.sendActionBar(p, plugin.getChatManager().colorMessage("In-Game.Cooldown-Format", p)
-          .replace("%progress%", progress).replace("%time%", Double.toString((double) ((seconds * 20) - ticks) / 20)));
+            .replace("%progress%", progress).replace("%time%", Double.toString((double) ((seconds * 20) - ticks) / 20)));
         ticks += 10;
       }
     }.runTaskTimer(plugin, 0, 10);
@@ -91,7 +91,7 @@ public class Utils {
     List<Block> blocks = new ArrayList<>();
 
     org.bukkit.World world = location.getWorld();
-    if (world == null)
+    if(world == null)
       return blocks;
 
     int blockX = location.getBlockX();
@@ -139,9 +139,9 @@ public class Utils {
   public static Vector rotateAroundAxisX(Vector v, double angle) {
     angle = Math.toRadians(angle);
     double cos = Math.cos(angle),
-      sin = Math.sin(angle),
-      y = v.getY() * cos - v.getZ() * sin,
-      z = v.getY() * sin + v.getZ() * cos;
+        sin = Math.sin(angle),
+        y = v.getY() * cos - v.getZ() * sin,
+        z = v.getY() * sin + v.getZ() * cos;
     return v.setY(y).setZ(z);
   }
 
@@ -149,9 +149,9 @@ public class Utils {
     angle = -angle;
     angle = Math.toRadians(angle);
     double cos = Math.cos(angle),
-      sin = Math.sin(angle),
-      x = v.getX() * cos + v.getZ() * sin,
-      z = v.getX() * -sin + v.getZ() * cos;
+        sin = Math.sin(angle),
+        x = v.getX() * cos + v.getZ() * sin,
+        z = v.getX() * -sin + v.getZ() * cos;
     return v.setX(x).setZ(z);
   }
 

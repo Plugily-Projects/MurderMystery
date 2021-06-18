@@ -18,9 +18,6 @@
 
 package plugily.projects.murdermystery.events;
 
-import com.github.stefvanschie.inventoryframework.gui.GuiItem;
-import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
-import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
@@ -56,6 +53,9 @@ import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
 import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
 import pl.plajerlair.commonsbox.minecraft.hologram.HologramManager;
 import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+import plugily.projects.inventoryframework.gui.GuiItem;
+import plugily.projects.inventoryframework.gui.type.ChestGui;
+import plugily.projects.inventoryframework.pane.OutlinePane;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
@@ -68,8 +68,6 @@ import plugily.projects.murdermystery.handlers.items.SpecialItemManager;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Utils;
-
-import static plugily.projects.murdermystery.arena.ArenaUtils.arenaForceStart;
 
 /**
  * @author Plajer
@@ -264,7 +262,7 @@ public class Events implements Listener {
     }
     if(key.equalsIgnoreCase(SpecialItemManager.SpecialItems.FORCESTART.getName())) {
       event.setCancelled(true);
-      arenaForceStart(event.getPlayer());
+      ArenaUtils.arenaForceStart(event.getPlayer());
       return;
     }
     if(key.equals(SpecialItemManager.SpecialItems.LOBBY_LEAVE_ITEM.getName()) || key.equals(SpecialItemManager.SpecialItems.SPECTATOR_LEAVE_ITEM.getName())) {

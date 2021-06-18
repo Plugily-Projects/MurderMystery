@@ -18,8 +18,8 @@
 
 package plugily.projects.murdermystery.handlers.setup.components;
 
-import com.github.stefvanschie.inventoryframework.gui.GuiItem;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import plugily.projects.inventoryframework.gui.GuiItem;
+import plugily.projects.inventoryframework.pane.StaticPane;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

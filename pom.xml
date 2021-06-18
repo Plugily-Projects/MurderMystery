@@ -109,9 +109,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.stefvanschie.inventoryframework</groupId>
+            <groupId>plugily.projects.inventoryframework</groupId>
             <artifactId>IF</artifactId>
-            <version>0.9.7</version>
+            <version>0.9.8</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -248,7 +248,7 @@
                         <configuration>
                             <relocations>
                                 <relocation>
-                                    <pattern>com.github.stefvanschie.inventoryframework</pattern>
+                                    <pattern>plugily.projects.inventoryframework</pattern>
                                     <shadedPattern>plugily.projects.murdermystery.utils.inventoryframework
                                     </shadedPattern>
                                 </relocation>
