@@ -78,10 +78,10 @@ public class PlaceholderManager extends PlaceholderExpansion {
   }
 
   private String handleArenaPlaceholderRequest(String id) {
-    if(!id.contains(":")) {
-      return null;
-    }
     String[] data = id.split(":", 2);
+    if (data.length < 2)
+      return null;
+
     Arena arena = ArenaRegistry.getArena(data[0]);
     if(arena == null) {
       return null;
