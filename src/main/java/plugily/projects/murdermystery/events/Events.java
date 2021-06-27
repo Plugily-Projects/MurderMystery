@@ -152,7 +152,11 @@ public class Events implements Listener {
 
     stand.setGravity(false);
     stand.setRemoveWhenFarAway(true);
-    stand.setMarker(true);
+
+    if(Version.isCurrentEqualOrHigher(Version.v1_8_R3)) {
+      stand.setMarker(true);
+    }
+
     Location initialise = Utils.rotateAroundAxisY(new Vector(-0.8D, 1.45D, 0.0D), loc.getYaw()).toLocation(attacker.getWorld()).add(standStart).add(Utils.rotateAroundAxisY(Utils.rotateAroundAxisX(new Vector(0.0D, 0.0D, 1.0D), loc.getPitch()), loc.getYaw()));
     int maxRange = plugin.getConfig().getInt("Murderer-Sword-Fly-Range", 20);
     double maxHitRange = plugin.getConfig().getDouble("Murderer-Sword-Fly-Hit-Range", 0.5);
