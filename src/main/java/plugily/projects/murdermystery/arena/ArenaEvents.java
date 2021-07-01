@@ -433,7 +433,7 @@ public class ArenaEvents implements Listener {
     }, 5);
   }
 
-  @EventHandler(priority = EventPriority.HIGH)
+  @EventHandler(priority = EventPriority.HIGHEST)
   public void onRespawn(PlayerRespawnEvent e) {
     Player player = e.getPlayer();
     Arena arena = ArenaRegistry.getArena(player);
@@ -443,7 +443,8 @@ public class ArenaEvents implements Listener {
     if(arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       e.setRespawnLocation(arena.getLobbyLocation());
       return;
-    } else if(arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
+    }
+    if(arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
       e.setRespawnLocation(arena.getEndLocation());
       return;
     }
