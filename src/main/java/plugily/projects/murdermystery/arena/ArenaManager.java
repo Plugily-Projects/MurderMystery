@@ -498,10 +498,10 @@ public class ArenaManager {
       User user = plugin.getUserManager().getUser(p);
       int localKills = user.getStat(StatsStorage.StatisticType.LOCAL_KILLS);
 
+      murders.append(p.getName());
+
       if(arena.getMurdererList().size() > 1) {
-        murders.append(p.getName()).append(" (").append(localKills).append("), ");
-      } else {
-        murders.append(p.getName());
+        murders.append(" (").append(localKills).append("), ");
       }
 
       murdererKills += localKills;

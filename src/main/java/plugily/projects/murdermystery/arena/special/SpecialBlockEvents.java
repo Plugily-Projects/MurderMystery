@@ -106,11 +106,13 @@ public class SpecialBlockEvents implements Listener {
     if(e.getClickedBlock().getType() != Material.CAULDRON) {
       return;
     }
-    User user = plugin.getUserManager().getUser(e.getPlayer());
+
     if(e.getPlayer().getInventory().getItem(/* same for all roles */ ItemPosition.POTION.getOtherRolesItemPosition()) != null) {
       e.getPlayer().sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Drink-Potion", e.getPlayer()));
       return;
     }
+
+    User user = plugin.getUserManager().getUser(e.getPlayer());
 
     int localGold = user.getStat(StatsStorage.StatisticType.LOCAL_GOLD);
     if(localGold < 1) {

@@ -89,10 +89,10 @@ public class ArenaUtils {
     String msg = chatManager.colorMessage("In-Game.Messages.Bonus-Score");
 
     if(action == ScoreAction.GOLD_PICKUP && amount > 1) {
-      int score = action.getPoints() * amount;
+      int score = action.points * amount;
 
       msg = StringUtils.replace(msg, "%score%", Integer.toString(score));
-      msg = StringUtils.replace(msg, "%action%", action.getAction());
+      msg = StringUtils.replace(msg, "%action%", action.action);
 
       user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + (score));
       user.getPlayer().sendMessage(msg);
@@ -112,21 +112,21 @@ public class ArenaUtils {
       user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + overallInnocents);
 
       msg = StringUtils.replace(msg, "%score%", Integer.toString(overallInnocents));
-      msg = StringUtils.replace(msg, "%action%", action.getAction().replace("%amount%", Integer.toString(innocents)));
+      msg = StringUtils.replace(msg, "%action%", action.action.replace("%amount%", Integer.toString(innocents)));
 
       user.getPlayer().sendMessage(msg);
       return;
     }
 
-    msg = StringUtils.replace(msg, "%score%", Integer.toString(action.getPoints()));
+    msg = StringUtils.replace(msg, "%score%", Integer.toString(action.points));
 
-    if(action.getPoints() < 0) {
+    if(action.points < 0) {
       msg = StringUtils.replace(msg, "+", "");
     }
 
-    msg = StringUtils.replace(msg, "%action%", action.getAction());
+    msg = StringUtils.replace(msg, "%action%", action.action);
 
-    user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + action.getPoints());
+    user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + action.points);
     user.getPlayer().sendMessage(msg);
   }
 
