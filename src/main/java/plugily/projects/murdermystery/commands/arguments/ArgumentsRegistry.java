@@ -50,6 +50,7 @@ import plugily.projects.murdermystery.commands.arguments.game.CreateArgument;
 import plugily.projects.murdermystery.commands.arguments.game.JoinArguments;
 import plugily.projects.murdermystery.commands.arguments.game.LeaderboardArgument;
 import plugily.projects.murdermystery.commands.arguments.game.LeaveArgument;
+import plugily.projects.murdermystery.commands.arguments.game.RoleSelectorArgument;
 import plugily.projects.murdermystery.commands.arguments.game.StatsArgument;
 import plugily.projects.murdermystery.commands.completion.TabCompletion;
 import plugily.projects.murdermystery.handlers.ChatManager;
@@ -96,6 +97,7 @@ public class ArgumentsRegistry implements CommandExecutor {
     new LeaderboardArgument(this, chatManager);
     new LeaveArgument(this, chatManager);
     new StatsArgument(this, chatManager);
+    new RoleSelectorArgument(this, chatManager);
 
     //register admin related arguments
     new DeleteArgument(this, chatManager);

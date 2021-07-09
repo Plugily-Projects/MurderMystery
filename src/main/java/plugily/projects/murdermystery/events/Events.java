@@ -64,6 +64,7 @@ import plugily.projects.murdermystery.arena.ArenaManager;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.ArenaUtils;
 import plugily.projects.murdermystery.arena.role.Role;
+import plugily.projects.murdermystery.commands.arguments.game.RoleSelectorArgument;
 import plugily.projects.murdermystery.handlers.items.SpecialItemManager;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.user.User;
@@ -269,7 +270,7 @@ public class Events implements Listener {
     }
     if(key.equalsIgnoreCase(SpecialItemManager.SpecialItems.ROLE_PASS.getName())) {
       event.setCancelled(true);
-      openRolePassMenu(event.getPlayer());
+      RoleSelectorArgument.openRolePassMenu(event.getPlayer(), plugin);
       return;
     }
     if(key.equalsIgnoreCase(SpecialItemManager.SpecialItems.FORCESTART.getName())) {
@@ -287,45 +288,7 @@ public class Events implements Listener {
     }
   }
 
-  private void openRolePassMenu(Player player) {
-    int rows = Utils.serializeInt(Role.values().length) / 9;
-    ChestGui gui = new ChestGui(rows, plugin.getChatManager().colorMessage("In-Game.Role-Pass.Menu-Name"));
-    gui.setOnGlobalClick(event -> event.setCancelled(true));
-    OutlinePane pane = new OutlinePane(9, rows);
-    gui.addPane(pane);
 
-    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.IRON_SWORD.parseMaterial())
-        .name(plugin.getChatManager().colorMessage("In-Game.Role-Pass.Murderer.Name"))
-        .lore(LanguageManager.getLanguageList("In-Game.Role-Pass.Murderer.Lore"))
-        .build(), event -> {
-      event.setCancelled(true);
-      User user = plugin.getUserManager().getUser(player);
-      if(user.getStat(StatsStorage.StatisticType.MURDERER_PASS) <= 0) {
-        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Role-Pass.Fail").replace("%role%", Role.MURDERER.name()));
-        return;
-      }
-      user.addStat(StatsStorage.StatisticType.MURDERER_PASS, -1);
-      user.addStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 999);
-      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Role-Pass.Success").replace("%role%", Role.MURDERER.name()));
-    }));
-
-    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.BOW.parseMaterial())
-        .name(plugin.getChatManager().colorMessage("In-Game.Role-Pass.Detective.Name"))
-        .lore(LanguageManager.getLanguageList("In-Game.Role-Pass.Detective.Lore"))
-        .build(), event -> {
-      event.setCancelled(true);
-      User user = plugin.getUserManager().getUser(player);
-      if(user.getStat(StatsStorage.StatisticType.DETECTIVE_PASS) <= 0) {
-        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Role-Pass.Fail").replace("%role%", Role.DETECTIVE.name()));
-        return;
-      }
-      user.addStat(StatsStorage.StatisticType.DETECTIVE_PASS, -1);
-      user.addStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 999);
-      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Role-Pass.Success").replace("%role%", Role.DETECTIVE.name()));
-    }));
-
-    gui.show(player);
-  }
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onFoodLevelChange(FoodLevelChangeEvent event) {
