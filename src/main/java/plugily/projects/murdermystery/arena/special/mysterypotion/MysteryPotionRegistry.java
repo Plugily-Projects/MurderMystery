@@ -21,7 +21,8 @@ package plugily.projects.murdermystery.arena.special.mysterypotion;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
 
 import java.util.ArrayList;

@@ -19,7 +19,8 @@
 package plugily.projects.murdermystery;
 
 import org.bukkit.inventory.ItemStack;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
+
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
 import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.MessageUtils;
 

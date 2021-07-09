@@ -26,8 +26,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
+
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.string.StringFormatUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
@@ -164,18 +165,4 @@ public class Utils {
   public static boolean isNamed(ItemStack stack) {
     return stack != null && stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
   }
-
-  /**
-   * @param s string to check whether is integer number
-   * @return true if it is, false otherwise, like 12a, 12.03 33333333333333 etc.
-   */
-  public static boolean isInteger(String s) {
-    try {
-      Integer.parseInt(s);
-      return true;
-    } catch(NumberFormatException ex) {
-      return false;
-    }
-  }
-
 }

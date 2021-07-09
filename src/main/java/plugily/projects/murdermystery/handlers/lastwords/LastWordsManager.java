@@ -20,7 +20,7 @@ package plugily.projects.murdermystery.handlers.lastwords;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.utils.Debugger;
 

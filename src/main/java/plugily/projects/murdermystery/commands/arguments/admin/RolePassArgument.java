@@ -1,10 +1,11 @@
 package plugily.projects.murdermystery.commands.arguments.admin;
 
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import plugily.projects.commonsbox.number.NumberUtils;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
@@ -13,7 +14,6 @@ import plugily.projects.murdermystery.commands.arguments.data.LabelData;
 import plugily.projects.murdermystery.commands.arguments.data.LabeledCommandArgument;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.user.User;
-import plugily.projects.murdermystery.utils.Utils;
 
 /**
  * @author Tigerpanzer_02
@@ -41,7 +41,7 @@ public class RolePassArgument {
         Role role = Role.MURDERER;
         try {
           role = Role.valueOf(roleArg);
-        } catch(Exception exception) {
+        } catch(IllegalArgumentException exception) {
           sender.sendMessage(chatManager.getPrefix() + ChatColor.RED + "Command: /mma rolepass <add/set/remove> <role> <amount> [player]");
           return;
         }
@@ -49,14 +49,12 @@ public class RolePassArgument {
           sender.sendMessage(chatManager.getPrefix() + ChatColor.RED + "Command: /mma rolepass <add/set/remove> <role> <amount> [player]");
           return;
         }
-        String amountArg = args[2];
-        int amount = 0;
-        if(Utils.isInteger(amountArg)) {
-          amount = Integer.parseInt(amountArg);
-        } else {
+        java.util.Optional<Integer> opt = NumberUtils.parseInt(args[2]);
+        if(!opt.isPresent()) {
           sender.sendMessage(chatManager.getPrefix() + ChatColor.RED + "Command: /mma rolepass <add/set/remove> <role> <amount> [player]");
           return;
         }
+        int amount = opt.orElse(0);
         //player
         Player player = args.length == 4 ? Bukkit.getPlayerExact(args[3]) : (Player) sender;
         if(player == null) {
@@ -90,9 +88,9 @@ public class RolePassArgument {
             break;
         }
         if(role == Role.MURDERER) {
-          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Role-Pass.Change").replace("%amount%", amountArg).replace("%role%", Role.MURDERER.name()));
+          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Role-Pass.Change").replace("%amount%", args[2]).replace("%role%", Role.MURDERER.name()));
         } else {
-          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Role-Pass.Change").replace("%amount%", amountArg).replace("%role%", Role.DETECTIVE.name()));
+          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Role-Pass.Change").replace("%amount%", args[2]).replace("%role%", Role.DETECTIVE.name()));
         }
       }
     });

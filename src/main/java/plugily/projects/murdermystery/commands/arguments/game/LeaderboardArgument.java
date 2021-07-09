@@ -66,16 +66,22 @@ public class LeaderboardArgument {
           sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Statistics.Type-Name"));
           return;
         }
+
+        StatsStorage.StatisticType statisticType;
+
         try {
-          StatsStorage.StatisticType statisticType = StatsStorage.StatisticType.valueOf(args[1].toUpperCase());
-          if(!statisticType.isPersistent()) {
-            sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Statistics.Invalid-Name"));
-            return;
-          }
-          printLeaderboard(sender, statisticType);
+          statisticType = StatsStorage.StatisticType.valueOf(args[1].toUpperCase());
         } catch(IllegalArgumentException e) {
           sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Statistics.Invalid-Name"));
+          return;
         }
+
+        if(!statisticType.isPersistent()) {
+          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Statistics.Invalid-Name"));
+          return;
+        }
+
+        printLeaderboard(sender, statisticType);
       }
     });
   }

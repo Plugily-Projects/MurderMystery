@@ -18,7 +18,8 @@
 package plugily.projects.murdermystery.handlers.trails;
 
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.murdermystery.Main;
 
 import java.util.ArrayList;

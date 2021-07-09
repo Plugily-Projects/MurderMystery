@@ -20,7 +20,8 @@ package plugily.projects.murdermystery.handlers.setup;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+
+import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.handlers.ChatManager;
 

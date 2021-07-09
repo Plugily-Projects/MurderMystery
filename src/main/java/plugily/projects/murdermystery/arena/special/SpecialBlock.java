@@ -19,7 +19,8 @@
 package plugily.projects.murdermystery.arena.special;
 
 import org.bukkit.Location;
-import pl.plajerlair.commonsbox.minecraft.hologram.ArmorStandHologram;
+
+import plugily.projects.commonsbox.minecraft.hologram.ArmorStandHologram;
 
 /**
  * @author Plajer

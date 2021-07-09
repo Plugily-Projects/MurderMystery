@@ -81,19 +81,19 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>pl.plajer</groupId>
+            <groupId>plugily.projects</groupId>
             <artifactId>commons-box-classic</artifactId>
             <version>1.3.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>pl.plajer</groupId>
+            <groupId>plugily.projects</groupId>
             <artifactId>commons-box-database</artifactId>
             <version>1.3.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>pl.plajer</groupId>
+            <groupId>plugily.projects</groupId>
             <artifactId>commons-box-minecraft</artifactId>
             <version>1.3.1</version>
             <scope>compile</scope>

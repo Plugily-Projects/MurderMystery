@@ -44,15 +44,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerSwapHandItemsEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
-import pl.plajerlair.commonsbox.minecraft.hologram.HologramManager;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
+
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.compat.events.api.CBPlayerInteractEvent;
+import plugily.projects.commonsbox.minecraft.compat.events.api.CBPlayerSwapHandItemsEvent;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XSound;
+import plugily.projects.commonsbox.minecraft.hologram.HologramManager;
+import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.inventoryframework.gui.GuiItem;
 import plugily.projects.inventoryframework.gui.type.ChestGui;
 import plugily.projects.inventoryframework.pane.OutlinePane;
@@ -122,7 +122,7 @@ public class Events implements Listener {
 
     attackerUser.setCooldown("sword_shoot", swordFlyCooldown);
 
-    if(ServerVersion.Version.isCurrentLower(Version.v1_9_R1)) {
+    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_9_R1)) {
       attackerUser.setCooldown("sword_attack", (plugin.getConfig().getInt("Murderer-Sword-Attack-Cooldown", 1)));
     } else {
       attacker.setCooldown(plugin.getConfigPreferences().getMurdererSword().getType(), 20 * (plugin.getConfig().getInt("Murderer-Sword-Attack-Cooldown", 1)));
@@ -140,7 +140,7 @@ public class Events implements Listener {
     standStart.setYaw(loc.getYaw());
     ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(standStart, EntityType.ARMOR_STAND);
     stand.setVisible(false);
-    if(Version.isCurrentHigher(Version.v1_8_R3)) {
+    if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_8_R3)) {
       stand.setInvulnerable(true);
       stand.setSilent(true);
     }
@@ -153,7 +153,7 @@ public class Events implements Listener {
     stand.setGravity(false);
     stand.setRemoveWhenFarAway(true);
 
-    if(Version.isCurrentEqualOrHigher(Version.v1_8_R3)) {
+    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_8_R3)) {
       stand.setMarker(true);
     }
 
