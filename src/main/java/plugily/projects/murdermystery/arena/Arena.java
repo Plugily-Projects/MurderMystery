@@ -315,6 +315,9 @@ public class Arena extends BukkitRunnable {
           Object[] sortedMurdererArray = sortedMurderer.keySet().toArray();
 
           for(int i = 0; i < maxmurderer; i++) {
+            if (i >= sortedMurdererArray.length)
+              break;
+
             Player murderer = ((User) sortedMurdererArray[i]).getPlayer();
             setCharacter(CharacterType.MURDERER, murderer);
             allMurderer.add(murderer);
@@ -324,6 +327,7 @@ public class Arena extends BukkitRunnable {
                 chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
             detectiveChances.remove(sortedMurdererArray[i]);
           }
+
           //shuffling map to avoid the same detectives on the next round
           List<Map.Entry<User, Double>> shuffledDetectives = new ArrayList<>(detectiveChances.entrySet());
           Collections.shuffle(shuffledDetectives);
@@ -334,6 +338,9 @@ public class Arena extends BukkitRunnable {
           Object[] sortedDetArray = sortedDetective.keySet().toArray();
 
           for(int i = 0; i < maxdetectives; i++) {
+            if (i >= sortedDetArray.length)
+                break;
+
             Player detective = ((User) sortedDetArray[i]).getPlayer();
             setCharacter(CharacterType.DETECTIVE, detective);
             allDetectives.add(detective);

@@ -514,7 +514,10 @@ public class ArenaManager {
       detectives.append(p.getName()).append(", ");
     }
 
-    detectives.deleteCharAt(detectives.length() - 2);
+    int index = detectives.length() - 2;
+    if (index > 0 && index < detectives.length()) {
+      detectives.deleteCharAt(index);
+    }
 
     int aliveMurderer = arena.aliveMurderer();
 
