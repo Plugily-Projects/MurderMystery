@@ -6,6 +6,7 @@
 * Removed lobbyitems.yml
 * Removed Rainbow Bed option
 * Added 1.17 support
+* Reuse XMaterial for specialitems
 >>> beta1 
 * Fixed party (parties v3.1.0) not working anymore
 * Fixed when plugins scoreboards not re-appeared after game end
