@@ -42,9 +42,10 @@ jobs:
         with:
           maven-version: 3.6.3
           
-      - uses: actions/setup-java@v1
+      - name: Set up JDK 16
+        uses: actions/setup-java@v1
         with:
-          java-version: 8
+          java-version: 16
 
       - name: maven-settings-action
         uses: s4u/maven-settings-action@v2.4.0
