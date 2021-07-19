@@ -59,7 +59,7 @@ public class ArenaRegistry {
    * @see #isInArena(Player) to check if player is playing
    */
   public static Arena getArena(Player p) {
-    if(p == null || !p.isOnline()) {
+    if(p == null) {
       return null;
     }
     for(Arena arena : arenas) {

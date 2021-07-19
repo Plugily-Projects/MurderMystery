@@ -52,10 +52,6 @@ import plugily.projects.commonsbox.minecraft.compat.events.api.CBPlayerInteractE
 import plugily.projects.commonsbox.minecraft.compat.events.api.CBPlayerSwapHandItemsEvent;
 import plugily.projects.commonsbox.minecraft.compat.xseries.XSound;
 import plugily.projects.commonsbox.minecraft.hologram.HologramManager;
-import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
-import plugily.projects.inventoryframework.gui.GuiItem;
-import plugily.projects.inventoryframework.gui.type.ChestGui;
-import plugily.projects.inventoryframework.pane.OutlinePane;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
