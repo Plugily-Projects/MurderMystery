@@ -300,19 +300,22 @@ public class Events implements Listener {
   @EventHandler(priority = EventPriority.HIGH)
   //highest priority to fully protect our game
   public void onBlockBreakEvent(BlockBreakEvent event) {
+    if(ArenaRegistry.isInArena(event.getPlayer())) {
+      event.setCancelled(true);
+      return;
+    }
+    if(event.getBlock().getType() != XMaterial.ARMOR_STAND.parseMaterial) {
+      return;
+    }
+
     HologramManager.getArmorStands().removeIf(armorStand -> {
       boolean isSameType = armorStand.getLocation().getBlock().getType() == event.getBlock().getType();
       if(isSameType) {
         armorStand.remove();
         armorStand.setCustomNameVisible(false);
       }
-
       return isSameType;
     });
-
-    if(ArenaRegistry.isInArena(event.getPlayer())) {
-      event.setCancelled(true);
-    }
   }
 
   @EventHandler(priority = EventPriority.HIGH)
