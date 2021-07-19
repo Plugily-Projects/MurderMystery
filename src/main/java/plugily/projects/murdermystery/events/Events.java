@@ -304,7 +304,7 @@ public class Events implements Listener {
       event.setCancelled(true);
       return;
     }
-    if(event.getBlock().getType() != XMaterial.ARMOR_STAND.parseMaterial) {
+    if(event.getBlock().getType() != XMaterial.ARMOR_STAND.parseMaterial()) {
       return;
     }
 
