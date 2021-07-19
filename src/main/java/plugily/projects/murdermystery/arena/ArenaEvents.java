@@ -398,7 +398,7 @@ public class ArenaEvents implements Listener {
       plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
       return;
     }
-    if(Role.isRole(Role.MURDERER, player) && arena.lastAliveMurderer()) {
+    if(Role.isRole(Role.MURDERER, player, arena) && arena.lastAliveMurderer()) {
       ArenaUtils.onMurdererDeath(arena);
     }
     if(Role.isRole(Role.ANY_DETECTIVE, player) && arena.lastAliveDetective()) {
@@ -480,14 +480,14 @@ public class ArenaEvents implements Listener {
   @EventHandler
   public void playerCommandExecution(PlayerCommandPreprocessEvent e) {
     if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.ENABLE_SHORT_COMMANDS)) {
-      Player player = e.getPlayer();
       if(e.getMessage().equalsIgnoreCase("/start")) {
-        player.performCommand("mma forcestart");
+        e.getPlayer().performCommand("mma forcestart");
         e.setCancelled(true);
         return;
       }
+
       if(e.getMessage().equalsIgnoreCase("/leave")) {
-        player.performCommand("mm leave");
+        e.getPlayer().performCommand("mm leave");
         e.setCancelled(true);
       }
     }
@@ -505,7 +505,7 @@ public class ArenaEvents implements Listener {
       return;
     }
     if(arena.getArenaState() == ArenaState.IN_GAME) {
-      if(Role.isRole(Role.INNOCENT, player)) {
+      if(Role.isRole(Role.INNOCENT, player, arena)) {
         if(player.getInventory().getItem(ItemPosition.BOW_LOCATOR.getOtherRolesItemPosition()) != null) {
           ItemStack bowLocator = new ItemStack(Material.COMPASS, 1);
           ItemMeta bowMeta = bowLocator.getItemMeta();
@@ -515,11 +515,13 @@ public class ArenaEvents implements Listener {
           return;
         }
       }
-      if(arena.isMurdererLocatorReceived() && Role.isRole(Role.MURDERER, player) && arena.isMurderAlive(player)) {
+      if(arena.isMurdererLocatorReceived() && Role.isRole(Role.MURDERER, player, arena) && arena.isMurderAlive(player)) {
         ItemStack innocentLocator = new ItemStack(Material.COMPASS, 1);
         ItemMeta innocentMeta = innocentLocator.getItemMeta();
         for(Player p : arena.getPlayersLeft()) {
-          if(Role.isRole(Role.INNOCENT, p) || Role.isRole(Role.ANY_DETECTIVE, p)) {
+          Arena playerArena = ArenaRegistry.getArena(p);
+
+          if(Role.isRole(Role.INNOCENT, p, playerArena) || Role.isRole(Role.ANY_DETECTIVE, p, playerArena)) {
             ComplementAccessor.getComplement().setDisplayName(innocentMeta, chatManager.colorMessage("In-Game.Innocent-Locator-Item-Name", player) + " §7| §a" + (int) Math.round(player.getLocation().distance(p.getLocation())));
             innocentLocator.setItemMeta(innocentMeta);
             ItemPosition.setItem(player, ItemPosition.INNOCENTS_LOCATOR, innocentLocator);

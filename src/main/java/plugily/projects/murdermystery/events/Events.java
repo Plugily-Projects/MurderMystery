@@ -102,7 +102,7 @@ public class Events implements Listener {
     if(arena == null) {
       return;
     }
-    if(!Role.isRole(Role.MURDERER, e.getPlayer())) {
+    if(!Role.isRole(Role.MURDERER, e.getPlayer(), arena)) {
       return;
     }
     Player attacker = e.getPlayer();
@@ -180,8 +180,10 @@ public class Events implements Listener {
   }
 
   private void killBySword(Arena arena, User attackerUser, Player victim) {
+    Arena victimArena = ArenaRegistry.getArena(victim);
+
     //check if victim is murderer
-    if(Role.isRole(Role.MURDERER, victim)) {
+    if(Role.isRole(Role.MURDERER, victim, victimArena)) {
       return;
     }
     XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation(), 50, 1);
@@ -191,8 +193,8 @@ public class Events implements Listener {
     attackerUser.addStat(StatsStorage.StatisticType.LOCAL_KILLS, 1);
     attackerUser.addStat(StatsStorage.StatisticType.KILLS, 1);
     ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
-    if(Role.isRole(Role.ANY_DETECTIVE, victim) && arena.lastAliveDetective()) {
-      if(Role.isRole(Role.FAKE_DETECTIVE, victim)) {
+    if(Role.isRole(Role.ANY_DETECTIVE, victim, victimArena) && arena.lastAliveDetective()) {
+      if(Role.isRole(Role.FAKE_DETECTIVE, victim, victimArena)) {
         arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
       }
       ArenaUtils.dropBowAndAnnounce(arena, victim);

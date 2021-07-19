@@ -69,10 +69,21 @@ public enum Role {
    * @return true if is playing it, false otherwise
    */
   public static boolean isRole(Role role, Player player) {
-    Arena arena = ArenaRegistry.getArena(player);
-    if(arena == null) {
+    return isRole(role, player, ArenaRegistry.getArena(player));
+  }
+
+  /**
+   * Checks whether player is playing specified role or not
+   *
+   * @param role   role to check
+   * @param player player to check
+   * @param arena  the arena where to check
+   * @return true if is playing it, false otherwise
+   */
+  public static boolean isRole(Role role, Player player, Arena arena) {
+    if (arena == null)
       return false;
-    }
+
     switch(role) {
       case DETECTIVE:
         return arena.isCharacterSet(Arena.CharacterType.DETECTIVE) && arena.getDetectiveList().contains(player);
