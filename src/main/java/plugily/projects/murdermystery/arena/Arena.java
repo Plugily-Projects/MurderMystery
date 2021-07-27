@@ -269,9 +269,10 @@ public class Arena extends BukkitRunnable {
             ArenaUtils.hidePlayersOutsideTheGame(player, this);
             player.updateInventory();
             user.addStat(StatsStorage.StatisticType.GAMES_PLAYED, 1);
-            setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
             player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Game-Started"));
           }
+
+          setTimer(plugin.getConfig().getInt("Classic-Gameplay-Time", 270));
 
           Map<User, Double> murdererChances = new HashMap<>(), detectiveChances = new HashMap<>();
           for(Player p : players) {
