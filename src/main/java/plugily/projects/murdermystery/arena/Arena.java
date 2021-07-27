@@ -384,9 +384,11 @@ public class Arena extends BukkitRunnable {
         int classicGameplayTime = plugin.getConfig().getInt("Classic-Gameplay-Time", 270);
 
         if(currentTimer <= (classicGameplayTime - 10) && currentTimer > (classicGameplayTime - 15)) {
+          String murdererGetSword = chatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword")
+                  .replace("%time%", Integer.toString(currentTimer - (classicGameplayTime - 15)));
+
           for(Player p : players) {
-            p.sendMessage(chatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword")
-                .replace("%time%", Integer.toString(currentTimer - (classicGameplayTime - 15))));
+            p.sendMessage(murdererGetSword);
             XSound.UI_BUTTON_CLICK.play(p.getLocation(), 1, 1);
           }
 
@@ -395,8 +397,10 @@ public class Arena extends BukkitRunnable {
 
             for(Player p : allMurderer) {
               User murderer = plugin.getUserManager().getUser(p);
-              if(murderer.isSpectator() || !p.isOnline() || murderer.getArena() != this)
+
+              if(murderer.isSpectator() || !p.isOnline() || ArenaRegistry.getArena(p) != this)
                 continue;
+
               p.getInventory().setHeldItemSlot(0);
               ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
             }
@@ -435,13 +439,18 @@ public class Arena extends BukkitRunnable {
         } else {
           //winner check
           if(playersLeft.size() == aliveMurderer()) {
+            String loseTitle = chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose");
+            String murdererKill = chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone");
+            String titleWin = chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win");
+
             for(Player p : players) {
-              VersionUtils.sendTitles(p, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose"),
-                  chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone"), 5, 40, 5);
+              VersionUtils.sendTitles(p, loseTitle, murdererKill, 5, 40, 5);
+
               if(allMurderer.contains(p)) {
-                VersionUtils.sendTitles(p, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win"), null, 5, 40, 5);
+                VersionUtils.sendTitles(p, titleWin, null, 5, 40, 5);
               }
             }
+
             ArenaManager.stopGame(false, this);
           //murderer speed add
           } else if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.MURDERER_SPEED_ENABLED) && playersLeft.size() == aliveMurderer() + 1) {
@@ -497,8 +506,8 @@ public class Arena extends BukkitRunnable {
             player.setFoodLevel(20);
             PrayerRegistry.getRush().remove(player);
             PrayerRegistry.getBan().remove(player);
+            teleportToEndLocation(player);
           }
-          teleportAllToEndLocation();
 
           if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
             for(Player player : players) {
