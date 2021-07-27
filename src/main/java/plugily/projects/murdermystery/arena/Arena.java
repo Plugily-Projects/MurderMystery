@@ -413,7 +413,7 @@ public class Arena extends BukkitRunnable {
         //every 30 secs survive reward
         if(currentTimer % 30 == 0) {
           for(Player p : playersLeft) {
-            if(Role.isRole(Role.INNOCENT, p)) {
+            if(Role.isRole(Role.INNOCENT, p, this)) {
               ArenaUtils.addScore(plugin.getUserManager().getUser(p), ArenaUtils.ScoreAction.SURVIVE_TIME, 0);
             }
           }
@@ -1076,7 +1076,7 @@ public class Arena extends BukkitRunnable {
   public int aliveDetective() {
     int alive = 0;
     for(Player p : getPlayersLeft()) {
-      if(Role.isRole(Role.ANY_DETECTIVE, p) && isDetectiveAlive(p)) {
+      if(Role.isRole(Role.ANY_DETECTIVE, p, this) && isDetectiveAlive(p)) {
         alive++;
       }
     }
@@ -1112,7 +1112,7 @@ public class Arena extends BukkitRunnable {
   public int aliveMurderer() {
     int alive = 0;
     for(Player p : getPlayersLeft()) {
-      if(Role.isRole(Role.MURDERER, p) && isMurderAlive(p)) {
+      if(Role.isRole(Role.MURDERER, p, this) && isMurderAlive(p)) {
         alive++;
       }
     }

@@ -107,9 +107,9 @@ public class SpectatorItemEvents implements Listener {
       lore.add(plugin.getChatManager().colorMessage("In-Game.Spectator.Target-Player-Health")
           .replace("%health%", Double.toString(NumberUtils.round(arenaPlayer.getHealth(), 2))));
       String role = roleRaw;
-      if(Role.isRole(Role.MURDERER, player)) {
+      if(Role.isRole(Role.MURDERER, player, arena)) {
         role = StringUtils.replace(role, "%role%", plugin.getChatManager().colorMessage("Scoreboard.Roles.Murderer"));
-      } else if(Role.isRole(Role.ANY_DETECTIVE, player)) {
+      } else if(Role.isRole(Role.ANY_DETECTIVE, player, arena)) {
         role = StringUtils.replace(role, "%role%", plugin.getChatManager().colorMessage("Scoreboard.Roles.Detective"));
       } else {
         role = StringUtils.replace(role, "%role%", plugin.getChatManager().colorMessage("Scoreboard.Roles.Innocent"));

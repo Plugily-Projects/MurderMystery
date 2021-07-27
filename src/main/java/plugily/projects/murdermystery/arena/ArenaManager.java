@@ -280,7 +280,7 @@ public class ArenaManager {
     }
 
     if(arena.getArenaState() == ArenaState.IN_GAME) {
-      if(Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
+      if(Role.isRole(Role.FAKE_DETECTIVE, player, arena) || Role.isRole(Role.INNOCENT, player, arena)) {
         user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, ThreadLocalRandom.current().nextInt(4) + 1);
         user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, ThreadLocalRandom.current().nextInt(4) + 1);
       }
@@ -288,7 +288,7 @@ public class ArenaManager {
 
     user.removeScoreboard(arena);
 
-    boolean playerHasMurdererRole = Role.isRole(Role.MURDERER, player);
+    boolean playerHasMurdererRole = Role.isRole(Role.MURDERER, player, arena);
     if(playerHasMurdererRole) {
       arena.removeFromMurdererList(player);
     }
@@ -301,7 +301,7 @@ public class ArenaManager {
           if(arena.getMurdererList().isEmpty()) {
             List<Player> players = new ArrayList<>();
             for(Player gamePlayer : playersLeft) {
-              if(gamePlayer == player || Role.isRole(Role.ANY_DETECTIVE, gamePlayer) || Role.isRole(Role.MURDERER, gamePlayer)) {
+              if(gamePlayer == player || Role.isRole(Role.ANY_DETECTIVE, gamePlayer, arena) || Role.isRole(Role.MURDERER, gamePlayer, arena)) {
                 continue;
               }
               players.add(gamePlayer);
@@ -333,9 +333,9 @@ public class ArenaManager {
           } else {
             Debugger.debug("No new murderer added as there are some");
           }
-        } else if(Role.isRole(Role.ANY_DETECTIVE, player) && arena.lastAliveDetective()) {
+        } else if(Role.isRole(Role.ANY_DETECTIVE, player, arena) && arena.lastAliveDetective()) {
           arena.setDetectiveDead(true);
-          if(Role.isRole(Role.FAKE_DETECTIVE, player)) {
+          if(Role.isRole(Role.FAKE_DETECTIVE, player, arena)) {
             arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
           } else {
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
@@ -432,16 +432,16 @@ public class ArenaManager {
     for(final Player player : arena.getPlayers()) {
       User user = plugin.getUserManager().getUser(player);
 
-      if(!quickStop && Role.isAnyRole(player)) {
-        boolean hasDeathRole = Role.isRole(Role.DEATH, player);
+      if(!quickStop && Role.isAnyRole(player, arena)) {
+        boolean hasDeathRole = Role.isRole(Role.DEATH, player, arena);
 
-        if(!hasDeathRole && !Role.isRole(Role.SPECTATOR, player)) {
-          if(Role.isRole(Role.FAKE_DETECTIVE, player) || Role.isRole(Role.INNOCENT, player)) {
+        if(!hasDeathRole && !Role.isRole(Role.SPECTATOR, player, arena)) {
+          if(Role.isRole(Role.FAKE_DETECTIVE, player, arena) || Role.isRole(Role.INNOCENT, player, arena)) {
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, ThreadLocalRandom.current().nextInt(4) + 1);
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, ThreadLocalRandom.current().nextInt(4) + 1);
           }
 
-          boolean hasMurdererRole = Role.isRole(Role.MURDERER, player);
+          boolean hasMurdererRole = Role.isRole(Role.MURDERER, player, arena);
 
           if((murderWon && hasMurdererRole) || !hasMurdererRole) {
             user.addStat(StatsStorage.StatisticType.WINS, 1);

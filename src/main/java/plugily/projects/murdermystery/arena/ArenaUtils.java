@@ -55,13 +55,13 @@ public class ArenaUtils {
     for(Player player : arena.getPlayers()) {
       VersionUtils.sendTitles(player, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win", player),
           chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", player), 5, 40, 5);
-      if(Role.isRole(Role.MURDERER, player)) {
+      if(Role.isRole(Role.MURDERER, player, arena)) {
         VersionUtils.sendTitles(player, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", player), null, 5, 40, 5);
       }
       User loopUser = plugin.getUserManager().getUser(player);
-      if(Role.isRole(Role.INNOCENT, player)) {
+      if(Role.isRole(Role.INNOCENT, player, arena)) {
         addScore(loopUser, ScoreAction.SURVIVE_GAME, 0);
-      } else if(Role.isRole(Role.ANY_DETECTIVE, player)) {
+      } else if(Role.isRole(Role.ANY_DETECTIVE, player, arena)) {
         addScore(loopUser, ScoreAction.WIN_GAME, 0);
         addScore(loopUser, ScoreAction.DETECTIVE_WIN_GAME, 0);
       }
@@ -102,8 +102,10 @@ public class ArenaUtils {
 
     if(action == ScoreAction.DETECTIVE_WIN_GAME) {
       int innocents = 0;
-      for(Player p : user.getArena().getPlayersLeft()) {
-        if(Role.isRole(Role.INNOCENT, p)) {
+      Arena arena = user.getArena();
+
+      for(Player p : arena.getPlayersLeft()) {
+        if(Role.isRole(Role.INNOCENT, p, arena)) {
           innocents++;
         }
       }
@@ -147,7 +149,7 @@ public class ArenaUtils {
       arena.setMurdererLocatorReceived(true);
 
       for(Player p : list) {
-        if(Role.isRole(Role.MURDERER, p)) {
+        if(Role.isRole(Role.MURDERER, p, arena)) {
           continue;
         }
         VersionUtils.sendTitles(p, chatManager.colorMessage("In-Game.Watch-Out-Title", p), chatManager.colorMessage("In-Game.Watch-Out-Subtitle", p), 5, 40, 5);
@@ -155,7 +157,7 @@ public class ArenaUtils {
     }
 
     for(Player p : list) {
-      if(Role.isRole(Role.MURDERER, p)) {
+      if(Role.isRole(Role.MURDERER, p, arena)) {
         continue;
       }
       for(Player murder : arena.getMurdererList()) {
@@ -173,7 +175,7 @@ public class ArenaUtils {
     ComplementAccessor.getComplement().setDisplayName(bowMeta, chatManager.colorMessage("In-Game.Bow-Locator-Item-Name"));
     bowLocator.setItemMeta(bowMeta);
     for(Player p : arena.getPlayersLeft()) {
-      if(Role.isRole(Role.INNOCENT, p)) {
+      if(Role.isRole(Role.INNOCENT, p, arena)) {
         ItemPosition.setItem(p, ItemPosition.BOW_LOCATOR, bowLocator);
         p.setCompassTarget(loc);
       }

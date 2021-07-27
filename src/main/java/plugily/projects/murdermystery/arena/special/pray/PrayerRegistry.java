@@ -101,7 +101,7 @@ public class PrayerRegistry {
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
         break;
       case BOW_TIME:
-        if(!Role.isRole(Role.ANY_DETECTIVE, player)) {
+        if(!Role.isRole(Role.ANY_DETECTIVE, player, arena)) {
           ItemPosition.addItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
         }
         ItemPosition.setItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Prayer-Arrows", 2)));
