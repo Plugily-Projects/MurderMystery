@@ -101,26 +101,33 @@ public class ArenaEvents implements Listener {
     if(arena == null) {
       return;
     }
-    if(e.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
+
+    switch (e.getCause()) {
+    case DROWNING:
       e.setCancelled(true);
-    }
-    if(e.getCause() == EntityDamageEvent.DamageCause.FALL) {
+      break;
+    case FALL:
       if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
         if(e.getDamage() >= 20.0) {
           //kill the player for suicidal death, else do not
           victim.damage(1000.0);
         }
       }
+
       e.setCancelled(true);
-    }
-    //kill the player and move to the spawn point
-    if(e.getCause() == EntityDamageEvent.DamageCause.VOID) {
+      break;
+    case VOID: //kill the player and move to the spawn point
       victim.damage(1000.0);
+
       if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
         victim.teleport(arena.getLobbyLocation());
       } else {
         victim.teleport(arena.getPlayerSpawnPoints().get(0));
       }
+
+      break;
+    default:
+      break;
     }
   }
 
@@ -269,12 +276,9 @@ public class ArenaEvents implements Listener {
       if(plugin.getUserManager().getUser(attacker).getCooldown("sword_attack") > 0) {
         return;
       }
-    } else {
-      if(attacker.hasCooldown(plugin.getConfigPreferences().getMurdererSword().getType())) {
-        return;
-      }
+    } else if(attacker.hasCooldown(plugin.getConfigPreferences().getMurdererSword().getType())) {
+      return;
     }
-
 
     if(Role.isRole(Role.MURDERER, victim)) {
       plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.MURDERER_KILL);
@@ -451,10 +455,12 @@ public class ArenaEvents implements Listener {
     }
     if(arena.getPlayers().contains(player)) {
       User user = plugin.getUserManager().getUser(player);
-      if(player.getLocation().getWorld().equals(arena.getPlayerSpawnPoints().get(0).getWorld())) {
+      org.bukkit.Location firstSpawn = arena.getPlayerSpawnPoints().get(0);
+
+      if(player.getLocation().getWorld().equals(firstSpawn.getWorld())) {
         e.setRespawnLocation(player.getLocation());
       } else {
-        e.setRespawnLocation(arena.getPlayerSpawnPoints().get(0));
+        e.setRespawnLocation(firstSpawn);
       }
       player.setAllowFlight(true);
       player.setFlying(true);
