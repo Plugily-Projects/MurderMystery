@@ -95,7 +95,7 @@ public class ArenaUtils {
       msg = StringUtils.replace(msg, "%score%", Integer.toString(score));
       msg = StringUtils.replace(msg, "%action%", action.action);
 
-      user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + (score));
+      user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + score);
       user.getPlayer().sendMessage(msg);
       return;
     }

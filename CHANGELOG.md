@@ -7,6 +7,7 @@
 * Removed Rainbow Bed option
 * Added 1.17 support
 * Reuse XMaterial for specialitems
+* Fix NoSuchMethodError when hasCooldown method is not existed in 1.11 and lowest versions
 >>> beta1 
 * Fixed party (parties v3.1.0) not working anymore
 * Fixed when plugins scoreboards not re-appeared after game end

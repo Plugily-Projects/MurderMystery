@@ -272,7 +272,7 @@ public class ArenaEvents implements Listener {
     }
 
     //check if sword has cooldown
-    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_9_R1)) {
+    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_11_R1)) {
       if(plugin.getUserManager().getUser(attacker).getCooldown("sword_attack") > 0) {
         return;
       }
