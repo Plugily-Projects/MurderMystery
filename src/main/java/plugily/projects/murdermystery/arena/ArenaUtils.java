@@ -27,17 +27,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XSound;
+import plugily.projects.commonsbox.minecraft.hologram.ArmorStandHologram;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.handlers.ChatManager;
-import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.ItemPosition;
+import plugily.projects.murdermystery.utils.Utils;
 
 /**
  * @author Plajer
@@ -53,15 +55,15 @@ public class ArenaUtils {
     for(Player player : arena.getPlayers()) {
       VersionUtils.sendTitles(player, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win", player),
           chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Stopped", player), 5, 40, 5);
-      if(Role.isRole(Role.MURDERER, player)) {
+      if(Role.isRole(Role.MURDERER, player, arena)) {
         VersionUtils.sendTitles(player, chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", player), null, 5, 40, 5);
       }
       User loopUser = plugin.getUserManager().getUser(player);
-      if(Role.isRole(Role.INNOCENT, player)) {
-        ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.SURVIVE_GAME, 0);
-      } else if(Role.isRole(Role.ANY_DETECTIVE, player)) {
-        ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.WIN_GAME, 0);
-        ArenaUtils.addScore(loopUser, ArenaUtils.ScoreAction.DETECTIVE_WIN_GAME, 0);
+      if(Role.isRole(Role.INNOCENT, player, arena)) {
+        addScore(loopUser, ScoreAction.SURVIVE_GAME, 0);
+      } else if(Role.isRole(Role.ANY_DETECTIVE, player, arena)) {
+        addScore(loopUser, ScoreAction.WIN_GAME, 0);
+        addScore(loopUser, ScoreAction.DETECTIVE_WIN_GAME, 0);
       }
     }
     for(Player murderer : arena.getMurdererList()) {
@@ -79,47 +81,55 @@ public class ArenaUtils {
 
       try {
         sound = Sound.valueOf(s.toUpperCase());
-      } catch (IllegalArgumentException e) {
+      } catch(IllegalArgumentException e) {
       }
 
       XSound.matchXSound(sound).play(user.getPlayer().getLocation(), 1F, 2F);
     }
 
     String msg = chatManager.colorMessage("In-Game.Messages.Bonus-Score");
-    msg = StringUtils.replace(msg, "%score%", Integer.toString(action.getPoints()));
 
     if(action == ScoreAction.GOLD_PICKUP && amount > 1) {
-      msg = StringUtils.replace(msg, "%score%", Integer.toString(action.getPoints() * amount));
-      msg = StringUtils.replace(msg, "%action%", action.getAction());
-      user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + (action.getPoints() * amount));
+      int score = action.points * amount;
+
+      msg = StringUtils.replace(msg, "%score%", Integer.toString(score));
+      msg = StringUtils.replace(msg, "%action%", action.action);
+
+      user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + score);
       user.getPlayer().sendMessage(msg);
       return;
     }
 
     if(action == ScoreAction.DETECTIVE_WIN_GAME) {
       int innocents = 0;
-      for(Player p : user.getArena().getPlayersLeft()) {
-        if(Role.isRole(Role.INNOCENT, p)) {
+      Arena arena = user.getArena();
+
+      for(Player p : arena.getPlayersLeft()) {
+        if(Role.isRole(Role.INNOCENT, p, arena)) {
           innocents++;
         }
       }
 
-      user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + (100 * innocents));
-      msg = StringUtils.replace(msg, "%score%", Integer.toString(100 * innocents));
-      msg = StringUtils.replace(msg, "%action%", action.getAction().replace("%amount%", Integer.toString(innocents)));
+      int overallInnocents = 100 * innocents;
+
+      user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + overallInnocents);
+
+      msg = StringUtils.replace(msg, "%score%", Integer.toString(overallInnocents));
+      msg = StringUtils.replace(msg, "%action%", action.action.replace("%amount%", Integer.toString(innocents)));
+
       user.getPlayer().sendMessage(msg);
       return;
     }
 
-    msg = StringUtils.replace(msg, "%score%", Integer.toString(action.getPoints()));
+    msg = StringUtils.replace(msg, "%score%", Integer.toString(action.points));
 
-    if(action.getPoints() < 0) {
+    if(action.points < 0) {
       msg = StringUtils.replace(msg, "+", "");
     }
 
-    msg = StringUtils.replace(msg, "%action%", action.getAction());
+    msg = StringUtils.replace(msg, "%action%", action.action);
 
-    user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + action.getPoints());
+    user.setStat(StatsStorage.StatisticType.LOCAL_SCORE, user.getStat(StatsStorage.StatisticType.LOCAL_SCORE) + action.points);
     user.getPlayer().sendMessage(msg);
   }
 
@@ -139,7 +149,7 @@ public class ArenaUtils {
       arena.setMurdererLocatorReceived(true);
 
       for(Player p : list) {
-        if(Role.isRole(Role.MURDERER, p)) {
+        if(Role.isRole(Role.MURDERER, p, arena)) {
           continue;
         }
         VersionUtils.sendTitles(p, chatManager.colorMessage("In-Game.Watch-Out-Title", p), chatManager.colorMessage("In-Game.Watch-Out-Subtitle", p), 5, 40, 5);
@@ -147,7 +157,7 @@ public class ArenaUtils {
     }
 
     for(Player p : list) {
-      if(Role.isRole(Role.MURDERER, p)) {
+      if(Role.isRole(Role.MURDERER, p, arena)) {
         continue;
       }
       for(Player murder : arena.getMurdererList()) {
@@ -165,7 +175,7 @@ public class ArenaUtils {
     ComplementAccessor.getComplement().setDisplayName(bowMeta, chatManager.colorMessage("In-Game.Bow-Locator-Item-Name"));
     bowLocator.setItemMeta(bowMeta);
     for(Player p : arena.getPlayersLeft()) {
-      if(Role.isRole(Role.INNOCENT, p)) {
+      if(Role.isRole(Role.INNOCENT, p, arena)) {
         ItemPosition.setItem(p, ItemPosition.BOW_LOCATOR, bowLocator);
         p.setCompassTarget(loc);
       }
@@ -234,6 +244,28 @@ public class ArenaUtils {
         continue;
       }
       VersionUtils.updateNameTagsVisibility(p, players, "MMHide", arena.getArenaState() != ArenaState.IN_GAME);
+    }
+  }
+
+  public static void arenaForceStart(Player player) {
+    if(!Utils.hasPermission(player, "murdermystery.admin.forcestart")) {
+      return;
+    }
+    if(!Utils.checkIsInGameInstance(player)) {
+      return;
+    }
+    Arena arena = ArenaRegistry.getArena(player);
+    if(arena.getPlayers().size() < 2) {
+      chatManager.broadcast(arena, chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), arena.getMinimumPlayers()));
+      return;
+    }
+    if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
+      arena.setArenaState(ArenaState.STARTING);
+      arena.setForceStart(true);
+      arena.setTimer(0);
+      for(Player arenaPlayers : arena.getPlayers()) {
+        arenaPlayers.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
+      }
     }
   }
 

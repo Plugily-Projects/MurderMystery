@@ -19,8 +19,9 @@
 package plugily.projects.murdermystery.user.data;
 
 import org.bukkit.Bukkit;
-import pl.plajerlair.commonsbox.database.MysqlDatabase;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+
+import plugily.projects.commonsbox.database.MysqlDatabase;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.user.User;
@@ -50,17 +51,19 @@ public class MysqlManager implements UserDatabase {
       try(Connection connection = database.getConnection()) {
         Statement statement = connection.createStatement();
         statement.executeUpdate("CREATE TABLE IF NOT EXISTS `" + getTableName() + "` (\n"
-          + "  `UUID` char(36) NOT NULL PRIMARY KEY,\n"
-          + "  `name` varchar(32) NOT NULL,\n"
-          + "  `kills` int(11) NOT NULL DEFAULT '0',\n"
-          + "  `deaths` int(11) NOT NULL DEFAULT '0',\n"
-          + "  `highestscore` int(11) NOT NULL DEFAULT '0',\n"
-          + "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n"
-          + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
-          + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
-          + "  `contribmurderer` int(11) NOT NULL DEFAULT '1',\n"
-          + "  `contribdetective` int(11) NOT NULL DEFAULT '1'\n"
-          + ");");
+            + "  `UUID` char(36) NOT NULL PRIMARY KEY,\n"
+            + "  `name` varchar(32) NOT NULL,\n"
+            + "  `kills` int(11) NOT NULL DEFAULT '0',\n"
+            + "  `deaths` int(11) NOT NULL DEFAULT '0',\n"
+            + "  `highestscore` int(11) NOT NULL DEFAULT '0',\n"
+            + "  `gamesplayed` int(11) NOT NULL DEFAULT '0',\n"
+            + "  `wins` int(11) NOT NULL DEFAULT '0',\n"
+            + "  `loses` int(11) NOT NULL DEFAULT '0',\n"
+            + "  `contribmurderer` int(11) NOT NULL DEFAULT '1',\n"
+            + "  `contribdetective` int(11) NOT NULL DEFAULT '1',\n"
+            + "  `murderer_pass` int(11) NOT NULL DEFAULT '0',\n"
+            + "  `detective_pass` int(11) NOT NULL DEFAULT '0'\n"
+            + ");");
       } catch(SQLException e) {
         e.printStackTrace();
         MessageUtils.errorOccurred();
@@ -91,7 +94,7 @@ public class MysqlManager implements UserDatabase {
     String finalUpdate = update.toString();
 
     Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
-      database.executeUpdate("UPDATE " + getTableName() + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';"));
+        database.executeUpdate("UPDATE " + getTableName() + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';"));
   }
 
   @Override

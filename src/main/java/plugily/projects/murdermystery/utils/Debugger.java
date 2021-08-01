@@ -20,8 +20,9 @@ package plugily.projects.murdermystery.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
+
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
 
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -52,7 +53,7 @@ public class Debugger {
   }
 
   public static void sendConsoleMsg(String msg) {
-    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1) && msg.contains("#")) {
+    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1) && msg.indexOf('#') >= 0) {
       msg = MiscUtils.matchColorRegex(msg);
     }
 

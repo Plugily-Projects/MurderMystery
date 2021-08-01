@@ -25,8 +25,6 @@ import de.simonsator.partyandfriends.spigot.api.party.PlayerParty;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.stream.Collectors;
-
 /**
  * @author Plajer
  * <p>
@@ -44,7 +42,17 @@ public class PAFBPartyHandlerImpl implements PartyHandler {
     PartyManager api = PartyManager.getInstance();
     PAFPlayer partyPlayer = PAFPlayerManager.getInstance().getPlayer(player.getUniqueId());
     PlayerParty party = api.getParty(partyPlayer);
-    return new GameParty(party.getAllPlayers().stream().map(localPlayer -> Bukkit.getPlayer(localPlayer.getUniqueId())).collect(Collectors.toList()), Bukkit.getPlayer(party.getLeader().getUniqueId()));
+
+    java.util.List<Player> players = new java.util.ArrayList<>();
+
+    for (PAFPlayer localPlayer : party.getAllPlayers()) {
+      Player pl = Bukkit.getPlayer(localPlayer.getUniqueId());
+
+      if (pl != null)
+        players.add(pl);
+    }
+
+    return new GameParty(players, Bukkit.getPlayer(party.getLeader().getUniqueId()));
   }
 
   @Override

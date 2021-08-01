@@ -33,6 +33,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -41,21 +42,19 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.events.api.CBPlayerPickupArrow;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XSound;
-import pl.plajerlair.commonsbox.minecraft.item.ItemBuilder;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
+import plugily.projects.commonsbox.minecraft.compat.events.api.CBPlayerPickupArrow;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XSound;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.arena.special.pray.PrayerRegistry;
 import plugily.projects.murdermystery.handlers.ChatManager;
-import plugily.projects.murdermystery.handlers.items.SpecialItemManager;
+import plugily.projects.murdermystery.handlers.items.SpecialItem;
 import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.ItemPosition;
@@ -102,26 +101,33 @@ public class ArenaEvents implements Listener {
     if(arena == null) {
       return;
     }
-    if(e.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
+
+    switch (e.getCause()) {
+    case DROWNING:
       e.setCancelled(true);
-    }
-    if(e.getCause() == EntityDamageEvent.DamageCause.FALL) {
+      break;
+    case FALL:
       if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
         if(e.getDamage() >= 20.0) {
           //kill the player for suicidal death, else do not
           victim.damage(1000.0);
         }
       }
+
       e.setCancelled(true);
-    }
-    //kill the player and move to the spawn point
-    if(e.getCause() == EntityDamageEvent.DamageCause.VOID) {
+      break;
+    case VOID: //kill the player and move to the spawn point
       victim.damage(1000.0);
+
       if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
         victim.teleport(arena.getLobbyLocation());
       } else {
         victim.teleport(arena.getPlayerSpawnPoints().get(0));
       }
+
+      break;
+    default:
+      break;
     }
   }
 
@@ -266,16 +272,13 @@ public class ArenaEvents implements Listener {
     }
 
     //check if sword has cooldown
-    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_9_R1)) {
+    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_11_R1)) {
       if(plugin.getUserManager().getUser(attacker).getCooldown("sword_attack") > 0) {
         return;
       }
-    } else {
-      if(attacker.hasCooldown(plugin.getConfigPreferences().getMurdererSword().getType())) {
-        return;
-      }
+    } else if(attacker.hasCooldown(plugin.getConfigPreferences().getMurdererSword().getType())) {
+      return;
     }
-
 
     if(Role.isRole(Role.MURDERER, victim)) {
       plugin.getRewardsHandler().performReward(attacker, Reward.RewardType.MURDERER_KILL);
@@ -399,7 +402,7 @@ public class ArenaEvents implements Listener {
       plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_GOLD, 0);
       return;
     }
-    if(Role.isRole(Role.MURDERER, player) && arena.lastAliveMurderer()) {
+    if(Role.isRole(Role.MURDERER, player, arena) && arena.lastAliveMurderer()) {
       ArenaUtils.onMurdererDeath(arena);
     }
     if(Role.isRole(Role.ANY_DETECTIVE, player) && arena.lastAliveDetective()) {
@@ -426,13 +429,16 @@ public class ArenaEvents implements Listener {
     //we must call it ticks later due to instant respawn bug
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       player.spigot().respawn();
-      player.getInventory().setItem(0, new ItemBuilder(XMaterial.COMPASS.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Spectator-Item-Name", player)).build());
-      player.getInventory().setItem(4, new ItemBuilder(XMaterial.COMPARATOR.parseItem()).name(chatManager.colorMessage("In-Game.Spectator.Settings-Menu.Item-Name", player)).build());
-      player.getInventory().setItem(8, SpecialItemManager.getSpecialItem("Leave").getItemStack());
+      for(SpecialItem item : plugin.getSpecialItemManager().getSpecialItems()) {
+        if(item.getDisplayStage() != SpecialItem.DisplayStage.SPECTATOR) {
+          continue;
+        }
+        player.getInventory().setItem(item.getSlot(), item.getItemStack());
+      }
     }, 5);
   }
 
-  @EventHandler(priority = EventPriority.HIGH)
+  @EventHandler(priority = EventPriority.HIGHEST)
   public void onRespawn(PlayerRespawnEvent e) {
     Player player = e.getPlayer();
     Arena arena = ArenaRegistry.getArena(player);
@@ -442,16 +448,19 @@ public class ArenaEvents implements Listener {
     if(arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
       e.setRespawnLocation(arena.getLobbyLocation());
       return;
-    } else if(arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
+    }
+    if(arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
       e.setRespawnLocation(arena.getEndLocation());
       return;
     }
     if(arena.getPlayers().contains(player)) {
       User user = plugin.getUserManager().getUser(player);
-      if(player.getLocation().getWorld().equals(arena.getPlayerSpawnPoints().get(0).getWorld())) {
+      org.bukkit.Location firstSpawn = arena.getPlayerSpawnPoints().get(0);
+
+      if(player.getLocation().getWorld().equals(firstSpawn.getWorld())) {
         e.setRespawnLocation(player.getLocation());
       } else {
-        e.setRespawnLocation(arena.getPlayerSpawnPoints().get(0));
+        e.setRespawnLocation(firstSpawn);
       }
       player.setAllowFlight(true);
       player.setFlying(true);
@@ -468,21 +477,23 @@ public class ArenaEvents implements Listener {
   @EventHandler
   public void onItemMove(InventoryClickEvent e) {
     if(e.getWhoClicked() instanceof Player && ArenaRegistry.isInArena((Player) e.getWhoClicked())) {
-      e.setResult(Event.Result.DENY);
+      if(e.getView().getType() == InventoryType.CRAFTING || e.getView().getType() == InventoryType.PLAYER) {
+        e.setResult(Event.Result.DENY);
+      }
     }
   }
 
   @EventHandler
   public void playerCommandExecution(PlayerCommandPreprocessEvent e) {
     if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.ENABLE_SHORT_COMMANDS)) {
-      Player player = e.getPlayer();
       if(e.getMessage().equalsIgnoreCase("/start")) {
-        player.performCommand("mma forcestart");
+        e.getPlayer().performCommand("mma forcestart");
         e.setCancelled(true);
         return;
       }
+
       if(e.getMessage().equalsIgnoreCase("/leave")) {
-        player.performCommand("mm leave");
+        e.getPlayer().performCommand("mm leave");
         e.setCancelled(true);
       }
     }
@@ -500,7 +511,7 @@ public class ArenaEvents implements Listener {
       return;
     }
     if(arena.getArenaState() == ArenaState.IN_GAME) {
-      if(Role.isRole(Role.INNOCENT, player)) {
+      if(Role.isRole(Role.INNOCENT, player, arena)) {
         if(player.getInventory().getItem(ItemPosition.BOW_LOCATOR.getOtherRolesItemPosition()) != null) {
           ItemStack bowLocator = new ItemStack(Material.COMPASS, 1);
           ItemMeta bowMeta = bowLocator.getItemMeta();
@@ -510,11 +521,13 @@ public class ArenaEvents implements Listener {
           return;
         }
       }
-      if(arena.isMurdererLocatorReceived() && Role.isRole(Role.MURDERER, player) && arena.isMurderAlive(player)) {
+      if(arena.isMurdererLocatorReceived() && Role.isRole(Role.MURDERER, player, arena) && arena.isMurderAlive(player)) {
         ItemStack innocentLocator = new ItemStack(Material.COMPASS, 1);
         ItemMeta innocentMeta = innocentLocator.getItemMeta();
         for(Player p : arena.getPlayersLeft()) {
-          if(Role.isRole(Role.INNOCENT, p) || Role.isRole(Role.ANY_DETECTIVE, p)) {
+          Arena playerArena = ArenaRegistry.getArena(p);
+
+          if(Role.isRole(Role.INNOCENT, p, playerArena) || Role.isRole(Role.ANY_DETECTIVE, p, playerArena)) {
             ComplementAccessor.getComplement().setDisplayName(innocentMeta, chatManager.colorMessage("In-Game.Innocent-Locator-Item-Name", player) + " §7| §a" + (int) Math.round(player.getLocation().distance(p.getLocation())));
             innocentLocator.setItemMeta(innocentMeta);
             ItemPosition.setItem(player, ItemPosition.INNOCENTS_LOCATOR, innocentLocator);

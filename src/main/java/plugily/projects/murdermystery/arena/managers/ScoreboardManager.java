@@ -27,7 +27,8 @@ import me.tigerhix.lib.scoreboard.type.ScoreboardHandler;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
+
+import plugily.projects.commonsbox.string.StringFormatUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.Arena;
@@ -35,7 +36,6 @@ import plugily.projects.murdermystery.arena.ArenaState;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
-import plugily.projects.murdermystery.handlers.rewards.Reward;
 import plugily.projects.murdermystery.user.User;
 
 import java.util.ArrayList;
@@ -63,9 +63,9 @@ public class ScoreboardManager {
    * @see User
    */
   public void createScoreboard(User user) {
-    plugin.getRewardsHandler().performReward(user.getPlayer(), Reward.RewardType.SCOREBOARD_ADD);
+    Player player = user.getPlayer();
     final String boardTitle = plugin.getChatManager().colorMessage("Scoreboard.Title");
-    Scoreboard scoreboard = ScoreboardLib.createScoreboard(user.getPlayer()).setHandler(new ScoreboardHandler() {
+    Scoreboard scoreboard = ScoreboardLib.createScoreboard(player).setHandler(new ScoreboardHandler() {
       @Override
       public String getTitle(Player player) {
         return boardTitle;
@@ -88,11 +88,9 @@ public class ScoreboardManager {
    */
   public void removeScoreboard(User user) {
     for(Scoreboard board : scoreboards) {
-      Player player = user.getPlayer();
-      if(board.getHolder().equals(player)) {
+      if(board.getHolder().equals(user.getPlayer())) {
         scoreboards.remove(board);
         board.deactivate();
-        plugin.getRewardsHandler().performReward(player, Reward.RewardType.SCOREBOARD_REMOVED);
         return;
       }
     }
@@ -133,20 +131,31 @@ public class ScoreboardManager {
 
   private String formatScoreboardLine(String line, User user) {
     String formattedLine = line;
-    formattedLine = StringUtils.replace(formattedLine, "%TIME%", Integer.toString(arena.getTimer() + 1));
-    formattedLine = StringUtils.replace(formattedLine, "%FORMATTED_TIME%", StringFormatUtils.formatIntoMMSS(arena.getTimer() + 1));
+
+    int timer = arena.getTimer();
+
+    formattedLine = StringUtils.replace(formattedLine, "%TIME%", Integer.toString(timer + 1));
+    formattedLine = StringUtils.replace(formattedLine, "%FORMATTED_TIME%", StringFormatUtils.formatIntoMMSS(timer + 1));
     formattedLine = StringUtils.replace(formattedLine, "%MAPNAME%", arena.getMapName());
+
+    boolean havePlayer = false;
     int innocents = 0;
-    List<Player> playersLeft = arena.getPlayersLeft();
-    for(Player p : playersLeft) {
-      if(Role.isRole(Role.MURDERER, p)) {
-        continue;
-      }
-      innocents++;
-    }
-    ChatManager chatManager = plugin.getChatManager();
+
     Player player = user.getPlayer();
-    if(!playersLeft.contains(player)) {
+
+    for(Player p : arena.getPlayersLeft()) {
+      if (p == player) {
+        havePlayer = true;
+      }
+
+      if(!Role.isRole(Role.MURDERER, p)) {
+        innocents++;
+      }
+    }
+
+    ChatManager chatManager = plugin.getChatManager();
+
+    if(!havePlayer) {
       formattedLine = StringUtils.replace(formattedLine, "%ROLE%", chatManager.colorMessage("Scoreboard.Roles.Dead"));
     } else {
       if(Role.isRole(Role.MURDERER, player)) {
@@ -161,23 +170,26 @@ public class ScoreboardManager {
     formattedLine = StringUtils.replace(formattedLine, "%PLAYERS%", Integer.toString(arena.getPlayers().size()));
     formattedLine = StringUtils.replace(formattedLine, "%MAX_PLAYERS%", Integer.toString(arena.getMaximumPlayers()));
     formattedLine = StringUtils.replace(formattedLine, "%MIN_PLAYERS%", Integer.toString(arena.getMinimumPlayers()));
-    if(arena.isDetectiveDead() && !arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
-      formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", chatManager.colorMessage("Scoreboard.Detective-Died-No-Bow"));
-    }
-    if(arena.isDetectiveDead() && arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
-      formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", chatManager.colorMessage("Scoreboard.Detective-Died-Bow"));
-    }
-    if(!arena.isDetectiveDead()) {
+
+    if (arena.isDetectiveDead()) {
+      if(!arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
+        formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", chatManager.colorMessage("Scoreboard.Detective-Died-No-Bow"));
+      } else {
+        formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", chatManager.colorMessage("Scoreboard.Detective-Died-Bow"));
+      }
+    } else {
       formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", chatManager.colorMessage("Scoreboard.Detective-Status-Normal"));
     }
+
     //should be for murderer only
     formattedLine = StringUtils.replace(formattedLine, "%KILLS%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_KILLS)));
     formattedLine = StringUtils.replace(formattedLine, "%SCORE%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE)));
-    formattedLine = chatManager.colorRawMessage(formattedLine);
+
     if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       formattedLine = PlaceholderAPI.setPlaceholders(player, formattedLine);
     }
-    return formattedLine;
+
+    return chatManager.colorRawMessage(formattedLine);
   }
 
 }

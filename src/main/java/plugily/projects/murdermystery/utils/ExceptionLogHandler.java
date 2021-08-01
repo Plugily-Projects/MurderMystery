@@ -55,7 +55,7 @@ public class ExceptionLogHandler extends Handler {
   @Override
   public void publish(LogRecord record) {
     Throwable throwable = record.getThrown();
-    if(!(throwable instanceof Exception) || !throwable.getClass().getSimpleName().contains("Exception") || throwable.getCause() == null) {
+    if(throwable == null || throwable.getCause() == null) {
       return;
     }
     StackTraceElement[] element = throwable.getCause().getStackTrace();
@@ -67,7 +67,7 @@ public class ExceptionLogHandler extends Handler {
     }
     new ReportedException(plugin, throwable);
     record.setThrown(null);
-    record.setMessage("[MurderMystery] We have found a bug in the code. Contact us at our official discord server (Invite link: https://discordapp.com/invite/UXzUdTP) with the following error given" +
+    record.setMessage("[Murder Mystery] We have found a bug in the code. Contact us at our official discord server (Invite link: https://discordapp.com/invite/UXzUdTP) with the following error given" +
       " above!");
   }
 

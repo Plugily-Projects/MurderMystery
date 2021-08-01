@@ -23,10 +23,12 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
+
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.string.StringFormatUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
@@ -60,7 +62,7 @@ public class Utils {
    * @param i integer to serialize
    * @return serialized number
    */
-  public static int serializeInt(Integer i) {
+  public static int serializeInt(int i) {
     if(i == 0) return 9; //The function bellow doesn't work if i == 0, so return 9 in case that happens.
     return (i % 9) == 0 ? i : (i + 9 - 1) / 9 * 9;
   }
@@ -80,7 +82,7 @@ public class Utils {
         }
         String progress = StringFormatUtils.getProgressBar(ticks, seconds * 20, 10, "■", ChatColor.COLOR_CHAR + "a", ChatColor.COLOR_CHAR + "c");
         VersionUtils.sendActionBar(p, plugin.getChatManager().colorMessage("In-Game.Cooldown-Format", p)
-          .replace("%progress%", progress).replace("%time%", Double.toString((double) ((seconds * 20) - ticks) / 20)));
+            .replace("%progress%", progress).replace("%time%", Double.toString((double) ((seconds * 20) - ticks) / 20)));
         ticks += 10;
       }
     }.runTaskTimer(plugin, 0, 10);
@@ -88,10 +90,19 @@ public class Utils {
 
   public static List<Block> getNearbyBlocks(Location location, int radius) {
     List<Block> blocks = new ArrayList<>();
-    for(int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
-      for(int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
-        for(int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
-          blocks.add(location.getWorld().getBlockAt(x, y, z));
+
+    org.bukkit.World world = location.getWorld();
+    if(world == null)
+      return blocks;
+
+    int blockX = location.getBlockX();
+    int blockY = location.getBlockY();
+    int blockZ = location.getBlockZ();
+
+    for(int x = blockX - radius; x <= blockX + radius; x++) {
+      for(int y = blockY - radius; y <= blockY + radius; y++) {
+        for(int z = blockZ - radius; z <= blockZ + radius; z++) {
+          blocks.add(world.getBlockAt(x, y, z));
         }
       }
     }
@@ -118,12 +129,20 @@ public class Utils {
     return false;
   }
 
+  public static boolean hasPermission(Player sender, String perm) {
+    if(sender.hasPermission(perm)) {
+      return true;
+    }
+    sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Permission"));
+    return false;
+  }
+
   public static Vector rotateAroundAxisX(Vector v, double angle) {
     angle = Math.toRadians(angle);
     double cos = Math.cos(angle),
-      sin = Math.sin(angle),
-      y = v.getY() * cos - v.getZ() * sin,
-      z = v.getY() * sin + v.getZ() * cos;
+        sin = Math.sin(angle),
+        y = v.getY() * cos - v.getZ() * sin,
+        z = v.getY() * sin + v.getZ() * cos;
     return v.setY(y).setZ(z);
   }
 
@@ -131,10 +150,19 @@ public class Utils {
     angle = -angle;
     angle = Math.toRadians(angle);
     double cos = Math.cos(angle),
-      sin = Math.sin(angle),
-      x = v.getX() * cos + v.getZ() * sin,
-      z = v.getX() * -sin + v.getZ() * cos;
+        sin = Math.sin(angle),
+        x = v.getX() * cos + v.getZ() * sin,
+        z = v.getX() * -sin + v.getZ() * cos;
     return v.setX(x).setZ(z);
   }
 
+  /**
+   * Checks whether itemstack is named (not null, has meta and display name)
+   *
+   * @param stack item stack to check
+   * @return true if named, false otherwise
+   */
+  public static boolean isNamed(ItemStack stack) {
+    return stack != null && stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
+  }
 }

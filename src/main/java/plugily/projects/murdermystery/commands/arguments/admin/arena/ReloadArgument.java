@@ -21,7 +21,8 @@ package plugily.projects.murdermystery.commands.arguments.admin.arena;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+
+import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaManager;

@@ -66,34 +66,41 @@ public class LeaderboardArgument {
           sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Statistics.Type-Name"));
           return;
         }
+
+        StatsStorage.StatisticType statisticType;
+
         try {
-          StatsStorage.StatisticType statisticType = StatsStorage.StatisticType.valueOf(args[1].toUpperCase());
-          if(!statisticType.isPersistent()) {
-            sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Statistics.Invalid-Name"));
-            return;
-          }
-          printLeaderboard(sender, statisticType);
+          statisticType = StatsStorage.StatisticType.valueOf(args[1].toUpperCase());
         } catch(IllegalArgumentException e) {
           sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Statistics.Invalid-Name"));
+          return;
         }
+
+        if(!statisticType.isPersistent()) {
+          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Statistics.Invalid-Name"));
+          return;
+        }
+
+        printLeaderboard(sender, statisticType);
       }
     });
   }
 
   private void printLeaderboard(CommandSender sender, StatsStorage.StatisticType statisticType) {
     java.util.Map<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
+
     sender.sendMessage(chatManager.colorMessage("Commands.Statistics.Header"));
+
     String statistic = StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "));
+    Object[] array = stats.keySet().toArray();
+    UUID current = (UUID) array[array.length - 1];
+
     for(int i = 0; i < 10; i++) {
-      Object[] array = stats.keySet().toArray();
       try {
-        UUID current = (UUID) array[array.length - 1];
-        sender.sendMessage(formatMessage(statistic, Bukkit.getOfflinePlayer(current).getName(), i + 1, stats.get(current)));
-        stats.remove(current);
+        sender.sendMessage(formatMessage(statistic, Bukkit.getOfflinePlayer(current).getName(), i + 1, stats.remove(current)));
       } catch(IndexOutOfBoundsException ex) {
         sender.sendMessage(formatMessage(statistic, "Empty", i + 1, 0));
       } catch(NullPointerException ex) {
-        UUID current = (UUID) array[array.length - 1];
         if(registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
           try(Connection connection = registry.getPlugin().getMysqlDatabase().getConnection()) {
             Statement statement = connection.createStatement();

@@ -28,12 +28,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.string.StringMatcher;
+
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.string.StringMatcher;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.commands.arguments.admin.ListArenasArgument;
+import plugily.projects.murdermystery.commands.arguments.admin.RolePassArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.TeleportArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.arena.DeleteArgument;
 import plugily.projects.murdermystery.commands.arguments.admin.arena.ForceStartArgument;
@@ -48,6 +50,7 @@ import plugily.projects.murdermystery.commands.arguments.game.CreateArgument;
 import plugily.projects.murdermystery.commands.arguments.game.JoinArguments;
 import plugily.projects.murdermystery.commands.arguments.game.LeaderboardArgument;
 import plugily.projects.murdermystery.commands.arguments.game.LeaveArgument;
+import plugily.projects.murdermystery.commands.arguments.game.RoleSelectorArgument;
 import plugily.projects.murdermystery.commands.arguments.game.StatsArgument;
 import plugily.projects.murdermystery.commands.completion.TabCompletion;
 import plugily.projects.murdermystery.handlers.ChatManager;
@@ -94,15 +97,17 @@ public class ArgumentsRegistry implements CommandExecutor {
     new LeaderboardArgument(this, chatManager);
     new LeaveArgument(this, chatManager);
     new StatsArgument(this, chatManager);
+    new RoleSelectorArgument(this);
 
     //register admin related arguments
     new DeleteArgument(this, chatManager);
-    new ForceStartArgument(this, chatManager);
+    new ForceStartArgument(this);
     new ListArenasArgument(this, chatManager);
     new SpecialBlockRemoverArgument(this);
     new ReloadArgument(this, chatManager);
     new StopArgument(this);
     new TeleportArgument(this);
+    new RolePassArgument(this, chatManager);
   }
 
   @Override

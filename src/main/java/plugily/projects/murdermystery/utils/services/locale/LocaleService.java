@@ -20,7 +20,7 @@ package plugily.projects.murdermystery.utils.services.locale;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.utils.services.ServiceRegistry;
 
 import javax.net.ssl.HttpsURLConnection;

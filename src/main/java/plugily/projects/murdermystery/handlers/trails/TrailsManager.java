@@ -18,7 +18,8 @@
 package plugily.projects.murdermystery.handlers.trails;
 
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.murdermystery.Main;
 
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class TrailsManager {
     //check perms
     List<Trail> perms = registeredTrails.stream().filter(trail -> player.hasPermission(trail.getPermission())).collect(Collectors.toList());
     if(!perms.isEmpty()) {
-      return perms.get(ThreadLocalRandom.current().nextInt(perms.size()));
+      return perms.get(perms.size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(perms.size()));
     }
     //fallback
     return registeredTrails.get(0);

@@ -23,6 +23,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,11 +32,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
-import pl.plajerlair.commonsbox.minecraft.serialization.LocationSerializer;
+
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaManager;
@@ -135,7 +137,7 @@ public class SignManager implements Listener {
     }
     arenaSigns.remove(arenaSign);
     FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    org.bukkit.configuration.ConfigurationSection section = config.getConfigurationSection("instances");
+    ConfigurationSection section = config.getConfigurationSection("instances");
     if (section == null)
       return;
 
@@ -190,13 +192,13 @@ public class SignManager implements Listener {
 
     arenaSigns.clear();
 
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    if(!config.isConfigurationSection("instances")) {
+    ConfigurationSection section = ConfigUtils.getConfig(plugin, "arenas").getConfigurationSection("instances");
+    if(section == null) {
       return;
     }
 
-    for(String path : config.getConfigurationSection("instances").getKeys(false)) {
-      for(String sign : config.getStringList("instances." + path + ".signs")) {
+    for(String path : section.getKeys(false)) {
+      for(String sign : section.getStringList(path + ".signs")) {
         Location loc = LocationSerializer.getLocation(sign);
         if(loc.getBlock().getState() instanceof Sign) {
           arenaSigns.add(new ArenaSign((Sign) loc.getBlock().getState(), ArenaRegistry.getArena(path)));

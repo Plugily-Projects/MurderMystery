@@ -24,8 +24,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.sorter.SortUtils;
+
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.sorter.SortUtils;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.user.data.MysqlManager;
@@ -120,7 +121,7 @@ public class StatsStorage {
     CONTRIBUTION_DETECTIVE("contribdetective", true),
     CONTRIBUTION_MURDERER("contribmurderer", true), DEATHS("deaths", true), GAMES_PLAYED("gamesplayed", true), HIGHEST_SCORE("highestscore", true),
     KILLS("kills", true), LOSES("loses", true), WINS("wins", true), LOCAL_CURRENT_PRAY("local_pray", false), LOCAL_GOLD("gold", false), LOCAL_KILLS("local_kills", false),
-    LOCAL_PRAISES("local_praises", false), LOCAL_SCORE("local_score", false);
+    LOCAL_PRAISES("local_praises", false), LOCAL_SCORE("local_score", false), MURDERER_PASS("murderer_pass", true), DETECTIVE_PASS("murderer_pass", true);
 
     private final String name;
     private final boolean persistent;

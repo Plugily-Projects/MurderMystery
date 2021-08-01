@@ -22,9 +22,10 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
-import pl.plajerlair.commonsbox.string.StringFormatUtils;
+
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
+import plugily.projects.commonsbox.string.StringFormatUtils;
 import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
@@ -61,7 +62,7 @@ public class ChatManager {
       return "";
     }
 
-    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1) && message.contains("#")) {
+    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1) && message.indexOf('#') >= 0) {
       message = MiscUtils.matchColorRegex(message);
     }
 
@@ -103,9 +104,12 @@ public class ChatManager {
 
   private String formatPlaceholders(String message, Arena arena) {
     String returnString = message;
+
+    int timer = arena.getTimer();
+
     returnString = StringUtils.replace(returnString, "%ARENANAME%", arena.getMapName());
-    returnString = StringUtils.replace(returnString, "%TIME%", Integer.toString(arena.getTimer()));
-    returnString = StringUtils.replace(returnString, "%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS((arena.getTimer())));
+    returnString = StringUtils.replace(returnString, "%TIME%", Integer.toString(timer));
+    returnString = StringUtils.replace(returnString, "%FORMATTEDTIME%", StringFormatUtils.formatIntoMMSS(timer));
     returnString = StringUtils.replace(returnString, "%PLAYERSIZE%", Integer.toString(arena.getPlayers().size()));
     returnString = StringUtils.replace(returnString, "%MAXPLAYERS%", Integer.toString(arena.getMaximumPlayers()));
     returnString = StringUtils.replace(returnString, "%MINPLAYERS%", Integer.toString(arena.getMinimumPlayers()));
@@ -113,9 +117,6 @@ public class ChatManager {
   }
 
   public void broadcastAction(Arena a, Player p, ActionType action) {
-    if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_DEATH_MESSAGE)) {
-      return;
-    }
     String message;
     switch(action) {
       case JOIN:
@@ -125,6 +126,10 @@ public class ChatManager {
         message = formatMessage(a, colorMessage("In-Game.Messages.Leave"), p);
         break;
       case DEATH:
+        if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_DEATH_MESSAGE)) {
+          return;
+        }
+
         message = formatMessage(a, colorMessage("In-Game.Messages.Death"), p);
         break;
       default:

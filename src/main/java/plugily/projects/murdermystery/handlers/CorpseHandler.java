@@ -30,17 +30,18 @@ import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion.Version;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
-import pl.plajerlair.commonsbox.minecraft.compat.xseries.XMaterial;
+
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
+import plugily.projects.commonsbox.minecraft.hologram.ArmorStandHologram;
+import plugily.projects.commonsbox.minecraft.hologram.HologramManager;
 import plugily.projects.murdermystery.HookManager;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.corpse.Corpse;
 import plugily.projects.murdermystery.arena.corpse.Stand;
-import plugily.projects.murdermystery.handlers.hologram.ArmorStandHologram;
-import plugily.projects.murdermystery.handlers.hologram.HologramManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -83,7 +84,7 @@ public class CorpseHandler implements Listener {
       head.setItemMeta(meta);
 
       stand.setVisible(false);
-      if(Version.isCurrentEqualOrHigher(Version.v1_16_R1)) {
+      if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
         stand.getEquipment().setHelmet(head);
       } else {
         stand.setHelmet(head);

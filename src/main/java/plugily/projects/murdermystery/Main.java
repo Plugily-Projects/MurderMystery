@@ -25,12 +25,14 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.database.MysqlDatabase;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
-import pl.plajerlair.commonsbox.minecraft.compat.events.EventsInitializer;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.MiscUtils;
-import pl.plajerlair.commonsbox.minecraft.serialization.InventorySerializer;
+
+import plugily.projects.commonsbox.database.MysqlDatabase;
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
+import plugily.projects.commonsbox.minecraft.compat.events.EventsInitializer;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.hologram.HologramManager;
+import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
+import plugily.projects.commonsbox.minecraft.serialization.InventorySerializer;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaEvents;
@@ -47,20 +49,19 @@ import plugily.projects.murdermystery.events.LobbyEvent;
 import plugily.projects.murdermystery.events.QuitEvent;
 import plugily.projects.murdermystery.events.spectator.SpectatorEvents;
 import plugily.projects.murdermystery.events.spectator.SpectatorItemEvents;
-import plugily.projects.murdermystery.handlers.trails.BowTrailsHandler;
 import plugily.projects.murdermystery.handlers.BungeeManager;
 import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.CorpseHandler;
 import plugily.projects.murdermystery.handlers.PermissionsManager;
 import plugily.projects.murdermystery.handlers.PlaceholderManager;
-import plugily.projects.murdermystery.handlers.hologram.HologramManager;
-import plugily.projects.murdermystery.handlers.items.SpecialItem;
+import plugily.projects.murdermystery.handlers.items.SpecialItemManager;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.handlers.lastwords.LastWordsManager;
 import plugily.projects.murdermystery.handlers.party.PartyHandler;
 import plugily.projects.murdermystery.handlers.party.PartySupportInitializer;
 import plugily.projects.murdermystery.handlers.rewards.RewardsFactory;
 import plugily.projects.murdermystery.handlers.sign.SignManager;
+import plugily.projects.murdermystery.handlers.trails.BowTrailsHandler;
 import plugily.projects.murdermystery.handlers.trails.TrailsManager;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.user.UserManager;
@@ -98,6 +99,7 @@ public class Main extends JavaPlugin {
   private ChatManager chatManager;
   private LastWordsManager lastWordsManager;
   private TrailsManager trailsManager;
+  private SpecialItemManager specialItemManager;
 
   @Override
   public void onEnable() {
@@ -129,12 +131,11 @@ public class Main extends JavaPlugin {
     checkUpdate();
     Debugger.debug("[System] Initialization finished took {0}ms", System.currentTimeMillis() - start);
 
-    Debugger.debug("Plugin loaded! Hooking into soft-dependencies in a while!");
-    //start hook manager later in order to allow soft-dependencies to fully load
-    getServer().getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
+    Debugger.debug("Plugin loaded!");
+
     if(configPreferences.getOption(ConfigPreferences.Option.NAMETAGS_HIDDEN)) {
       getServer().getScheduler().scheduleSyncRepeatingTask(this, () ->
-        getServer().getOnlinePlayers().forEach(ArenaUtils::updateNameTagsVisibility), 60, 140);
+          getServer().getOnlinePlayers().forEach(ArenaUtils::updateNameTagsVisibility), 60, 140);
     }
   }
 
@@ -193,7 +194,6 @@ public class Main extends JavaPlugin {
           InventorySerializer.loadInventory(this, player);
         }
       }
-      arena.teleportAllToEndLocation();
       arena.cleanUpArena();
     }
     Debugger.debug("System disable finished took {0}ms", System.currentTimeMillis() - start);
@@ -211,8 +211,8 @@ public class Main extends JavaPlugin {
     }
     argumentsRegistry = new ArgumentsRegistry(this);
     userManager = new UserManager(this);
+    hookManager = new HookManager();
     Utils.init(this);
-    SpecialItem.loadAll();
     PermissionsManager.init();
     new ArenaEvents(this);
     new SpectatorEvents(this);
@@ -229,6 +229,7 @@ public class Main extends JavaPlugin {
     new LobbyEvent(this);
     new SpectatorItemEvents(this);
     rewardsHandler = new RewardsFactory(this);
+    specialItemManager = new SpecialItemManager(this);
     corpseHandler = new CorpseHandler(this);
     partyHandler = new PartySupportInitializer().initialize(this);
     new BowTrailsHandler(this);
@@ -238,7 +239,7 @@ public class Main extends JavaPlugin {
     new EventsInitializer().initialize(this);
     lastWordsManager = new LastWordsManager(this);
     trailsManager = new TrailsManager(this);
-    MiscUtils.sendStartUpMessage(this, "MurderMystery", getDescription(),true, true);
+    MiscUtils.sendStartUpMessage(this, "MurderMystery", getDescription(), true, true);
   }
 
   private void registerSoftDependenciesAndServices() {
@@ -277,9 +278,9 @@ public class Main extends JavaPlugin {
       }
       if(result.getNewestVersion().contains("b")) {
         if(getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-          Debugger.sendConsoleMsg("&c[MurderMystery] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-          Debugger.sendConsoleMsg("&c[MurderMystery] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
-            result.getNewestVersion()));
+          Debugger.sendConsoleMsg("&c[Murder Mystery] Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
+          Debugger.sendConsoleMsg("&c[Murder Mystery] Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion()).replace("%new%",
+              result.getNewestVersion()));
         }
         return;
       }
@@ -291,7 +292,7 @@ public class Main extends JavaPlugin {
   }
 
   private void setupFiles() {
-    for(String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "lobbyitems", "mysql", "specialblocks")) {
+    for(String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "special_items", "mysql", "specialblocks")) {
       File file = new File(getDataFolder() + File.separator + fileName + ".yml");
       if(!file.exists()) {
         saveResource(fileName + ".yml", false);
@@ -351,6 +352,10 @@ public class Main extends JavaPlugin {
     return trailsManager;
   }
 
+  public SpecialItemManager getSpecialItemManager() {
+    return specialItemManager;
+  }
+
   private void saveAllUserStatistics() {
     for(Player player : getServer().getOnlinePlayers()) {
       User user = userManager.getUser(player);
@@ -366,7 +371,7 @@ public class Main extends JavaPlugin {
         String finalUpdate = update.toString();
         //copy of userManager#saveStatistic but without async database call that's not allowed in onDisable method.
         ((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE " + ((MysqlManager) getUserManager().getDatabase()).getTableName()
-          + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
+            + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
         continue;
       }
       for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {

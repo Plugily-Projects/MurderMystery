@@ -20,15 +20,11 @@ package plugily.projects.murdermystery.commands.arguments.admin.arena;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import plugily.projects.murdermystery.arena.Arena;
-import plugily.projects.murdermystery.arena.ArenaRegistry;
-import plugily.projects.murdermystery.arena.ArenaState;
+import plugily.projects.murdermystery.arena.ArenaUtils;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
 import plugily.projects.murdermystery.commands.arguments.data.CommandArgument;
 import plugily.projects.murdermystery.commands.arguments.data.LabelData;
 import plugily.projects.murdermystery.commands.arguments.data.LabeledCommandArgument;
-import plugily.projects.murdermystery.handlers.ChatManager;
-import plugily.projects.murdermystery.utils.Utils;
 
 /**
  * @author Plajer
@@ -37,28 +33,12 @@ import plugily.projects.murdermystery.utils.Utils;
  */
 public class ForceStartArgument {
 
-  public ForceStartArgument(ArgumentsRegistry registry, ChatManager chatManager) {
+  public ForceStartArgument(ArgumentsRegistry registry) {
     registry.mapArgument("murdermysteryadmin", new LabeledCommandArgument("forcestart", "murdermystery.admin.forcestart", CommandArgument.ExecutorType.PLAYER,
-      new LabelData("/mma forcestart", "/mma forcestart", "&7Force starts arena you're in\n&6Permission: &7murdermystery.admin.forcestart")) {
+        new LabelData("/mma forcestart", "/mma forcestart", "&7Force starts arena you're in\n&6Permission: &7murdermystery.admin.forcestart")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if(!Utils.checkIsInGameInstance((Player) sender)) {
-          return;
-        }
-
-        Arena arena = ArenaRegistry.getArena((Player) sender);
-        if(arena.getPlayers().size() < 2) {
-          chatManager.broadcast(arena, chatManager.formatMessage(arena, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Waiting-For-Players"), arena.getMinimumPlayers()));
-          return;
-        }
-        if(arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS || arena.getArenaState() == ArenaState.STARTING) {
-          arena.setArenaState(ArenaState.STARTING);
-          arena.setForceStart(true);
-          arena.setTimer(0);
-          for(Player player : arena.getPlayers()) {
-            player.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Messages.Admin-Messages.Set-Starting-In-To-0"));
-          }
-        }
+        ArenaUtils.arenaForceStart((Player) sender);
       }
     });
   }

@@ -54,7 +54,7 @@ public class TabCompletion implements TabCompleter {
 
     if(cmd.getName().equalsIgnoreCase("murdermysteryadmin")) {
       if(args.length == 1) {
-        cmds.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
+        cmds.addAll(registry.getMappedArguments().get("murdermysteryadmin").stream().map(CommandArgument::getArgumentName)
           .collect(Collectors.toList()));
       } else if(args.length == 2 && args[0].equalsIgnoreCase("delete")) {
         cmds.addAll(ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList()));
@@ -65,7 +65,7 @@ public class TabCompletion implements TabCompleter {
       if(args.length == 2 && args[0].equalsIgnoreCase("join")) {
         cmds.addAll(ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList()));
       } else if(args.length == 1) {
-        cmds.addAll(registry.getMappedArguments().get(cmd.getName().toLowerCase()).stream().map(CommandArgument::getArgumentName)
+        cmds.addAll(registry.getMappedArguments().get("murdermystery").stream().map(CommandArgument::getArgumentName)
           .collect(Collectors.toList()));
       }
     }

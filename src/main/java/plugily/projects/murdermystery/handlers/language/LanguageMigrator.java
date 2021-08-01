@@ -22,8 +22,8 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.migrator.MigratorUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.migrator.MigratorUtils;
 import plugily.projects.murdermystery.Main;
 
 import java.io.File;
@@ -35,7 +35,7 @@ import java.io.File;
 public class LanguageMigrator {
 
   public static final int CONFIG_FILE_VERSION = 23;
-  public static final int LANGUAGE_FILE_VERSION = 7;
+  public static final int LANGUAGE_FILE_VERSION = 8;
   private final Main plugin;
 
   public LanguageMigrator(Main plugin) {
@@ -277,6 +277,24 @@ public class LanguageMigrator {
         case 6:
           //No migrator as we can't handle that
           break;
+        case 7:
+          MigratorUtils.insertAfterLine(file, "  Spectator:", "    Target-Player-Health: \"&cHealth: &7%health%\"\r\n");
+          MigratorUtils.insertAfterLine(file, "In-Game:", "  Role-Pass:\r\n" +
+              "    Menu-Name: \"Role pass menu\"\r\n" +
+              "    Role:\r\n" +
+              "      Murderer:\r\n" +
+              "        Name: \"Be murderer\"\r\n" +
+              "        Lore:\r\n" +
+              "          - \"Cost 1 murderer pass\"\r\n" +
+              "          - \"You got %amount%\"\r\n" +
+              "      Detective:\r\n" +
+              "        Name: \"Be detective\"\r\n" +
+              "        Lore:\r\n" +
+              "          - \"Cost 1 detective pass\"\r\n" +
+              "          - \"You got %amount%\"\r\n" +
+              "    Fail: \"You do not got enough passes for %role% role\"\r\n" +
+              "    Success: \"You will be %role% next round!\"\r\n" +
+              "    Change: \"You now got %amount% %role% passes!\"\r\n");
         default:
           break;
       }

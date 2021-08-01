@@ -37,7 +37,7 @@ Classic-Gameplay-Time: 270
 # Should we hook into bungee cord? (If you wanna use arena per server option)
 # You STILL need to use external addon for HUB server game signs
 # Murder Mystery doesn't offer that addon.
-# Check here for more info: https://wiki.plugily.xyz/minecraft/murdermystery/addons.php#bungee-signs-not-official
+# Check here for more info: https://wiki.plugily.xyz/murdermystery/support/servertips#bungeecord-lobby-signs
 BungeeActivated: false
 
 # Enable this option when you're using MySQL, otherwise it won't work.
@@ -132,7 +132,7 @@ Speed-Effect-Murderer:
 # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
 AddScore-Sound: ""
 
-# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/minecraft/murdermystery/cmds_and_perms.php#basic-permissions
+# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/murdermystery/setup/cmdsandperms#basic-permissions
 Basic-Permissions:
   Full-Games-Permission: "murdermystery.fullgames"
   # <arena> represents arena name (NOT MAP NAME!), for example: 'murdermystery.join.MM02'

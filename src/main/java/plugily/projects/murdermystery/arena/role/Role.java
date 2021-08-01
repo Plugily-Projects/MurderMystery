@@ -69,16 +69,26 @@ public enum Role {
    * @return true if is playing it, false otherwise
    */
   public static boolean isRole(Role role, Player player) {
-    Arena arena = ArenaRegistry.getArena(player);
-    if(arena == null) {
+    return isRole(role, player, ArenaRegistry.getArena(player));
+  }
+
+  /**
+   * Checks whether player is playing specified role or not
+   *
+   * @param role   role to check
+   * @param player player to check
+   * @param arena  the arena where to check
+   * @return true if is playing it, false otherwise
+   */
+  public static boolean isRole(Role role, Player player, Arena arena) {
+    if (arena == null)
       return false;
-    }
+
     switch(role) {
       case DETECTIVE:
         return arena.isCharacterSet(Arena.CharacterType.DETECTIVE) && arena.getDetectiveList().contains(player);
       case FAKE_DETECTIVE:
-        Player character = arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE);
-        return character != null && player.equals(character);
+        return player.equals(arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE));
       case MURDERER:
         return arena.isCharacterSet(Arena.CharacterType.MURDERER) && arena.getMurdererList().contains(player);
       case ANY_DETECTIVE:
@@ -101,6 +111,17 @@ public enum Role {
    * @return true if is playing one role, false otherwise
    */
   public static boolean isAnyRole(Player player) {
-    return ArenaRegistry.isInArena(player) && Arrays.stream(Role.values()).anyMatch(role -> isRole(role, player));
+    return isAnyRole(player, ArenaRegistry.getArena(player));
+  }
+
+  /**
+   * Checks whether player is playing a role or not
+   *
+   * @param player player to check
+   * @param arena the player's arena
+   * @return true if is playing one role, false otherwise
+   */
+  public static boolean isAnyRole(Player player, Arena arena) {
+    return arena != null && Arrays.stream(Role.values()).anyMatch(role -> isRole(role, player, arena));
   }
 }

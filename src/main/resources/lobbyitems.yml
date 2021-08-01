@@ -1,9 +1,0 @@
-# Custom in-game lobby items.
-# Probably you will only translate displayname and lore so don't mess with it.
-
-Leave:
-  displayname: "&c&lReturn to Lobby &7(Right Click)"
-  lore:
-    - "&7Right-click to leave to the lobby"
-  material-name: BED
-  slot: 8

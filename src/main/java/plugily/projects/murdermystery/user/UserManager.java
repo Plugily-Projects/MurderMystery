@@ -58,13 +58,16 @@ public class UserManager {
   }
 
   public User getUser(Player player) {
+    java.util.UUID playerId = player.getUniqueId();
+
     for(User user : users) {
-      if(user.getUniqueId().equals(player.getUniqueId())) {
+      if(user.getUniqueId().equals(playerId)) {
         return user;
       }
     }
-    Debugger.debug("Registering new user {0} ({1})", player.getUniqueId(), player.getName());
-    User user = new User(player.getUniqueId());
+
+    Debugger.debug("Registering new user {0} ({1})", playerId, player.getName());
+    User user = new User(playerId);
     users.add(user);
     return user;
   }
@@ -72,7 +75,7 @@ public class UserManager {
   public List<User> getUsers(Arena arena) {
     List<User> list = new ArrayList<>();
 
-    for (Player player : arena.getPlayers()) {
+    for(Player player : arena.getPlayers()) {
       list.add(getUser(player));
     }
 
@@ -84,17 +87,17 @@ public class UserManager {
       return;
     }
     //apply before save
-    fixContirbutionStatistics(user);
+    fixContributionStat(user);
     database.saveStatistic(user, stat);
   }
 
   public void loadStatistics(User user) {
     database.loadStatistics(user);
     //apply after load to override
-    fixContirbutionStatistics(user);
+    fixContributionStat(user);
   }
 
-  private void fixContirbutionStatistics(User user) {
+  private void fixContributionStat(User user) {
     if(user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) <= 0) {
       user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
     }

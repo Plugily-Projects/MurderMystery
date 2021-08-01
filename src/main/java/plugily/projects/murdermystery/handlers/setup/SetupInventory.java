@@ -18,12 +18,12 @@
 
 package plugily.projects.murdermystery.handlers.setup;
 
-import com.github.stefvanschie.inventoryframework.Gui;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import plugily.projects.inventoryframework.gui.type.ChestGui;
+import plugily.projects.inventoryframework.pane.StaticPane;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.handlers.ChatManager;
@@ -48,7 +48,7 @@ public class SetupInventory {
   private final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
   private final Arena arena;
   private final Player player;
-  private Gui gui;
+  private ChestGui gui;
   private final SetupUtilities setupUtilities;
 
   public SetupInventory(Arena arena, Player player) {
@@ -59,7 +59,7 @@ public class SetupInventory {
   }
 
   private void prepareGui() {
-    this.gui = new Gui(plugin, 4, "Murder Mystery Arena Setup");
+    this.gui = new ChestGui(4, "Murder Mystery Arena Setup");
     this.gui.setOnGlobalClick(e -> e.setCancelled(true));
     StaticPane pane = new StaticPane(9, 4);
     this.gui.addPane(pane);
@@ -97,7 +97,7 @@ public class SetupInventory {
         p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://translate.plugily.xyz"));
         break;
       case 1:
-        p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7LeaderHeads leaderboard plugin is supported with our plugin! Check here: https://bit.ly/2IH5zkR"));
+        p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7PlaceholderApi plugin is supported with our plugin! Check here: https://wiki.plugily.xyz/murdermystery/placeholders/placeholderapi"));
         break;
       case 2:
         p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Plugily-Projects/MurderMystery"));
@@ -107,6 +107,9 @@ public class SetupInventory {
         break;
       case 4:
         p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Suggest new ideas for the plugin or vote on current ones! https://app.feedbacky.net/b/MurderMystery"));
+        break;
+      case 5:
+        p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Achievements, ranks and replay ability are things available in our paid addon for this minigame! https://wiki.plugily.xyz/murdermystery/addon/overview"));
         break;
       default:
         break;
@@ -134,7 +137,7 @@ public class SetupInventory {
     return player;
   }
 
-  public Gui getGui() {
+  public ChestGui getGui() {
     return gui;
   }
 

@@ -18,9 +18,10 @@
 
 package plugily.projects.murdermystery.user;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
+
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.api.events.player.MMPlayerStatisticChangeEvent;
@@ -47,6 +48,8 @@ public class User {
   private boolean spectator = false;
   private boolean permanentSpectator = false;
 
+  public Scoreboard lastBoard;
+
   @Deprecated
   public User(Player player) {
     this(player.getUniqueId());
@@ -61,7 +64,7 @@ public class User {
   }
 
   public static void cooldownHandlerTask() {
-    Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> cooldownCounter++, 20, 20);
+    plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> cooldownCounter++, 20, 20);
   }
 
   public Arena getArena() {
@@ -69,7 +72,7 @@ public class User {
   }
 
   public Player getPlayer() {
-    return Bukkit.getPlayer(uuid);
+    return plugin.getServer().getPlayer(uuid);
   }
 
   public boolean isSpectator() {
@@ -100,23 +103,33 @@ public class User {
 
   public void removeScoreboard(Arena arena) {
     arena.getScoreboardManager().removeScoreboard(this);
-    //player.setScoreboard(scoreboardManager.getNewScoreboard());
+
+    if (lastBoard != null) {
+      getPlayer().setScoreboard(lastBoard);
+      lastBoard = null;
+    }
   }
 
   public void setStat(StatsStorage.StatisticType stat, int i) {
     stats.put(stat, i);
 
     //statistics manipulation events are called async when using mysql
-    Bukkit.getScheduler().runTask(plugin, () ->
-      Bukkit.getPluginManager().callEvent(new MMPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, i)));
+    plugin.getServer().getScheduler().runTask(plugin, () -> {
+      Player player = getPlayer();
+      plugin.getServer().getPluginManager().callEvent(new MMPlayerStatisticChangeEvent(
+          ArenaRegistry.getArena(player), player, stat, i));
+    });
   }
 
   public void addStat(StatsStorage.StatisticType stat, int i) {
     stats.put(stat, getStat(stat) + i);
 
     //statistics manipulation events are called async when using mysql
-    Bukkit.getScheduler().runTask(plugin, () ->
-      Bukkit.getPluginManager().callEvent(new MMPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, getStat(stat))));
+    plugin.getServer().getScheduler().runTask(plugin, () -> {
+      Player player = getPlayer();
+      plugin.getServer().getPluginManager().callEvent(new MMPlayerStatisticChangeEvent(
+          ArenaRegistry.getArena(player), player, stat, getStat(stat)));
+    });
   }
 
   public void setCooldown(String s, double seconds) {

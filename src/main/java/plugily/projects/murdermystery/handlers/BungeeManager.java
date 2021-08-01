@@ -29,8 +29,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
-import pl.plajerlair.commonsbox.minecraft.configuration.ConfigUtils;
-import pl.plajerlair.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+
+import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaManager;
@@ -69,7 +70,7 @@ public class BungeeManager implements Listener {
   }
 
   public void connectToHub(Player player) {
-    if(!bungee.getBoolean("Connect-To-Hub", true)) {
+    if(!plugin.isEnabled() || !bungee.getBoolean("Connect-To-Hub", true)) {
       return;
     }
     ByteArrayDataOutput out = ByteStreams.newDataOutput();

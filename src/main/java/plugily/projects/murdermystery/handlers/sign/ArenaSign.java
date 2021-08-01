@@ -23,7 +23,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import pl.plajerlair.commonsbox.minecraft.compat.ServerVersion;
+
+import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
 import plugily.projects.murdermystery.arena.Arena;
 
 import javax.annotation.Nullable;
@@ -54,7 +55,8 @@ public class ArenaSign {
 
   private Block getBlockBehind() {
     try {
-      Object blockData = sign.getBlock().getState().getClass().getMethod("getBlockData").invoke(sign.getBlock().getState());
+      org.bukkit.block.BlockState state = sign.getBlock().getState();
+      Object blockData = state.getClass().getMethod("getBlockData").invoke(state);
       BlockFace face = (BlockFace) blockData.getClass().getMethod("getFacing").invoke(blockData);
 
       Location loc = sign.getLocation();

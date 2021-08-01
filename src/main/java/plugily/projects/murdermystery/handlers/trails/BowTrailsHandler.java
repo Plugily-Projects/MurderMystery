@@ -25,7 +25,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import pl.plajerlair.commonsbox.minecraft.compat.VersionUtils;
+
+import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 import plugily.projects.murdermystery.utils.Debugger;
