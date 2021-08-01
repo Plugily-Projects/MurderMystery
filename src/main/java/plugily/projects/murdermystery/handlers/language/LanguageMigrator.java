@@ -286,10 +286,12 @@ public class LanguageMigrator {
               "        Name: \"Be murderer\"\r\n" +
               "        Lore:\r\n" +
               "          - \"Cost 1 murderer pass\"\r\n" +
+              "          - \"You got %amount%\"\r\n" +
               "      Detective:\r\n" +
               "        Name: \"Be detective\"\r\n" +
               "        Lore:\r\n" +
               "          - \"Cost 1 detective pass\"\r\n" +
+              "          - \"You got %amount%\"\r\n" +
               "    Fail: \"You do not got enough passes for %role% role\"\r\n" +
               "    Success: \"You will be %role% next round!\"\r\n" +
               "    Change: \"You now got %amount% %role% passes!\"\r\n");

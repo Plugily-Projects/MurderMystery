@@ -139,10 +139,12 @@ In-Game:
         Name: "Be murderer"
         Lore:
           - "Cost 1 murderer pass"
+          - "You got %amount%"
       Detective:
         Name: "Be detective"
         Lore:
           - "Cost 1 detective pass"
+          - "You got %amount%"
     Fail: "You do not got enough passes for %role% role"
     Success: "You will be %role% next round!"
     Change: "You now got %amount% %role% passes!"

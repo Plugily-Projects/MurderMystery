@@ -97,7 +97,7 @@ public class ArgumentsRegistry implements CommandExecutor {
     new LeaderboardArgument(this, chatManager);
     new LeaveArgument(this, chatManager);
     new StatsArgument(this, chatManager);
-    new RoleSelectorArgument(this, chatManager);
+    new RoleSelectorArgument(this);
 
     //register admin related arguments
     new DeleteArgument(this, chatManager);

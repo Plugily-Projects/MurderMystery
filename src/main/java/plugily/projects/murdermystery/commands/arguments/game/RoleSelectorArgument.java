@@ -3,7 +3,6 @@ package plugily.projects.murdermystery.commands.arguments.game;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
 import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
 import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
 import plugily.projects.inventoryframework.gui.GuiItem;
@@ -16,17 +15,16 @@ import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
 import plugily.projects.murdermystery.commands.arguments.data.CommandArgument;
 import plugily.projects.murdermystery.commands.arguments.data.LabelData;
 import plugily.projects.murdermystery.commands.arguments.data.LabeledCommandArgument;
-import plugily.projects.murdermystery.handlers.ChatManager;
 import plugily.projects.murdermystery.handlers.language.LanguageManager;
 import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.Utils;
 
+import java.util.stream.Collectors;
+
 public class RoleSelectorArgument implements Listener {
 
-  private final ChatManager chatManager;
 
-  public RoleSelectorArgument(ArgumentsRegistry registry, ChatManager chatManager) {
-    this.chatManager = chatManager;
+  public RoleSelectorArgument(ArgumentsRegistry registry) {
     registry.mapArgument("murdermystery", new LabeledCommandArgument("roleselector", "murdermystery.roleselector", CommandArgument.ExecutorType.PLAYER,
         new LabelData("/mm roleselector", "/mm roleselector", "&7Select a role\n&6Permission: &7murdermystery.roleselector")) {
       @Override
@@ -49,7 +47,7 @@ public class RoleSelectorArgument implements Listener {
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.IRON_SWORD.parseMaterial())
         .name(plugin.getChatManager().colorMessage("In-Game.Role-Pass.Role.Murderer.Name"))
-        .lore(LanguageManager.getLanguageList("In-Game.Role-Pass.Role.Murderer.Lore"))
+        .lore(LanguageManager.getLanguageList("In-Game.Role-Pass.Role.Murderer.Lore").stream().map(string -> string.replace("%amount%", Integer.toString(plugin.getUserManager().getUser(player).getStat(StatsStorage.StatisticType.DETECTIVE_PASS)))).collect(Collectors.toList()))
         .build(), event -> {
       event.setCancelled(true);
       User user = plugin.getUserManager().getUser(player);
@@ -64,7 +62,7 @@ public class RoleSelectorArgument implements Listener {
 
     pane.addItem(new GuiItem(new ItemBuilder(XMaterial.BOW.parseMaterial())
         .name(plugin.getChatManager().colorMessage("In-Game.Role-Pass.Role.Detective.Name"))
-        .lore(LanguageManager.getLanguageList("In-Game.Role-Pass.Role.Detective.Lore"))
+        .lore(LanguageManager.getLanguageList("In-Game.Role-Pass.Role.Detective.Lore").stream().map(string -> string.replace("%amount%", Integer.toString(plugin.getUserManager().getUser(player).getStat(StatsStorage.StatisticType.DETECTIVE_PASS)))).collect(Collectors.toList()))
         .build(), event -> {
       event.setCancelled(true);
       User user = plugin.getUserManager().getUser(player);

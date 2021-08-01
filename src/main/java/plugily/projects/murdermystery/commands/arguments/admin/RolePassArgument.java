@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import plugily.projects.commonsbox.number.NumberUtils;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.role.Role;
@@ -27,20 +26,20 @@ public class RolePassArgument {
         new LabelData("/mma rolepass <add/set/remove> <role> <amount> [player]", "/mma rolepass <add/remove> <amount> [player] ", "&7Add or remove rolepass\n&6Permission: &7murdermystery.admin.rolepass")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
-        if(args.length < 3) {
+        if(args.length < 4) {
           sender.sendMessage(chatManager.getPrefix() + ChatColor.RED + "Command: /mma rolepass <add/set/remove> <role> <amount> [player]");
           return;
         }
         //add/remove
-        String addOrRemove = args[0];
+        String addOrRemove = args[1];
         if(!addOrRemove.equalsIgnoreCase("add") && !addOrRemove.equalsIgnoreCase("remove") && !addOrRemove.equalsIgnoreCase("set")) {
           sender.sendMessage(chatManager.getPrefix() + ChatColor.RED + "Command: /mma rolepass <add/set/remove> <role> <amount> [player]");
           return;
         }
-        String roleArg = args[1];
+        String roleArg = args[2];
         Role role = Role.MURDERER;
         try {
-          role = Role.valueOf(roleArg);
+          role = Role.valueOf(roleArg.toUpperCase());
         } catch(IllegalArgumentException exception) {
           sender.sendMessage(chatManager.getPrefix() + ChatColor.RED + "Command: /mma rolepass <add/set/remove> <role> <amount> [player]");
           return;
@@ -49,14 +48,14 @@ public class RolePassArgument {
           sender.sendMessage(chatManager.getPrefix() + ChatColor.RED + "Command: /mma rolepass <add/set/remove> <role> <amount> [player]");
           return;
         }
-        java.util.Optional<Integer> opt = NumberUtils.parseInt(args[2]);
+        java.util.Optional<Integer> opt = NumberUtils.parseInt(args[3]);
         if(!opt.isPresent()) {
           sender.sendMessage(chatManager.getPrefix() + ChatColor.RED + "Command: /mma rolepass <add/set/remove> <role> <amount> [player]");
           return;
         }
         int amount = opt.orElse(0);
         //player
-        Player player = args.length == 4 ? Bukkit.getPlayerExact(args[3]) : (Player) sender;
+        Player player = args.length == 5 ? Bukkit.getPlayerExact(args[4]) : (Player) sender;
         if(player == null) {
           sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Admin-Commands.Player-Not-Found"));
           return;
@@ -88,9 +87,9 @@ public class RolePassArgument {
             break;
         }
         if(role == Role.MURDERER) {
-          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Role-Pass.Change").replace("%amount%", args[2]).replace("%role%", Role.MURDERER.name()));
+          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Role-Pass.Change").replace("%amount%", Integer.toString(user.getStat(StatsStorage.StatisticType.MURDERER_PASS))).replace("%role%", Role.MURDERER.name()));
         } else {
-          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Role-Pass.Change").replace("%amount%", args[2]).replace("%role%", Role.DETECTIVE.name()));
+          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Role-Pass.Change").replace("%amount%", Integer.toString(user.getStat(StatsStorage.StatisticType.MURDERER_PASS))).replace("%role%", Role.DETECTIVE.name()));
         }
       }
     });
