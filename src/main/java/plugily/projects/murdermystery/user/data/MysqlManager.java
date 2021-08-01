@@ -62,7 +62,7 @@ public class MysqlManager implements UserDatabase {
             + "  `contribmurderer` int(11) NOT NULL DEFAULT '1',\n"
             + "  `contribdetective` int(11) NOT NULL DEFAULT '1'\n"
             + "  `murderer_pass` int(11) NOT NULL DEFAULT '0',\n"
-            + "  `detective_pass` int(11) NOT NULL DEFAULT '0',\n"
+            + "  `detective_pass` int(11) NOT NULL DEFAULT '0'\n"
             + ");");
       } catch(SQLException e) {
         e.printStackTrace();
