@@ -1,18 +1,18 @@
 ### 1.7.9 Release (30.05.2021 - XX.XX.2021)
 * Added forcestart item
 * Added murderer and detective pass (Command and Item to activate)
-* Added new stat (new tables one mysql needs to be manually added murderer_pass, detective_pass)  
+* Added new stat (new tables on mysql needs to be manually added murderer_pass, detective_pass *or* recreated)  
 * Added special_items.yml
+* Added 1.17 support
 * Removed lobbyitems.yml
 * Removed Rainbow Bed option
-* Added 1.17 support
 * Reuse XMaterial for specialitems
 * Fix NoSuchMethodError when hasCooldown method is not existed in 1.11 and lowest versions
 >>> beta1 
 * Fixed party (parties v3.1.0) not working anymore
 * Fixed when plugins scoreboards not re-appeared after game end
-* Removed temp added scoreboard rewards
 * Fixed join maxplayers did not match the arena with highest player amount
+* Removed temp added scoreboard rewards
 
 ### 1.7.8 Release (15.04.2021 - 10.05.2021)
 * Added /mm join maxplayers which tries to get the arena with the highest amount of players
