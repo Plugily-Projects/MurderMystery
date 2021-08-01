@@ -1,6 +1,6 @@
 ![](https://images.plugily.xyz/banner/display.php?id=MurderMystery)
 
-# Murder Mystery [![](https://img.shields.io/badge/javadocs-latest-red.svg)](https://jd.plugily.xyz/apidocs/minecraft/murdermystery/) [![](https://img.shields.io/badge/wiki-click-blue.svg)](https://wiki.plajer.xyz/minecraft/murdermystery/index.php) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Plajer-Lair_MurderMystery&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=Plajer-Lair_MurderMystery) [![Discord](https://img.shields.io/discord/345628548716822530.svg?color=7289DA&label=discord)](https://discord.gg/UXzUdTP)
+# Murder Mystery [![](https://img.shields.io/badge/javadocs-latest-red.svg)](https://jd.plugily.xyz/apidocs/minecraft/murdermystery/) [![](https://img.shields.io/badge/wiki-click-blue.svg)](https://wiki.plajer.xyz/minecraft/murdermystery/index.php) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Plugily-Projects_MurderMystery&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=Plugily-Projects_MurderMystery) [![Discord](https://img.shields.io/discord/345628548716822530.svg?color=7289DA&label=discord)](https://discord.gg/UXzUdTP)
 Murder Mystery is a Minecraft minigame designed for small and big servers. This minigame is unique and very configurable, 100% free and open source! 
 
 Be the murderer and kill everyone in the game! Beware of the detective and armored innocents! As a detective you must kill the murderer and protect as much innocents as you can!
