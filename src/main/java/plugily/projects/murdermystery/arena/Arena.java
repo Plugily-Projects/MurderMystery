@@ -152,8 +152,6 @@ public class Arena extends BukkitRunnable {
     Debugger.performance("ArenaTask", "[PerformanceMonitor] [{0}] Running game task", getId());
     long start = System.currentTimeMillis();
 
-    boolean bossBarEnabled = ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1) && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED);
-
     switch(arenaState) {
       case WAITING_FOR_PLAYERS:
         if(plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BUNGEE_ENABLED)) {
@@ -167,7 +165,7 @@ public class Arena extends BukkitRunnable {
             break;
           }
         } else {
-          if(bossBarEnabled) {
+          if(gameBar != null) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
           }
           chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
@@ -188,20 +186,22 @@ public class Arena extends BukkitRunnable {
         int timer = getTimer();
         double startWaitingTime = plugin.getConfig().getDouble("Starting-Waiting-Time", 60);
 
-        if(bossBarEnabled) {
+        if(gameBar != null) {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Starting-In").replace("%time%", Integer.toString(timer)));
           gameBar.setProgress(timer / startWaitingTime);
         }
 
+        float exp = (float) (timer / startWaitingTime);
+
         for(Player player : players) {
-          player.setExp((float) (timer / startWaitingTime));
+          player.setExp(exp);
           player.setLevel(timer);
         }
 
         int minimumPlayers = getMinimumPlayers();
 
         if(!forceStart && players.size() < minimumPlayers) {
-          if(bossBarEnabled) {
+          if(gameBar != null) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
             gameBar.setProgress(1.0);
           }
@@ -242,7 +242,7 @@ public class Arena extends BukkitRunnable {
           Bukkit.getPluginManager().callEvent(new MMGameStartEvent(this));
           setArenaState(ArenaState.IN_GAME);
 
-          if(bossBarEnabled) {
+          if(gameBar != null) {
             gameBar.setProgress(1.0);
           }
 
@@ -319,14 +319,19 @@ public class Arena extends BukkitRunnable {
             if (i >= sortedMurdererArray.length)
               break;
 
-            Player murderer = ((User) sortedMurdererArray[i]).getPlayer();
-            setCharacter(CharacterType.MURDERER, murderer);
-            allMurderer.add(murderer);
-            plugin.getUserManager().getUser(murderer).setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
-            playersToSet.remove(murderer);
-            VersionUtils.sendTitles(murderer, chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
-                chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
-            detectiveChances.remove(sortedMurdererArray[i]);
+            User user = (User) sortedMurdererArray[i];
+            Player murderer = user.getPlayer();
+
+            if (murderer != null) {
+              setCharacter(CharacterType.MURDERER, murderer);
+              allMurderer.add(murderer);
+              user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
+              playersToSet.remove(murderer);
+              VersionUtils.sendTitles(murderer, chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
+                  chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
+            }
+
+            detectiveChances.remove(user);
           }
 
           //shuffling map to avoid the same detectives on the next round
@@ -342,10 +347,15 @@ public class Arena extends BukkitRunnable {
             if (i >= sortedDetArray.length)
                 break;
 
-            Player detective = ((User) sortedDetArray[i]).getPlayer();
+            User user = (User) sortedDetArray[i];
+
+            Player detective = user.getPlayer();
+            if (detective == null)
+              continue;
+
             setCharacter(CharacterType.DETECTIVE, detective);
             allDetectives.add(detective);
-            plugin.getUserManager().getUser(detective).setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
+            user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
             VersionUtils.sendTitles(detective, chatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"),
                 chatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
             playersToSet.remove(detective);
@@ -356,11 +366,13 @@ public class Arena extends BukkitRunnable {
           Debugger.debug("Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Players: Detectives = {4}, Murders = {5}",
               getId(), maxdetectives, maxmurderer, playersSize, allDetectives, allMurderer);
 
+          String innocentTitle = chatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title");
+          String innocentSubTitle = chatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle");
           for(Player p : playersToSet) {
-            VersionUtils.sendTitles(p, chatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title"),
-                chatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle"), 5, 40, 5);
+            VersionUtils.sendTitles(p, innocentTitle, innocentSubTitle, 5, 40, 5);
           }
-          if(bossBarEnabled) {
+
+          if(gameBar != null) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.In-Game-Info"));
           }
 
@@ -481,7 +493,7 @@ public class Arena extends BukkitRunnable {
           plugin.getServer().setWhitelist(false);
         }
         if(getTimer() <= 0) {
-          if(bossBarEnabled) {
+          if(gameBar != null) {
             gameBar.setTitle(chatManager.colorMessage("Bossbar.Game-Ended"));
           }
 
@@ -546,7 +558,7 @@ public class Arena extends BukkitRunnable {
             ArenaManager.joinAttempt(player, ArenaRegistry.getArenas().get(ArenaRegistry.getBungeeArena()));
           }
         }
-        if(bossBarEnabled) {
+        if(gameBar != null) {
           gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
         }
 

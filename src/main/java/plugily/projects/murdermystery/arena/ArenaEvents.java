@@ -176,7 +176,7 @@ public class ArenaEvents implements Listener {
         return;
       }
 
-      if(Role.isRole(Role.INNOCENT, player)) {
+      if(Role.isRole(Role.INNOCENT, player, arena)) {
         XSound.BLOCK_LAVA_POP.play(player.getLocation(), 1F, 2F);
         arena.removeBowHolo();
         e.getItem().remove();
@@ -227,7 +227,7 @@ public class ArenaEvents implements Listener {
     player.sendMessage(chatManager.colorMessage("In-Game.Messages.Picked-Up-Gold", player));
     plugin.getRewardsHandler().performReward(player, Reward.RewardType.GOLD_PICKUP);
 
-    if(Role.isRole(Role.ANY_DETECTIVE, player)) {
+    if(Role.isRole(Role.ANY_DETECTIVE, player, arena)) {
       ItemPosition.addItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, e.getItem().getItemStack().getAmount() * plugin.getConfig().getInt("Detective-Gold-Pick-Up-Arrows", 3)));
       return;
     }

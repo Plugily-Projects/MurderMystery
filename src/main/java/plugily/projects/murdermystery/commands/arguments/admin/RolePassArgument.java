@@ -89,7 +89,7 @@ public class RolePassArgument {
         if(role == Role.MURDERER) {
           sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Role-Pass.Change").replace("%amount%", Integer.toString(user.getStat(StatsStorage.StatisticType.MURDERER_PASS))).replace("%role%", Role.MURDERER.name()));
         } else {
-          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Role-Pass.Change").replace("%amount%", Integer.toString(user.getStat(StatsStorage.StatisticType.MURDERER_PASS))).replace("%role%", Role.DETECTIVE.name()));
+          sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("In-Game.Role-Pass.Change").replace("%amount%", Integer.toString(user.getStat(StatsStorage.StatisticType.DETECTIVE_PASS))).replace("%role%", Role.DETECTIVE.name()));
         }
       }
     });
