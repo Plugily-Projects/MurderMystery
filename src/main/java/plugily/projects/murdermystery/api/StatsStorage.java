@@ -68,7 +68,10 @@ public class StatsStorage {
         ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.getName());
         Map<UUID, Integer> column = new LinkedHashMap<>();
         while(set.next()) {
-          column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
+          try {
+            column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
+          } catch (IllegalArgumentException e) {
+          }
         }
         return column;
       } catch(SQLException e) {
@@ -85,7 +88,11 @@ public class StatsStorage {
       if(string.equals("data-version")) {
         continue;
       }
-      stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
+
+      try {
+        stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
+      } catch (IllegalArgumentException e) {
+      }
     }
     return SortUtils.sortByValue(stats);
   }

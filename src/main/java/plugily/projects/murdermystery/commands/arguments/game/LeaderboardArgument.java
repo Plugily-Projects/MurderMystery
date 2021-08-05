@@ -19,22 +19,14 @@
 package plugily.projects.murdermystery.commands.arguments.game;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import plugily.projects.murdermystery.ConfigPreferences;
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
 import plugily.projects.murdermystery.commands.arguments.data.CommandArgument;
 import plugily.projects.murdermystery.commands.completion.CompletableArgument;
 import plugily.projects.murdermystery.handlers.ChatManager;
-import plugily.projects.murdermystery.user.data.MysqlManager;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -87,33 +79,23 @@ public class LeaderboardArgument {
   }
 
   private void printLeaderboard(CommandSender sender, StatsStorage.StatisticType statisticType) {
-    java.util.Map<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
+    java.util.Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);
 
     sender.sendMessage(chatManager.colorMessage("Commands.Statistics.Header"));
 
-    String statistic = StringUtils.capitalize(statisticType.toString().toLowerCase().replace("_", " "));
-    Object[] array = stats.keySet().toArray();
-    UUID current = (UUID) array[array.length - 1];
+    String statistic = StringUtils.capitalize(statisticType.toString().toLowerCase().replace('_', ' '));
+    UUID[] array = stats.keySet().toArray(new UUID[0]);
 
-    for(int i = 0; i < 10; i++) {
-      try {
-        sender.sendMessage(formatMessage(statistic, Bukkit.getOfflinePlayer(current).getName(), i + 1, stats.remove(current)));
-      } catch(IndexOutOfBoundsException ex) {
-        sender.sendMessage(formatMessage(statistic, "Empty", i + 1, 0));
-      } catch(NullPointerException ex) {
-        if(registry.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-          try(Connection connection = registry.getPlugin().getMysqlDatabase().getConnection()) {
-            Statement statement = connection.createStatement();
-            ResultSet set = statement.executeQuery("SELECT name FROM " + ((MysqlManager) registry.getPlugin().getUserManager().getDatabase()).getTableName() + " WHERE UUID='" + current.toString() + "'");
-            if(set.next()) {
-              sender.sendMessage(formatMessage(statistic, set.getString(1), i + 1, stats.get(current)));
-              continue;
-            }
-          } catch(SQLException ignored) {
-            //it has failed second time, cannot continue
-          }
+    for(int i = 1; i <= 10; i++) {
+      if (array.length - i < 0) {
+        sender.sendMessage(formatMessage(statistic, "Empty", i, 0));
+      } else {
+        UUID current = array[array.length - i];
+        String name = registry.getPlugin().getUserManager().getDatabase().getPlayerName(current);
+        if (name == null) {
+          name = "Unknown Player";
         }
-        sender.sendMessage(formatMessage(statistic, "Unknown Player", i + 1, stats.get(current)));
+        sender.sendMessage(formatMessage(statistic, name, i, stats.get(current)));
       }
     }
   }

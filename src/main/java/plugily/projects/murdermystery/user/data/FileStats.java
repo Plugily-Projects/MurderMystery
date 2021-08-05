@@ -18,6 +18,8 @@
 
 package plugily.projects.murdermystery.user.data;
 
+import java.util.UUID;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
@@ -59,6 +61,11 @@ public class FileStats implements UserDatabase {
     for(StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
       user.setStat(stat, config.getInt(user.getUniqueId().toString() + "." + stat.getName(), 0));
     }
+  }
+
+  @Override
+  public String getPlayerName(UUID uuid) {
+    return plugin.getServer().getOfflinePlayer(uuid).getName();
   }
 
 }

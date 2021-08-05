@@ -32,6 +32,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.UUID;
 import java.util.logging.Level;
 
 /**
@@ -129,6 +130,15 @@ public class MysqlManager implements UserDatabase {
         e.printStackTrace();
       }
     });
+  }
+
+  @Override
+  public String getPlayerName(UUID uuid) {
+    try(Connection connection = database.getConnection(); Statement statement = connection.createStatement()) {
+      return statement.executeQuery("Select `name` FROM " + getTableName() + " WHERE UUID='" + uuid.toString() + "'").toString();
+    } catch(SQLException | NullPointerException e) {
+      return null;
+    }
   }
 
   public String getTableName() {

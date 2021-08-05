@@ -1,3 +1,6 @@
+### 1.8.0 Release (05.08.2021 - xx.xx.202x)
+* Improved leaderboard command
+
 ### 1.7.9 Release (30.05.2021 - 01.08.2021)
 * Added forcestart item
 * Added murderer and detective pass (Command and Item to activate)

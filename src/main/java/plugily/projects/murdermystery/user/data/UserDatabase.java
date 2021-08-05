@@ -18,6 +18,10 @@
 
 package plugily.projects.murdermystery.user.data;
 
+import java.util.UUID;
+
+import org.jetbrains.annotations.Nullable;
+
 import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.user.User;
 
@@ -49,5 +53,14 @@ public interface UserDatabase {
    * @param user user to load statistic for
    */
   void loadStatistics(User user);
+
+  /**
+   * Get the name of the player providing the UUID
+   *
+   * @param uuid the UUID
+   * @return the player's name
+   */
+  @Nullable
+  String getPlayerName(UUID uuid);
 
 }
