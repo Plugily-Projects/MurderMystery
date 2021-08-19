@@ -62,9 +62,12 @@ public class ArenaRegistry {
     if(p == null) {
       return null;
     }
+
+    java.util.UUID playerId = p.getUniqueId();
+
     for(Arena arena : arenas) {
       for(Player player : arena.getPlayers()) {
-        if(player.getUniqueId().equals(p.getUniqueId())) {
+        if(player.getUniqueId().equals(playerId)) {
           return arena;
         }
       }

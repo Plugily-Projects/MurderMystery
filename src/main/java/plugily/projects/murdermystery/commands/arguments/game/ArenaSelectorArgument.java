@@ -114,9 +114,14 @@ public class ArenaSelectorArgument implements Listener {
     return formatted;
   }
 
+  private String invTitle;
+
   @EventHandler
   public void onArenaSelectorMenuClick(InventoryClickEvent e) {
-    if(!ComplementAccessor.getComplement().getTitle(e.getView()).equals(chatManager.colorMessage("Arena-Selector.Inv-Title"))) {
+    if (invTitle == null)
+      invTitle = chatManager.colorMessage("Arena-Selector.Inv-Title");
+
+    if(!ComplementAccessor.getComplement().getTitle(e.getView()).equals(invTitle)) {
       return;
     }
     ItemStack currentItem = e.getCurrentItem();

@@ -18,6 +18,7 @@
 
 package plugily.projects.murdermystery.events.spectator;
 
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -39,6 +40,7 @@ import org.bukkit.event.player.PlayerShearEntityEvent;
 
 import plugily.projects.commonsbox.minecraft.compat.events.api.CBEntityPickupItemEvent;
 import plugily.projects.murdermystery.Main;
+import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 
 /**
@@ -128,22 +130,29 @@ public class SpectatorEvents implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onFoodLevelChange(FoodLevelChangeEvent event) {
-    if(event.getEntity() instanceof Player && plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
+    if(event.getEntityType() == EntityType.PLAYER && plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
       event.setCancelled(true);
     }
   }
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onDamage(EntityDamageEvent event) {
-    if(!(event.getEntity() instanceof Player)) {
+    if(event.getEntityType() != EntityType.PLAYER) {
       return;
     }
+
     Player player = (Player) event.getEntity();
-    if(!plugin.getUserManager().getUser(player).isSpectator() || !ArenaRegistry.isInArena(player)) {
+
+    if(!plugin.getUserManager().getUser(player).isSpectator()) {
       return;
     }
+
+    Arena playerArena = ArenaRegistry.getArena(player);
+    if (playerArena == null)
+      return;
+
     if(player.getLocation().getY() < 1) {
-      player.teleport(ArenaRegistry.getArena(player).getPlayerSpawnPoints().get(0));
+      player.teleport(playerArena.getPlayerSpawnPoints().get(0));
       event.setDamage(0);
     }
     event.setCancelled(true);
@@ -151,7 +160,7 @@ public class SpectatorEvents implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onDamageByBlock(EntityDamageByBlockEvent event) {
-    if(event.getEntity() instanceof Player && plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
+    if(event.getEntityType() == EntityType.PLAYER && plugin.getUserManager().getUser((Player) event.getEntity()).isSpectator()) {
       event.setCancelled(true);
     }
   }

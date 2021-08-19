@@ -23,6 +23,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -78,7 +79,7 @@ public class ArenaEvents implements Listener {
 
   @EventHandler
   public void onArmorStandEject(EntityDismountEvent e) {
-    if(!(e.getEntity() instanceof ArmorStand) || !"MurderMysteryArmorStand".equals(e.getEntity().getCustomName())) {
+    if(e.getEntityType() != EntityType.ARMOR_STAND || !"MurderMysteryArmorStand".equals(e.getEntity().getCustomName())) {
       return;
     }
     if(!(e.getDismounted() instanceof Player)) {
@@ -93,7 +94,7 @@ public class ArenaEvents implements Listener {
 
   @EventHandler
   public void onEntityDamage(EntityDamageEvent e) {
-    if(!(e.getEntity() instanceof Player)) {
+    if(e.getEntityType() != EntityType.PLAYER) {
       return;
     }
     Player victim = (Player) e.getEntity();
@@ -133,7 +134,7 @@ public class ArenaEvents implements Listener {
 
   @EventHandler
   public void onBowShot(EntityShootBowEvent e) {
-    if(!(e.getEntity() instanceof Player)) {
+    if(e.getEntityType() != EntityType.PLAYER) {
       return;
     }
     Player player = (Player) e.getEntity();
@@ -244,7 +245,7 @@ public class ArenaEvents implements Listener {
 
   @EventHandler
   public void onMurdererDamage(EntityDamageByEntityEvent e) {
-    if(!(e.getDamager() instanceof Player) || !(e.getEntity() instanceof Player)) {
+    if(!(e.getDamager() instanceof Player) || e.getEntityType() != EntityType.PLAYER) {
       return;
     }
     Player attacker = (Player) e.getDamager();
@@ -319,7 +320,7 @@ public class ArenaEvents implements Listener {
       e.setCancelled(true);
       e.getDamager().remove();
     }
-    if(!(e.getEntity() instanceof Player)) {
+    if(e.getEntityType() != EntityType.PLAYER) {
       return;
     }
     Player victim = (Player) e.getEntity();

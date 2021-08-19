@@ -257,8 +257,11 @@ public class Events implements Listener {
       return;
     }
     Arena arena = ArenaRegistry.getArena(event.getPlayer());
+    if (arena == null)
+      return;
+
     ItemStack itemStack = VersionUtils.getItemInHand(event.getPlayer());
-    if(arena == null || !Utils.isNamed(itemStack)) {
+    if(!Utils.isNamed(itemStack)) {
       return;
     }
     String key = plugin.getSpecialItemManager().getRelatedSpecialItem(itemStack).getName();
@@ -284,8 +287,6 @@ public class Events implements Listener {
       }
     }
   }
-
-
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onFoodLevelChange(FoodLevelChangeEvent event) {
