@@ -68,21 +68,26 @@ public class Utils {
   }
 
   public static void applyActionBarCooldown(Player p, int seconds) {
+    final int s = seconds * 20;
+
     new BukkitRunnable() {
       int ticks = 0;
 
       @Override
       public void run() {
         Arena arena = ArenaRegistry.getArena(p);
+
         if(arena == null || arena.getArenaState() != ArenaState.IN_GAME) {
           cancel();
         }
-        if(ticks >= seconds * 20) {
+
+        if(ticks >= s) {
           cancel();
         }
-        String progress = StringFormatUtils.getProgressBar(ticks, seconds * 20, 10, "■", ChatColor.COLOR_CHAR + "a", ChatColor.COLOR_CHAR + "c");
+
+        String progress = StringFormatUtils.getProgressBar(ticks, s, 10, "■", ChatColor.COLOR_CHAR + "a", ChatColor.COLOR_CHAR + "c");
         VersionUtils.sendActionBar(p, plugin.getChatManager().colorMessage("In-Game.Cooldown-Format", p)
-            .replace("%progress%", progress).replace("%time%", Double.toString((double) ((seconds * 20) - ticks) / 20)));
+            .replace("%progress%", progress).replace("%time%", Double.toString((double) (s - ticks) / 20)));
         ticks += 10;
       }
     }.runTaskTimer(plugin, 0, 10);

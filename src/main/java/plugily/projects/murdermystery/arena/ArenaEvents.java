@@ -173,12 +173,9 @@ public class ArenaEvents implements Listener {
     }
     e.setCancelled(true);
     if(arena.getBowHologram() != null && e.getItem().equals(arena.getBowHologram().getEntityItem())) {
-      if(plugin.getUserManager().getUser(player).isSpectator()) {
-        return;
-      }
-
-      if(Role.isRole(Role.INNOCENT, player, arena)) {
+      if(!plugin.getUserManager().getUser(player).isSpectator() && Role.isRole(Role.INNOCENT, player, arena)) {
         XSound.BLOCK_LAVA_POP.play(player.getLocation(), 1F, 2F);
+
         arena.removeBowHolo();
         e.getItem().remove();
 

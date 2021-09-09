@@ -24,7 +24,6 @@ import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
 import plugily.projects.murdermystery.utils.Debugger;
 import plugily.projects.murdermystery.utils.MessageUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -36,7 +35,7 @@ public class ConfigPreferences {
 
   private final Main plugin;
   private ItemStack murdererSword;
-  private final Map<Option, Boolean> options = new HashMap<>();
+  private final Map<Option, Boolean> options = new java.util.EnumMap<>(Option.class);
 
   public ConfigPreferences(Main plugin) {
     this.plugin = plugin;

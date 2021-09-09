@@ -121,8 +121,10 @@ public class SpecialBlockEvents implements Listener {
       return;
     }
 
-    VersionUtils.sendParticles("FIREWORKS_SPARK", e.getPlayer(), e.getClickedBlock().getLocation(), 10);
-    Item item = e.getClickedBlock().getWorld().dropItemNaturally(e.getClickedBlock().getLocation().clone().add(0, 1, 0), new ItemStack(Material.POTION, 1));
+    org.bukkit.Location blockLoc = e.getClickedBlock().getLocation();
+
+    VersionUtils.sendParticles("FIREWORKS_SPARK", e.getPlayer(), blockLoc, 10);
+    Item item = blockLoc.getWorld().dropItemNaturally(blockLoc.clone().add(0, 1, 0), new ItemStack(Material.POTION, 1));
     item.setPickupDelay(10000);
     Bukkit.getScheduler().runTaskLater(plugin, item::remove, 20);
     user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, localGold - 1);
@@ -168,12 +170,15 @@ public class SpecialBlockEvents implements Listener {
     if(item.getType() != XMaterial.POTION.parseMaterial() || !ItemUtils.isItemStackNamed(item)) {
       return;
     }
-    Arena arena = ArenaRegistry.getArena(e.getPlayer());
-    if(arena == null) {
+
+    if(ArenaRegistry.getArena(e.getPlayer()) == null) {
       return;
     }
+
+    String itemDisplayName = ComplementAccessor.getComplement().getDisplayName(item.getItemMeta());
+
     for(MysteryPotion potion : MysteryPotionRegistry.getMysteryPotions()) {
-      if(ComplementAccessor.getComplement().getDisplayName(item.getItemMeta()).equals(potion.getName())) {
+      if(itemDisplayName.equals(potion.getName())) {
         e.setCancelled(true);
         e.getPlayer().sendMessage(potion.getSubtitle());
         VersionUtils.sendTitles(e.getPlayer(), "", potion.getSubtitle(), 5, 40, 5);

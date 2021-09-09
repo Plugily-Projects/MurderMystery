@@ -107,10 +107,14 @@ public class PrayerRegistry {
         ItemPosition.setItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Prayer-Arrows", 2)));
         break;
       case DETECTIVE_REVELATION:
-        Player characterType = arena.getCharacter(Arena.CharacterType.DETECTIVE);
+        Player characterType = null;
 
-        if (characterType == null) {
-          characterType = arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE);
+        if (arena != null) {
+          characterType = arena.getCharacter(Arena.CharacterType.DETECTIVE);
+
+          if (characterType == null) {
+            characterType = arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE);
+          }
         }
 
         String charName = characterType == null ? "????" : characterType.getName();
