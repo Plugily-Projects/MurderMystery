@@ -40,6 +40,7 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
@@ -58,6 +59,7 @@ import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaManager;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
+import plugily.projects.murdermystery.arena.ArenaState;
 import plugily.projects.murdermystery.arena.ArenaUtils;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.commands.arguments.game.RoleSelectorArgument;
@@ -235,12 +237,25 @@ public class Events implements Listener {
 
   @EventHandler
   public void onInGameInteract(PlayerInteractEvent event) {
-    Arena arena = ArenaRegistry.getArena(event.getPlayer());
-    if(arena == null || event.getClickedBlock() == null) {
+    if (event.getClickedBlock() == null || ArenaRegistry.getArena(event.getPlayer()) == null) {
       return;
     }
-    if(event.getClickedBlock().getType() == XMaterial.PAINTING.parseMaterial() || event.getClickedBlock().getType() == XMaterial.FLOWER_POT.parseMaterial()) {
+
+    org.bukkit.Material type = event.getClickedBlock().getType();
+
+    if(type == XMaterial.PAINTING.parseMaterial() || type == XMaterial.FLOWER_POT.parseMaterial()) {
       event.setCancelled(true);
+    }
+  }
+
+  @EventHandler
+  public void onWeatherChange(WeatherChangeEvent event) {
+    for (Arena arena : ArenaRegistry.getArenas()) {
+      if (arena.getArenaState() != ArenaState.WAITING_FOR_PLAYERS && !arena.getPlayerSpawnPoints().isEmpty()
+          && arena.getPlayerSpawnPoints().get(0).getWorld() == event.getWorld()) {
+        event.setCancelled(true);
+        break;
+      }
     }
   }
 
