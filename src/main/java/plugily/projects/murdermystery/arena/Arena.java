@@ -233,8 +233,10 @@ public class Arena extends BukkitRunnable {
         }
 
         if(!hideChances) {
+          String message = chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Role-Chances-Action-Bar");
+
           for(Player p : players) {
-            VersionUtils.sendActionBar(p, formatRoleChance(plugin.getUserManager().getUser(p), totalMurderer, totalDetective));
+            VersionUtils.sendActionBar(p, formatRoleChance(message, plugin.getUserManager().getUser(p), totalMurderer, totalDetective));
           }
         }
 
@@ -577,8 +579,7 @@ public class Arena extends BukkitRunnable {
             currentTimeMillis() - start);
   }
 
-  private String formatRoleChance(User user, int murdererPts, int detectivePts) throws NumberFormatException {
-    String message = chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Role-Chances-Action-Bar");
+  public String formatRoleChance(String message, User user, int murdererPts, int detectivePts) {
     message = StringUtils.replace(message, "%murderer_chance%", NumberUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER) / (double) murdererPts) * 100.0, 2) + "%");
     message = StringUtils.replace(message, "%detective_chance%", NumberUtils.round(((double) user.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE) / (double) detectivePts) * 100.0, 2) + "%");
     return message;
@@ -643,6 +644,10 @@ public class Arena extends BukkitRunnable {
 
   public void setForceStart(boolean forceStart) {
     this.forceStart = forceStart;
+  }
+
+  public boolean isHideChances() {
+    return hideChances;
   }
 
   public ScoreboardManager getScoreboardManager() {

@@ -171,6 +171,19 @@ public class ScoreboardManager {
     formattedLine = StringUtils.replace(formattedLine, "%MAX_PLAYERS%", Integer.toString(arena.getMaximumPlayers()));
     formattedLine = StringUtils.replace(formattedLine, "%MIN_PLAYERS%", Integer.toString(arena.getMinimumPlayers()));
 
+    if (!arena.isHideChances()) {
+      int totalMurderer = 0;
+      int totalDetective = 0;
+
+      for(Player p : arena.getPlayers()) {
+        User us = plugin.getUserManager().getUser(p);
+        totalMurderer += us.getStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER);
+        totalDetective += us.getStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE);
+      }
+
+      formattedLine = arena.formatRoleChance(formattedLine, user, totalMurderer, totalDetective);
+    }
+
     if (arena.isDetectiveDead()) {
       if(!arena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
         formattedLine = StringUtils.replace(formattedLine, "%DETECTIVE_STATUS%", chatManager.colorMessage("Scoreboard.Detective-Died-No-Bow"));
