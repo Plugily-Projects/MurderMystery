@@ -22,8 +22,6 @@ import org.bukkit.entity.Player;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaRegistry;
 
-import java.util.Arrays;
-
 /**
  * @author Plajer
  * <p>
@@ -114,6 +112,8 @@ public enum Role {
     return isAnyRole(player, ArenaRegistry.getArena(player));
   }
 
+  private static final java.util.stream.Stream<Role> roles = java.util.Arrays.stream(Role.values());
+
   /**
    * Checks whether player is playing a role or not
    *
@@ -122,6 +122,6 @@ public enum Role {
    * @return true if is playing one role, false otherwise
    */
   public static boolean isAnyRole(Player player, Arena arena) {
-    return arena != null && Arrays.stream(Role.values()).anyMatch(role -> isRole(role, player, arena));
+    return arena != null && roles.anyMatch(role -> isRole(role, player, arena));
   }
 }

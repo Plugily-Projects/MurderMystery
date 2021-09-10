@@ -50,14 +50,19 @@ public class BowTrailsHandler implements Listener {
     if(!(event.getEntity() instanceof Player && event.getProjectile() instanceof Arrow)) {
       return;
     }
-    Player player = (Player) event.getEntity();
+
     Entity projectile = event.getProjectile();
-    if(!ArenaRegistry.isInArena(player) || projectile.isDead() || projectile.isOnGround()) {
+
+    if(projectile.isDead() || projectile.isOnGround()) {
       return;
     }
-    if(!plugin.getTrailsManager().gotAnyTrails(player)) {
+
+    Player player = (Player) event.getEntity();
+
+    if(!ArenaRegistry.isInArena(player) || !plugin.getTrailsManager().gotAnyTrails(player)) {
       return;
     }
+
     Trail trail = plugin.getTrailsManager().getRandomTrail(player);
     Debugger.debug("Spawning particle with perm {0} for player {1}", trail.getPermission(), player.getName());
     new BukkitRunnable() {

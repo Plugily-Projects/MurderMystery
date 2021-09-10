@@ -116,7 +116,7 @@ public class Arena extends BukkitRunnable {
       arenaOptions.put(option, option.getDefaultValue());
     }
     if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_9_R1) && plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-      gameBar = Bukkit.createBossBar(chatManager.colorMessage("Bossbar.Main-Title"), BarColor.BLUE, BarStyle.SOLID);
+      gameBar = Bukkit.createBossBar(chatManager.colorMessage("Bossbar.Main-Title", null), BarColor.BLUE, BarStyle.SOLID);
     }
     scoreboardManager = new ScoreboardManager(this);
   }
@@ -166,7 +166,7 @@ public class Arena extends BukkitRunnable {
           }
         } else {
           if(gameBar != null) {
-            gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
+            gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players", null));
           }
           chatManager.broadcast(this, chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Enough-Players-To-Start"));
           setArenaState(ArenaState.STARTING);
@@ -187,7 +187,7 @@ public class Arena extends BukkitRunnable {
         double startWaitingTime = plugin.getConfig().getDouble("Starting-Waiting-Time", 60);
 
         if(gameBar != null) {
-          gameBar.setTitle(chatManager.colorMessage("Bossbar.Starting-In").replace("%time%", Integer.toString(timer)));
+          gameBar.setTitle(chatManager.colorMessage("Bossbar.Starting-In", null).replace("%time%", Integer.toString(timer)));
           gameBar.setProgress(timer / startWaitingTime);
         }
 
@@ -202,7 +202,7 @@ public class Arena extends BukkitRunnable {
 
         if(!forceStart && players.size() < minimumPlayers) {
           if(gameBar != null) {
-            gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
+            gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players", null));
             gameBar.setProgress(1.0);
           }
 
@@ -233,7 +233,7 @@ public class Arena extends BukkitRunnable {
         }
 
         if(!hideChances) {
-          String message = chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Role-Chances-Action-Bar");
+          String message = chatManager.colorMessage("In-Game.Messages.Lobby-Messages.Role-Chances-Action-Bar", null);
 
           for(Player p : players) {
             VersionUtils.sendActionBar(p, formatRoleChance(message, plugin.getUserManager().getUser(p), totalMurderer, totalDetective));
@@ -317,6 +317,9 @@ public class Arena extends BukkitRunnable {
 
           Object[] sortedMurdererArray = sortedMurderer.keySet().toArray();
 
+          String murdererTitle = chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title", null);
+          String murdererSubTitle = chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle", null);
+
           for(int i = 0; i < maxmurderer; i++) {
             if (i >= sortedMurdererArray.length)
               break;
@@ -329,8 +332,7 @@ public class Arena extends BukkitRunnable {
               allMurderer.add(murderer);
               user.setStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 1);
               playersToSet.remove(murderer);
-              VersionUtils.sendTitles(murderer, chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Title"),
-                  chatManager.colorMessage("In-Game.Messages.Role-Set.Murderer-Subtitle"), 5, 40, 5);
+              VersionUtils.sendTitles(murderer, murdererTitle, murdererSubTitle, 5, 40, 5);
             }
 
             detectiveChances.remove(user);
@@ -345,6 +347,9 @@ public class Arena extends BukkitRunnable {
 
           Object[] sortedDetArray = sortedDetective.keySet().toArray();
 
+          String detectiveTitle = chatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title", null);
+          String detectiveSubTitle = chatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle", null);
+
           for(int i = 0; i < maxdetectives; i++) {
             if (i >= sortedDetArray.length)
                 break;
@@ -358,8 +363,9 @@ public class Arena extends BukkitRunnable {
             setCharacter(CharacterType.DETECTIVE, detective);
             allDetectives.add(detective);
             user.setStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 1);
-            VersionUtils.sendTitles(detective, chatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Title"),
-                chatManager.colorMessage("In-Game.Messages.Role-Set.Detective-Subtitle"), 5, 40, 5);
+
+            VersionUtils.sendTitles(detective, detectiveTitle, detectiveSubTitle, 5, 40, 5);
+
             playersToSet.remove(detective);
             detective.getInventory().setHeldItemSlot(0);
             ItemPosition.setItem(detective, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
@@ -368,14 +374,14 @@ public class Arena extends BukkitRunnable {
           Debugger.debug("Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Players: Detectives = {4}, Murders = {5}",
               getId(), maxdetectives, maxmurderer, playersSize, allDetectives, allMurderer);
 
-          String innocentTitle = chatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title");
-          String innocentSubTitle = chatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle");
+          String innocentTitle = chatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Title", null);
+          String innocentSubTitle = chatManager.colorMessage("In-Game.Messages.Role-Set.Innocent-Subtitle", null);
           for(Player p : playersToSet) {
             VersionUtils.sendTitles(p, innocentTitle, innocentSubTitle, 5, 40, 5);
           }
 
           if(gameBar != null) {
-            gameBar.setTitle(chatManager.colorMessage("Bossbar.In-Game-Info"));
+            gameBar.setTitle(chatManager.colorMessage("Bossbar.In-Game-Info", null));
           }
 
           // Load and append special blocks hologram
@@ -435,8 +441,9 @@ public class Arena extends BukkitRunnable {
 
         if(currentTimer == 30 || currentTimer == 60) {
           String strTimer = Integer.toString(currentTimer);
-          String title = chatManager.colorMessage("In-Game.Messages.Seconds-Left-Title").replace("%time%", strTimer);
-          String subtitle = chatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle").replace("%time%", strTimer);
+          String title = chatManager.colorMessage("In-Game.Messages.Seconds-Left-Title", null).replace("%time%", strTimer);
+          String subtitle = chatManager.colorMessage("In-Game.Messages.Seconds-Left-Subtitle", null).replace("%time%", strTimer);
+
           for(Player p : players) {
             VersionUtils.sendTitles(p, title, subtitle, 5, 40, 5);
           }
@@ -453,9 +460,9 @@ public class Arena extends BukkitRunnable {
         } else {
           //winner check
           if(playersLeft.size() == aliveMurderer()) {
-            String loseTitle = chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose");
-            String murdererKill = chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone");
-            String titleWin = chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win");
+            String loseTitle = chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Lose", null);
+            String murdererKill = chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Subtitles.Murderer-Kill-Everyone", null);
+            String titleWin = chatManager.colorMessage("In-Game.Messages.Game-End-Messages.Titles.Win", null);
 
             for(Player p : players) {
               VersionUtils.sendTitles(p, loseTitle, murdererKill, 5, 40, 5);
@@ -496,7 +503,7 @@ public class Arena extends BukkitRunnable {
         }
         if(getTimer() <= 0) {
           if(gameBar != null) {
-            gameBar.setTitle(chatManager.colorMessage("Bossbar.Game-Ended"));
+            gameBar.setTitle(chatManager.colorMessage("Bossbar.Game-Ended", null));
           }
 
           for(Player player : new ArrayList<>(players)) {
@@ -561,7 +568,7 @@ public class Arena extends BukkitRunnable {
           }
         }
         if(gameBar != null) {
-          gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players"));
+          gameBar.setTitle(chatManager.colorMessage("Bossbar.Waiting-For-Players", null));
         }
 
         if(goldVisuals) {
@@ -967,11 +974,11 @@ public class Arena extends BukkitRunnable {
 
     switch(block.getSpecialBlockType()) {
       case MYSTERY_CAULDRON:
-        block.setArmorStandHologram(new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()), chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram")));
+        block.setArmorStandHologram(new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()), chatManager.colorMessage("In-Game.Messages.Special-Blocks.Cauldron-Hologram", null)));
         break;
       case PRAISE_DEVELOPER:
         ArmorStandHologram prayer = new ArmorStandHologram(Utils.getBlockCenter(block.getLocation()));
-        for(String str : chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram").split(";")) {
+        for(String str : chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praise-Hologram", null).split(";")) {
           prayer.appendLine(str);
         }
         block.setArmorStandHologram(prayer);

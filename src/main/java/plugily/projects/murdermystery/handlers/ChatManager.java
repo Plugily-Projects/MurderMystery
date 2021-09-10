@@ -69,11 +69,13 @@ public class ChatManager {
     return ChatColor.translateAlternateColorCodes('&', message);
   }
 
-  public String colorMessage(String message, Player player) {
-    String returnString = LanguageManager.getLanguageMessage(message);
+  public String colorMessage(String path, Player player) {
+    String returnString = LanguageManager.getLanguageMessage(path);
+
     if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
       returnString = PlaceholderAPI.setPlaceholders(player, returnString);
     }
+
     return colorRawMessage(returnString);
   }
 

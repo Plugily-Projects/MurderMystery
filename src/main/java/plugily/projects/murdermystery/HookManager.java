@@ -57,12 +57,10 @@ public class HookManager {
   }
 
   public boolean isFeatureEnabled(HookFeature feature) {
-    Boolean b = hooks.get(feature);
-    return b != null && b;
+    return hooks.getOrDefault(feature, false);
   }
 
   public enum HookFeature {
-    //todo hidden name tags hook
     CORPSES(Hook.CORPSE_REBORN);
 
     private final Hook[] requiredHooks;

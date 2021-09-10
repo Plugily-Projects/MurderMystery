@@ -43,29 +43,40 @@ public class SetupUtilities {
   }
 
   public String isOptionDone(String path) {
-    if(config.isSet(path)) {
-      return chatManager.colorRawMessage("&a&l✔ Completed &7(value: &8" + config.getString(path) + "&7)");
+    String option = config.getString(path);
+
+    if(option != null) {
+      return chatManager.colorRawMessage("&a&l✔ Completed &7(value: &8" + option + "&7)");
     }
+
     return chatManager.colorRawMessage("&c&l✘ Not Completed");
   }
 
   public String isOptionDoneList(String path, int minimum) {
-    if(config.isSet(path)) {
-      if(config.getStringList(path).size() < minimum) {
+    int listSize = config.getStringList(path).size();
+
+    if(listSize != 0) {
+      if(listSize < minimum) {
         return chatManager.colorRawMessage("&c&l✘ Not Completed | &cPlease add more spawns");
       }
-      return chatManager.colorRawMessage("&a&l✔ Completed &7(value: &8" + config.getStringList(path).size() + "&7)");
+
+      return chatManager.colorRawMessage("&a&l✔ Completed &7(value: &8" + listSize + "&7)");
     }
+
     return chatManager.colorRawMessage("&c&l✘ Not Completed");
   }
 
   public String isOptionDoneBool(String path) {
-    if(config.isSet(path)) {
-      if(Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(LocationSerializer.getLocation(config.getString(path)))) {
+    String option = config.getString(path);
+
+    if(option != null) {
+      if(Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(LocationSerializer.getLocation(option))) {
         return chatManager.colorRawMessage("&c&l✘ Not Completed");
       }
+
       return chatManager.colorRawMessage("&a&l✔ Completed");
     }
+
     return chatManager.colorRawMessage("&c&l✘ Not Completed");
   }
 

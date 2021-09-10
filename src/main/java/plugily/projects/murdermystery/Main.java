@@ -293,7 +293,7 @@ public class Main extends JavaPlugin {
 
   private void setupFiles() {
     for(String fileName : Arrays.asList("arenas", "bungee", "rewards", "stats", "special_items", "mysql", "specialblocks")) {
-      File file = new File(getDataFolder() + File.separator + fileName + ".yml");
+      File file = new File(getDataFolder(), fileName + ".yml");
       if(!file.exists()) {
         saveResource(fileName + ".yml", false);
       }

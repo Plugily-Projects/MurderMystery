@@ -23,17 +23,16 @@ import java.util.stream.Collectors;
 
 public class RoleSelectorArgument implements Listener {
 
-
   public RoleSelectorArgument(ArgumentsRegistry registry) {
     registry.mapArgument("murdermystery", new LabeledCommandArgument("roleselector", "murdermystery.roleselector", CommandArgument.ExecutorType.PLAYER,
         new LabelData("/mm roleselector", "/mm roleselector", "&7Select a role\n&6Permission: &7murdermystery.roleselector")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
-        if(!Utils.checkIsInGameInstance(player)) {
-          return;
+
+        if(Utils.checkIsInGameInstance(player)) {
+          openRolePassMenu(player, registry.getPlugin());
         }
-        openRolePassMenu((Player) sender, registry.getPlugin());
       }
     });
   }

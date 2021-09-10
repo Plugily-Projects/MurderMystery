@@ -54,7 +54,6 @@ import java.util.Map;
 public class CorpseHandler implements Listener {
 
   private final Main plugin;
-  private final ChatManager chatManager;
   private Corpses.CorpseData lastSpawnedCorpse;
 
   private final Map<String, String> registeredLastWords = new HashMap<>();
@@ -62,7 +61,6 @@ public class CorpseHandler implements Listener {
 
   public CorpseHandler(Main plugin) {
     this.plugin = plugin;
-    chatManager = plugin.getChatManager();
     //run bit later than hook manager to ensure it's not null
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       if(plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
@@ -116,7 +114,7 @@ public class CorpseHandler implements Listener {
 
   private ArmorStandHologram getLastWordsHologram(Player player) {
     ArmorStandHologram hologram = new ArmorStandHologram(player.getLocation());
-    hologram.appendLine(chatManager.colorMessage("In-Game.Messages.Corpse-Last-Words", player).replace("%player%", player.getName()));
+    hologram.appendLine(plugin.getChatManager().colorMessage("In-Game.Messages.Corpse-Last-Words", player).replace("%player%", player.getName()));
     hologram.appendLine(plugin.getLastWordsManager().getRandomLastWord(player));
     return hologram;
   }
