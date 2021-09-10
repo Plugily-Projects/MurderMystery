@@ -41,7 +41,7 @@ import java.util.Set;
  */
 public class DeleteArgument {
 
-  private final Set<CommandSender> confirmations = new HashSet<>();
+  private Set<CommandSender> confirmations;
 
   public DeleteArgument(ArgumentsRegistry registry, ChatManager chatManager) {
     registry.mapArgument("murdermysteryadmin", new LabeledCommandArgument("delete", "murdermystery.admin.delete", CommandArgument.ExecutorType.PLAYER,
@@ -53,22 +53,31 @@ public class DeleteArgument {
           sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Type-Arena-Name"));
           return;
         }
+
         Arena arena = ArenaRegistry.getArena(args[1]);
         if(arena == null) {
           sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.No-Arena-Like-That"));
           return;
         }
-        if(!confirmations.contains(sender)) {
-          confirmations.add(sender);
-          Bukkit.getScheduler().runTaskLater(registry.getPlugin(), () -> confirmations.remove(sender), 20 * 10);
-          sender.sendMessage(chatManager.getPrefix() + chatManager.colorRawMessage("&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"));
-          return;
+
+        if (registry.getPlugin().getConfig().getBoolean("Deleting-Arena-Needs-Confirmation", true)) {
+          if (confirmations == null)
+            confirmations = new HashSet<>();
+
+          if(!confirmations.remove(sender)) {
+            confirmations.add(sender);
+            Bukkit.getScheduler().runTaskLater(registry.getPlugin(), () -> confirmations.remove(sender), 20 * 10);
+            sender.sendMessage(chatManager.getPrefix() + chatManager.colorRawMessage("&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"));
+            return;
+          }
         }
-        confirmations.remove(sender);
+
         ArenaManager.stopGame(true, arena);
+
         FileConfiguration config = ConfigUtils.getConfig(registry.getPlugin(), "arenas");
         config.set("instances." + args[1], null);
         ConfigUtils.saveConfig(registry.getPlugin(), config, "arenas");
+
         ArenaRegistry.unregisterArena(arena);
         sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Removed-Game-Instance"));
       }

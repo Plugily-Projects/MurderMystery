@@ -34,7 +34,7 @@ import java.io.File;
 @SuppressWarnings("deprecation")
 public class LanguageMigrator {
 
-  public static final int CONFIG_FILE_VERSION = 23;
+  public static final int CONFIG_FILE_VERSION = 24;
   public static final int LANGUAGE_FILE_VERSION = 8;
   private final Main plugin;
 
@@ -210,6 +210,11 @@ public class LanguageMigrator {
               "  - \"block_crack\"\r\n" +
               "  - \"item_crack\"\r\n" +
               "  - \"block_dust\"\r\n");
+          break;
+        case 23:
+          MigratorUtils.addNewLines(file, "\r\n# Should the /mma delete command awaits the confirmation to delete the arena?\r\n"
+              + "Deleting-Arena-Needs-Confirmation: true\r\n");
+          break;
         default:
           break;
       }

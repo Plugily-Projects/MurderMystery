@@ -3,6 +3,7 @@
 * Added murderer and detective chance placeholders to scoreboard
 * Now weather changing will be cancelled when a game is running
 * Now users can use placeholderapi placeholders in bossbar, titles, without player specified
+* Added option to determine if the deletion of arena needs confirmation or not
 
 ### 1.7.9 Release (30.05.2021 - 01.08.2021)
 * Added forcestart item

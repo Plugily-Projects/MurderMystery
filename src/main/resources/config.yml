@@ -145,6 +145,9 @@ Enable-Short-Commands: false
 # Should /mm leave command be blocked?
 Disable-Leave-Command: false
 
+# Should the /mma delete command awaits the confirmation to delete the arena?
+Deleting-Arena-Needs-Confirmation: true
+
 # Should players get no fall damage?
 Disable-Fall-Damage: false
 
@@ -203,6 +206,6 @@ Blacklisted-Trails:
   - "block_dust"
 
 # Don't modify.
-Version: 23
+Version: 24
 
 # No way! You've reached the end! But... where's the dragon!?
