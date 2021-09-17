@@ -22,6 +22,7 @@ import com.alessiodp.parties.api.Parties;
 import com.alessiodp.parties.api.interfaces.PartiesAPI;
 import com.alessiodp.parties.api.interfaces.Party;
 import com.alessiodp.parties.api.interfaces.PartyPlayer;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -33,31 +34,26 @@ import org.bukkit.entity.Player;
 public class PartiesPartyHandlerImpl implements PartyHandler {
 
   @Override
-  public boolean isPlayerInParty(Player player) {
-    PartiesAPI api = Parties.getApi();
-    PartyPlayer partyPlayer = api.getPartyPlayer(player.getUniqueId());
-    if(partyPlayer == null) return false;
-
-    Party party = api.getParty(partyPlayer.getPartyId());
-    return party != null && party.getMembers().size() > 1;
-  }
-
-  @Override
   public GameParty getParty(Player player) {
     PartiesAPI api = Parties.getApi();
     PartyPlayer partyPlayer = api.getPartyPlayer(player.getUniqueId());
+
+    if (partyPlayer == null)
+      return null;
+
     Party party = api.getParty(partyPlayer.getPartyId());
+    if (party == null || party.getMembers().size() <= 1)
+      return null;
 
-    java.util.List<Player> players = new java.util.ArrayList<>();
+    Player leader = Bukkit.getPlayer(party.getLeader());
+    if (leader == null)
+      return null;
 
-    for (PartyPlayer localPlayer : party.getOnlineMembers(true)) {
-      Player pl = Bukkit.getPlayer(localPlayer.getPlayerUUID());
+    java.util.List<Player> members = party.getOnlineMembers(true).stream()
+        .map(localPlayer -> Bukkit.getPlayer(localPlayer.getPlayerUUID()))
+        .filter(java.util.Objects::nonNull).collect(java.util.stream.Collectors.toList());
 
-      if (pl != null)
-        players.add(pl);
-    }
-
-    return new GameParty(players, Bukkit.getPlayer(party.getLeader()));
+    return new GameParty(members, leader);
   }
 
   @Override

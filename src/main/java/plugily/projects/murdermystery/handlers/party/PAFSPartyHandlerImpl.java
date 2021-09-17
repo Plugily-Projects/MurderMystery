@@ -18,9 +18,11 @@
 
 package plugily.projects.murdermystery.handlers.party;
 
-import de.simonsator.partyandfriends.api.pafplayers.OnlinePAFPlayer;
 import de.simonsator.partyandfriends.api.party.PartyManager;
 import de.simonsator.partyandfriends.api.party.PlayerParty;
+
+import java.util.stream.Collectors;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -32,25 +34,20 @@ import org.bukkit.entity.Player;
 public class PAFSPartyHandlerImpl implements PartyHandler {
 
   @Override
-  public boolean isPlayerInParty(Player player) {
-    return PartyManager.getInstance().getParty(player.getUniqueId()) != null;
-  }
-
-  @Override
   public GameParty getParty(Player player) {
-    PartyManager api = PartyManager.getInstance();
-    PlayerParty party = api.getParty(player.getUniqueId());
+    PlayerParty party = PartyManager.getInstance().getParty(player.getUniqueId());
+    if (party == null)
+      return null;
 
-    java.util.List<Player> players = new java.util.ArrayList<>();
+    Player leader = Bukkit.getPlayer(party.getLeader().getUniqueId());
+    if (leader == null)
+      return null;
 
-    for (OnlinePAFPlayer localPlayer : party.getAllPlayers()) {
-      Player pl = Bukkit.getPlayer(localPlayer.getUniqueId());
+    java.util.List<Player> allMembers = party.getAllPlayers().stream()
+        .map(localPlayer -> Bukkit.getPlayer(localPlayer.getUniqueId()))
+        .filter(java.util.Objects::nonNull).collect(Collectors.toList());
 
-      if (pl != null)
-        players.add(pl);
-    }
-
-    return new GameParty(players, Bukkit.getPlayer(party.getLeader().getUniqueId()));
+    return new GameParty(allMembers, leader);
   }
 
   @Override

@@ -22,6 +22,7 @@ import de.simonsator.partyandfriends.spigot.api.pafplayers.PAFPlayer;
 import de.simonsator.partyandfriends.spigot.api.pafplayers.PAFPlayerManager;
 import de.simonsator.partyandfriends.spigot.api.party.PartyManager;
 import de.simonsator.partyandfriends.spigot.api.party.PlayerParty;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -33,26 +34,24 @@ import org.bukkit.entity.Player;
 public class PAFBPartyHandlerImpl implements PartyHandler {
 
   @Override
-  public boolean isPlayerInParty(Player player) {
-    return PartyManager.getInstance().getParty(PAFPlayerManager.getInstance().getPlayer(player.getUniqueId())) != null;
-  }
-
-  @Override
   public GameParty getParty(Player player) {
-    PartyManager api = PartyManager.getInstance();
     PAFPlayer partyPlayer = PAFPlayerManager.getInstance().getPlayer(player.getUniqueId());
-    PlayerParty party = api.getParty(partyPlayer);
+    if (partyPlayer == null)
+      return null;
 
-    java.util.List<Player> players = new java.util.ArrayList<>();
+    PlayerParty party = PartyManager.getInstance().getParty(partyPlayer);
+    if (party == null)
+      return null;
 
-    for (PAFPlayer localPlayer : party.getAllPlayers()) {
-      Player pl = Bukkit.getPlayer(localPlayer.getUniqueId());
+    Player leader = Bukkit.getPlayer(party.getLeader().getUniqueId());
+    if (leader == null)
+      return null;
 
-      if (pl != null)
-        players.add(pl);
-    }
+    java.util.List<Player> allMembers = party.getAllPlayers().stream()
+        .map(localPlayer -> Bukkit.getPlayer(localPlayer.getUniqueId()))
+        .filter(java.util.Objects::nonNull).collect(java.util.stream.Collectors.toList());
 
-    return new GameParty(players, Bukkit.getPlayer(party.getLeader().getUniqueId()));
+    return new GameParty(allMembers, leader);
   }
 
   @Override

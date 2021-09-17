@@ -43,11 +43,6 @@ public class PartySupportInitializer {
     }
     partyHandler = new PartyHandler() {
       @Override
-      public boolean isPlayerInParty(Player player) {
-        return false;
-      }
-
-      @Override
       public GameParty getParty(Player player) {
         return null;
       }

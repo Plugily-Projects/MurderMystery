@@ -27,8 +27,6 @@ import org.bukkit.entity.Player;
  */
 public interface PartyHandler {
 
-  boolean isPlayerInParty(Player player);
-
   GameParty getParty(Player player);
 
   boolean partiesSupported();
