@@ -122,6 +122,12 @@ public enum Role {
    * @return true if is playing one role, false otherwise
    */
   public static boolean isAnyRole(Player player, Arena arena) {
-    return arena != null && Arrays.stream(Role.values()).anyMatch(role -> isRole(role, player, arena));
+    if (arena == null) return false;
+    for (Role role : values()) {
+      if (isRole(role, player, arena)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
