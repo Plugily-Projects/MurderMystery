@@ -120,7 +120,7 @@ public class Events implements Listener {
 
     attackerUser.setCooldown("sword_shoot", swordFlyCooldown);
 
-    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_9_R1)) {
+    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_10_R1)) {
       attackerUser.setCooldown("sword_attack", (plugin.getConfig().getInt("Murderer-Sword-Attack-Cooldown", 1)));
     } else {
       attacker.setCooldown(plugin.getConfigPreferences().getMurdererSword().getType(), 20 * (plugin.getConfig().getInt("Murderer-Sword-Attack-Cooldown", 1)));

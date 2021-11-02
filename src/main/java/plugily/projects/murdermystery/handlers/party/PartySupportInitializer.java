@@ -31,7 +31,6 @@ import plugily.projects.murdermystery.Main;
 public class PartySupportInitializer {
 
   public PartyHandler initialize(Main plugin) {
-    PartyHandler partyHandler;
     if(!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_PARTIES)) {
       if(Bukkit.getServer().getPluginManager().getPlugin("Parties") != null) {
         return new PartiesPartyHandlerImpl();
@@ -41,23 +40,23 @@ public class PartySupportInitializer {
         return new PAFSPartyHandlerImpl();
       }
     }
-    partyHandler = new PartyHandler() {
-      @Override
-      public GameParty getParty(Player player) {
-        return null;
-      }
 
-      @Override
-      public boolean partiesSupported() {
-        return false;
-      }
+    return new PartyHandler() {
+        @Override
+        public GameParty getParty(Player player) {
+          return null;
+        }
 
-      @Override
-      public PartyPluginType getPartyPluginType() {
-        return PartyPluginType.NONE;
-      }
-    };
-    return partyHandler;
+        @Override
+        public boolean partiesSupported() {
+          return false;
+        }
+
+        @Override
+        public PartyPluginType getPartyPluginType() {
+          return PartyPluginType.NONE;
+        }
+      };
   }
 
 }
