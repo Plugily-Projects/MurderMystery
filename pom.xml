@@ -49,7 +49,7 @@
         </repository>
         <repository>
             <id>papi-repo</id>
-            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
             <id>plugilyprojects</id>
@@ -61,7 +61,7 @@
         </repository>
         <repository>
             <id>simonsators-repo</id>
-            <url>http://simonsator.de/repo/</url>
+            <url>https://simonsator.de/repo/</url>
         </repository>
         <repository>
             <id>alessiodp-repo</id>
