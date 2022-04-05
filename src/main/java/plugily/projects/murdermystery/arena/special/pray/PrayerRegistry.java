@@ -25,16 +25,11 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
+import plugily.projects.minigamesbox.classic.user.User;
+import plugily.projects.minigamesbox.classic.utils.misc.MiscUtils;
 import plugily.projects.murdermystery.Main;
-import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.Arena;
-import plugily.projects.murdermystery.arena.ArenaRegistry;
-import plugily.projects.murdermystery.arena.ArenaState;
 import plugily.projects.murdermystery.arena.role.Role;
-import plugily.projects.murdermystery.handlers.ChatManager;
-import plugily.projects.murdermystery.handlers.language.LanguageManager;
-import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.ItemPosition;
 
 import java.util.ArrayList;
@@ -49,7 +44,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class PrayerRegistry {
 
   private static Main plugin;
-  private static ChatManager chatManager;
   private static final List<Prayer> prayers = new ArrayList<>();
   private static final List<Player> ban = new ArrayList<>(), rush = new ArrayList<>();
 
@@ -58,7 +52,6 @@ public class PrayerRegistry {
 
   public static void init(Main plugin) {
     PrayerRegistry.plugin = plugin;
-    chatManager = plugin.getChatManager();
     //good prayers
     prayers.add(new Prayer(Prayer.PrayerType.DETECTIVE_REVELATION, true, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Detective-Revelation")));
     prayers.add(new Prayer(Prayer.PrayerType.GOLD_RUSH, true, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Gold-Rush")));
@@ -83,11 +76,11 @@ public class PrayerRegistry {
   public static void applyRandomPrayer(User user) {
     Prayer prayer = getRandomPray();
 
-    user.setStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY, prayer.getPrayerType().ordinal());
+    user.setStatistic("LOCAL_CURRENT_PRAY", prayer.getPrayerType().ordinal());
 
     Player player = user.getPlayer();
-    Arena arena = ArenaRegistry.getArena(player);
-    List<String> prayMessage = LanguageManager.getLanguageList("In-Game.Messages.Special-Blocks.Praises.Message");
+    Arena arena = plugin.getArenaRegistry().getArena(player);
+    List<String> prayMessage = plugin.getLanguageManager().getLanguageList("In-Game.Messages.Arena.Playing.Special-Blocks.Pray.Praises.Message");
 
     String feeling = chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings." + (prayer.isGoodPray() ? "Blessed" : "Cursed"), player);
     int praySize = prayMessage.size();

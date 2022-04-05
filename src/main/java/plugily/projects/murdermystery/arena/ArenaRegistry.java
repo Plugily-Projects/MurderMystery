@@ -1,6 +1,6 @@
 /*
- * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Village Defense - Protect villagers from hordes of zombies
+ * Copyright (c) 2022  Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,194 +19,114 @@
 package plugily.projects.murdermystery.arena;
 
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
-import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.classic.arena.PluginArenaRegistry;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.utils.dimensional.Cuboid;
+import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
+import plugily.projects.minigamesbox.classic.utils.serialization.LocationSerializer;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
-import plugily.projects.murdermystery.utils.Debugger;
+import plugily.projects.thebridge.Main;
+import plugily.projects.thebridge.arena.base.Base;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Tom on 27/07/2014.
  */
-public class ArenaRegistry {
+public class ArenaRegistry extends PluginArenaRegistry {
 
-  private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-  private static final List<Arena> arenas = new ArrayList<>();
-  private static int bungeeArena = -999;
+  private final Main plugin;
 
-  /**
-   * Checks if player is in any arena
-   *
-   * @param player player to check
-   * @return [b]true[/b] when player is in arena, [b]false[/b] if otherwise
-   */
-  public static boolean isInArena(Player player) {
-    return getArena(player) != null;
+  public ArenaRegistry(Main plugin) {
+    super(plugin);
+    this.plugin = plugin;
   }
 
-  /**
-   * Returns arena where the player is
-   *
-   * @param p target player
-   * @return Arena or null if not playing
-   * @see #isInArena(Player) to check if player is playing
-   */
-  public static Arena getArena(Player p) {
-    if(p == null) {
-      return null;
-    }
 
-    java.util.UUID playerId = p.getUniqueId();
-
-    for(Arena arena : arenas) {
-      for(Player player : arena.getPlayers()) {
-        if(player.getUniqueId().equals(playerId)) {
-          return arena;
-        }
-      }
-    }
-    return null;
+  @Override
+  public PluginArena getNewArena(String id) {
+    return new Arena(id);
   }
 
-  /**
-   * Returns arena based by ID
-   *
-   * @param id name of arena
-   * @return Arena or null if not found
-   */
-  public static Arena getArena(String id) {
-    for(Arena loopArena : arenas) {
-      if(loopArena.getId().equalsIgnoreCase(id)) {
-        return loopArena;
-      }
-    }
-    return null;
-  }
+  @Override
+  public boolean additionalValidatorChecks(ConfigurationSection section, PluginArena arena, String id) {
+    boolean checks = super.additionalValidatorChecks(section, arena, id);
+    if(!checks) return false;
 
-  public static int getArenaPlayersOnline() {
-    int players = 0;
-    for(Arena arena : arenas) {
-      players += arena.getPlayers().size();
-    }
-    return players;
-  }
-
-  public static void registerArena(Arena arena) {
-    Debugger.debug("Registering new game instance {0}", arena.getId());
-    arenas.add(arena);
-  }
-
-  public static void unregisterArena(Arena arena) {
-    Debugger.debug("Unegistering game instance {0}", arena.getId());
-    arenas.remove(arena);
-  }
-
-  public static void registerArenas() {
-    Debugger.debug("Initial arenas registration");
-    long start = System.currentTimeMillis();
-
-    if(!arenas.isEmpty()) {
-      for(Arena arena : new ArrayList<>(arenas)) {
-        arena.cleanUpArena();
-        unregisterArena(arena);
-      }
+    if(!section.getBoolean(id + ".isdone")) {
+      plugin.getDebugger().sendConsoleMsg(new MessageBuilder("VALIDATOR_INVALID_ARENA_CONFIGURATION").asKey().value("NOT VALIDATED").arena(arena).build());
+      return false;
     }
 
-    org.bukkit.configuration.file.FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-    org.bukkit.configuration.ConfigurationSection section = config.getConfigurationSection("instances");
-    if(section == null) {
-      Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.No-Instances-Created"));
-      return;
-    }
+    List<Location> playerSpawnPoints = new ArrayList<>();
+    for(String loc : section.getStringList(id + ".playerspawnpoints")) {
+      org.bukkit.Location serialized = LocationSerializer.getLocation(loc);
 
-    for(String id : section.getKeys(false)) {
-      if(id.equalsIgnoreCase("default")) {
-        continue;
-      }
-
-      Arena arena = new Arena(id);
-
-      List<Location> playerSpawnPoints = new ArrayList<>();
-      for(String loc : section.getStringList(id + ".playerspawnpoints")) {
-        org.bukkit.Location serialized = LocationSerializer.getLocation(loc);
-
-        // Ignore the arena if world is not exist at least in spawn points
-        if(serialized == null || serialized.getWorld() == null) {
-          section.set(id + ".isdone", false);
-        } else {
-          playerSpawnPoints.add(serialized);
-        }
-      }
-
-      arena.setPlayerSpawnPoints(playerSpawnPoints);
-      arena.setMinimumPlayers(section.getInt(id + ".minimumplayers", 2));
-      arena.setMaximumPlayers(section.getInt(id + ".maximumplayers", 4));
-      arena.setMapName(section.getString(id + ".mapname", "none"));
-      arena.setSpawnGoldTime(section.getInt(id + ".spawngoldtime", 5));
-      arena.setHideChances(section.getBoolean(id + ".hidechances"));
-      arena.setMurderers(section.getInt(id + ".playerpermurderer", 5));
-      arena.setDetectives(section.getInt(id + ".playerperdetective", 7));
-      arena.setGoldVisuals(section.getBoolean(id + ".goldvisuals"));
-
-      Location endLoc = LocationSerializer.getLocation(section.getString(id + ".Endlocation", "world,364.0,63.0,-72.0,0.0,0.0"));
-      Location lobbyLoc = LocationSerializer.getLocation(section.getString(id + ".lobbylocation", "world,364.0,63.0,-72.0,0.0,0.0"));
-      if(lobbyLoc == null || lobbyLoc.getWorld() == null || endLoc == null || endLoc.getWorld() == null) {
+      // Ignore the arena if world is not exist at least in spawn points
+      if(serialized == null || serialized.getWorld() == null) {
         section.set(id + ".isdone", false);
       } else {
-        arena.setLobbyLocation(lobbyLoc);
-        arena.setEndLocation(endLoc);
+        playerSpawnPoints.add(serialized);
       }
-
-      if(!section.getBoolean(id + ".isdone")) {
-        Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
-        arena.setReady(false);
-        registerArena(arena);
-        continue;
-      }
-
-      List<Location> goldSpawnPoints = new ArrayList<>();
-      for(String loc : section.getStringList(id + ".goldspawnpoints")) {
-        goldSpawnPoints.add(LocationSerializer.getLocation(loc));
-      }
-      arena.setGoldSpawnPoints(goldSpawnPoints);
-
-      List<SpecialBlock> specialBlocks = new ArrayList<>();
-      for(String loc : section.getStringList(id + ".mystery-cauldrons")) {
-        specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
-      }
-      for(String loc : section.getStringList(id + ".confessionals")) {
-        specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
-      }
-
-      specialBlocks.forEach(arena::loadSpecialBlock);
-
-      registerArena(arena);
-      arena.start();
-      Debugger.sendConsoleMsg(plugin.getChatManager().colorMessage("Validator.Instance-Started").replace("%arena%", id));
     }
-    ConfigUtils.saveConfig(plugin, config, "arenas");
-    Debugger.debug("Arenas registration completed, took {0}ms", System.currentTimeMillis() - start);
+
+    ((Arena) arena).setSpawnGoldTime(section.getInt(id + ".spawngoldtime", 5));
+    ((Arena) arena).setHideChances(section.getBoolean(id + ".hidechances"));
+    arena.setArenaOption("MURDERER_DIVIDER",section.getInt(id + ".playerpermurderer", 5));
+    arena.setArenaOption("DETECTIVE_DIVIDER",section.getInt(id + ".playerperdetective", 7));
+    ((Arena) arena).setGoldVisuals(section.getBoolean(id + ".goldvisuals"));
+    ((Arena) arena).setPlayerSpawnPoints(playerSpawnPoints);
+
+    List<Location> goldSpawnPoints = new ArrayList<>();
+    for(String loc : section.getStringList(id + ".goldspawnpoints")) {
+      goldSpawnPoints.add(LocationSerializer.getLocation(loc));
+    }
+    ((Arena) arena).setGoldSpawnPoints(goldSpawnPoints);
+
+    List<SpecialBlock> specialBlocks = new ArrayList<>();
+    for(String loc : section.getStringList(id + ".mystery-cauldrons")) {
+      specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON));
+    }
+    for(String loc : section.getStringList(id + ".confessionals")) {
+      specialBlocks.add(new SpecialBlock(LocationSerializer.getLocation(loc), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER));
+    }
+
+    specialBlocks.forEach(((Arena) arena)::loadSpecialBlock);
+    return true;
   }
 
-  public static List<Arena> getArenas() {
+  @Override
+  public @Nullable Arena getArena(Player player) {
+    PluginArena pluginArena = super.getArena(player);
+    if(pluginArena instanceof Arena) {
+      return (Arena) pluginArena;
+    }
+    return null;
+  }
+
+  @Override
+  public @Nullable Arena getArena(String id) {
+    PluginArena pluginArena = super.getArena(id);
+    if(pluginArena instanceof Arena) {
+      return (Arena) pluginArena;
+    }
+    return null;
+  }
+
+  public @NotNull List<Arena> getPluginArenas() {
+    List<Arena> arenas = new ArrayList<>();
+    for(PluginArena pluginArena : super.getArenas()) {
+      if(pluginArena instanceof Arena) {
+        arenas.add((Arena) pluginArena);
+      }
+    }
     return arenas;
-  }
-
-  public static void shuffleBungeeArena() {
-    bungeeArena = new Random().nextInt(arenas.size());
-  }
-
-  public static int getBungeeArena() {
-    if(bungeeArena == -999) {
-      bungeeArena = new Random().nextInt(arenas.size());
-    }
-    return bungeeArena;
   }
 }

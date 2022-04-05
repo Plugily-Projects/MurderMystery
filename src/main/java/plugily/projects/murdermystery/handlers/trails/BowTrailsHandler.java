@@ -25,11 +25,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.murdermystery.Main;
-import plugily.projects.murdermystery.arena.ArenaRegistry;
-import plugily.projects.murdermystery.utils.Debugger;
+
 
 /**
  * @author 2Wild4You, Tigerpanzer_02
@@ -59,17 +57,17 @@ public class BowTrailsHandler implements Listener {
 
     Player player = (Player) event.getEntity();
 
-    if(!ArenaRegistry.isInArena(player) || !plugin.getTrailsManager().gotAnyTrails(player)) {
+    if(!plugin.getArenaRegistry().isInArena(player) || !plugin.getTrailsManager().gotAnyTrails(player)) {
       return;
     }
 
     Trail trail = plugin.getTrailsManager().getRandomTrail(player);
-    Debugger.debug("Spawning particle with perm {0} for player {1}", trail.getPermission(), player.getName());
+    plugin.getDebugger().debug("Spawning particle with perm {0} for player {1}", trail.getPermission(), player.getName());
     new BukkitRunnable() {
       @Override
       public void run() {
         if(projectile.isDead() || projectile.isOnGround()) {
-          Debugger.debug("Stopped spawning particle with perm {0} for player {1}", trail.getPermission(), player.getName());
+          plugin.getDebugger().debug("Stopped spawning particle with perm {0} for player {1}", trail.getPermission(), player.getName());
           cancel();
         }
         VersionUtils.sendParticles(trail.getName(), player, projectile.getLocation(), 3);

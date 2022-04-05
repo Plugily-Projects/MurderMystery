@@ -17,9 +17,11 @@
  */
 package plugily.projects.murdermystery.handlers.trails;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
+import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.murdermystery.Main;
 
 import java.util.ArrayList;
@@ -28,11 +30,10 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
- * @author 2Wild4You, Tigerpanzer_02
+ * @author Tigerpanzer_02
  * <p>
  * Created at 19.02.2021
  */
-
 public class TrailsManager {
 
   private final List<Trail> registeredTrails = new ArrayList<>();
@@ -40,13 +41,14 @@ public class TrailsManager {
   private final List<String> blacklistedTrails;
 
   public TrailsManager(Main plugin) {
-    blacklistedTrails = plugin.getConfig().getStringList("Blacklisted-Trails");
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "trails");
+    blacklistedTrails = config.getStringList("Blacklisted-Trails");
     registerTrails();
   }
 
   public void registerTrails() {
-    for(String particle : VersionUtils.getParticleValues()) {
-      if(blacklistedTrails.contains(particle.toLowerCase())) {
+    for (String particle : VersionUtils.getParticleValues()) {
+      if (blacklistedTrails.contains(particle.toLowerCase())) {
         continue;
       }
       addTrail(new Trail(particle, "murdermystery.trails." + particle.toLowerCase()));
@@ -66,12 +68,15 @@ public class TrailsManager {
   }
 
   public Trail getRandomTrail(Player player) {
-    //check perms
-    List<Trail> perms = registeredTrails.stream().filter(trail -> player.hasPermission(trail.getPermission())).collect(Collectors.toList());
-    if(!perms.isEmpty()) {
+    // check perms
+    List<Trail> perms =
+        registeredTrails.stream()
+            .filter(trail -> player.hasPermission(trail.getPermission()))
+            .collect(Collectors.toList());
+    if (!perms.isEmpty()) {
       return perms.get(perms.size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(perms.size()));
     }
-    //fallback
+    // fallback
     return registeredTrails.get(0);
   }
 }

@@ -22,8 +22,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
-import plugily.projects.murdermystery.Main;
+import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
+import plugily.projects.murdermystery.old.Main;
 
 import java.util.ArrayList;
 import java.util.List;

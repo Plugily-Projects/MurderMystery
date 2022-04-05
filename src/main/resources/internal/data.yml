@@ -1,0 +1,29 @@
+###############################[IMPORTANT]###############################
+#
+#   Leave this file as it is! It is kinda an internal file!
+#
+### !!!Do not change anything here!!!
+#
+### THIS FILE AUTOMATICALLY REGENERATES ON SERVER RESTART
+#
+###############################[IMPORTANT]###############################
+Plugin:
+  Name:
+    Shot: mm
+    Long: ${project.name}
+  Id:
+    Spigot: 66614
+    BStats: 3038
+  Compatibility:
+    Spigot:
+      - "1.8"
+      - "1.9"
+      - "1.10"
+      - "1.11"
+      - "1.12"
+      - "1.13"
+      - "1.14"
+      - "1.15"
+      - "1.16"
+      - "1.17"
+      - "1.18"

@@ -15,34 +15,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package plugily.projects.murdermystery.handlers.skins.sword;
 
-package plugily.projects.murdermystery.arena.corpse;
-
-import org.golde.bukkit.corpsereborn.nms.Corpses;
-
-import plugily.projects.commonsbox.minecraft.hologram.ArmorStandHologram;
-import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
+import org.bukkit.inventory.ItemStack;
 
 /**
- * @author Plajer
+ * @author Tigerpanzer_02
  * <p>
- * Created at 07.08.2018
+ * Created at 03.04.2022
  */
-public class Corpse {
+public class SwordSkin {
 
-  private final ArmorStandHologram hologram;
-  private final Corpses.CorpseData corpseData;
+  private final ItemStack itemStack;
+  private final String permission;
 
-  public Corpse(ArmorStandHologram hologram, Corpses.CorpseData corpseData) {
-    this.hologram = hologram;
-    this.corpseData = corpseData;
+  public SwordSkin(ItemStack itemStack, String permission) {
+    this.itemStack = itemStack;
+    this.permission = permission;
   }
 
-  public ArmorStandHologram getHologram() {
-    return hologram;
+  public ItemStack getItemStack() {
+    return itemStack;
   }
 
-  public Corpses.CorpseData getCorpseData() {
-    return corpseData;
+  public String getPermission() {
+    return permission;
   }
+
+  public boolean hasPermission() {
+    return !permission.isEmpty();
+  }
+
 }

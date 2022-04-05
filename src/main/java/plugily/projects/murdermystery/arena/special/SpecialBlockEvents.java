@@ -26,25 +26,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-
-import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
-import plugily.projects.commonsbox.minecraft.item.ItemUtils;
-import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
-import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
-import plugily.projects.commonsbox.minecraft.misc.stuff.ComplementAccessor;
+import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.murdermystery.Main;
-import plugily.projects.murdermystery.api.StatsStorage;
-import plugily.projects.murdermystery.arena.Arena;
-import plugily.projects.murdermystery.arena.ArenaRegistry;
-import plugily.projects.murdermystery.arena.ArenaState;
-import plugily.projects.murdermystery.arena.special.mysterypotion.MysteryPotion;
-import plugily.projects.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
-import plugily.projects.murdermystery.arena.special.pray.PrayerRegistry;
-import plugily.projects.murdermystery.handlers.ChatManager;
-import plugily.projects.murdermystery.user.User;
-import plugily.projects.murdermystery.utils.ItemPosition;
-import plugily.projects.murdermystery.utils.Utils;
+
 
 /**
  * @author Plajer
@@ -54,11 +38,9 @@ import plugily.projects.murdermystery.utils.Utils;
 public class SpecialBlockEvents implements Listener {
 
   private final Main plugin;
-  private final ChatManager chatManager;
 
   public SpecialBlockEvents(Main plugin) {
     this.plugin = plugin;
-    chatManager = plugin.getChatManager();
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 

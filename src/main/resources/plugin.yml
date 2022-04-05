@@ -1,18 +1,18 @@
 name: MurderMystery
 main: plugily.projects.murdermystery.Main
-authors: [2Wild4You, Tigerpanzer, Plajer, montlikadani]
+authors: [ PlugilyProjects, Tigerpanzer_02 ]
 version: ${project.version}
+softdepend: [CorpseReborn, PlaceholderAPI, Parties, Spigot-Party-API-PAF, PartyAndFriends, ViaVersion, ProtocolSupport]
 api-version: 1.13
-softdepend: [CorpseReborn, PlaceholderAPI, Parties, Spigot-Party-API-PAF, PartyAndFriends]
 
 commands:
   MurderMystery:
-    description: Murder mystery commands
-    usage: "\u00A76Correct usage: /mm [stats/leave/join]"
+    description: MurderMystery Commands
+    usage: "\u00A76Correct usage: /murdermystery [option]"
     aliases: [mm, murder]
   MurderMysteryAdmin:
-    description: Murder mystery admin commands
-    usage: "\u00A76Correct usage: /mma [option]"
+    description: MurderMysteryAdmin commands
+    usage: "\u00A76Correct usage: /murdermysterya [option]"
     aliases: [mma, murderadmin]
 
 permissions:
@@ -20,14 +20,16 @@ permissions:
     default: op
     children:
       murdermystery.updatenotify: true
-      murdermystery.command.override: true
       murdermystery.admin: true
       murdermystery.admin.setup: true
-      murdermystery.admin.create: true
       murdermystery.admin.delete: true
       murdermystery.admin.list: true
+      murdermystery.admin.spychat: true
       murdermystery.admin.stopgame: true
       murdermystery.admin.forcestart: true
       murdermystery.admin.addsign: true
+      murdermystery.admin.clear: true
       murdermystery.admin.sign.create: true
       murdermystery.admin.sign.break: true
+      murdermystery.admin.reload: true
+      murdermystery.command.override: true

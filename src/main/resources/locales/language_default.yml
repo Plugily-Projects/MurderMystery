@@ -1,333 +1,326 @@
-# Leave this file as it is!
+###############################[IMPORTANT]###############################
+#
+#   Leave this file as it is! It is kinda an internal backup file!
 #
 ### !!!Do not change anything here!!!
 #
 ### THIS FILE AUTOMATICALLY REGENERATES ON SERVER RESTART
 #
-# Needed as it can be possible that the api is not working
+#   Needed when the external api isn't working
+#
+###############################[IMPORTANT]###############################
+#    You can translate REPLACEWITHPROJECTNAME messages here.
+#             Color codes (&) supported.
+#
+#             Use \n to make new line
+#             Some messages like item
+#        descriptions don't support new lines
+# they are wrapped every 40 characters automatically
+#
+#     Some messages support their own placeholders
+#            like %player%, %kit% etc.
+
+#
+# Command messages
+#
 Commands:
-  Did-You-Mean: "&6Did you mean &e/%command%&6?"
-  Teleported-To-The-Lobby: "Teleported to the lobby!"
+  Did-You-Mean: "&6Did you mean &e/%value%&6?"
+  Command-Executed: "&aCommand successfully executed!"
+  Teleported-To-Lobby: "&aTeleported to lobby!"
   Removed-Game-Instance: "&cSuccessfully removed game instance!"
   No-Arena-Like-That: "&cNo arena with that ID!"
-  Look-Sign: "&cYou have to look at a sign to perform this command!"
+  Look-At-Sign: "&cYou have to look at a sign to perform this command!"
   Type-Arena-Name: "&cPlease type arena ID!"
+  Hold-Any-Item: "&cYou must hold any item!"
   No-Free-Arenas: "&cThere are no free arenas!"
-  Statistics:
-    Type-Name: "&cPlease type statistic name to view!"
-    Invalid-Name: "&cName of statistic is invalid! Type: kills, deaths, games_played, wins, loses, highest_score"
-    Header: "&8&m-------------------[&6 Top 10 &8&m]-------------------"
-    Format: "&e#%position% %name% - %value% &7%statistic%"
   Only-By-Player: "&cYou can execute this command only as player!"
   Not-Playing: "&cYou must play to execute this command!"
   No-Permission: "&cYou don't have permission to use this command!"
-  Admin-Commands:
-    Teleported-To-Player: "&aTeleported to player!"
-    Player-Not-Found: "&cPlayer not found!"
-    Success-Reload: "&aArenas reloaded!"
-    List-Command:
-      Header: "&aMurder Mystery &6arenas:"
-      Format: "&a%arena% &e%status% &6%players%/%maxplayers%"
+  Player-Not-Found: "&cTarget player %player% doesn't exist!"
+  Invalid-Location-Teleport: "&cLocation to teleport is invalid!"
+  Wrong-Usage: "&cWrong usage. Do %value%"
+  Admin:
+    Adjust-Statistic: "&eStatistic %value% of %player% is now %number%!"
+    Reload-Success: "&aArenas reloaded!"
+    List:
+      Header: "&a%plugin_name% &6arenas: &aName &eState &6Players"
+      Format: "&a%arena_name% &e%arena_state_placeholder% &6%arena_players_size%/%arena_max_players%"
       No-Arenas: "&cThere are no game instances!"
-  Stats-Command:
-    Header: "&l-----YOUR STATS-----"
-    Header-Other: "&l-----STATS FOR %player%-----"
-    Footer: "&l--------------------"
-    Kills: "&aKills: &e"
-    Deaths: "&aDeaths: &e"
-    Wins: "&aWins: &e"
-    Loses: "&aLoses: &e"
-    Highest-Score: "&aHighest score: &e"
-    Games-Played: "&aGames played: &e"
-  Main-Command:
-    Header: "&6----------------{Murder Mystery commands}----------"
-    Description: "&aGame commands:\n
-    &b/mm stats: &7Shows your stats!\n
-    &b/mm leave: &7Quits current arena!\n
-    &b/mm join <arena>: &7Joins specified arena!\n
-    &b/mm top <statistic>: &7Shows top 10 players!\n
-    &b/mm randomjoin: &7Join random arena!"
-    Admin-Bonus-Description: "\n&b/mma: &7Shows all the admin commands"
+    Spychat:
+      Toggled: "&aGame spy chat toggled to&c %value%"
+  Main:
+    Header: "&6----------------{%plugin_name% commands}----------"
+    Description:
+      - "&aGame commands:"
+      - "&b/%plugin_short_command% stats: &7Shows your stats!"
+      - "&b/%plugin_short_command% leave: &7Quits current arena!"
+      - "&b/%plugin_short_command% join <arena>: &7Joins specified arena!"
+      - "&b/%plugin_short_command% top <statistic>: &7Shows top 10 players!"
+      - "&b/%plugin_short_command% randomjoin: &7Join random arena!"
+    Admin-Bonus-Description: "&b/%plugin_short_command%a: &7Shows all the admin commands"
     Footer: "&6-------------------------------------------------"
 
-# In-game scoreboard messages.
-# Please do not use more than 48 chars here! COLOR CODES INCLUDED.
+
+#
+# In-Game scoreboard messages
+#
+# Please do not use more chars than the scoreboard can handle!
+# Scoreboard supports up to 122 chars for 1.14+ and 48 chars for 1.13- (COLOR CODES INCLUDED.)
+# Placeholders:
+# https://wiki.plugily.xyz/REPLACEWITHPROJECTNAME/placeholders/language
 Scoreboard:
-  Title: "&4&lMurder Mystery"
-  Detective-Status-Normal: "&fDetective: &eAlive"
-  Detective-Died-No-Bow: "&cBow Dropped"
-  Detective-Died-Bow: "&aBow Not Dropped"
-  Roles:
-    Detective: "&bDetective"
-    Murderer: "&cMurderer"
-    Innocent: "&eInnocent"
-    Dead: "&7Dead"
+  Title: "&a&l%plugin_name%"
   Content:
-    # Contents of scoreboard for innocents and detective
-    Playing:
-      - "&fRole: %ROLE%"
-      - ""
-      - "&fInnocents Left: &e%INNOCENTS%"
-      - "&fTime Left: &e%FORMATTED_TIME%"
-      - ""
-      - "%DETECTIVE_STATUS%"
-      - ""
-      - "&fScore: &e%SCORE%"
-      - ""
-      - "&ewww.plugily.xyz"
-    # Contents of scoreboard for murderer
-    Playing-Murderer:
-      - "&fRole: %ROLE%"
-      - ""
-      - "&fInnocents Left: &e%INNOCENTS%"
-      - "&fTime Left: &e%FORMATTED_TIME%"
-      - ""
-      - "%DETECTIVE_STATUS%"
-      - ""
-      - "&fKills: &e%KILLS%"
-      - ""
-      - "&fScore: &e%SCORE%"
-      - ""
-      - "&ewww.plugily.xyz"
     Waiting:
-      - "&fPlayers: &e%PLAYERS%"
+      - "&fPlayers: &e%arena_players_size%"
       - ""
-      - "&fMinimum Players: &e%MIN_PLAYERS%"
+      - "&fMinimum Players: &e%arena_min_players%"
       - ""
       - "&ewww.plugily.xyz"
     Starting:
-      - "&fStarting In: &e%TIME%"
+      - "&fStarting In: &e%arena_time%"
       - ""
-      - "&fPlayers: &e%PLAYERS%"
+      - "&fPlayers: &e%arena_players_size%"
       - ""
-      - "&fMinimum Players: &e%MIN_PLAYERS%"
+      - "&fMinimum Players: &e%arena_min_players%"
+      - ""
+      - "&ewww.plugily.xyz"
+    # Contents of scoreboard while ingame
+    In-Game:
+      - "&f"
+      - "&f"
+      - "&f"
+      - ""
+      - "&f"
+      - "&f"
+      - ""
+      - "&ewww.plugily.xyz"
+    # Contents of scoreboard while state is ending
+    Ending:
+      - "&f"
+      - "&f"
+      - "&cGAME ENDED"
+      - ""
+      - "&f"
+      - "&f"
+      - ""
+      - "&ewww.plugily.xyz"
+    # Contents of scoreboard while state is restarting
+    Restarting:
+      - "&f"
+      - "&f"
+      - "&cRESTARTING GAME"
+      - ""
+      - "&f"
+      - "&f"
       - ""
       - "&ewww.plugily.xyz"
 
-# Has usage only when bossbar is enabled in config.yml
+#
+# Bossbar messages
+#
+# Bossbar needs to be enabled on config.yml
 Bossbar:
-  Main-Title: "&a&lMurder Mystery &6- www.plugily.xyz"
-  Starting-In: "&f&lStarting in: &e&l%time%"
-  Waiting-For-Players: "&4&lWaiting for more players..."
-  In-Game-Info: "&e&lPlaying &f&lMURDER MYSTERY &e&lon &b&lPLUGILY.XYZ"
-  Game-Ended: "&c&lGame has ended! You were playing on &b&lPLUGILY.XYZ"
+  Title: "&a&l%plugin_name% &6- www.plugily.xyz"
+  Content:
+    Waiting:
+      - "&4&lWaiting for more players..."
+    Starting:
+      - "&f&lStarting in: &e&l%arena_time%"
+    In-Game:
+      - "&e&lPlaying &f&l%plugin_name_uppercase% &e&lon &b&lPLUGILY.XYZ"
+      - "&e&lCheck the plugin creator out &e&lon &b&lPLUGILY.XYZ"
+    Ending:
+      - "&c&lGame has ended! You were playing on &b&lPLUGILY.XYZ"
+    Restarting:
+      - "&c&lRestarting the arena. You will be moved soon!"
 
+#
+# In-Game Messages
+#
 In-Game:
   #Used in most game messages.
-  Plugin-Prefix: "&4[Murder Mystery] "
-  Already-Playing: "&cYou are already queued for a game! You can leave a game with /mm leave."
-  Join-No-Permission: "&cYou don't have &6%permission% &cpermission to join this arena!"
-  Full-Game-No-Permission: "&cYou don't have the permission to join full games!"
-  No-Slots-For-Premium: "&cThis game is already full of premium players! Sorry"
-  You-Are-Spectator: "&cYou're now a spectator! You can fly now!"
-  Only-Command-Ingame-Is-Leave: "&cYou have to leave the game first to perform commands. The only command that works is /mm leave!"
-  # Join cancelled via external plugin that uses MM api.
-  Join-Cancelled-Via-API: "&cYou can't join this game!"
-  Join-As-Party-Member: "&cYou joined %ARENANAME% because the party leader joined it!"
-  Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
-  Game-Chat-Format: "&7%player%: &f%message%"
-  Game-Death-Format: "&7[&4☠&7] &r"
-  Cooldown-Format: "&8&l[%progress%&8&l] &6%time% seconds"
-  Bow-Locator-Item-Name: "&6Bow locator"
-  Innocent-Locator-Item-Name: "&6Innocent locator"
-  Watch-Out-Title: "&cWatch out!"
-  Watch-Out-Subtitle: "&eThe Murderer can now find survivors easily"
-  Role-Pass:
-    Menu-Name: "Role pass menu"
-    Role:
-      Murderer:
-        Name: "Be murderer"
-        Lore:
-          - "Cost 1 murderer pass"
-          - "You got %amount%"
-      Detective:
-        Name: "Be detective"
-        Lore:
-          - "Cost 1 detective pass"
-          - "You got %amount%"
-    Fail: "You do not got enough passes for %role% role"
-    Success: "You will be %role% next round!"
-    Change: "You now got %amount% %role% passes!"
+  Plugin-Prefix: "&a[%plugin_name%] "
+  Game-Chat-Format: "&6[&5%user_statistic_level%&6]&6[%kit%&6] %player%: &f%message%"
+  You-Leveled-Up: "&7You leveled up! You're now level %number%!"
+  Commands-Blocked: "&cYou have to leave the game first to perform commands. The only command that works is /%plugin_short_command% leave!"
+  Join:
+    Already-Playing: "&cYou are already queued for a game! You can leave a game with /%plugin_short_command% leave."
+    No-Permission: "&cYou don't have &6%value% &cpermission to join this arena!"
+    Full-Game: "&cYou don't have the permission to join full games!"
+    No-Slots-For-Premium: "&cThis game is already full of premium players! Sorry"
+    # Join cancelled via external plugin that uses the API of our plugin.
+    Cancelled-Via-API: "&cYou can't join this game!"
+    As-Party-Member: "&cYou joined %arena_name% because the party leader joined it!"
+    Arena-Not-Configured: "&cArena is not configured yet! Contact staff!"
+  Death:
+    Tag: "&8Dead"
+    Screen: "&cYou died!"
   Spectator:
+    You-Are-Spectator: "&cYou're now a spectator! You can fly now!"
     Spectator-Menu-Name: "Alive players list"
-    Target-Player-Role: "&7Role: %role%"
-    Target-Player-Health: "&cHealth: &7%health%"
-    Settings-Menu:
-      Inventory-Name: "&7Spectator settings"
-      Speed-Name: "&aSpeed"
+    Target-Player-Health: "&cHealth: &7%number%"
+    Spectator-Warning: "&cYou are a spectator!"
+    Teleport: "&cTeleported to %player%"
+    Menu:
+      Settings:
+        Status:
+          Enabled: "Enabled"
+          Disabled: "Disabled"
+        Changed-Speed: "Changed Speed to %number%"
+        Auto-Teleport: "%value% auto teleport"
+        Target-Player:
+          Action-Bar: "%number% blocks away | Target %player%"
+        Night-Vision: "%value% night vision"
+        First-Person-Mode:
+          Action-Bar: "&eSNEAK &cto leave! | Target %player%"
+          Title: "&eSNEAK &cto leave!"
+        Visibility: "%value% other spectator players"
   Messages:
-    Lobby-Messages:
-      Start-In: "&7The game starts in &b%TIME%&7 seconds!"
-      Waiting-For-Players: "&7Waiting for players... We need at least &b%MINPLAYERS%&7 players to start."
+    Join: "&b%player%&7 joined the game (%arena_players_size%/%arena_max_players%)!"
+    Leave: "&b%player% &7left the game (%arena_players_size%/%arena_max_players%)!"
+    Death: "&b%player% &7died!"
+    Lobby:
+      Start-In: "&7The game starts in &b%arena_time%&7 seconds!"
+      Waiting-For-Players: "&7Waiting for players... We need at least &b%arena_min_players%&7 players to start."
       Enough-Players-To-Start: "&7We now have enough players. The game is starting soon!"
-      Game-Started: "&7The game has started! Survive till the end!"
-      Kicked-For-Premium-Slot: "&c%PLAYER% got removed from the game to make a place for premium players!"
+      Reduced-Time: "&7The time got reduced to %number% seconds"
+      Max-Players: "&7We reached max players for this round. Let's shorten the time!"
+      Game-Started: "&7The game has started!"
+      Kicked-For-Premium-Slot: "&c%player% got removed from the game to make a place for premium players!"
       You-Were-Kicked-For-Premium-Slot: "&cYou got kicked out of the game to make a place for a premium player!"
-      Role-Chances-Action-Bar: "&cMurderer Chance: %murderer_chance% &a- &bDetective Chance: %detective_chance%"
-      Not-Enough-Space-For-Party: "&cYour party is bigger than free places on the arena %ARENANAME%"
-    Join: "&b%PLAYER%&7 joined the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
-    Leave: "&b%PLAYER% &7left the game (%PLAYERSIZE%/%MAXPLAYERS%)!"
-    Death: "&b%PLAYER% &7died!"
-    Seconds-Left-Title: "&c%time% &eseconds left!"
-    Seconds-Left-Subtitle: "&eAfter %time%s the Murderer will lose"
-    Role-Set:
-      Murderer-Title: "&cROLE: MURDERER"
-      Murderer-Subtitle: "&eKill all players!"
-      Detective-Title: "&bROLE: DETECTIVE"
-      Detective-Subtitle: "&eFind and kill the murderer!"
-      Innocent-Title: "&eROLE: INNOCENT"
-      Innocent-Subtitle: "&eStay alive as long as possible!"
-    Bonus-Score: "&e+%score% score (%action%)"
-    Score-Actions:
-      Kill-Player: "for killing player"
-      Kill-Murderer: "for killing murderer"
-      Gold-Pickup: "for gold pickup"
-      Survive: "for surviving 30 seconds"
-      #for innocents
-      Survive-Till-End: "for surviving till end"
-      #for murderer or detective
-      Win-Game: "for winning the game"
-      Detective-Reward: "for %amount% innocents survived"
-      Innocent-Kill: "for killing innocent"
-    Picked-Up-Gold: "&ePicked up gold!"
-    Previous-Role-Left-Title: "&cPrevious %role% has left!"
-    Previous-Role-Left-Subtitle: "&cSelecting new %role%!"
-    Corpse-Last-Words: "&7%player%&e's last words:"
-    Murderer-Get-Sword: "&eThe Murderer gets their sword in &c%time% &eseconds!"
-    Special-Blocks:
-      Cauldron-Drink-Potion: "&cPlease drink your current potion!"
-      Not-Enough-Gold: "&cYou need %amount% gold for this!"
-      Cauldron-Hologram: "&fMystery Potion - 1 &eGold"
-      Praise-Hologram: "&eClick to give gift;&ePull lever to pray"
-      Prayed-Message: "&aYou prayed to the developer! Hope he will hear that!"
-      No-Money-No-Pray: "&cPay to pray!"
-      Praises:
-        Message:
-          - ""
-          - "&7Developer hears your prayer."
-          - "%feeling%"
-          - "%praise%"
-        Feelings:
-          Blessed: "&aYou feel blessed."
-          Cursed: "&cYou feel cursed."
-        Gifts:
-          Detective-Revelation: "&aYou know that &bCurrent detective &ais %detective%"
-          Gold-Rush: "&aYou received power of ancients. For each gold you collect, you will receive 3 gold now."
-          Single-Compensation: "&aDeveloper is proud of you! He rewarded you with 5 gold ingots!"
-          Bow-Time: "&aYou received bow from pleased developer!"
-        Curses:
-          Slowness-Curse: "&cYour legs are much heavier than before."
-          Blindness-Curse: "&cYour eyes can't see that well anymore."
-          Gold-Ban: "&cDeveloper cursed you with gold ban! You cannot longer pickup any gold!"
-          Incoming-Death: "&cYou feel overpowering force of death. You know that you'll be dead in a minute!"
-    Bow-Messages:
-      Bow-Dropped-Title: "&6The Bow has been dropped!"
-      Bow-Dropped-Subtitle: "&eFind the Bow for a chance to kill the Murderer."
-      Pickup-Bow-Message: "&eA player has picked up the Bow!"
-      Bow-Shot-For-Gold: "&a+1 Bow Shot!"
-      Bow-Shot-Subtitle: "&eYou collected 10 gold and got an arrow!"
-    Last-Words:
-      'default':
-        Message: "&fPlease respawn :("
-      'meme':
-        Message: "&fDespacito 2 is confirmed by God"
-        Permission: "murdermystery.lastwords.meme"
-      'rage':
-        Message: "&fWHY YOU KILLED ME?!!?"
-        Permission: "murdermystery.lastwords.rage"
-      'pro':
-        Message: "&fIt was lagging..."
-        Permission: "murdermystery.lastwords.pro"
-      'hacker':
-        Message: "Turn off your hacks..."
-        Permission: "murdermystery.lastwords.hacker"
-
-    Game-End-Messages:
-      Titles:
-        Win: "&aYOU WIN!"
-        Lose: "&cYOU LOSE!"
-        Died: "&cYOU DIED!"
-      Subtitles:
-        Murderer-Stopped: "&6The Murderer has been stopped!"
-        Murderer-Kill-Everyone: "&6The Murderer has killed everyone."
-        Murderer-Killed-You: "&eThe murderer killed you!"
-        Player-Killed-You: "&cA player killed you with a Bow!"
-        Killed-Innocent: "&eYou killed an innocent player!"
-      Winners:
-        Players: "&ePLAYERS"
-        Murderer: "&cMURDERER"
-        Nobody: "&7Nobody"
-      Summary-Message:
-        - "&a&m------------------------------------------------------------------"
-        - "&f&lMurder Mystery"
+      Not-Enough-Space-For-Party: "&cYour party is bigger than free places on the arena %arena_name%"
+    Game-End:
+      Summary:
+        - "&a&m--------------------------------------------------"
+        - "&f&l%plugin_name%"
         - ""
-        - "&f&lWINNER: %winner%"
+        - "%arena_summary%"
+        - "%arena_summary_player%"
         - ""
-        - "&7Detective: %detective%"
-        - "&7Murderer: %murderer% (%murderer_kills%)"
-        - "&7Hero: %hero%"
         - ""
-        - "&a&m------------------------------------------------------------------"
-    Admin-Messages:
+        - ""
+        - ""
+        - ""
+        - "&a&m--------------------------------------------------"
+      Placeholders:
+        Win: "You won the game"
+        Lose: "You lost the game"
+    Admin:
       Set-Starting-In-To-0: "&bAn admin set waiting time to 0. The game starts now!"
 
+
+#
+# Sign messages
+#
 Signs:
   Please-Type-Arena-Name: "&cPlease type arena name in second line!"
   Arena-Doesnt-Exists: "&cArena with that name doesn't exists!"
-  Sign-Created: "&aSign created successfully!"
-  Sign-Removed: "&aSign successfully removed!"
-  Game-States:
-    Inactive: "&lInactive..."
-    In-Game: "&lIn-game"
-    Starting: "&e&lStarting"
-    Full-Game: "&4&lFULL"
-    Ending: "&lEnding"
-    Restarting: "&c&lRestarting"
+  Created: "&aSign created successfully!"
+  Removed: "&aSign successfully removed!"
   Lines:
-    - "&4&lMurder Mystery"
-    - "%state%"
-    - "%mapname%"
-    - "&5[%playersize%/%maxplayers%]"
+    - "&a&l%plugin_name%"
+    - "%arena_state_placeholder%"
+    - "%arena_name%"
+    - "&5[%arena_players_size%/%arena_max_players%]"
 
+
+#
+# Arena Selector messages
+#
 Arena-Selector:
-  Inv-Title: "Arena selector"
+  Inventory-Title: "%plugin_short_command% > Arena selector"
   Item:
-    Name: "&f%mapname%"
+    Name: "&f%arena_name%"
     Lore:
-      - "&4Murder Mystery &f- &e%mapname%"
+      - "&a%plugin_name% &f- &e%arena_name%"
       - " "
       - " "
-      - "  &fOnline: %playersize%/%maxplayers%"
-      - "  &fState: %state%"
+      - "  &fOnline: %arena_players_size%/%arena_max_players%"
+      - "  &fState: %arena_state_placeholder%"
       - " "
       - " "
       - "&eClick to join this arena"
 
-Leaderheads:
-  #top command from leaderheads ex. mmtopkills
-  Top-Command-Name: "mmtop%stat%"
-  Top-Command-Inv-Title: "&bTop users"
-  Leaderboard-Value:
-    Kills: "&e{amount} kills"
-    Deaths: "&e{amount} deaths"
-    Games-Played: "&e{amount} games played"
-    Highest-Score: "&e{amount} highest score"
-    Wins: "&e{amount} wins"
-    Loses: "&e{amount} loses"
-
+#
+# Validator messages
+#
 Validator:
-  Invalid-Arena-Configuration: "[Murder Mystery] Arena %arena% has invalid configuration! Missing node: %error%"
-  Instance-Started: "[Murder Mystery] Arena %arena% instance successfully started!"
-  No-Instances-Created: "[Murder Mystery] There are no arena instances created in configuration!"
+  Invalid-Arena-Configuration: "Arena %arena_name% has invalid configuration! Missing node: %value%"
+  Instance-Started: "Arena %arena_name% instance successfully started!"
+  No-Instances-Created: "There are no arena instances created in configuration!"
 
+
+#
+# Placeholder messages inside plugin
+#
 Placeholders:
   Game-States:
     Waiting: "&lWaiting for players..."
     Starting: "&e&lStarting"
+    Full-Game: "&4&lFULL"
     In-Game: "&lIn-game"
     Ending: "&lEnding"
     Restarting: "&c&lRestarting"
+  Motd:
+    Waiting: "&lYou can join this game..."
+    Starting: "&e&lStarting"
+    Full-Game: "&4&lFULL | Use another Server"
+    In-Game: "&lIn-game | Click to spectate"
+    Ending: "&lEnding | Server is closing"
+    Restarting: "&c&lRestarting"
+
+
+#
+# Kit messages
+#
+Kit:
+  Not-Unlocked: "&cYou haven't unlocked &b%value%&c yet!"
+  Choose: "&aYou have chosen: &b%value%&a!"
+  Open-Menu: "Open Kit Menu"
+  Cooldown: "&cKit ability still on cooldown (%number%)!"
+  Menu:
+    Title: "Kit Menu"
+    Lore:
+      Unlocked: "&aUNLOCKED!"
+      Locked: "&cLOCKED!"
+      Unlock-At-Level: "&aUnlocks at level %number%"
+      Unlock-In-Store: "&bUnlock this in the store!"
+
+
+#
+# Leaderboard messages
+#
+# Hologram function need to be enabled on config.yml
+Leaderboard:
+  Type:
+    Hologram:
+      Header: "&6&lTop %number% in %value%"
+      Format: "&e%number%. &f%player% (%value%)"
+      Empty-Format: "&e%number%. &fEmpty (0)"
+    Chat:
+      Header: "&l-----YOUR STATS-----"
+      Header-Other: "&l-----STATS FOR %player%-----"
+      Footer: "&l--------------------"
+      Format: "&a%value%: &e%number%"
+      Top:
+        Type-Name: "&cPlease type statistic name to view!"
+        Header: "&8&m-------------------[&6 Top 10 &8&m]-------------------"
+        Format: "&e#%number% %player% - %value% &7%user_statistic%"
+  Statistics:
+    Wins: "Wins ▸ %number%"
+    Loses: "Loses ▸ %number%"
+    Games-Played: "&aGames Played &e%number%"
+    Level: "&aLevel &e%number%"
+    Exp: "&aExperience &e%number%"
+    Next-Level-Exp: "&aExp to Level Up &e%number%"
+  Invalid-Name: "&cName of statistic is invalid! Type: %value%"
+  Unknown-Player: "&fUnknown Player"
+
 
 # Don't edit it. But who's stopping you? It's your server!
 # Really, don't edit ;p
-File-Version-Do-Not-Edit: 8
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

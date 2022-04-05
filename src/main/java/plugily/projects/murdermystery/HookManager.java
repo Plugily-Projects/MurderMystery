@@ -19,7 +19,8 @@
 package plugily.projects.murdermystery;
 
 import org.bukkit.Bukkit;
-import plugily.projects.murdermystery.utils.Debugger;
+import org.bukkit.plugin.java.JavaPlugin;
+import plugily.projects.murdermystery.Main;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -32,8 +33,9 @@ import java.util.Map;
 public class HookManager {
 
   private final Map<HookFeature, Boolean> hooks = new EnumMap<>(HookFeature.class);
-
-  public HookManager() {
+  private final Main plugin;
+  public HookManager(Main plugin) {
+    this.plugin = plugin;
     enableHooks();
   }
 
@@ -43,7 +45,7 @@ public class HookManager {
       for(Hook requiredHook : feature.getRequiredHooks()) {
         if(!Bukkit.getPluginManager().isPluginEnabled(requiredHook.pluginName)) {
           hooks.put(feature, false);
-          Debugger.debug("[HookManager] Feature {0} won't be enabled because {1} is not installed! Please install it in order to enable this feature in-game!",
+          plugin.getDebugger().debug("[HookManager] Feature {0} won't be enabled because {1} is not installed! Please install it in order to enable this feature in-game!",
             feature.name(), requiredHook.pluginName);
           hooked = false;
           break;
@@ -51,7 +53,7 @@ public class HookManager {
       }
       if(hooked) {
         hooks.put(feature, true);
-        Debugger.debug("[HookManager] Feature {0} enabled!", feature.name());
+        plugin.getDebugger().debug("[HookManager] Feature {0} enabled!", feature.name());
       }
     }
   }

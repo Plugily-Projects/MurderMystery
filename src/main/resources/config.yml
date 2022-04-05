@@ -1,9 +1,12 @@
-#     Murder Mystery configuration file
+### Initial config.yml for all plugily projects
+## Thanks for using our plugins! ~Tigerpanzer_02 from Plugily Projects
+#      PlugilyProjects configuration file
 #
-#    You can edit here the basic things of MM
+#    You can edit here the basic things of PlugilyProjects
 #      Please read everything CAREFULLY!
 #   You don't want to break anything, do you?
 #
+
 
 # Select locale of MurderMystery, default it's English.
 # Available locales:
@@ -22,151 +25,93 @@
 #    uk - Ukrainian
 locale: default
 
-# Enable bossbar support?
-Bossbar-Enabled: true
 
-# How many seconds game should take to start.
-Starting-Waiting-Time: 60
+# Should we display a boss bar with additional arena information?
+Bossbar:
+  Display: true
+  # Interval in seconds between messages
+  Interval: 10
 
-# Lobby waiting time set when lobby max players number is reached, used to start game quicker.
-Start-Time-On-Full-Lobby: 15
 
-# How many seconds classic game should play.
-Classic-Gameplay-Time: 270
-
-# Should we hook into bungee cord? (If you wanna use arena per server option)
+# Should we hook into bungeecord? (If you wanna use arena per server option)
+# This option will let you access bungee.yml and its options.
 # You STILL need to use external addon for HUB server game signs
-# Murder Mystery doesn't offer that addon.
-# Check here for more info: https://wiki.plugily.xyz/murdermystery/support/servertips#bungeecord-lobby-signs
-BungeeActivated: false
+# Check here for more info: https://wiki.plugily.xyz/
+Bungee-Mode: false
+
+
+# Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
+# This saves inventory of players and restores it after player leaves arena.
+# Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions
+Inventory-Manager: true
+
+
+Commands:
+  # Commands which can be used in game, remove all of them to disable (only works if Block.In-Game.Commands = true)
+  Whitelist:
+    - me
+    - help
+  # Enable and Disable predefined shortened commands or add your own
+  Shorter:
+    '1':
+      Short: "start"
+      Executes: "plugilyprojectsadmin forcestart"
+      Enabled: true
+    '2':
+      Short: "leave"
+      Executes: "plugilyprojects leave"
+      Enabled: true
+    '3':
+      Short: "kit"
+      Executes: "plugilyprojects selectkit"
+      Enabled: false
+    '4':
+      Short: "stats"
+      Executes: "plugilyprojects stats"
+      Enabled: false
+    '5':
+      Short: "top"
+      Executes: "plugilyprojects top"
+      Enabled: true
+
+
+# Block some functions of your players
+Block:
+  In-Game:
+    # Should we block every not plugin associated commands in game?
+    Commands: true
+    # Should the leave command be blocked inside arena?
+    Leave: false
+    # Cancels Item Movement into player crafting, enchantment tables, anvils ...
+    Item-Move: true
+
 
 # Enable this option when you're using MySQL, otherwise it won't work.
 # Be careful when changing this because there is NO migrator between
 # flat file and MySQL for player stats.
-DatabaseActivated: false
+# If this option is disabled it means all stats will be saved as flat file!
+Database: false
 
-# Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
-# This saves inventory of players and restores it after player leaves arena.
-# Saved elements: max health, health, food, experience, full inventory, armor contents, fire ticks, active potions, gamemode
-InventoryManager: true
 
-# Should in-game chat format be enabled?
-# You can edit the formatting in language.yml
-ChatFormat-Enabled: true
+# Should we enable in game rewards? See rewards.yml for more...
+# You should also check out our script engine tutorial for rewards! https://tutorial.plugily.xyz
+Rewards: true
 
-# Should we disable all chat related stuff?
-# It will disable the separated chat, for example
-Disable-Separate-Chat: false
 
-# Should we disable death messages, so the player dies without other recognizes it
-# It will not broadcast the death message to all ;)
-Hide-Death: false
+# Enable in game (eg. '[KIT][LEVEL] Tigerpanzer_02: hey') special formatting?
+# Formatting is configurable in language.yml
+# You can use PlaceholderAPI placeholders in chat format!
+Plugin-Chat-Format: true
 
-# Should we override corpses spawn from CorpsesReborn plugin?
-# When player will die outside game corpse won't be spawned!
-# Disable this if you don't want this!
-# WARNING: If disabled, two corpses will be spawned when player in-game dies
-Override-Corpses-Spawn: true
 
-# Which item should be your Murderer sword?
-Murderer-Sword-Material: IRON_SWORD
+# Should we enable a separate arena chat for players inside a arena
+# Useful on multi arena servers that don't want the same chat for all players on the server
+Separate-Arena-Chat: true
 
-# How many blocks per tick sword thrown by murderer should fly
-# Please avoid high values as it might look like the sword is
-# blinking each tick
-Murderer-Sword-Speed: 0.65
 
-# How many blocks should the sword fly
-Murderer-Sword-Fly-Range: 20
+# Should we fire some cool fireworks at locations of every player at special events such as the game end?
+Firework: true
 
-# In what radius should we hit the players
-Murderer-Sword-Fly-Hit-Range: 0.5
-
-#How long should be the sword attack after throw cooldown in seconds?
-#Its normal lower than Murderer-Sword-Fly-Cooldown!
-Murderer-Sword-Attack-Cooldown: 1
-
-#How long should be the sword fly cooldown in seconds?
-Murderer-Sword-Fly-Cooldown: 5
-
-#Should we change spawner mode to spawn on all spawners instant of random one
-Change-Gold-Spawner-Mode-To-All: false
-
-#Should we disable the gold spawn limit (It does not spawn more gold than spawner locations)
-Disable-Gold-Limiter: false
-
-#How much arrows should a player with bow gets when he pick up a gold ingot?
-Detective-Gold-Pick-Up-Arrows: 1
-
-#How much gold should a player need to get a bow
-Gold-For-Bow: 10
-
-#How much arrows should the player get? (Cause: Bow because enough gold collected)
-Gold-Bow-Arrows: 3
-
-#How much arrows should the detective gets on game start or when a player get a bow?
-Detective-Default-Arrows: 3
-
-#How much arrows should the fake detective get? (Cause: Player pick up bow after detective died)
-Detective-Fake-Arrows: 3
-
-#How much arrows should the player get when the prayer gives a bow to him?
-Detective-Prayer-Arrows: 2
-
-#How long should be the bow shoot cooldown in seconds?
-Detective-Bow-Cooldown: 5
-
-#Should Detectives be killed if they kill a innocent?
-Enable-Kill-Detective-If-Innocent-Killed: true
-
-#Should there be a innocent locator
-Enable-Innocent-Locator: true
-
-#Should the murderer get speed effect?
-Speed-Effect-Murderer:
-  Enabled: true
-  #Enter a multiplier (min 2, max 10)
-  Speed: 3
-
-# Play sound when a user gets score.
-# https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
-AddScore-Sound: ""
-
-# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/murdermystery/setup/cmdsandperms#basic-permissions
-Basic-Permissions:
-  Full-Games-Permission: "murdermystery.fullgames"
-  # <arena> represents arena name (NOT MAP NAME!), for example: 'murdermystery.join.MM02'
-  # use 'murdermystery.join.*' to enable access to all arenas
-  Join-Permission: "murdermystery.join.<arena>"
-
-# Should we enable short commands such as /start and /leave
-Enable-Short-Commands: false
-
-# Should /mm leave command be blocked?
-Disable-Leave-Command: false
-
-# Should the /mma delete command awaits the confirmation to delete the arena?
-Deleting-Arena-Needs-Confirmation: true
-
-# Should players get no fall damage?
-Disable-Fall-Damage: false
-
-# Commands which can be used in game, remove all of them to disable
-Whitelisted-Commands:
-  - me
-  - help
-
-# Enable in game rewards? See rewards.yml for more...
-Rewards-Enabled: false
-
-# Should we block every not Murder Mystery associated commands in game?
-Block-Commands-In-Game: true
-
-# Should we fire some cool fireworks at location of every player after the game ends?
-Firework-When-Game-Ends: true
-
-# Should players' name tags in game be hidden?
-Nametags-Hidden: true
 
 # Should blocks behind game signs change their color based on game state?
 # They will change color to:
@@ -175,17 +120,74 @@ Nametags-Hidden: true
 # - orange (in game) stained glass
 # - gray (ending) stained glass
 # - black (restarting) stained glass
-Signs-Block-States-Enabled: true
+# or define your own at signs.yml!
+Sign-Block-States: true
 
 
-Arena-Selector:
-  # Change items of arena selector
-  State-Item:
-    Waiting: LIME_wool
-    Starting: YELLOW_wool
-    In-Game: RED_wool
-    Ending: RED_wool
-    Restarting: RED_wool
+# Should holiday events for the plugin be enabled?
+# Eg. 4 days before and 4 days after Halloween special effects
+# for death, spooky! There are more holiday events! Check wiki!
+# Wiki: -
+Holidays: true
+
+
+# Should the plugin enable special powerups which can be found in powerups.yml
+Powerups: false
+
+
+# Should we create leaderboards out of the stats?
+Leaderboard: true
+
+
+Parties:
+  # Should we try to hook into your current party plugin? (Supports well know party plugins, see wiki!)
+  # It will group up all players with the party leader. The party leader can join with the whole party!
+  External: true
+  # Should we enable our own party system that can be only used for this plugin?
+  # Check the wiki for commands
+  Own: false
+
+
+Damage:
+  # Should players get fall damage?
+  Fall: false
+  # Should players get drowning damage?
+  Drowning: false
+  # Should players get fire damage?
+  Fire: false
+  # Should players lose food ingame?
+  Food: false
+
+
+Option:
+  Player:
+    # Disable player drops ingame?
+    Drop: true
+
+
+Cycle:
+  # Should we make permanent clear weather on all worlds where our arenas are?
+  Weather: false
+  # Should the time on the world your arenas are modified to stay at the same time?
+  Daylight:
+    Enable: false
+    Time: 10000
+
+
+# How many seconds game should take to start.
+Time-Manager:
+  Waiting: 20
+  Starting: 60
+  Shorten-Waiting-Full: 15
+  Shorten-Waiting-Force: 5
+  In-Game: 270
+  Ending: 10
+  Restarting: 5
+
+
+# Allow spectators on arena instances
+Spectators: true
+
 
 Update-Notifier:
   # Should we check for updates on plugin start/after admin join?
@@ -195,17 +197,79 @@ Update-Notifier:
   # BETA IS NOT ALWAYS AS STABLE AS NORMAL RELEASE!
   Notify-Beta-Versions: true
 
-#Disable Party features of external party plugins (such as PAF, Parties ...)
-Disable-Parties: true
+Corpses:
+  # Should we override corpses spawn from CorpsesReborn plugin?
+  # When player will die outside game corpse won't be spawned!
+  # Disable this if you don't want this!
+  # WARNING: If disabled, two corpses will be spawned when player in-game dies
+  Integration-Overwrite: true
 
-#Add trails that you want to blacklist from all trails(particles)
-Blacklisted-Trails:
-  - "elder_guardian"
-  - "block_crack"
-  - "item_crack"
-  - "block_dust"
 
-# Don't modify.
-Version: 24
+Gold:
+  #Should we change spawner mode to spawn on all spawners instant of random one
+  Spawner-Mode: false
+  #Should we disable the gold spawn limit (It does not spawn more gold than spawner locations)
+  Limiter: false
+  Amount:
+    #How much gold should a player need to get a bow
+    Bow: 10
+    #How much arrows should the player get? (Cause: Bow because enough gold collected)
+    Arrows: 3
+    #How much arrows should a player with bow gets when he pick up a gold ingot?
+    Pick-Up: 1
 
-# No way! You've reached the end! But... where's the dragon!?
+
+Bow:
+  #Should Detectives be killed if they kill a innocent?
+  Kill-Detective: true
+  Amount:
+    Arrows:
+      #How much arrows should the detective gets on game start or when a player get a bow?
+      Detective: 3
+      #How much arrows should the fake detective get? (Cause: Player pick up bow after detective died)
+      Fake: 3
+      #How much arrows should the player get when the prayer gives a bow to him?
+      Prayer: 2
+      #How much arrows should the player get after x picked up gold
+      Gold: 3
+    #How long should be the bow shoot cooldown in seconds?
+    Cooldown: 5
+
+
+Hide:
+  # Should we disable death messages, so the player dies without other recognizes it
+  # It will not broadcast the death message to all ;)
+  Death: false
+  # Should players' name tags in game be hidden?
+  Nametags: true
+
+
+Murderer:
+  #Should the murderer get speed effect?
+  #Enter a multiplier (min 2, max 10, 1 is normal speed)
+  Speed: 3
+
+
+Sword:
+  # How many blocks per tick sword thrown by murderer should fly
+  # Please avoid high values as it might look like the sword is
+  # blinking each tick
+  Speed: 0.65
+  Fly:
+    # How many blocks should the sword fly
+    Range: 20
+    # In what radius should we hit the players
+    Radius: 0.5
+  Cooldown:
+    #How long should be the sword attack after throw cooldown in seconds?
+    #Its normal lower than Murderer-Sword-Fly-Cooldown!
+    Attack: 1
+    #How long should be the sword fly cooldown in seconds?
+    Fly: 5
+
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

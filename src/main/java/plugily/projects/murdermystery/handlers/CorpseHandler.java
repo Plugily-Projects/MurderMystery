@@ -31,15 +31,14 @@ import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 
-import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
-import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
-import plugily.projects.commonsbox.minecraft.hologram.ArmorStandHologram;
-import plugily.projects.commonsbox.minecraft.hologram.HologramManager;
-import plugily.projects.murdermystery.HookManager;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
+import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
-import plugily.projects.murdermystery.arena.ArenaRegistry;
+import plugily.projects.murdermystery.HookManager;
 import plugily.projects.murdermystery.arena.corpse.Corpse;
 import plugily.projects.murdermystery.arena.corpse.Stand;
 
@@ -91,12 +90,12 @@ public class CorpseHandler implements Listener {
       stand.setCustomNameVisible(false);
       stand.setHeadPose(new EulerAngle(Math.toRadians(p.getLocation().getX()), Math.toRadians(p.getLocation().getPitch()), Math.toRadians(p.getLocation().getZ())));
 
-      HologramManager.getArmorStands().add(stand);
+      plugin.getHologramManager().getArmorStands().add(stand);
       ArmorStandHologram hologram = getLastWordsHologram(p);
       arena.addHead(new Stand(hologram, stand));
       Bukkit.getScheduler().runTaskLater(plugin, () -> {
         hologram.delete();
-        HologramManager.getArmorStands().remove(stand);
+        plugin.getHologramManager().getArmorStands().remove(stand);
         Bukkit.getScheduler().runTaskLater(plugin, stand::remove, 20 * 20);
       }, 15 * 20);
       return;
@@ -114,7 +113,7 @@ public class CorpseHandler implements Listener {
 
   private ArmorStandHologram getLastWordsHologram(Player player) {
     ArmorStandHologram hologram = new ArmorStandHologram(player.getLocation());
-    hologram.appendLine(plugin.getChatManager().colorMessage("In-Game.Messages.Corpse-Last-Words", player).replace("%player%", player.getName()));
+    hologram.appendLine(new MessageBuilder(plugin.getLastWordsManager().getHologramTitle()).player(player).build());
     hologram.appendLine(plugin.getLastWordsManager().getRandomLastWord(player));
     return hologram;
   }
@@ -124,14 +123,14 @@ public class CorpseHandler implements Listener {
     if(lastSpawnedCorpse == null) {
       return;
     }
-    if(plugin.getConfig().getBoolean("Override-Corpses-Spawn", true) && !lastSpawnedCorpse.equals(e.getCorpse())) {
+    if(plugin.getConfigPreferences().getOption("CORPSES_INTEGRATION_OVERWRITE") && !lastSpawnedCorpse.equals(e.getCorpse())) {
       e.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onCorpseClick(CorpseClickEvent e) {
-    if(ArenaRegistry.isInArena(e.getClicker())) {
+    if(plugin.getArenaRegistry().isInArena(e.getClicker())) {
       e.setCancelled(true);
       e.getClicker().closeInventory();
     }

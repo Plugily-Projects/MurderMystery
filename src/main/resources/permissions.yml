@@ -1,0 +1,53 @@
+# You can create custom players permissions here.
+# Player with your custom permission will get int
+
+Chances-Boost:
+  # Do not use dots (.), they won't work.
+  # Increase chance by 10 percent
+  chances-boost-5: 10
+  chances-boost-50: 50
+  # Increase chance by 100 percent
+  admin-boost: 100
+
+
+Murderer-Boost:
+  # Do not use dots (.), they won't work.
+  # Increase murderer chance by 10 percent
+  murderer-boost-5: 10
+  murderer-boost-50: 50
+  # Increase murderer chance by 100 percent
+  admin-boost: 100
+
+
+Detective-Boost:
+  # Do not use dots (.), they won't work.
+  # Increase detective chance by 10 percent
+  detective-boost-5: 10
+  detective-boost-50: 50
+  # Increase detective chance by 100 percent
+  admin-boost: 100
+
+
+# Create custom exp boost permissions
+Exp-Boost:
+  # Do not use dots (.), they won't work.
+  # Increase exp by 10 percent
+  exp-boost-10: 10
+  exp-boost-50: 50
+  # Increase exp by 300 percent
+  admin-boost: 300
+
+# Basic permissions for game, permissions explained here: https://wiki.plugily.xyz/
+Basic:
+  Full-Games: "plugilyprojects.fullgames"
+  # <arena> represents arena name (NOT MAP NAME!), for example: 'plugilyprojects.join.ARENAnice'
+  # use 'plugilyprojects.join.*' to enable access to all arenas
+  Join: "plugilyprojects.join.<arena>"
+  Forcestart: "plugilyprojects.admin.forcestart"
+
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

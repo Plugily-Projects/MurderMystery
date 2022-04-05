@@ -48,24 +48,12 @@
             <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
         <repository>
-            <id>papi-repo</id>
-            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-        <repository>
             <id>plugilyprojects</id>
-            <url>https://maven.plugily.xyz/</url>
+            <url>https://maven.plugily.xyz/releases</url>
         </repository>
         <repository>
             <id>codemc-repo</id>
             <url>https://repo.codemc.org/repository/maven-public/</url>
-        </repository>
-        <repository>
-            <id>simonsators-repo</id>
-            <url>https://simonsator.de/repo/</url>
-        </repository>
-        <repository>
-            <id>alessiodp-repo</id>
-            <url>https://repo.alessiodp.com/releases/</url>
         </repository>
         <repository>
             <id>spigot-repo</id>
@@ -79,55 +67,6 @@
             <artifactId>paper-api</artifactId>
             <version>1.17.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>plugily.projects</groupId>
-            <artifactId>commons-box-classic</artifactId>
-            <version>1.3.3</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>plugily.projects</groupId>
-            <artifactId>commons-box-database</artifactId>
-            <version>1.3.3</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>plugily.projects</groupId>
-            <artifactId>commons-box-minecraft</artifactId>
-            <version>1.3.3</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.tigerhix.lib</groupId>
-            <artifactId>scoreboard</artifactId>
-            <version>1.0.9</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>plugily.projects.inventoryframework</groupId>
-            <artifactId>IF</artifactId>
-            <version>0.10.0</version>
-            <scope>compile</scope>
-            <classifier>legacy-jar-with-dependencies</classifier>
-        </dependency>
-        <dependency>
-            <groupId>me.clip</groupId>
-            <artifactId>placeholderapi</artifactId>
-            <version>2.10.9</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.alessiodp.parties</groupId>
-            <artifactId>parties-api</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.bstats/bstats-bukkit -->
-        <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>2.2.1</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
         <dependency>
@@ -144,48 +83,11 @@
             <systemPath>${project.basedir}/lib/CorpseReborn.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>3.0.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.10.0</version>
+            <groupId>plugily.projects</groupId>
+            <artifactId>MiniGamesBox-Classic</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.simonsator</groupId>
-            <artifactId>partyandfriends</artifactId>
-            <version>1.0.52</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/PAFSpigot.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>de.simonsator</groupId>
-            <artifactId>Party-and-Friends-MySQL-Edition-Spigot-API</artifactId>
-            <version>1.3.2</version>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>be.maximvdw</groupId>
-                    <artifactId>MVdWPlaceholderAPI</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>de.simonsator</groupId>
-            <artifactId>Spigot-Party-API-For-RedisBungee</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>redis.clients</groupId>
-                    <artifactId>jedis</artifactId>
-                </exclusion>
-            </exclusions>
+            <optional>true</optional>
         </dependency>
     </dependencies>
     <build>
@@ -245,25 +147,16 @@
                         <configuration>
                             <relocations>
                                 <relocation>
-                                    <pattern>plugily.projects.inventoryframework</pattern>
-                                    <shadedPattern>plugily.projects.murdermystery.utils.inventoryframework
-                                    </shadedPattern>
-                                </relocation>
-                                <relocation>
                                     <pattern>com.zaxxer.hikari</pattern>
                                     <shadedPattern>plugily.projects.murdermystery.database.hikari</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>me.tigerhix.lib.scoreboard</pattern>
-                                    <shadedPattern>plugily.projects.murdermystery.utils.scoreboard</shadedPattern>
+                                    <pattern>plugily.projects.minigamesbox</pattern>
+                                    <shadedPattern>plugily.projects.murdermystery.minigamesbox</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>plugily.projects.commonsbox</pattern>
                                     <shadedPattern>plugily.projects.murdermystery.commonsbox</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.bstats</pattern>
-                                    <shadedPattern>plugily.projects.murdermystery.utils.bstats</shadedPattern>
                                 </relocation>
                             </relocations>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -286,21 +179,20 @@
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ftp</artifactId>
-                <version>3.4.3</version>
+                <artifactId>wagon-ssh</artifactId>
+                <version>3.5.1</version>
             </extension>
         </extensions>
     </build>
-
     <distributionManagement>
         <repository>
-            <id>plugily-projects-repo</id>
-            <url>ftp://81.19.211.8</url>
+            <id>plugily-projects-releases-repository</id>
+            <url>https://maven.plugily.xyz/releases</url>
         </repository>
         <site>
             <id>plugily-projects-java-docs</id>
-            <name>murdermystery</name>
-            <url>ftp://81.19.211.8</url>
+            <name>MurderMystery</name>
+            <url>sftp://91.229.245.16/var/www/jd</url>
         </site>
     </distributionManagement>
 

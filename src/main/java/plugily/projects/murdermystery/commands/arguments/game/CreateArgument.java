@@ -27,15 +27,12 @@ import org.bukkit.entity.Player;
 
 import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
 import plugily.projects.commonsbox.minecraft.serialization.LocationSerializer;
-import plugily.projects.murdermystery.arena.Arena;
-import plugily.projects.murdermystery.arena.ArenaRegistry;
+import plugily.projects.murdermystery.old.arena.ArenaRegistry;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
-import plugily.projects.murdermystery.commands.arguments.data.CommandArgument;
-import plugily.projects.murdermystery.commands.arguments.data.LabelData;
-import plugily.projects.murdermystery.commands.arguments.data.LabeledCommandArgument;
-import plugily.projects.murdermystery.handlers.ChatManager;
-import plugily.projects.murdermystery.handlers.setup.SetupInventory;
+import plugily.projects.murdermystery.arguments.data.CommandArgument;
+import plugily.projects.murdermystery.arguments.data.LabelData;
+import plugily.projects.murdermystery.arguments.data.LabeledCommandArgument;
 
 import java.util.ArrayList;
 import java.util.List;
