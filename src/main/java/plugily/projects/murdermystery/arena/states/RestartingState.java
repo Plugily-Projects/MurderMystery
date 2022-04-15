@@ -21,7 +21,6 @@ package plugily.projects.murdermystery.arena.states;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.states.PluginRestartingState;
 import plugily.projects.murdermystery.arena.Arena;
-import plugily.projects.thebridge.arena.Arena;
 
 /**
  * @author Plajer

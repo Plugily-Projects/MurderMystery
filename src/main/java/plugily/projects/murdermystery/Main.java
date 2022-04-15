@@ -1,6 +1,5 @@
 package plugily.projects.murdermystery;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -35,7 +34,10 @@ import plugily.projects.murdermystery.arena.special.SpecialBlockEvents;
 import plugily.projects.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
 import plugily.projects.murdermystery.arena.special.pray.PrayerRegistry;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
+import plugily.projects.murdermystery.events.PluginEvents;
+import plugily.projects.murdermystery.handlers.CorpseHandler;
 import plugily.projects.murdermystery.handlers.lastwords.LastWordsManager;
+import plugily.projects.murdermystery.handlers.setup.SetupInventory;
 import plugily.projects.murdermystery.handlers.skins.sword.SwordSkinManager;
 import plugily.projects.murdermystery.handlers.trails.BowTrailsHandler;
 import plugily.projects.murdermystery.handlers.trails.TrailsManager;
@@ -43,7 +45,9 @@ import plugily.projects.murdermystery.handlers.trails.TrailsManager;
 import java.io.File;
 import java.util.Arrays;
 
-/** Created by Tigerpanzer_02 on 13.03.2022 */
+/**
+ * Created by Tigerpanzer_02 on 13.03.2022
+ */
 public class Main extends PluginMain {
   private FileConfiguration entityUpgradesConfig;
   private ArenaRegistry arenaRegistry;
@@ -53,6 +57,7 @@ public class Main extends PluginMain {
   private TrailsManager trailsManager;
   private SwordSkinManager swordSkinManager;
   private HookManager hookManager;
+  private CorpseHandler corpseHandler;
 
   @TestOnly
   public Main() {
@@ -75,6 +80,12 @@ public class Main extends PluginMain {
     addMessages();
     addAdditionalValues();
     initializePluginClasses();
+
+    if(getConfigPreferences().getOption("NAMETAGS_HIDDEN")) {
+      getServer().getScheduler().scheduleSyncRepeatingTask(this, () ->
+          getServer().getOnlinePlayers().forEach(ArenaUtils::updateNameTagsVisibility), 60, 140);
+    }
+
     getDebugger().debug("Full {0} plugin enabled", getName());
     getDebugger()
         .debug(
@@ -84,6 +95,9 @@ public class Main extends PluginMain {
 
   public void initializePluginClasses() {
     addFileName("lastwords");
+    addFileName("skins");
+    addFileName("special_blocks");
+    addFileName("trails");
     addArenaOptions();
     Arena.init(this);
     ArenaUtils.init(this);
@@ -102,6 +116,7 @@ public class Main extends PluginMain {
     new SpecialBlockEvents(this);
     trailsManager = new TrailsManager(this);
     hookManager = new HookManager(this);
+    corpseHandler = new CorpseHandler(this);
     swordSkinManager = new SwordSkinManager(this);
     new PluginEvents(this);
     addPluginMetrics();
@@ -230,14 +245,13 @@ public class Main extends PluginMain {
             "CORPSES_INTEGRATION_OVERWRITE",
             new ConfigOption("Corpses.Integration-Overwrite", true));
     getConfigPreferences()
-        .registerOption("GOLD_SPAWNER_MODE", new ConfigOption("Gold.Spawner-Mode", false));
-    getConfigPreferences().registerOption("GOLD_LIMITER", new ConfigOption("Gold.Limiter", false));
-    getConfigPreferences()
         .registerOption("BOW_KILL_DETECTIVE", new ConfigOption("Bow.Kill-Detective", true));
     getConfigPreferences().registerOption("HIDE_DEATH", new ConfigOption("Hide.Death", false));
     getConfigPreferences()
         .registerOption("HIDE_NAMETAGS", new ConfigOption("Hide.Nametags", false));
-
+    getConfigPreferences().registerOption("GOLD_SPAWNER_MODE_ALL", new ConfigOption("Gold.Spawner-Mode", false));
+    getConfigPreferences().registerOption("GOLD_LIMITER", new ConfigOption("Gold.Limiter", false));
+    getConfigPreferences().registerOption("MURDERER_LOCATOR", new ConfigOption("Murderer.Locator", true));
     getStatsStorage()
         .registerStatistic("WINS", new StatisticType("wins", true, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage()
@@ -576,17 +590,17 @@ public class Main extends PluginMain {
               @Override
               public String getValue(Player player, PluginArena arena) {
                 Arena pluginArena = getArenaRegistry().getArena(arena.getId());
-                if (pluginArena == null) {
+                if(pluginArena == null) {
                   return null;
                 }
 
                 StringBuilder detectives = new StringBuilder();
-                for (Player p : pluginArena.getDetectiveList()) {
+                for(Player p : pluginArena.getDetectiveList()) {
                   detectives.append(p.getName()).append(", ");
                 }
 
                 int index = detectives.length() - 2;
-                if (index > 0 && index < detectives.length()) {
+                if(index > 0 && index < detectives.length()) {
                   detectives.deleteCharAt(index);
                 }
 
@@ -604,20 +618,20 @@ public class Main extends PluginMain {
               @Override
               public String getValue(Player player, PluginArena arena) {
                 Arena pluginArena = getArenaRegistry().getArena(arena.getId());
-                if (pluginArena == null) {
+                if(pluginArena == null) {
                   return null;
                 }
 
                 StringBuilder murders = new StringBuilder();
-                for (Player p : pluginArena.getMurdererList()) {
+                for(Player p : pluginArena.getMurdererList()) {
                   User user = getUserManager().getUser(p);
                   int localKills = user.getStatistic("LOCAL_KILLS");
                   murders.append(p.getName());
-                  if (pluginArena.getMurdererList().size() > 1) {
+                  if(pluginArena.getMurdererList().size() > 1) {
                     murders.append(" (").append(localKills).append("), ");
                   }
                 }
-                if (pluginArena.getMurdererList().size() > 1) {
+                if(pluginArena.getMurdererList().size() > 1) {
                   murders.deleteCharAt(murders.length() - 2);
                 }
 
@@ -635,11 +649,11 @@ public class Main extends PluginMain {
               @Override
               public String getValue(Player player, PluginArena arena) {
                 Arena pluginArena = getArenaRegistry().getArena(arena.getId());
-                if (pluginArena == null) {
+                if(pluginArena == null) {
                   return null;
                 }
                 int murdererKills = 0;
-                for (Player p : pluginArena.getMurdererList()) {
+                for(Player p : pluginArena.getMurdererList()) {
                   User user = getUserManager().getUser(p);
                   int localKills = user.getStatistic("LOCAL_KILLS");
                   murdererKills += localKills;
@@ -655,15 +669,15 @@ public class Main extends PluginMain {
               @Override
               public String getValue(Player player, PluginArena arena) {
                 Arena pluginArena = getArenaRegistry().getArena(arena.getId());
-                if (pluginArena == null) {
+                if(pluginArena == null) {
                   return null;
                 }
                 Player hero = pluginArena.getCharacter(Arena.CharacterType.HERO);
                 return hero != null
                     ? hero.getName()
                     : new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_NOBODY")
-                        .asKey()
-                        .build();
+                    .asKey()
+                    .build();
               }
             });
 
@@ -676,22 +690,22 @@ public class Main extends PluginMain {
               @Override
               public String getValue(Player player, PluginArena arena) {
                 Arena pluginArena = getArenaRegistry().getArena(arena.getId());
-                if (pluginArena == null) {
+                if(pluginArena == null) {
                   return null;
                 }
 
                 int totalMurderer = 0;
 
-                for (Player p : arena.getPlayers()) {
+                for(Player p : arena.getPlayers()) {
                   User user = getUserManager().getUser(p);
                   totalMurderer += user.getStatistic("CONTRIBUTION_MURDERER");
                 }
                 User user = getUserManager().getUser(player);
                 return NumberUtils.round(
-                        ((double) user.getStatistic("CONTRIBUTION_MURDERER")
-                                / (double) totalMurderer)
-                            * 100.0,
-                        2)
+                    ((double) user.getStatistic("CONTRIBUTION_MURDERER")
+                        / (double) totalMurderer)
+                        * 100.0,
+                    2)
                     + "%";
               }
             });
@@ -705,22 +719,22 @@ public class Main extends PluginMain {
               @Override
               public String getValue(Player player, PluginArena arena) {
                 Arena pluginArena = getArenaRegistry().getArena(arena.getId());
-                if (pluginArena == null) {
+                if(pluginArena == null) {
                   return null;
                 }
 
                 int totalDetectives = 0;
 
-                for (Player p : arena.getPlayers()) {
+                for(Player p : arena.getPlayers()) {
                   User user = getUserManager().getUser(p);
                   totalDetectives += user.getStatistic("CONTRIBUTION_DETECTIVE");
                 }
                 User user = getUserManager().getUser(player);
                 return NumberUtils.round(
-                        ((double) user.getStatistic("CONTRIBUTION_DETECTIVE")
-                                / (double) totalDetectives)
-                            * 100.0,
-                        2)
+                    ((double) user.getStatistic("CONTRIBUTION_DETECTIVE")
+                        / (double) totalDetectives)
+                        * 100.0,
+                    2)
                     + "%";
               }
             });
@@ -734,12 +748,12 @@ public class Main extends PluginMain {
               @Override
               public String getValue(Player player, PluginArena arena) {
                 Arena pluginArena = getArenaRegistry().getArena(arena.getId());
-                if (pluginArena == null) {
+                if(pluginArena == null) {
                   return null;
                 }
 
-                if (pluginArena.isDetectiveDead()) {
-                  if (!pluginArena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
+                if(pluginArena.isDetectiveDead()) {
+                  if(!pluginArena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
                     return new MessageBuilder("SCOREBOARD_DETECTIVE_BOW_DROPPED").build();
                   } else {
                     return new MessageBuilder("SCOREBOARD_DETECTIVE_BOW_PICKED").build();
@@ -759,12 +773,12 @@ public class Main extends PluginMain {
               @Override
               public String getValue(Player player, PluginArena arena) {
                 Arena pluginArena = getArenaRegistry().getArena(arena.getId());
-                if (pluginArena == null) {
+                if(pluginArena == null) {
                   return null;
                 }
                 int innocents = 0;
-                for (Player p : arena.getPlayersLeft()) {
-                  if (!Role.isRole(Role.MURDERER, getUserManager().getUser(p))) {
+                for(Player p : arena.getPlayersLeft()) {
+                  if(!Role.isRole(Role.MURDERER, getUserManager().getUser(p))) {
                     innocents++;
                   }
                 }
@@ -779,16 +793,16 @@ public class Main extends PluginMain {
               @Override
               public String getValue(Player player, PluginArena arena) {
                 Arena pluginArena = getArenaRegistry().getArena(arena.getId());
-                if (pluginArena == null) {
+                if(pluginArena == null) {
                   return null;
                 }
                 User user = getUserManager().getUser(player);
                 String role;
-                if (pluginArena.isDeathPlayer(player)) {
+                if(pluginArena.isDeathPlayer(player)) {
                   role = new MessageBuilder("SCOREBOARD_ROLES_DEAD").asKey().build();
-                } else if (Role.isRole(Role.MURDERER, user, arena)) {
+                } else if(Role.isRole(Role.MURDERER, user, arena)) {
                   role = new MessageBuilder("SCOREBOARD_ROLES_DETECTIVE").asKey().build();
-                } else if (Role.isRole(Role.ANY_DETECTIVE, user, arena)) {
+                } else if(Role.isRole(Role.ANY_DETECTIVE, user, arena)) {
                   role = new MessageBuilder("SCOREBOARD_ROLES_MURDERER").asKey().build();
                 } else {
                   role = new MessageBuilder("SCOREBOARD_ROLES_INNOCENT").asKey().build();
@@ -811,19 +825,19 @@ public class Main extends PluginMain {
               @Nullable
               private String getSummary(Player player, PluginArena arena) {
                 Arena pluginArena = getArenaRegistry().getArena(arena.getId());
-                if (pluginArena == null) {
+                if(pluginArena == null) {
                   return null;
                 }
                 String summaryEnding;
 
-                if (pluginArena.getMurdererList().containsAll(pluginArena.getPlayersLeft())
+                if(pluginArena.getMurdererList().containsAll(pluginArena.getPlayersLeft())
                     && pluginArena.getMurdererList().contains(player)) {
                   summaryEnding =
                       new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_WIN")
                           .asKey()
                           .arena(pluginArena)
                           .build();
-                } else if (!pluginArena.getMurdererList().containsAll(pluginArena.getPlayersLeft())
+                } else if(!pluginArena.getMurdererList().containsAll(pluginArena.getPlayersLeft())
                     && !pluginArena.getMurdererList().contains(player)) {
                   summaryEnding =
                       new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_WIN")
@@ -857,15 +871,15 @@ public class Main extends PluginMain {
               @Nullable
               private String getSummary(PluginArena arena) {
                 Arena pluginArena = getArenaRegistry().getArena(arena.getId());
-                if (pluginArena == null) {
+                if(pluginArena == null) {
                   return null;
                 }
                 String summaryEnding;
 
-                if (pluginArena.getMurdererList().containsAll(pluginArena.getPlayersLeft())) {
+                if(pluginArena.getMurdererList().containsAll(pluginArena.getPlayersLeft())) {
                   summaryEnding =
                       new MessageBuilder(
-                              "IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_MURDERER_KILLED_ALL")
+                          "IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_MURDERER_KILLED_ALL")
                           .asKey()
                           .arena(pluginArena)
                           .build();
@@ -887,7 +901,7 @@ public class Main extends PluginMain {
             new Metrics.SimplePie(
                 "hooked_addons",
                 () -> {
-                  if (getServer().getPluginManager().getPlugin("MurderMystery-Extension") != null) {
+                  if(getServer().getPluginManager().getPlugin("MurderMystery-Extension") != null) {
                     return "Extension";
                   }
                   return "None";
@@ -928,6 +942,10 @@ public class Main extends PluginMain {
 
   public HookManager getHookManager() {
     return hookManager;
+  }
+
+  public CorpseHandler getCorpseHandler() {
+    return corpseHandler;
   }
 
   @Override

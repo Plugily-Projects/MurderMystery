@@ -57,12 +57,7 @@ import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.managers.MapRestorerManager;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.arena.special.pray.PrayerRegistry;
-import plugily.projects.murdermystery.old.arena.ArenaRegistry;
 import plugily.projects.murdermystery.utils.ItemPosition;
-import plugily.projects.thebridge.Main;
-import plugily.projects.thebridge.arena.base.Base;
-import plugily.projects.thebridge.arena.managers.ScoreboardManager;
-import plugily.projects.thebridge.kits.level.ArcherKit;
 
 /**
  * @author Plajer
@@ -117,7 +112,7 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     if (user.getCooldown("bow_shot") == 0) {
-      int bowCooldown = plugin.getConfig().getInt("Detective-Bow-Cooldown", 5);
+      int bowCooldown = plugin.getConfig().getInt("Bow.Amount.Cooldown", 5);
 
       user.setCooldown("bow_shot", bowCooldown);
       plugin.getBukkitHelper().applyActionBarCooldown(player, bowCooldown);
@@ -156,18 +151,19 @@ public class ArenaEvents extends PluginArenaEvents {
         e.getItem().remove();
 
         for (Player loopPlayer : arena.getPlayersLeft()) {
-          if (Role.isRole(Role.INNOCENT, plugin.getUserManager().getUser(loopPlayer))) {
+          User loopUser =  plugin.getUserManager().getUser(loopPlayer);
+          if (Role.isRole(Role.INNOCENT,loopUser)) {
             ItemPosition.setItem(
-                loopPlayer, ItemPosition.BOW_LOCATOR, new ItemStack(Material.AIR, 1));
+                loopUser, ItemPosition.BOW_LOCATOR, new ItemStack(Material.AIR, 1));
           }
         }
 
         arena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, player);
-        ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+        ItemPosition.setItem(user, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
         ItemPosition.setItem(
-            player,
+            user,
             ItemPosition.INFINITE_ARROWS,
-            new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Fake-Arrows", 3)));
+            new ItemStack(Material.ARROW, plugin.getConfig().getInt("Bow.Amount.Arrows.Fake", 3)));
         new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_BOW_PICKUP")
             .asKey()
             .player(player)
@@ -201,7 +197,7 @@ public class ArenaEvents extends PluginArenaEvents {
       stack.setAmount(3 * e.getItem().getItemStack().getAmount());
     }
 
-    ItemPosition.addItem(player, ItemPosition.GOLD_INGOTS, stack);
+    ItemPosition.addItem(user, ItemPosition.GOLD_INGOTS, stack);
     user.adjustStatistic("LOCAL_GOLD", stack.getAmount());
     ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP, stack.getAmount());
 
@@ -216,7 +212,7 @@ public class ArenaEvents extends PluginArenaEvents {
 
     if (Role.isRole(Role.ANY_DETECTIVE, user, arena)) {
       ItemPosition.addItem(
-          player,
+          user,
           ItemPosition.ARROWS,
           new ItemStack(
               Material.ARROW,
@@ -232,9 +228,9 @@ public class ArenaEvents extends PluginArenaEvents {
           .player(player)
           .arena(arena)
           .sendPlayer();
-      ItemPosition.setItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+      ItemPosition.setItem(user, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
       ItemPosition.addItem(
-          player,
+          user,
           ItemPosition.ARROWS,
           new ItemStack(Material.ARROW, plugin.getConfig().getInt("Bow.Amount.Arrows.Gold", 3)));
       player
@@ -271,9 +267,8 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
 
-    //todo support for skins later
     //just don't kill user if item isn't murderer sword
-    if(VersionUtils.getItemInHand(attacker).getType() != plugin.getConfigPreferences().getMurdererSword().getType()) {
+    if(VersionUtils.getItemInHand(attacker).getType() != plugin.getSwordSkinManager().getMurdererSword(attacker).getType()) {
       return;
     }
 
@@ -282,7 +277,7 @@ public class ArenaEvents extends PluginArenaEvents {
       if(plugin.getUserManager().getUser(attacker).getCooldown("sword_attack") > 0) {
         return;
       }
-    } else if(attacker.hasCooldown(plugin.getConfigPreferences().getMurdererSword().getType())) {
+    } else if(attacker.hasCooldown(plugin.getSwordSkinManager().getMurdererSword(attacker).getType())) {
       return;
     }
 
@@ -304,7 +299,7 @@ public class ArenaEvents extends PluginArenaEvents {
     user.adjustStatistic("LOCAL_KILLS", 1);
     ArenaUtils.addScore(user, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
 
-    Arena arena = ArenaRegistry.getArena(attacker);
+    Arena arena = plugin.getArenaRegistry().getArena(attacker);
     if(Role.isRole(Role.ANY_DETECTIVE, userVictim) && arena.lastAliveDetective()) {
       //if already true, no effect is done :)
       arena.setDetectiveDead(true);
@@ -326,7 +321,7 @@ public class ArenaEvents extends PluginArenaEvents {
     }
     Player attacker = (Player) ((Arrow) e.getDamager()).getShooter();
     User userAttacker = plugin.getUserManager().getUser(attacker);
-    if(ArenaRegistry.isInArena(attacker)) {
+    if(plugin.getArenaRegistry().isInArena(attacker)) {
       e.setCancelled(true);
       e.getDamager().remove();
     }
@@ -348,7 +343,7 @@ public class ArenaEvents extends PluginArenaEvents {
       e.setCancelled(true);
       return;
     }
-    Arena arena = ArenaRegistry.getArena(attacker);
+    Arena arena = plugin.getArenaRegistry().getArena(attacker);
     //we need to set it before the victim die, because of hero character
     if(Role.isRole(Role.MURDERER, userVictim)) {
       arena.setCharacter(Arena.CharacterType.HERO, attacker);
@@ -485,7 +480,7 @@ public class ArenaEvents extends PluginArenaEvents {
       user.setStatistic("LOCAL_GOLD", 0);
       plugin
           .getRewardsHandler()
-          .performReward(player, plugin.getRewardsHandler().getRewardType("DEATH");
+          .performReward(player, plugin.getRewardsHandler().getRewardType("DEATH"));
     }
   }
 
@@ -509,7 +504,7 @@ public class ArenaEvents extends PluginArenaEvents {
           ItemMeta bowMeta = bowLocator.getItemMeta();
           ComplementAccessor.getComplement().setDisplayName(bowMeta, new MessageBuilder("IN_GAME_MESSAGES_ARENA_LOCATOR_BOW").asKey().player(player).arena(arena).build() + " §7| §a" + (int) Math.round(player.getLocation().distance(player.getCompassTarget())));
           bowLocator.setItemMeta(bowMeta);
-          ItemPosition.setItem(player, ItemPosition.BOW_LOCATOR, bowLocator);
+          ItemPosition.setItem(user, ItemPosition.BOW_LOCATOR, bowLocator);
           return;
         }
       }
@@ -523,7 +518,7 @@ public class ArenaEvents extends PluginArenaEvents {
           if(Role.isRole(Role.INNOCENT, playerUser, playerArena) || Role.isRole(Role.ANY_DETECTIVE, playerUser, playerArena)) {
             ComplementAccessor.getComplement().setDisplayName(innocentMeta, new MessageBuilder("IN_GAME_MESSAGES_ARENA_LOCATOR_INNOCENT").asKey().player(player).arena(arena).build() + " §7| §a" + (int) Math.round(player.getLocation().distance(p.getLocation())));
             innocentLocator.setItemMeta(innocentMeta);
-            ItemPosition.setItem(player, ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
+            ItemPosition.setItem(user, ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
           }
         }
       }
@@ -533,7 +528,7 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler
   public void onItemMove(InventoryClickEvent e) {
-    if(e.getWhoClicked() instanceof Player && ArenaRegistry.isInArena((Player) e.getWhoClicked())) {
+    if(e.getWhoClicked() instanceof Player && plugin.getArenaRegistry().isInArena((Player) e.getWhoClicked())) {
       if(e.getView().getType() == InventoryType.CRAFTING || e.getView().getType() == InventoryType.PLAYER) {
         e.setResult(Event.Result.DENY);
       }

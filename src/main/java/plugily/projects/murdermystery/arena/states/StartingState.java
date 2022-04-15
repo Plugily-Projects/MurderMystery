@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Plajer
- *     <p>Created at 03.06.2019
+ * <p>Created at 03.06.2019
  */
 public class StartingState extends PluginStartingState {
 
@@ -56,21 +56,21 @@ public class StartingState extends PluginStartingState {
   public void handleCall(PluginArena arena) {
     super.handleCall(arena);
     Arena pluginArena = (Arena) getPlugin().getArenaRegistry().getArena(arena.getId());
-    if (pluginArena == null) {
+    if(pluginArena == null) {
       return;
     }
 
     int totalMurderer = 0;
     int totalDetective = 0;
 
-    for (Player p : arena.getPlayers()) {
+    for(Player p : arena.getPlayers()) {
       User user = arena.getPlugin().getUserManager().getUser(p);
       totalMurderer += user.getStatistic("CONTRIBUTION_MURDERER");
       totalDetective += user.getStatistic("CONTRIBUTION_DETECTIVE");
     }
 
-    if (!pluginArena.isHideChances()) {
-      for (Player player : arena.getPlayers()) {
+    if(!pluginArena.isHideChances()) {
+      for(Player player : arena.getPlayers()) {
         String message =
             new MessageBuilder("IN_GAME_MESSAGES_ARENA_ROLE_CHANCES_ACTION_BAR")
                 .asKey()
@@ -81,10 +81,10 @@ public class StartingState extends PluginStartingState {
       }
     }
 
-    if (arena.getTimer() == 0 || arena.isForceStart()) {
+    if(arena.getTimer() == 0 || arena.isForceStart()) {
       Map<User, Double> murdererChances = new HashMap<>();
       Map<User, Double> detectiveChances = new HashMap<>();
-      for (Player player : arena.getPlayers()) {
+      for(Player player : arena.getPlayers()) {
         User user = arena.getPlugin().getUserManager().getUser(player);
         /*
                    //reset local variables to be 100% sure
@@ -114,7 +114,7 @@ public class StartingState extends PluginStartingState {
       addRole(pluginArena, Role.MURDERER, murdererChances, playersToSet);
       addRole(pluginArena, Role.DETECTIVE, detectiveChances, playersToSet);
 
-      for (Player player : playersToSet) {
+      for(Player player : playersToSet) {
         new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_INNOCENT")
             .asKey()
             .player(player)
@@ -155,8 +155,8 @@ public class StartingState extends PluginStartingState {
 
     Object[] sortedChancesUser = sortedChances.keySet().toArray();
     int amount = role == Role.MURDERER ? maxmurderer : maxdetectives;
-    for (int i = 0; i < amount; i++) {
-      if (i >= sortedChancesUser.length) break;
+    for(int i = 0; i < amount; i++) {
+      if(i >= sortedChancesUser.length) break;
       User user = (User) sortedChancesUser[i];
       Player userPlayer = user.getPlayer();
       arena.setCharacter(Arena.CharacterType.valueOf(roleName), userPlayer);
@@ -167,17 +167,17 @@ public class StartingState extends PluginStartingState {
           .arena(arena)
           .player(user.getPlayer())
           .sendPlayer();
-      if (role == Role.MURDERER) {
+      if(role == Role.MURDERER) {
         arena.getMurdererList().add(userPlayer);
-      } else if (role == Role.DETECTIVE) {
+      } else if(role == Role.DETECTIVE) {
         arena.getDetectiveList().add(userPlayer);
         userPlayer.getInventory().setHeldItemSlot(0);
         ItemPosition.setItem(user, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
         ItemPosition.setItem(
-            userPlayer,
+            user,
             ItemPosition.INFINITE_ARROWS,
             new ItemStack(
-                Material.ARROW, plugin.getConfig().getInt("Detective-Default-Arrows", 3)));
+                Material.ARROW, getPlugin().getConfig().getInt("Bow.Amount.Arrows.Detective", 3)));
       }
     }
   }
@@ -195,15 +195,15 @@ public class StartingState extends PluginStartingState {
             playersSize,
             arena.getArenaOption("DETECTIVE_DIVIDER"),
             arena.getArenaOption("MURDERER_DIVIDER"));
-    if (arena.getArenaOption("MURDERER_DIVIDER") > 1
+    if(arena.getArenaOption("MURDERER_DIVIDER") > 1
         && playersSize > arena.getArenaOption("MURDERER_DIVIDER")) {
       maxmurderer = (playersSize / arena.getArenaOption("MURDERER_DIVIDER"));
     }
-    if (arena.getArenaOption("DETECTIVE_DIVIDER") > 1
+    if(arena.getArenaOption("DETECTIVE_DIVIDER") > 1
         && playersSize > arena.getArenaOption("DETECTIVE_DIVIDER")) {
       maxdetectives = (playersSize / arena.getArenaOption("DETECTIVE_DIVIDER"));
     }
-    if (playersSize - (maxmurderer + maxdetectives) < 1) {
+    if(playersSize - (maxmurderer + maxdetectives) < 1) {
       arena
           .getPlugin()
           .getDebugger()
@@ -211,9 +211,9 @@ public class StartingState extends PluginStartingState {
               "{0} Murderers and detectives amount was reduced because there are not enough players",
               arena.getId());
       // Make sure to have one innocent!
-      if (maxdetectives > 1) {
+      if(maxdetectives > 1) {
         maxdetectives--;
-      } else if (maxmurderer > 1) {
+      } else if(maxmurderer > 1) {
         maxmurderer--;
       }
     }

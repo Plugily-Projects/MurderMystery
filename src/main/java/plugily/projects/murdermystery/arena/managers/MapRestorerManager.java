@@ -3,7 +3,10 @@ package plugily.projects.murdermystery.arena.managers;
 import org.bukkit.entity.Item;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import plugily.projects.minigamesbox.classic.arena.managers.PluginMapRestorerManager;
+import plugily.projects.murdermystery.HookManager;
 import plugily.projects.murdermystery.arena.Arena;
+import plugily.projects.murdermystery.arena.corpse.Corpse;
+import plugily.projects.murdermystery.arena.corpse.Stand;
 
 import java.util.Objects;
 
@@ -38,7 +41,7 @@ public class MapRestorerManager extends PluginMapRestorerManager {
     if(arena.getBowHologram() != null && !arena.getBowHologram().isDeleted()) {
       arena.getBowHologram().delete();
     }
-arena.setBowHologram(null);
+    arena.setBowHologram(null);
   }
 
   public void clearGold() {
@@ -47,8 +50,8 @@ arena.setBowHologram(null);
   }
 
   public void clearCorpses() {
-    if(!plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
-      for(Stand stand : stands) {
+    if(!arena.getPlugin().getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+      for(Stand stand : arena.getStands()) {
         if(!stand.getHologram().isDeleted()) {
           stand.getHologram().delete();
         }
@@ -56,10 +59,10 @@ arena.setBowHologram(null);
           stand.getStand().remove();
         }
       }
-      stands.clear();
+      arena.getStands().clear();
       return;
     }
-    for(Corpse corpse : corpses) {
+    for(Corpse corpse : arena.getCorpses()) {
       if(!corpse.getHologram().isDeleted()) {
         corpse.getHologram().delete();
       }
@@ -68,6 +71,6 @@ arena.setBowHologram(null);
         CorpseAPI.removeCorpse(corpse.getCorpseData());
       }
     }
-    corpses.clear();
+    arena.getCorpses().clear();
   }
 }

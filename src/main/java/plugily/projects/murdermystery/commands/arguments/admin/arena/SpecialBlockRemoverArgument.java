@@ -18,7 +18,6 @@
 
 package plugily.projects.murdermystery.commands.arguments.admin.arena;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -29,6 +28,7 @@ import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.CommandArgument;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.LabelData;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.LabeledCommandArgument;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.minigamesbox.classic.utils.serialization.LocationSerializer;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
@@ -41,7 +41,7 @@ import java.util.List;
 
 /**
  * @author Tigerpanzer_02
- *     <p>Created at 22.10.2020
+ * <p>Created at 22.10.2020
  */
 public class SpecialBlockRemoverArgument {
   public SpecialBlockRemoverArgument(ArgumentsRegistry registry) {
@@ -60,34 +60,34 @@ public class SpecialBlockRemoverArgument {
             // no need for check as argument is only for players
             Player player = (Player) sender;
             Block targetBlock = player.getTargetBlock(null, 7);
-            if (targetBlock.getType() == Material.CAULDRON
+            if(targetBlock.getType() == Material.CAULDRON
                 || targetBlock.getType() == XMaterial.ENCHANTING_TABLE.parseMaterial()) {
-              for (PluginArena arena : registry.getPlugin().getArenaRegistry().getArenas()) {
+              for(PluginArena arena : registry.getPlugin().getArenaRegistry().getArenas()) {
 
                 Arena pluginArena =
                     (Arena) registry.getPlugin().getArenaRegistry().getArena(player);
-                if (arena == null) {
+                if(arena == null) {
                   return;
                 }
 
                 // do not check arenas that could not be the case
-                if (pluginArena.getSpecialBlocks().isEmpty()) {
+                if(pluginArena.getSpecialBlocks().isEmpty()) {
                   continue;
                 }
-                if (pluginArena.getPlayerSpawnPoints().get(0).getWorld() != player.getWorld()) {
+                if(pluginArena.getPlayerSpawnPoints().get(0).getWorld() != player.getWorld()) {
                   continue;
                 }
                 // get all special blocks
-                for (SpecialBlock specialBlock : new ArrayList<>(pluginArena.getSpecialBlocks())) {
+                for(SpecialBlock specialBlock : new ArrayList<>(pluginArena.getSpecialBlocks())) {
                   // check if targetBlock is specialblock
-                  if (specialBlock.getLocation().getBlock().equals(targetBlock)) {
+                  if(specialBlock.getLocation().getBlock().equals(targetBlock)) {
                     // get special blocks from config
                     FileConfiguration config =
                         ConfigUtils.getConfig(registry.getPlugin(), "arenas");
                     // remove special block from arena
                     pluginArena.getSpecialBlocks().remove(specialBlock);
                     // remove hologram
-                    if (specialBlock.getArmorStandHologram() != null) {
+                    if(specialBlock.getArmorStandHologram() != null) {
                       specialBlock.getArmorStandHologram().delete();
                     }
                     // remove special block from arena file
@@ -103,19 +103,16 @@ public class SpecialBlockRemoverArgument {
                     config.set("instances." + arena.getId() + path, specialBlocksType);
                     // save arena config after removing special block
                     ConfigUtils.saveConfig(registry.getPlugin(), config, "arenas");
-
-                    player.sendMessage(
-                        ChatColor.RED
-                            + "Removed special block at loc "
-                            + serializedLoc
-                            + " from arena "
-                            + arena.getId());
+                    new MessageBuilder("&cRemoved special block at loc "
+                        + serializedLoc
+                        + " from arena "
+                        + arena.getId()).player(player).sendPlayer();
                     return;
                   }
                 }
               }
             }
-            player.sendMessage(ChatColor.RED + "Please target an special block to continue!");
+            new MessageBuilder("&cPlease target an special block to continue!").player(player).sendPlayer();
           }
         });
   }

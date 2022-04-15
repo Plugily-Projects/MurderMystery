@@ -22,7 +22,6 @@ import org.bukkit.entity.Player;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.murdermystery.arena.Arena;
-import plugily.projects.murdermystery.old.arena.ArenaRegistry;
 
 /**
  * @author Plajer
@@ -81,13 +80,13 @@ public enum Role {
    * @return true if is playing it, false otherwise
    */
   public static boolean isRole(Role role, User user, PluginArena arena) {
-    if (arena == null)
+    if(arena == null)
       return false;
     Arena pluginArena = (Arena) arena.getPlugin().getArenaRegistry().getArena(arena.getId());
-    if (pluginArena == null) {
+    if(pluginArena == null) {
       return false;
     }
-Player player = user.getPlayer();
+    Player player = user.getPlayer();
     switch(role) {
       case DETECTIVE:
         return pluginArena.isCharacterSet(Arena.CharacterType.DETECTIVE) && pluginArena.getDetectiveList().contains(player);
@@ -124,7 +123,7 @@ Player player = user.getPlayer();
    * Checks whether player is playing a role or not
    *
    * @param player player to check
-   * @param arena the player's arena
+   * @param arena  the player's arena
    * @return true if is playing one role, false otherwise
    */
   public static boolean isAnyRole(User user, PluginArena arena) {

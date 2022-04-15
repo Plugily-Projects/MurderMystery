@@ -20,7 +20,6 @@ package plugily.projects.murdermystery.arena.corpse;
 
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 
-import plugily.projects.commonsbox.minecraft.hologram.ArmorStandHologram;
 import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
 
 /**

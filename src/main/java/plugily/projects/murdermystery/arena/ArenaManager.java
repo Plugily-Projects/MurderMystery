@@ -30,8 +30,6 @@ import plugily.projects.murdermystery.arena.managers.MapRestorerManager;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
 import plugily.projects.murdermystery.utils.ItemPosition;
-import plugily.projects.thebridge.Main;
-import plugily.projects.thebridge.arena.base.Base;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +37,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Plajer
- *     <p>Created at 13.05.2018
+ * <p>Created at 13.05.2018
  */
 public class ArenaManager extends PluginArenaManager {
 
@@ -53,7 +51,7 @@ public class ArenaManager extends PluginArenaManager {
   @Override
   public void joinAttempt(@NotNull Player player, @NotNull PluginArena arena) {
     Arena pluginArena = (Arena) plugin.getArenaRegistry().getArena(arena.getId());
-    if (pluginArena == null) {
+    if(pluginArena == null) {
       return;
     }
     super.joinAttempt(player, arena);
@@ -89,17 +87,17 @@ public class ArenaManager extends PluginArenaManager {
   @Override
   public void leaveAttempt(@NotNull Player player, @NotNull PluginArena arena) {
     Arena pluginArena = (Arena) plugin.getArenaRegistry().getArena(arena.getId());
-    if (pluginArena == null) {
+    if(pluginArena == null) {
       return;
     }
     super.leaveAttempt(player, arena);
-    if (pluginArena.isDeathPlayer(player)) {
+    if(pluginArena.isDeathPlayer(player)) {
       pluginArena.removeDeathPlayer(player);
     }
     User user = plugin.getUserManager().getUser(player);
 
     int localScore = user.getStatistic("LOCAL_SCORE");
-    if (localScore > user.getStatistic("HIGHEST_SCORE")) {
+    if(localScore > user.getStatistic("HIGHEST_SCORE")) {
       user.setStatistic("HIGHEST_SCORE", localScore);
     }
 
@@ -128,16 +126,16 @@ public class ArenaManager extends PluginArenaManager {
             .max()
             .orElse(0);
     user.adjustStatistic("CONTRIBUTION_MURDERER", -murderDecrease);
-    if (user.getStatistic("CONTRIBUTION_MURDERER") <= 0) {
+    if(user.getStatistic("CONTRIBUTION_MURDERER") <= 0) {
       user.setStatistic("CONTRIBUTION_MURDERER", 1);
     }
     user.adjustStatistic("CONTRIBUTION_DETECTIVE", -detectiveDecrease);
-    if (user.getStatistic("CONTRIBUTION_DETECTIVE") <= 0) {
+    if(user.getStatistic("CONTRIBUTION_DETECTIVE") <= 0) {
       user.setStatistic("CONTRIBUTION_DETECTIVE", 1);
     }
 
-    if (arena.getArenaState() == ArenaState.IN_GAME) {
-      if (Role.isRole(Role.FAKE_DETECTIVE, user, arena)
+    if(arena.getArenaState() == ArenaState.IN_GAME) {
+      if(Role.isRole(Role.FAKE_DETECTIVE, user, arena)
           || Role.isRole(Role.INNOCENT, user, arena)) {
         user.setStatistic("CONTRIBUTION_MURDERER", ThreadLocalRandom.current().nextInt(4) + 1);
         user.setStatistic("CONTRIBUTION_DETECTIVE", ThreadLocalRandom.current().nextInt(4) + 1);
@@ -145,21 +143,21 @@ public class ArenaManager extends PluginArenaManager {
     }
 
     boolean playerHasMurdererRole = Role.isRole(Role.MURDERER, user, arena);
-    if (playerHasMurdererRole) {
+    if(playerHasMurdererRole) {
       pluginArena.removeFromMurdererList(player);
     }
 
-    if (arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {
+    if(arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {
       List<Player> playersLeft = arena.getPlayersLeft();
 
       // -1 cause we didn't remove player yet
-      if (playersLeft.size() - 1 > 1) {
-        if (playerHasMurdererRole) {
-          if (pluginArena.getMurdererList().isEmpty()) {
+      if(playersLeft.size() - 1 > 1) {
+        if(playerHasMurdererRole) {
+          if(pluginArena.getMurdererList().isEmpty()) {
             List<Player> players = new ArrayList<>();
-            for (Player gamePlayer : playersLeft) {
+            for(Player gamePlayer : playersLeft) {
               User userGamePlayer = plugin.getUserManager().getUser(gamePlayer);
-              if (gamePlayer == player
+              if(gamePlayer == player
                   || Role.isRole(Role.ANY_DETECTIVE, userGamePlayer, arena)
                   || Role.isRole(Role.MURDERER, userGamePlayer, arena)) {
                 continue;
@@ -170,7 +168,7 @@ public class ArenaManager extends PluginArenaManager {
             Player newMurderer =
                 players.get(
                     players.size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(players.size()));
-            if (newMurderer != null) {
+            if(newMurderer != null) {
               plugin
                   .getDebugger()
                   .debug("A murderer left the game. New murderer: {0}", newMurderer.getName());
@@ -184,33 +182,33 @@ public class ArenaManager extends PluginArenaManager {
                 .arena(pluginArena)
                 .sendArena();
 
-            if (newMurderer != null) {
+            if(newMurderer != null) {
               new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_MURDERER")
                   .asKey()
                   .player(player)
                   .arena(pluginArena)
                   .sendArena();
               ItemPosition.setItem(
-                  newMurderer,
+                  plugin.getUserManager().getUser(newMurderer),
                   ItemPosition.MURDERER_SWORD,
-                  plugin.getConfigPreferences().getMurdererSword());
+                  plugin.getSwordSkinManager().getRandomSwordSkin(player));
             }
 
             user.setStatistic("CONTRIBUTION_MURDERER", 1);
           } else {
             plugin.getDebugger().debug("No new murderer added as there are some");
           }
-        } else if (Role.isRole(Role.ANY_DETECTIVE, user, arena)
+        } else if(Role.isRole(Role.ANY_DETECTIVE, user, arena)
             && pluginArena.lastAliveDetective()) {
           pluginArena.setDetectiveDead(true);
-          if (Role.isRole(Role.FAKE_DETECTIVE, user, arena)) {
+          if(Role.isRole(Role.FAKE_DETECTIVE, user, arena)) {
             pluginArena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
           } else {
             user.setStatistic("CONTRIBUTION_DETECTIVE", 1);
           }
           ArenaUtils.dropBowAndAnnounce(pluginArena, player);
         }
-        plugin.getCorpseHandler().spawnCorpse(player, arena);
+        plugin.getCorpseHandler().spawnCorpse(player, pluginArena);
       } else {
         stopGame(false, arena);
       }
@@ -220,24 +218,24 @@ public class ArenaManager extends PluginArenaManager {
   @Override
   public void stopGame(boolean quickStop, @NotNull PluginArena arena) {
     Arena pluginArena = (Arena) plugin.getArenaRegistry().getArena(arena.getId());
-    if (pluginArena == null) {
+    if(pluginArena == null) {
       return;
     }
-    for (SpecialBlock specialBlock : pluginArena.getSpecialBlocks()) {
-      if (specialBlock.getArmorStandHologram() != null) {
+    for(SpecialBlock specialBlock : pluginArena.getSpecialBlocks()) {
+      if(specialBlock.getArmorStandHologram() != null) {
         specialBlock.getArmorStandHologram().delete();
       }
     }
     ((MapRestorerManager) pluginArena.getMapRestorerManager()).removeBowHolo();
     boolean murderWon = arena.getPlayersLeft().size() == pluginArena.aliveMurderer();
-    for (Player player : arena.getPlayers()) {
-      if (!quickStop) {
+    for(Player player : arena.getPlayers()) {
+      if(!quickStop) {
         User user = plugin.getUserManager().getUser(player);
-        if (!quickStop && Role.isAnyRole(user, arena)) {
+        if(!quickStop && Role.isAnyRole(user, arena)) {
           boolean hasDeathRole = Role.isRole(Role.DEATH, user, arena);
 
-          if (!hasDeathRole && !Role.isRole(Role.SPECTATOR, user, arena)) {
-            if (Role.isRole(Role.FAKE_DETECTIVE, user, arena)
+          if(!hasDeathRole && !Role.isRole(Role.SPECTATOR, user, arena)) {
+            if(Role.isRole(Role.FAKE_DETECTIVE, user, arena)
                 || Role.isRole(Role.INNOCENT, user, arena)) {
               user.setStatistic(
                   "CONTRIBUTION_MURDERER", ThreadLocalRandom.current().nextInt(4) + 1);
@@ -245,7 +243,7 @@ public class ArenaManager extends PluginArenaManager {
                   "CONTRIBUTION_DETECTIVE", ThreadLocalRandom.current().nextInt(4) + 1);
             }
             boolean hasMurdererRole = Role.isRole(Role.MURDERER, user, arena);
-            if (murderWon || !hasMurdererRole) {
+            if(murderWon || !hasMurdererRole) {
               user.adjustStatistic("WINS", 1);
               plugin
                   .getRewardsHandler()
@@ -256,7 +254,7 @@ public class ArenaManager extends PluginArenaManager {
                   .getRewardsHandler()
                   .performReward(player, plugin.getRewardsHandler().getRewardType("LOSE"));
             }
-          } else if (hasDeathRole) {
+          } else if(hasDeathRole) {
             user.adjustStatistic("LOSES", 1);
             plugin
                 .getRewardsHandler()

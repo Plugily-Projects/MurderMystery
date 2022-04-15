@@ -22,8 +22,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
-import plugily.projects.murdermystery.old.Main;
+import plugily.projects.murdermystery.Main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class MysteryPotionRegistry {
   private static final List<MysteryPotion> mysteryPotions = new ArrayList<>();
 
   public static void init(Main plugin) {
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "specialblocks");
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "special_blocks");
     org.bukkit.configuration.ConfigurationSection section = config.getConfigurationSection("Special-Blocks.Cauldron-Potions");
     if(section == null) {
       return;
@@ -48,7 +49,7 @@ public class MysteryPotionRegistry {
     for(String key : section.getKeys(false)) {
       PotionEffectType effectType = PotionEffectType.getByName(section.getString(key + ".Type", "").toUpperCase());
 
-      if (effectType == null) {
+      if(effectType == null) {
         effectType = PotionEffectType.HEAL;
       }
 
@@ -56,8 +57,8 @@ public class MysteryPotionRegistry {
       PotionEffect effect = new PotionEffect(effectType,
           section.getInt(key + ".Duration") * 20, section.getInt(key + ".Amplifier") - 1, false, false);
 
-      mysteryPotions.add(new MysteryPotion(plugin.getChatManager().colorRawMessage(section.getString(key + ".Name")),
-        plugin.getChatManager().colorRawMessage(section.getString(key + ".Subtitle")), effect));
+      mysteryPotions.add(new MysteryPotion(new MessageBuilder(section.getString(key + ".Name")).build(),
+          new MessageBuilder(section.getString(key + ".Subtitle")).build(), effect));
     }
   }
 

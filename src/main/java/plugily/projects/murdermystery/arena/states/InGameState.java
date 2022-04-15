@@ -24,22 +24,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.states.PluginInGameState;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XSound;
 import plugily.projects.murdermystery.arena.Arena;
+import plugily.projects.murdermystery.arena.ArenaUtils;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.utils.ItemPosition;
-import plugily.projects.thebridge.api.events.game.TBRoundStartEvent;
-import plugily.projects.thebridge.arena.Arena;
-import plugily.projects.thebridge.arena.ArenaUtils;
-import plugily.projects.thebridge.arena.base.Base;
 
 import java.util.Random;
 
 /**
  * @author Plajer
- *     <p>Created at 03.06.2019
+ * <p>Created at 03.06.2019
  */
 public class InGameState extends PluginInGameState {
 
@@ -47,26 +45,24 @@ public class InGameState extends PluginInGameState {
   public void handleCall(PluginArena arena) {
     super.handleCall(arena);
     Arena pluginArena = (Arena) getPlugin().getArenaRegistry().getArena(arena.getId());
-    if (pluginArena == null) {
+    if(pluginArena == null) {
       return;
     }
-    if (arena.getTimer() <= 0) {
+    if(arena.getTimer() <= 0) {
       getPlugin().getArenaManager().stopGame(false, arena);
     }
     int inGameLength = getPlugin().getConfig().getInt("Time-Manager.In-Game", 270);
 
 
     if(arena.getTimer() <= (inGameLength - 10) && arena.getTimer() > (inGameLength - 15)) {
-      String murdererGetSword = chatManager.colorMessage("In-Game.Messages.Murderer-Get-Sword")
-          .replace("%time%", Integer.toString(arena.getTimer() - (inGameLength - 15)));
+      new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SWORD_SOON").asKey().integer(arena.getTimer() - (inGameLength - 15)).arena(pluginArena).sendArena();
 
       for(Player p : arena.getPlayers()) {
-        p.sendMessage(murdererGetSword);
         XSound.UI_BUTTON_CLICK.play(p.getLocation(), 1, 1);
       }
 
       if(arena.getTimer() == (inGameLength - 14)) {
-        if(pluginArena.getMurdererList().isEmpty()) ArenaManager.stopGame(false, pluginArena);
+        if(pluginArena.getMurdererList().isEmpty()) getPlugin().getArenaManager().stopGame(false, pluginArena);
 
         for(Player p : pluginArena.getMurdererList()) {
           User murderer = getPlugin().getUserManager().getUser(p);
@@ -75,7 +71,7 @@ public class InGameState extends PluginInGameState {
             continue;
 
           p.getInventory().setHeldItemSlot(0);
-          ItemPosition.setItem(p, ItemPosition.MURDERER_SWORD, plugin.getConfigPreferences().getMurdererSword());
+          ItemPosition.setItem(murderer, ItemPosition.MURDERER_SWORD, pluginArena.getPlugin().getSwordSkinManager().getRandomSwordSkin(p));
         }
       }
     }
@@ -84,44 +80,34 @@ public class InGameState extends PluginInGameState {
     if(arena.getTimer() % 30 == 0) {
       new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_TIME_LEFT").arena(pluginArena).sendArena();
       for(Player p : arena.getPlayersLeft()) {
-        if(Role.isRole(Role.INNOCENT, p, pluginArena)) {
-          ArenaUtils.addScore(getPlugin().getUserManager().getUser(p), ArenaUtils.ScoreAction.SURVIVE_TIME, 0);
+        User user = getPlugin().getUserManager().getUser(p);
+        if(Role.isRole(Role.INNOCENT, user, pluginArena)) {
+          ArenaUtils.addScore(user, ArenaUtils.ScoreAction.SURVIVE_TIME, 0);
         }
       }
     }
 
-    if (arena.getTimer() <= 30
+    if(arena.getTimer() <= 30
         || arena.getPlayersLeft().size() == pluginArena.aliveMurderer() + 1) {
-      //todo locator config option
-      if(getPlugin().getConfigPreferences().getOption("INNOCENT_LOCATOR")) {
+      if(getPlugin().getConfigPreferences().getOption("MURDERER_LOCATOR")) {
         ArenaUtils.updateInnocentLocator(pluginArena);
       }
     }
 
     // no players - stop game
-    if (pluginArena.getPlayersLeft().isEmpty()) {
+    if(pluginArena.getPlayersLeft().isEmpty()) {
       getPlugin().getArenaManager().stopGame(false, pluginArena);
     } else {
       // winner check
-      if (arena.getPlayersLeft().size() == pluginArena.aliveMurderer()) {
-        //todo placeholder check
-        for(Player player : arena.getPlayers()) {
-
-          if(pluginArena.getMurdererList().contains(player)) {
-
-          }
-        }
-
+      if(arena.getPlayersLeft().size() == pluginArena.aliveMurderer()) {
         getPlugin().getArenaManager().stopGame(false, pluginArena);
         // murderer speed add
-        // todo config otpion
-      } else if (getPlugin().getConfigPreferences().getOption("MURDERER_SPEED")
-          && arena.getPlayersLeft().size() == pluginArena.aliveMurderer() + 1) {
-        int multiplier = getPlugin().getConfig().getInt("Speed-Effect-Murderer.Speed", 3);
+      } else if(arena.getPlayersLeft().size() == pluginArena.aliveMurderer() + 1) {
+        int multiplier = getPlugin().getConfig().getInt("Murderer.Speed", 3);
 
-        if (multiplier > 1 && multiplier <= 10) {
-          for (Player player : pluginArena.getMurdererList()) {
-            if (pluginArena.isMurderAlive(player)) {
+        if(multiplier > 1 && multiplier <= 10) {
+          for(Player player : pluginArena.getMurdererList()) {
+            if(pluginArena.isMurderAlive(player)) {
               // no potion because it adds particles which can be identified
               player.setWalkSpeed(0.1f * multiplier);
             }
@@ -130,10 +116,10 @@ public class InGameState extends PluginInGameState {
       }
       //don't spawn it every time
       if(pluginArena.getSpawnGoldTimer() == pluginArena.getSpawnGoldTime()) {
-        spawnSomeGold();
+        spawnSomeGold(pluginArena);
         pluginArena.setSpawnGoldTimer(0);
       } else {
-        pluginArena.setSpawnGoldTimer(pluginArena.getSpawnGoldTimer()+1);
+        pluginArena.setSpawnGoldTimer(pluginArena.getSpawnGoldTimer() + 1);
       }
 
     }
@@ -145,16 +131,14 @@ public class InGameState extends PluginInGameState {
     if(spawnPointsSize == 0) {
       return;
     }
-//todo config option
     //may users want to disable it and want much gold on there map xD
-    if(!getPlugin().getConfigPreferences().getOption("DISABLE_GOLD_LIMITER")) {
+    if(!getPlugin().getConfigPreferences().getOption("GOLD_LIMITER")) {
       //do not exceed amount of gold per spawn
       if(arena.getGoldSpawned().size() >= spawnPointsSize) {
         return;
       }
     }
-//todo config option
-    if(getPlugin().getConfigPreferences().getOption("SPAWN_GOLD_EVERY_SPAWNER_MODE")) {
+    if(getPlugin().getConfigPreferences().getOption("GOLD_SPAWNER_MODE_ALL")) {
       for(Location location : arena.getPlayerSpawnPoints()) {
         arena.getGoldSpawned().add(location.getWorld().dropItem(location, new ItemStack(Material.GOLD_INGOT, 1)));
       }

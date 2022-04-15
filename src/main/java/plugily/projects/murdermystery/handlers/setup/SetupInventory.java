@@ -237,7 +237,7 @@ public class SetupInventory extends PluginSetupInventory {
             .name(new MessageBuilder("&e&lAdd Mystery Cauldron").build())
             .lore(ChatColor.GRAY + "Target a cauldron and add it to the game")
             .lore(ChatColor.GRAY + "it will cost 1 gold per potion!")
-            .lore(ChatColor.GRAY + "Configure cauldron potions in specialblocks.yml file!")
+            .lore(ChatColor.GRAY + "Configure cauldron potions in special_blocks.yml file!")
             .build(), e -> {
           e.getWhoClicked().closeInventory();
           Block targetBlock = e.getWhoClicked().getTargetBlock(null, 7);

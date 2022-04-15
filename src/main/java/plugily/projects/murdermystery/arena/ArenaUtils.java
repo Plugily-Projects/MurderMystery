@@ -26,6 +26,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaUtils;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
@@ -35,12 +36,11 @@ import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAcc
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XSound;
 import plugily.projects.murdermystery.arena.role.Role;
-import plugily.projects.murdermystery.old.arena.ArenaRegistry;
 import plugily.projects.murdermystery.utils.ItemPosition;
 
 /**
  * @author Plajer
- *     <p>Created at 13.03.2018
+ * <p>Created at 13.03.2018
  */
 public class ArenaUtils extends PluginArenaUtils {
 
@@ -60,13 +60,13 @@ public class ArenaUtils extends PluginArenaUtils {
       }
     }
     //we must call it ticks later due to instant respawn bug
-    Bukkit.getScheduler().runTaskLater(getPlugin(), () -> ArenaManager.stopGame(false, arena), 10);
+    Bukkit.getScheduler().runTaskLater(getPlugin(), () -> getPlugin().getArenaManager().stopGame(false, arena), 10);
   }
 
   public static void updateInnocentLocator(Arena arena) {
     java.util.List<Player> list = arena.getPlayersLeft();
 
-    if (!arena.isMurdererLocatorReceived()) {
+    if(!arena.isMurdererLocatorReceived()) {
       ItemStack innocentLocator = new ItemStack(Material.COMPASS, 1);
       ItemMeta innocentMeta = innocentLocator.getItemMeta();
       ComplementAccessor.getComplement()
@@ -74,15 +74,15 @@ public class ArenaUtils extends PluginArenaUtils {
               innocentMeta,
               new MessageBuilder("IN_GAME_MESSAGES_ARENA_LOCATOR_INNOCENT").asKey().build());
       innocentLocator.setItemMeta(innocentMeta);
-      for (Player p : list) {
-        if (arena.isMurderAlive(p)) {
-          ItemPosition.setItem(p, ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
+      for(Player p : list) {
+        if(arena.isMurderAlive(p)) {
+          ItemPosition.setItem(getPlugin().getUserManager().getUser(p), ItemPosition.INNOCENTS_LOCATOR, innocentLocator);
         }
       }
       arena.setMurdererLocatorReceived(true);
 
-      for (Player p : list) {
-        if (Role.isRole(Role.MURDERER, getPlugin().getUserManager().getUser(p), arena)) {
+      for(Player p : list) {
+        if(Role.isRole(Role.MURDERER, getPlugin().getUserManager().getUser(p), arena)) {
           continue;
         }
         new TitleBuilder("IN_GAME_MESSAGES_ARENA_LOCATOR_WATCH_OUT")
@@ -93,12 +93,12 @@ public class ArenaUtils extends PluginArenaUtils {
       }
     }
 
-    for (Player p : list) {
-      if (Role.isRole(Role.MURDERER, getPlugin().getUserManager().getUser(p), arena)) {
+    for(Player p : list) {
+      if(Role.isRole(Role.MURDERER, getPlugin().getUserManager().getUser(p), arena)) {
         continue;
       }
-      for (Player murder : arena.getMurdererList()) {
-        if (arena.isMurderAlive(murder)) {
+      for(Player murder : arena.getMurdererList()) {
+        if(arena.isMurderAlive(murder)) {
           murder.setCompassTarget(p.getLocation());
         }
       }
@@ -107,7 +107,7 @@ public class ArenaUtils extends PluginArenaUtils {
   }
 
   public static void dropBowAndAnnounce(Arena arena, Player victim) {
-    if (arena.getBowHologram() != null) {
+    if(arena.getBowHologram() != null) {
       return;
     }
     new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_BOW_DROPPED").asKey().arena(arena).sendArena();
@@ -126,21 +126,22 @@ public class ArenaUtils extends PluginArenaUtils {
         .setDisplayName(
             bowMeta, new MessageBuilder("IN_GAME_MESSAGES_ARENA_LOCATOR_BOW").asKey().build());
     bowLocator.setItemMeta(bowMeta);
-    for (Player p : arena.getPlayersLeft()) {
-      if (Role.isRole(Role.INNOCENT, getPlugin().getUserManager().getUser(p), arena)) {
-        ItemPosition.setItem(p, ItemPosition.BOW_LOCATOR, bowLocator);
+    for(Player p : arena.getPlayersLeft()) {
+      User user = getPlugin().getUserManager().getUser(p);
+      if(Role.isRole(Role.INNOCENT, user, arena)) {
+        ItemPosition.setItem(user, ItemPosition.BOW_LOCATOR, bowLocator);
         p.setCompassTarget(loc);
       }
     }
   }
 
   public static void updateNameTagsVisibility(final Player p) {
-    if (!getPlugin().getConfigPreferences().getOption("HIDE_NAMETAGS")) {
+    if(!getPlugin().getConfigPreferences().getOption("HIDE_NAMETAGS")) {
       return;
     }
-    for (Player players : getPlugin().getServer().getOnlinePlayers()) {
-      Arena arena = ArenaRegistry.getArena(players);
-      if (arena == null) {
+    for(Player players : getPlugin().getServer().getOnlinePlayers()) {
+      PluginArena arena = getPlugin().getArenaRegistry().getArena(players);
+      if(arena == null) {
         continue;
       }
       VersionUtils.updateNameTagsVisibility(
@@ -152,7 +153,7 @@ public class ArenaUtils extends PluginArenaUtils {
     XSound.matchXSound(XSound.ENTITY_EXPERIENCE_ORB_PICKUP.parseSound())
         .play(user.getPlayer().getLocation(), 1F, 2F);
 
-    if (action == ScoreAction.GOLD_PICKUP && amount > 1) {
+    if(action == ScoreAction.GOLD_PICKUP && amount > 1) {
       int score = action.points * amount;
       new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_BONUS")
           .asKey()
@@ -165,12 +166,12 @@ public class ArenaUtils extends PluginArenaUtils {
       return;
     }
 
-    if (action == ScoreAction.DETECTIVE_WIN_GAME) {
+    if(action == ScoreAction.DETECTIVE_WIN_GAME) {
       int innocents = 0;
       Arena arena = (Arena) user.getArena();
 
-      for (Player p : arena.getPlayersLeft()) {
-        if (Role.isRole(Role.INNOCENT, getPlugin().getUserManager().getUser(p), arena)) {
+      for(Player p : arena.getPlayersLeft()) {
+        if(Role.isRole(Role.INNOCENT, getPlugin().getUserManager().getUser(p), arena)) {
           innocents++;
         }
       }
@@ -196,7 +197,7 @@ public class ArenaUtils extends PluginArenaUtils {
             .value(action.action)
             .build();
 
-    if (action.points < 0) {
+    if(action.points < 0) {
       msg = StringUtils.replace(msg, "+", "");
     }
 

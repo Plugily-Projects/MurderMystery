@@ -245,9 +245,11 @@ Hide:
 
 
 Murderer:
-  #Should the murderer get speed effect?
-  #Enter a multiplier (min 2, max 10, 1 is normal speed)
+  # Should the murderer get speed effect?
+  # Enter a multiplier (min 2, max 10, 1 is normal speed)
   Speed: 3
+  # Should the Murderer get a locator with Innocent location information
+  Locator: true
 
 
 Sword:

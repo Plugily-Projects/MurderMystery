@@ -119,6 +119,10 @@ public class Arena extends PluginArena {
     return corpses;
   }
 
+  public List<Stand> getStands() {
+    return stands;
+  }
+
   public void addHead(Stand stand) {
     stands.add(stand);
   }

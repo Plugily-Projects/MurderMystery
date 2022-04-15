@@ -31,11 +31,12 @@ import java.util.List;
 
 /**
  * @author Tigerpanzer_02
- *     <p>Created at 19.12.2021
+ * <p>Created at 19.12.2021
  */
 public class ScoreboardManager extends PluginScoreboardManager {
 
   private final PluginArena arena;
+
   public ScoreboardManager(PluginArena arena) {
     super(arena);
     this.arena = arena;
@@ -45,20 +46,20 @@ public class ScoreboardManager extends PluginScoreboardManager {
   public List<Entry> formatScoreboard(User user) {
     EntryBuilder builder = new EntryBuilder();
     List<String> lines;
-    if (user.getArena().getArenaState() == ArenaState.FULL_GAME) {
+    if(user.getArena().getArenaState() == ArenaState.FULL_GAME) {
       lines =
           user.getArena()
               .getPlugin()
               .getLanguageManager()
               .getLanguageList("Scoreboard.Content.Starting");
-    } else if (user.getArena().getArenaState() == ArenaState.IN_GAME) {
+    } else if(user.getArena().getArenaState() == ArenaState.IN_GAME) {
       lines =
           user.getArena()
               .getPlugin()
               .getLanguageManager()
               .getLanguageList(
-                  "Scoreboard.Content." + user.getArena().getArenaState().getFormattedName() + (Role.isRole(Role.MURDERER, user.getPlayer()) ? "Murderer" : ""));
-    }else {
+                  "Scoreboard.Content." + user.getArena().getArenaState().getFormattedName() + (Role.isRole(Role.MURDERER, user) ? "Murderer" : ""));
+    } else {
       lines =
           user.getArena()
               .getPlugin()
