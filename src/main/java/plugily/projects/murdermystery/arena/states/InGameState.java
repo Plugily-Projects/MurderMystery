@@ -1,5 +1,5 @@
 /*
- * Village Defense - Protect villagers from hordes of zombies
+ * MurderMystery - Find the murderer, kill him and survive!
  * Copyright (c) 2022  Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
