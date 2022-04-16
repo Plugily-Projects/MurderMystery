@@ -202,7 +202,7 @@ In-Game:
     Cancelled-Via-API: "%color_chat_issue%%plugin_prefix% You can't join this game!"
     As-Party-Member: "%color_chat_issue%%plugin_prefix% You joined %arena_name% because the party leader joined it!"
     Arena-Not-Configured: "%color_chat_issue%%plugin_prefix% Arena is not configured yet! Contact staff!"
-    Title: "20, 30, 20;%arena_name%;%arena_players_size%/%arena_max_players%"
+    Title: "20,30,20;%arena_name%;%arena_players_size%/%arena_max_players%"
   Death:
     Tag: "&8Dead"
     Screen: "%color_chat_issue%You died!"
