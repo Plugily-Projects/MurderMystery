@@ -99,7 +99,7 @@ public class Main extends PluginMain {
     addAdditionalValues();
     initializePluginClasses();
 
-    if(getConfigPreferences().getOption("NAMETAGS_HIDDEN")) {
+    if(getConfigPreferences().getOption("HIDE_NAMETAGS")) {
       getServer().getScheduler().scheduleSyncRepeatingTask(this, () ->
           getServer().getOnlinePlayers().forEach(ArenaUtils::updateNameTagsVisibility), 60, 140);
     }
@@ -270,11 +270,6 @@ public class Main extends PluginMain {
     getConfigPreferences().registerOption("GOLD_SPAWNER_MODE_ALL", new ConfigOption("Gold.Spawner-Mode", false));
     getConfigPreferences().registerOption("GOLD_LIMITER", new ConfigOption("Gold.Limiter", false));
     getConfigPreferences().registerOption("MURDERER_LOCATOR", new ConfigOption("Murderer.Locator", true));
-    getStatsStorage()
-        .registerStatistic("WINS", new StatisticType("wins", true, "int(11) NOT NULL DEFAULT '0'"));
-    getStatsStorage()
-        .registerStatistic(
-            "LOSES", new StatisticType("loses", true, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage()
         .registerStatistic(
             "KILLS", new StatisticType("kills", true, "int(11) NOT NULL DEFAULT '0'"));
