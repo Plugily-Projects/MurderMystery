@@ -81,32 +81,32 @@ public class RolePassArgument {
         switch(addOrRemove.toLowerCase()) {
           case "add":
             if(role == Role.MURDERER) {
-              user.adjustStatistic("MURDERER_PASS", amount);
+              user.adjustStatistic("PASS_MURDERER", amount);
             } else {
-              user.adjustStatistic("DETECTIVE_PASS", amount);
+              user.adjustStatistic("PASS_DETECTIVE", amount);
             }
             break;
           case "remove":
             if(role == Role.MURDERER) {
-              user.adjustStatistic("MURDERER_PASS", -amount);
+              user.adjustStatistic("PASS_MURDERER", -amount);
             } else {
-              user.adjustStatistic("DETECTIVE_PASS", -amount);
+              user.adjustStatistic("PASS_DETECTIVE", -amount);
             }
             break;
           case "set":
             if(role == Role.MURDERER) {
-              user.setStatistic("MURDERER_PASS", amount);
+              user.setStatistic("PASS_MURDERER", amount);
             } else {
-              user.setStatistic("DETECTIVE_PASS", amount);
+              user.setStatistic("PASS_DETECTIVE", amount);
             }
             break;
           default:
             break;
         }
         if(role == Role.MURDERER) {
-          new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_CHANGE").asKey().player(player).integer(user.getStatistic("MURDERER_PASS")).value(Role.MURDERER.name()).sendPlayer();
+          new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_CHANGE").asKey().player(player).integer(user.getStatistic("PASS_MURDERER")).value(Role.MURDERER.name()).sendPlayer();
         } else {
-          new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_CHANGE").asKey().player(player).integer(user.getStatistic("DETECTIVE_PASS")).value(Role.DETECTIVE.name()).sendPlayer();
+          new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_CHANGE").asKey().player(player).integer(user.getStatistic("PASS_DETECTIVE")).value(Role.DETECTIVE.name()).sendPlayer();
         }
       }
     });

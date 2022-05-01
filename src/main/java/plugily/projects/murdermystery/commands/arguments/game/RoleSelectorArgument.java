@@ -57,28 +57,28 @@ public class RoleSelectorArgument implements Listener {
 
     gui.addItem(new SimpleClickableItem(new ItemBuilder(XMaterial.IRON_SWORD.parseMaterial())
         .name(new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_ROLE_MURDERER_NAME").asKey().build())
-        .lore(plugin.getLanguageManager().getLanguageListFromKey("IN_GAME_MESSAGES_ARENA_PASS_ROLE_MURDERER_LORE").stream().map(string -> string.replace("%amount%", plugin.getUserManager().getUser(player).getStatistic("DETECTIVE_PASS") + "")).collect(Collectors.toList()))
+        .lore(plugin.getLanguageManager().getLanguageListFromKey("IN_GAME_MESSAGES_ARENA_PASS_ROLE_MURDERER_LORE").stream().map(string -> string.replace("%amount%", plugin.getUserManager().getUser(player).getStatistic("PASS_DETECTIVE") + "")).collect(Collectors.toList()))
         .build(), event -> {
       User user = plugin.getUserManager().getUser(player);
-      if(user.getStatistic("MURDERER_PASS") <= 0) {
+      if(user.getStatistic("PASS_MURDERER") <= 0) {
         new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_FAIL").asKey().player(player).value(Role.MURDERER.name()).sendPlayer();
         return;
       }
-      user.adjustStatistic("MURDERER_PASS", -1);
+      user.adjustStatistic("PASS_MURDERER", -1);
       user.adjustStatistic("CONTRIBUTION_MURDERER", 999);
       new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_SUCCESS").asKey().player(player).value(Role.MURDERER.name()).sendPlayer();
     }));
 
     gui.addItem(new SimpleClickableItem(new ItemBuilder(XMaterial.BOW.parseMaterial())
         .name(new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_ROLE_DETECTIVE_NAME").asKey().build())
-        .lore(plugin.getLanguageManager().getLanguageListFromKey("IN_GAME_MESSAGES_ARENA_PASS_ROLE_DETECTIVE_LORE").stream().map(string -> string.replace("%amount%", plugin.getUserManager().getUser(player).getStatistic("DETECTIVE_PASS") + "")).collect(Collectors.toList()))
+        .lore(plugin.getLanguageManager().getLanguageListFromKey("IN_GAME_MESSAGES_ARENA_PASS_ROLE_DETECTIVE_LORE").stream().map(string -> string.replace("%amount%", plugin.getUserManager().getUser(player).getStatistic("PASS_DETECTIVE") + "")).collect(Collectors.toList()))
         .build(), event -> {
       User user = plugin.getUserManager().getUser(player);
-      if(user.getStatistic("DETECTIVE_PASS") <= 0) {
+      if(user.getStatistic("PASS_DETECTIVE") <= 0) {
         new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_FAIL").asKey().player(player).value(Role.DETECTIVE.name()).sendPlayer();
         return;
       }
-      user.adjustStatistic("DETECTIVE_PASS", -1);
+      user.adjustStatistic("PASS_DETECTIVE", -1);
       user.adjustStatistic("CONTRIBUTION_DETECTIVE", 999);
       new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_SUCCESS").asKey().player(player).value(Role.DETECTIVE.name()).sendPlayer();
     }));
