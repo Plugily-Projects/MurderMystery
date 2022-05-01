@@ -225,7 +225,7 @@ Bow:
   Amount:
     Arrows:
       #How much arrows should the detective gets on game start or when a player get a bow?
-      Detective: 3
+      Detective: 10
       #How much arrows should the fake detective get? (Cause: Player pick up bow after detective died)
       Fake: 3
       #How much arrows should the player get when the prayer gives a bow to him?
