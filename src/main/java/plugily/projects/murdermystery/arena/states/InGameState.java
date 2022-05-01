@@ -141,10 +141,12 @@ public class InGameState extends PluginInGameState {
     if(getPlugin().getConfigPreferences().getOption("GOLD_SPAWNER_MODE_ALL")) {
       for(Location location : arena.getPlayerSpawnPoints()) {
         arena.getGoldSpawned().add(location.getWorld().dropItem(location, new ItemStack(Material.GOLD_INGOT, 1)));
+        getPlugin().getPowerupRegistry().spawnPowerup(location, arena);
       }
     } else {
       Location loc = arena.getGoldSpawned().get(spawnPointsSize == 1 ? 0 : new Random().nextInt(spawnPointsSize)).getLocation();
       arena.getGoldSpawned().add(loc.getWorld().dropItem(loc, new ItemStack(Material.GOLD_INGOT, 1)));
+      getPlugin().getPowerupRegistry().spawnPowerup(loc, arena);
     }
   }
 }

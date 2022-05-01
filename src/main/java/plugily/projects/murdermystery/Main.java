@@ -113,6 +113,7 @@ public class Main extends PluginMain {
 
   public void initializePluginClasses() {
     addFileName("lastwords");
+    addFileName("powerups");
     addFileName("skins");
     addFileName("special_blocks");
     addFileName("trails");
