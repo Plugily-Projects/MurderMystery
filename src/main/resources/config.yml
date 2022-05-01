@@ -249,6 +249,7 @@ Murderer:
   # Enter a multiplier (min 2, max 10, 1 is normal speed)
   Speed: 3
   # Should the Murderer get a locator with Innocent location information
+  # gets the locator if arena time lower 30 and only one innocent left
   Locator: true
 
 
