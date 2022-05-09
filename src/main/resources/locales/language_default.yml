@@ -249,9 +249,9 @@ In-Game:
         - "%arena_summary%"
         - "%arena_summary_player%"
         - ""
-        - "&7Detective: %detective%"
-        - "&7Murderer: %murderer% (%murderer_kills%)"
-        - "&7Hero: %hero%"
+        - "&7Detective: %arena_detective_list%"
+        - "&7Murderer: %arena_murderer_list% (%arena_murderer_kills%)"
+        - "&7Hero: %arena_hero%"
         - ""
         - "&a&m--------------------------------------------------"
       Placeholders:
@@ -272,8 +272,8 @@ In-Game:
       Set-Starting-In-To-0: "%plugin_prefix% An admin set waiting time to 0. The game starts now!"
     Arena:
       Chances:
-        Action-Bar: "&cMurderer Chance: %murderer_chance% &a- &bDetective Chance: %detective_chance%"
-      Cooldown: "&8&l[%progress%&8&l] &6%time% seconds"
+        Action-Bar: "&cMurderer Chance: %arena_murderer_chance% &a- &bDetective Chance: %arena_detective_chance%"
+      Cooldown: "&8&l[%value%&8&l] &6%number% seconds"
       Locator:
         Bow: "Bow locator"
         Innocent: "Innocent locator"
@@ -291,8 +291,8 @@ In-Game:
             Lore:
               - "Cost 1 detective pass"
               - "You got %amount%"
-        Fail: "You do not got enough passes for %arena_role% role"
-        Success: "You will be %arena_role% next round!"
+        Fail: "You do not got enough passes for %value% role"
+        Success: "You will be %value% next round!"
         Change: "You now got %number% %value% passes!"
       Playing:
         Time-Left: "5,20,5;%arena_time% seconds left!;After %arena_time%s the Murderer will lose"
