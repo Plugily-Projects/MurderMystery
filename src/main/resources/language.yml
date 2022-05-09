@@ -108,7 +108,7 @@ Scoreboard:
       - ""
       - "■ Role | %arena_player_role%"
       - "&f"
-      - "■ Innocents | %arena_innocents%"
+      - "■ Innocents | %arena_innocent_size%"
       - "&f"
       - "■ Time | %arena_time%"
       - ""
@@ -121,7 +121,7 @@ Scoreboard:
       - ""
       - "■ Role | %arena_player_role%"
       - "&f"
-      - "■ Innocents | %arena_innocents%"
+      - "■ Innocents | %arena_innocent_size%"
       - "&f"
       - "■ Time | %arena_time%"
       - ""
@@ -199,7 +199,7 @@ In-Game:
     Blocked: "%color_chat_issue%%plugin_prefix% Spectators are disabled for this arena"
     You-Are-Spectator: "%plugin_prefix% You're now a spectator! You can fly now!"
     Spectator-Menu-Name: "%color_chat_issue%Alive players list"
-    Target-Player-Health: "%color_chat_issue%Health: %number% | Role: %arena_role%"
+    Target-Player-Health: "%color_chat_issue%Health: %number% | Role: %arena_player_role%"
     Spectator-Warning: "%plugin_prefix% You are a spectator!"
     Teleport: "%plugin_prefix% Teleported to %player%"
     Menu:
@@ -286,7 +286,7 @@ In-Game:
       Playing:
         Time-Left: "5,20,5;%arena_time% seconds left!;After %arena_time%s the Murderer will lose"
         Role:
-          Change: "5,20,5;Previous %arena_role% has left!"
+          Change: "5,20,5;Previous %arena_player_role% has left!"
           Murderer: "5,20,5;ROLE | MURDERER; Kill all players!"
           Detective: "5,20,5;ROLE | DETECTIVE;Find and kill the murderer!"
           Innocent: "5,20,5;ROLE | INNOCENT;Stay alive as long as possible!"
