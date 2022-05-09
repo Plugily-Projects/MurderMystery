@@ -823,7 +823,7 @@ public class Main extends PluginMain {
     getPlaceholderManager()
         .registerPlaceholder(
             new Placeholder(
-                "role", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+                "player_role", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
               @Override
               public String getValue(Player player, PluginArena arena) {
                 Arena pluginArena = getArenaRegistry().getArena(arena.getId());
