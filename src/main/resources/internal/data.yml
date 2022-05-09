@@ -9,8 +9,8 @@
 ###############################[IMPORTANT]###############################
 Plugin:
   Name:
-    Shot: mm
-    Long: ${project.name}
+    Short: mm
+    Long: murdermystery
   Id:
     Spigot: 66614
     BStats: 3038
