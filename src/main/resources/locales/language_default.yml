@@ -449,6 +449,10 @@ Leaderboard:
     Kills: "Kills ▸ %number%"
     Deaths: "Deaths ▸ %number%"
     Highest-Score: "Highest score ▸ %number%"
+    Murderer-Pass: "Murderer passes ▸ %number%"
+    Detective-Pass: "Detective passes ▸ %number%"
+    Murderer-Contribution: "Murderer contribution ▸ %number%"
+    Detective-Contribution: "Detective contribution ▸ %number%"
   Invalid-Name: "%color_chat_issue%Name of statistic is invalid! Type: %value%"
   Unknown-Player: "%color_chat_issue%Unknown Player"
 

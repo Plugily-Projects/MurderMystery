@@ -591,7 +591,27 @@ public class Main extends PluginMain {
         .registerMessage(
             "IN_GAME_MESSAGES_ARENA_PLAYING_BOW_SHOT_TITLE",
             new Message("In-Game.Messages.Arena.Playing.Bow.Shot.Title", ""));
-  }
+    getMessageManager()
+        .registerMessage(
+            "LEADERBOARD_STATISTICS_CONTRIBUTION_DETECTIVE",
+            new Message("Leaderboard.Statistics.Detective-Contribution", ""));
+    getMessageManager()
+        .registerMessage(
+            "LEADERBOARD_STATISTICS_CONTRIBUTION_MURDERER",
+            new Message("Leaderboard.Statistics.Murderer-Contribution", ""));
+
+    getMessageManager()
+        .registerMessage(
+            "LEADERBOARD_STATISTICS_PASS_DETECTIVE",
+            new Message("Leaderboard.Statistics.Detective-Pass", ""));
+    getMessageManager()
+        .registerMessage(
+            "LEADERBOARD_STATISTICS_PASS_MURDERER",
+            new Message("Leaderboard.Statistics.Murderer-Pass", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_KILLS", new Message("Leaderboard.Statistics.Kills", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_DEATHS", new Message("Leaderboard.Statistics.Deaths", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_HIGHEST_SCORE", new Message("Leaderboard.Statistics.Deaths", ""));
+    }
 
   public void registerPlaceholders() {
 
