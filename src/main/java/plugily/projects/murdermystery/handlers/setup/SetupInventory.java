@@ -116,7 +116,7 @@ public class SetupInventory extends PluginSetupInventory {
         }));
         break;
       case PAGED_COUNTABLE:
-        inv.setItem(11, new CountItem(new ItemBuilder(Material.REDSTONE_TORCH)
+        inv.setItem(11, new CountItem(new ItemBuilder(XMaterial.REDSTONE_TORCH.parseMaterial())
             .amount(plugin.getSetupUtilities().getMinimumValueHigherThanZero("spawngoldtime", this))
             .name(new MessageBuilder("&e&lSet gold spawn time in seconds").build())
             .lore(ChatColor.GRAY + "LEFT click to decrease")
