@@ -82,7 +82,7 @@ Scoreboard:
     Innocent: "&eInnocent"
     Dead: "Dead"
   Detective:
-    Alive: "Detective: &aAlive"
+    Alive: "Detective &aAlive"
     Bow:
       Dropped: "%color_chat_issue%Bow Dropped"
       Picked: "Bow Not Dropped"

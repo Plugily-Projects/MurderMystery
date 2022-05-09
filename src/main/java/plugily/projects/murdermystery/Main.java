@@ -611,7 +611,7 @@ public class Main extends PluginMain {
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_KILLS", new Message("Leaderboard.Statistics.Kills", ""));
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_DEATHS", new Message("Leaderboard.Statistics.Deaths", ""));
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_HIGHEST_SCORE", new Message("Leaderboard.Statistics.Deaths", ""));
-    }
+  }
 
   public void registerPlaceholders() {
 
@@ -734,6 +734,9 @@ public class Main extends PluginMain {
                   User user = getUserManager().getUser(p);
                   totalMurderer += user.getStatistic("CONTRIBUTION_MURDERER");
                 }
+                if(totalMurderer == 0) {
+                  totalMurderer = 1;
+                }
                 User user = getUserManager().getUser(player);
                 return NumberUtils.round(
                     ((double) user.getStatistic("CONTRIBUTION_MURDERER")
@@ -763,6 +766,9 @@ public class Main extends PluginMain {
                   User user = getUserManager().getUser(p);
                   totalDetectives += user.getStatistic("CONTRIBUTION_DETECTIVE");
                 }
+                if(totalDetectives == 0) {
+                  totalDetectives = 1;
+                }
                 User user = getUserManager().getUser(player);
                 return NumberUtils.round(
                     ((double) user.getStatistic("CONTRIBUTION_DETECTIVE")
@@ -788,12 +794,12 @@ public class Main extends PluginMain {
 
                 if(pluginArena.isDetectiveDead()) {
                   if(!pluginArena.isCharacterSet(Arena.CharacterType.FAKE_DETECTIVE)) {
-                    return new MessageBuilder("SCOREBOARD_DETECTIVE_BOW_DROPPED").build();
+                    return new MessageBuilder("SCOREBOARD_DETECTIVE_BOW_DROPPED").asKey().build();
                   } else {
-                    return new MessageBuilder("SCOREBOARD_DETECTIVE_BOW_PICKED").build();
+                    return new MessageBuilder("SCOREBOARD_DETECTIVE_BOW_PICKED").asKey().build();
                   }
                 } else {
-                  return new MessageBuilder("SCOREBOARD_DETECTIVE_ALIVE").build();
+                  return new MessageBuilder("SCOREBOARD_DETECTIVE_ALIVE").asKey().build();
                 }
               }
             });
