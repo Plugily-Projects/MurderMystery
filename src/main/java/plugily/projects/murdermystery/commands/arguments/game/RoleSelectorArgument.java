@@ -82,7 +82,7 @@ public class RoleSelectorArgument implements Listener {
       user.adjustStatistic("CONTRIBUTION_DETECTIVE", 999);
       new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_SUCCESS").asKey().player(player).value(Role.DETECTIVE.name()).sendPlayer();
     }));
-
+    gui.refresh();
     gui.open(player);
   }
 
