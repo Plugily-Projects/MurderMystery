@@ -238,9 +238,9 @@ In-Game:
         - "%arena_summary%"
         - "%arena_summary_player%"
         - ""
-        - "&7Detective: %detective%"
-        - "&7Murderer: %murderer% (%murderer_kills%)"
-        - "&7Hero: %hero%"
+        - "&7Detective: %arena_detective_list%"
+        - "&7Murderer: %arena_murderer_list% (%arena_murderer_kills%)"
+        - "&7Hero: %arena_hero%"
         - ""
         - "&a&m--------------------------------------------------"
       Placeholders:
@@ -261,7 +261,7 @@ In-Game:
       Set-Starting-In-To-0: "%plugin_prefix% An admin set waiting time to 0. The game starts now!"
     Arena:
       Chances:
-        Action-Bar: "&cMurderer Chance: %murderer_chance% &a- &bDetective Chance: %detective_chance%"
+        Action-Bar: "&cMurderer Chance: %arena_murderer_chance% &a- &bDetective Chance: %arena_detective_chance%"
       Cooldown: "&8&l[%progress%&8&l] &6%time% seconds"
       Locator:
         Bow: "Bow locator"
