@@ -19,6 +19,7 @@
 package plugily.projects.murdermystery.events;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -29,6 +30,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
@@ -73,8 +75,14 @@ public class PluginEvents implements Listener {
       return;
     }
 
+    ItemStack murdererSword = plugin.getSwordSkinManager().getMurdererSword(attacker);
+
+    if(murdererSword == null) {
+      return;
+    }
+
     if(VersionUtils.getItemInHand(attacker).getType()
-        != plugin.getSwordSkinManager().getMurdererSword(attacker).getType()) {
+        != murdererSword.getType()) {
       return;
     }
     if(attackerUser.getCooldown("sword_shoot") > 0) {
