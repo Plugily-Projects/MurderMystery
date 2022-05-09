@@ -58,7 +58,7 @@ public class ScoreboardManager extends PluginScoreboardManager {
               .getPlugin()
               .getLanguageManager()
               .getLanguageList(
-                  "Scoreboard.Content." + user.getArena().getArenaState().getFormattedName() + (Role.isRole(Role.MURDERER, user) ? "Murderer" : ""));
+                  "Scoreboard.Content." + user.getArena().getArenaState().getFormattedName() + (Role.isRole(Role.MURDERER, user) ? "-Murderer" : ""));
     } else {
       lines =
           user.getArena()
