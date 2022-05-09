@@ -114,7 +114,7 @@ Scoreboard:
       - ""
       - "■ %arena_detective_status%"
       - ""
-      - "■ Score | %USERSTATISTC SCORE%"
+      - "■ Score | %user_statistic_local_score%"
       - ""
       - "   www.plugily.xyz"
     In-Game-Murderer:
@@ -127,9 +127,9 @@ Scoreboard:
       - ""
       - "■ %arena_detective_status%"
       - ""
-      - "■ Kills | %USER STATISTIC LOCAL KILLS%"
+      - "■ Kills | %user_statistic_local_kills%"
       - ""
-      - "■ Score | %USERSTATISTC SCORE%"
+      - "■ Score | %user_statistic_local_score%"
       - ""
       - "   www.plugily.xyz"
     # Contents of scoreboard while state is ending
