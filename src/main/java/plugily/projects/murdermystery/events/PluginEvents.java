@@ -19,7 +19,6 @@
 package plugily.projects.murdermystery.events;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -209,16 +208,15 @@ public class PluginEvents implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   // highest priority to fully protect our game
-  public void onBlockBreakEvent(BlockBreakEvent event) {
-    Arena arena = (Arena) plugin.getArenaRegistry().getArena(event.getPlayer());
+  public void onBlockBreak(BlockBreakEvent event) {
+    Arena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
     if(arena == null) {
-      event.setCancelled(true);
       return;
     }
+    event.setCancelled(true);
     if(event.getBlock().getType() != XMaterial.ARMOR_STAND.parseMaterial()) {
       return;
     }
-
     plugin
         .getHologramManager()
         .getArmorStands()
@@ -237,7 +235,7 @@ public class PluginEvents implements Listener {
   @EventHandler(priority = EventPriority.HIGH)
   // highest priority to fully protect our game
   public void onBuild(BlockPlaceEvent event) {
-    Arena arena = (Arena) plugin.getArenaRegistry().getArena(event.getPlayer());
+    Arena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
     if(arena == null) {
       return;
     }
