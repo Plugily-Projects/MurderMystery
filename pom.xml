@@ -186,14 +186,9 @@
     </build>
     <distributionManagement>
         <repository>
-            <id>plugily-projects-releases-repository</id>
+            <id>plugily-projects</id>
             <url>https://maven.plugily.xyz/releases</url>
         </repository>
-        <site>
-            <id>plugily-projects-java-docs</id>
-            <name>MurderMystery</name>
-            <url>sftp://91.229.245.16/var/www/jd</url>
-        </site>
     </distributionManagement>
 
 </project>
