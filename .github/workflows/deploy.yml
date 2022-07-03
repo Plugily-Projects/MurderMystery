@@ -25,21 +25,6 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Creating javadocs.key
-        id: javadocs-key
-        uses: timheuer/base64-to-file@v1.1
-        with:
-          fileName: 'javadocs.key'
-          fileDir: './temporary/secrets/key/'
-          encodedString: ${{ secrets.PLUGILY_JAVADOCS_PRIVATE_KEY }}
-          
-      - name: Validate SSH Connection
-        id: ssh-validation
-        uses: kielabokkie/ssh-key-and-known-hosts-action@v1.2.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          ssh-host: 91.229.245.16
-
       - name: Bump Version
         id: bump
         uses: Plugily-Projects/maven-version-bump-action@dev
@@ -72,17 +57,6 @@ jobs:
                 "id": "${{ secrets.PLUGILY_REPO_ID }}",
                 "username": "${{ secrets.PLUGILY_REPO_USERNAME }}",
                 "password": "${{ secrets.PLUGILY_REPO_PASSWORD }}"
-            },
-            {
-                "id": "${{ secrets.PLUGILY_JAVADOCS_ID }}",
-                "username": "${{ secrets.PLUGILY_JAVADOCS_USERNAME }}",
-                "privateKey": "${{ steps.javadocs-key.outputs.filePath }}",
-                "passphrase": "${{ secrets.PLUGILY_JAVADOCS_PASSWORD }}"
             }]
             
-      - run: mvn clean verify compile package site:site site:deploy deploy -f pom.xml
-      
-      - name: Remove File
-        uses: JesseTG/rm@v1.0.2
-        with:
-          path: ${{ steps.javadocs-key.outputs.filePath }}
+      - run: mvn clean verify compile package site:site javadoc:javadoc javadoc:jar deploy -f pom.xml
