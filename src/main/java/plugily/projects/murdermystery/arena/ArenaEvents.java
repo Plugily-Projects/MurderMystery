@@ -91,13 +91,13 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @Override
   public void handleIngameVoidDeath(Player victim, PluginArena arena) {
-    Arena pluginArena = (Arena) plugin.getArenaRegistry().getArena(arena.getId());
+    Arena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
     if (pluginArena == null) {
       return;
     }
     victim.damage(1000.0);
     if (arena.getArenaState() == ArenaState.IN_GAME) {
-      victim.teleport(pluginArena.getPlayerSpawnPoints().get(0));
+      VersionUtils.teleport(victim, pluginArena.getPlayerSpawnPoints().get(0));
     }
   }
 
@@ -136,7 +136,7 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     Player player = (Player) e.getEntity();
-    Arena arena = (Arena) plugin.getArenaRegistry().getArena(player);
+    Arena arena = plugin.getArenaRegistry().getArena(player);
     if (arena == null) {
       return;
     }

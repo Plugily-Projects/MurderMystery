@@ -64,7 +64,7 @@ public class PluginEvents implements Listener {
       return;
     }
     Player attacker = event.getPlayer();
-    Arena arena = (Arena) plugin.getArenaRegistry().getArena(attacker);
+    Arena arena = plugin.getArenaRegistry().getArena(attacker);
     if(arena == null) {
       return;
     }
@@ -153,7 +153,7 @@ public class PluginEvents implements Listener {
     new BukkitRunnable() {
       @Override
       public void run() {
-        stand.teleport(standStart.add(vec));
+        VersionUtils.teleport(stand, standStart.add(vec));
         initialise.add(vec);
         initialise
             .getWorld()
@@ -162,7 +162,7 @@ public class PluginEvents implements Listener {
                 entity -> {
                   if(entity instanceof Player) {
                     Player victim = (Player) entity;
-                    Arena arena = (Arena) plugin.getArenaRegistry().getArena(victim);
+                    Arena arena = plugin.getArenaRegistry().getArena(victim);
                     if(arena == null) {
                       return;
                     }
@@ -183,7 +183,7 @@ public class PluginEvents implements Listener {
   }
 
   private void killBySword(Arena arena, User attackerUser, Player victim) {
-    Arena victimArena = (Arena) plugin.getArenaRegistry().getArena(victim);
+    Arena victimArena = plugin.getArenaRegistry().getArena(victim);
     if(arena == null) {
       return;
     }
