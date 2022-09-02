@@ -35,8 +35,8 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.permissions.PermissionCategory;
 import plugily.projects.minigamesbox.classic.handlers.placeholder.Placeholder;
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardType;
-import plugily.projects.minigamesbox.classic.handlers.setup.PluginSetupInventory;
-import plugily.projects.minigamesbox.classic.handlers.setup.SetupUtilities;
+import plugily.projects.minigamesbox.classic.handlers.setup.SetupInventory;
+import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginSetupCategoryManager;
 import plugily.projects.minigamesbox.classic.preferences.ConfigOption;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.services.locale.Locale;
@@ -55,7 +55,7 @@ import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
 import plugily.projects.murdermystery.events.PluginEvents;
 import plugily.projects.murdermystery.handlers.CorpseHandler;
 import plugily.projects.murdermystery.handlers.lastwords.LastWordsManager;
-import plugily.projects.murdermystery.handlers.setup.SetupInventory;
+import plugily.projects.murdermystery.handlers.setup.SetupCategoryManager;
 import plugily.projects.murdermystery.handlers.skins.sword.SwordSkinManager;
 import plugily.projects.murdermystery.handlers.trails.BowTrailsHandler;
 import plugily.projects.murdermystery.handlers.trails.TrailsManager;
@@ -989,13 +989,7 @@ public class Main extends PluginMain {
   }
 
   @Override
-  public PluginSetupInventory openSetupInventory(PluginArena arena, Player player) {
-    return new SetupInventory(this, arena, player);
-  }
-
-  @Override
-  public PluginSetupInventory openSetupInventory(
-      PluginArena arena, Player player, SetupUtilities.InventoryStage inventoryStage) {
-    return new SetupInventory(this, arena, player, inventoryStage);
+  public PluginSetupCategoryManager getSetupCategoryManager(SetupInventory setupInventory) {
+    return new SetupCategoryManager(setupInventory);
   }
 }
