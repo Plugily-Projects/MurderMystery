@@ -499,11 +499,11 @@ public class Main extends PluginMain {
     getMessageManager()
         .registerMessage(
             "IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_CAULDRON_POTION",
-            new Message("In-Game.Messages.Arena.Playing.Special-Blocks.Potion", ""));
+            new Message("In-Game.Messages.Arena.Playing.Special-Blocks.Cauldron.Potion", ""));
     getMessageManager()
         .registerMessage(
             "IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_CAULDRON_HOLOGRAM",
-            new Message("In-Game.Messages.Arena.Playing.Special-Blocks.Hologram", ""));
+            new Message("In-Game.Messages.Arena.Playing.Special-Blocks.Cauldron.Hologram", ""));
     getMessageManager()
         .registerMessage(
             "IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_NOT_ENOUGH_GOLD",

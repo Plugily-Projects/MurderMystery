@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.managers.PluginMapRestorerManager;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.murdermystery.Main;
@@ -109,6 +110,7 @@ public class Arena extends PluginArena {
 
   private void setPluginValues() {
   }
+
   public void addCorpse(Corpse corpse) {
     if(plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
       corpses.add(corpse);
@@ -198,7 +200,7 @@ public class Arena extends PluginArena {
         Location goldLocation = goldLocations.clone();
         goldLocation.add(0, 0.4, 0);
         java.util.Iterator<? extends Player> iterator = Bukkit.getOnlinePlayers().iterator();
-        if (iterator.hasNext()) {
+        if(iterator.hasNext()) {
           VersionUtils.sendParticles("REDSTONE", iterator.next(), goldLocation, 10);
         }
       }
@@ -215,19 +217,20 @@ public class Arena extends PluginArena {
       startGoldVisuals();
     }
   }
+
   public void loadSpecialBlock(SpecialBlock block) {
-    if (!specialBlocks.contains(block)) {
+    if(!specialBlocks.contains(block)) {
       specialBlocks.add(block);
     }
 
     switch(block.getSpecialBlockType()) {
       case MYSTERY_CAULDRON:
-        block.setArmorStandHologram(new ArmorStandHologram(plugin.getBukkitHelper().getBlockCenter(block.getLocation()), plugin.getLanguageManager().getLanguageMessage("In-Game.Messages.Arena.Playing.Special-Blocks.Cauldron.Hologram")));
+        block.setArmorStandHologram(new ArmorStandHologram(plugin.getBukkitHelper().getBlockCenter(block.getLocation()), new MessageBuilder(plugin.getLanguageManager().getLanguageMessage("In-Game.Messages.Arena.Playing.Special-Blocks.Cauldron.Hologram")).build()));
         break;
       case PRAISE_DEVELOPER:
         ArmorStandHologram prayer = new ArmorStandHologram(plugin.getBukkitHelper().getBlockCenter(block.getLocation()));
         for(String str : plugin.getLanguageManager().getLanguageMessage("In-Game.Messages.Arena.Playing.Special-Blocks.Pray.Hologram").split(";")) {
-          prayer.appendLine(str);
+          prayer.appendLine(new MessageBuilder(str).build());
         }
         block.setArmorStandHologram(prayer);
         break;
@@ -242,6 +245,7 @@ public class Arena extends PluginArena {
   public List<SpecialBlock> getSpecialBlocks() {
     return specialBlocks;
   }
+
   public boolean isCharacterSet(Arena.CharacterType type) {
     return gameCharacters.containsKey(type);
   }
@@ -266,7 +270,7 @@ public class Arena extends PluginArena {
   public int aliveDetective() {
     int alive = 0;
     for(Player player : getPlayersLeft()) {
-      if (Role.isRole(Role.ANY_DETECTIVE, plugin.getUserManager().getUser(player), this)
+      if(Role.isRole(Role.ANY_DETECTIVE, plugin.getUserManager().getUser(player), this)
           && isDetectiveAlive(player)) {
         alive++;
       }
@@ -303,7 +307,7 @@ public class Arena extends PluginArena {
   public int aliveMurderer() {
     int alive = 0;
     for(Player player : getPlayersLeft()) {
-      if (Role.isRole(Role.MURDERER, plugin.getUserManager().getUser(player), this) && isMurderAlive(player)) {
+      if(Role.isRole(Role.MURDERER, plugin.getUserManager().getUser(player), this) && isMurderAlive(player)) {
         alive++;
       }
     }
@@ -359,6 +363,7 @@ public class Arena extends PluginArena {
   public boolean isSpectatorPlayer(Player player) {
     return spectators.contains(player);
   }
+
   public List<Location> getPlayerSpawnPoints() {
     return playerSpawnPoints;
   }
@@ -376,10 +381,10 @@ public class Arena extends PluginArena {
   }
 
 
-
   public void setPlayerSpawnPoints(@NotNull List<Location> playerSpawnPoints) {
     this.playerSpawnPoints = playerSpawnPoints;
   }
+
   public enum CharacterType {
     MURDERER, DETECTIVE, FAKE_DETECTIVE, HERO
   }
