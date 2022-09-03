@@ -18,7 +18,6 @@
 
 package plugily.projects.murdermystery.arena;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -198,7 +197,7 @@ public class ArenaUtils extends PluginArenaUtils {
             .build();
 
     if(action.points < 0) {
-      msg = StringUtils.replace(msg, "+", "");
+      msg = msg.replace("+", "");
     }
 
     user.adjustStatistic("LOCAL_SCORE", action.points);
