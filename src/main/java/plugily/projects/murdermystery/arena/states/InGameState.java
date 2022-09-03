@@ -126,12 +126,12 @@ public class InGameState extends PluginInGameState {
   }
 
   private void spawnSomeGold(Arena arena) {
-    int spawnPointsSize = arena.getPlayerSpawnPoints().size();
+    int spawnPointsSize = arena.getGoldSpawnPoints().size();
 
     if(spawnPointsSize == 0) {
       return;
     }
-    //may users want to disable it and want much gold on there map xD
+    //may users want to disable it and want much gold on their map xD
     if(!getPlugin().getConfigPreferences().getOption("GOLD_LIMITER")) {
       //do not exceed amount of gold per spawn
       if(arena.getGoldSpawned().size() >= spawnPointsSize) {
@@ -139,12 +139,12 @@ public class InGameState extends PluginInGameState {
       }
     }
     if(getPlugin().getConfigPreferences().getOption("GOLD_SPAWNER_MODE_ALL")) {
-      for(Location location : arena.getPlayerSpawnPoints()) {
+      for(Location location : arena.getGoldSpawnPoints()) {
         arena.getGoldSpawned().add(location.getWorld().dropItem(location, new ItemStack(Material.GOLD_INGOT, 1)));
         getPlugin().getPowerupRegistry().spawnPowerup(location, arena);
       }
     } else {
-      Location loc = arena.getGoldSpawned().get(spawnPointsSize == 1 ? 0 : new Random().nextInt(spawnPointsSize)).getLocation();
+      Location loc = arena.getGoldSpawned().get(spawnPointsSize == 1 ? 0 : getPlugin().getRandom().nextInt(spawnPointsSize - 1)).getLocation();
       arena.getGoldSpawned().add(loc.getWorld().dropItem(loc, new ItemStack(Material.GOLD_INGOT, 1)));
       getPlugin().getPowerupRegistry().spawnPowerup(loc, arena);
     }
