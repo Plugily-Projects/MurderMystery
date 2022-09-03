@@ -317,7 +317,7 @@ In-Game:
             Win: "for winning the game"
             Detective: "for %number% innocents survived"
         Sword:
-          Soon: "The Murderer gets their sword in %time% seconds!"
+          Soon: "The Murderer gets their sword in %number% seconds!"
         Special-Blocks:
           Cauldron:
             Potion: "Please drink your current potion!"
