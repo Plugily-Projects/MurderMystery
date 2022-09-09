@@ -11,7 +11,7 @@
 Role-Pass:
   permission: ""
   execute:
-    - "mm roleselector"
+    - "p:mm roleselector"
   displayname: "&c&lClick to open role pass menu &7(Right Click)"
   lore:
     - "&7Enjoy one round of guaranteed role with pass"
