@@ -480,7 +480,7 @@ public class ArenaEvents extends PluginArenaEvents {
       user.setStatistic("LOCAL_GOLD", 0);
       plugin
           .getRewardsHandler()
-          .performReward(player, plugin.getRewardsHandler().getRewardType("DEATH"));
+          .performReward(player, plugin.getRewardsHandler().getRewardType("PLAYER_DEATH"));
     }
   }
 

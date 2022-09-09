@@ -18,6 +18,7 @@
 
 package plugily.projects.murdermystery.arena.states;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -144,7 +145,7 @@ public class InGameState extends PluginInGameState {
         getPlugin().getPowerupRegistry().spawnPowerup(location, arena);
       }
     } else {
-      Location loc = arena.getGoldSpawned().get(spawnPointsSize == 1 ? 0 : getPlugin().getRandom().nextInt(spawnPointsSize - 1)).getLocation();
+      Location loc = arena.getGoldSpawnPoints().get(spawnPointsSize == 1 ? 0 : getPlugin().getRandom().nextInt(spawnPointsSize - 1));
       arena.getGoldSpawned().add(loc.getWorld().dropItem(loc, new ItemStack(Material.GOLD_INGOT, 1)));
       getPlugin().getPowerupRegistry().spawnPowerup(loc, arena);
     }
