@@ -73,22 +73,6 @@ public class ArenaEvents extends PluginArenaEvents {
     plugin.getServer().getPluginManager().registerEvents(this, plugin);
   }
 
-  @EventHandler
-  public void onArmorStandEject(EntityDismountEvent e) {
-    if (!(e.getEntity() instanceof ArmorStand)
-        || !"MurderMysteryArmorStand".equals(e.getEntity().getCustomName())) {
-      return;
-    }
-    if (!(e.getDismounted() instanceof Player)) {
-      return;
-    }
-    if (e.getDismounted().isDead()) {
-      e.getEntity().remove();
-    }
-    // we could use setCancelled here but for 1.12 support we cannot (no api)
-    e.getDismounted().addPassenger(e.getEntity());
-  }
-
   @Override
   public void handleIngameVoidDeath(Player victim, PluginArena arena) {
     Arena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
