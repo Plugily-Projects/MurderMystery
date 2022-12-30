@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
-import plugily.projects.minigamesbox.classic.commonsbox.number.NumberUtils;
+import plugily.projects.minigamesbox.number.NumberUtils;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.placeholder.Placeholder;
 import plugily.projects.minigamesbox.classic.handlers.placeholder.PlaceholderManager;

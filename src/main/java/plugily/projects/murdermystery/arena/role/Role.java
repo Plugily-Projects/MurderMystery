@@ -64,7 +64,7 @@ public enum Role {
    * Checks whether player is playing specified role or not
    *
    * @param role   role to check
-   * @param player player to check
+   * @param user player to check
    * @return true if is playing it, false otherwise
    */
   public static boolean isRole(Role role, User user) {
@@ -75,7 +75,7 @@ public enum Role {
    * Checks whether player is playing specified role or not
    *
    * @param role   role to check
-   * @param player player to check
+   * @param user player to check
    * @param arena  the arena where to check
    * @return true if is playing it, false otherwise
    */
@@ -110,7 +110,7 @@ public enum Role {
   /**
    * Checks whether player is playing a role or not
    *
-   * @param player player to check
+   * @param user player to check
    * @return true if is playing one role, false otherwise
    */
   public static boolean isAnyRole(User user) {
@@ -122,7 +122,7 @@ public enum Role {
   /**
    * Checks whether player is playing a role or not
    *
-   * @param player player to check
+   * @param user player to check
    * @param arena  the player's arena
    * @return true if is playing one role, false otherwise
    */
