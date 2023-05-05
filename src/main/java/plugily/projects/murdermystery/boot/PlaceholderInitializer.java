@@ -131,69 +131,31 @@ public class PlaceholderInitializer {
           }
         });
 
-    getPlaceholderManager()
-      .registerPlaceholder(
-        new Placeholder(
-          "murderer_chance",
-          Placeholder.PlaceholderType.ARENA,
-          Placeholder.PlaceholderExecutor.ALL) {
-          @Override
-          public String getValue(Player player, PluginArena arena) {
-            Arena pluginArena = getArenaRegistry().getArena(arena.getId());
-            if(pluginArena == null) {
-              return null;
-            }
+    getPlaceholderManager().registerPlaceholder(new Placeholder("murderer_chance", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        Arena pluginArena = getArenaRegistry().getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
 
-            int totalMurderer = 0;
+        User user = getUserManager().getUser(player);
+        return NumberUtils.round(((double) pluginArena.getContributorValue(Role.MURDERER, user) / (double) pluginArena.getTotalRoleChances(Role.MURDERER)) * 100.0, 2) + "%";
+      }
+    });
 
-            for(Player p : arena.getPlayers()) {
-              User user = getUserManager().getUser(p);
-              totalMurderer += user.getStatistic("CONTRIBUTION_MURDERER");
-            }
-            if(totalMurderer == 0) {
-              totalMurderer = 1;
-            }
-            User user = getUserManager().getUser(player);
-            return NumberUtils.round(
-              ((double) user.getStatistic("CONTRIBUTION_MURDERER")
-                / (double) totalMurderer)
-                * 100.0,
-              2)
-              + "%";
-          }
-        });
+    getPlaceholderManager().registerPlaceholder(new Placeholder("detective_chance", Placeholder.PlaceholderType.ARENA, Placeholder.PlaceholderExecutor.ALL) {
+      @Override
+      public String getValue(Player player, PluginArena arena) {
+        Arena pluginArena = getArenaRegistry().getArena(arena.getId());
+        if(pluginArena == null) {
+          return null;
+        }
 
-    getPlaceholderManager()
-      .registerPlaceholder(
-        new Placeholder(
-          "detective_chance",
-          Placeholder.PlaceholderType.ARENA,
-          Placeholder.PlaceholderExecutor.ALL) {
-          @Override
-          public String getValue(Player player, PluginArena arena) {
-            Arena pluginArena = getArenaRegistry().getArena(arena.getId());
-            if(pluginArena == null) {
-              return null;
-            }
-
-            int totalDetectives = 0;
-
-            for(Player p : arena.getPlayers()) {
-              User user = getUserManager().getUser(p);
-              totalDetectives += user.getStatistic("CONTRIBUTION_DETECTIVE");
-            }
-            if(totalDetectives == 0) {
-              totalDetectives = 1;
-            }
-            User user = getUserManager().getUser(player);
-            return NumberUtils.round(
-              ((double) user.getStatistic("CONTRIBUTION_DETECTIVE")
-                / (double) totalDetectives)
-                * 100.0,
-              2)
-              + "%";
-          }
-        });
+        User user = getUserManager().getUser(player);
+        return NumberUtils.round(((double) pluginArena.getContributorValue(Role.DETECTIVE, user) / (double) pluginArena.getTotalRoleChances(Role.DETECTIVE)) * 100.0, 2) + "%";
+      }
+    });
 
     getPlaceholderManager()
       .registerPlaceholder(
@@ -257,9 +219,9 @@ public class PlaceholderInitializer {
             if(pluginArena.isDeathPlayer(player)) {
               role = new MessageBuilder("SCOREBOARD_ROLES_DEAD").asKey().build();
             } else if(Role.isRole(Role.MURDERER, user, arena)) {
-              role = new MessageBuilder("SCOREBOARD_ROLES_DETECTIVE").asKey().build();
-            } else if(Role.isRole(Role.ANY_DETECTIVE, user, arena)) {
               role = new MessageBuilder("SCOREBOARD_ROLES_MURDERER").asKey().build();
+            } else if(Role.isRole(Role.ANY_DETECTIVE, user, arena)) {
+              role = new MessageBuilder("SCOREBOARD_ROLES_DETECTIVE").asKey().build();
             } else {
               role = new MessageBuilder("SCOREBOARD_ROLES_INNOCENT").asKey().build();
             }

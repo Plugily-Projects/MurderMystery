@@ -29,6 +29,7 @@ import plugily.projects.minigamesbox.classic.arena.ArenaState;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.managers.PluginMapRestorerManager;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.murdermystery.Main;
@@ -43,11 +44,7 @@ import plugily.projects.murdermystery.arena.states.StartingState;
 import plugily.projects.murdermystery.HookManager;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author Tigerpanzer_02
@@ -73,13 +70,10 @@ public class Arena extends PluginArena {
   private boolean detectiveDead;
   private boolean murdererLocatorReceived;
   private boolean hideChances;
-  private boolean ready = true;
-  private boolean forceStart = false;
   private boolean goldVisuals = false;
   private final Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
   private MapRestorerManager mapRestorerManager;
   private ArmorStandHologram bowHologram;
-  private static final Random random = new Random();
 
   public Arena(String id) {
     super(id);
@@ -246,12 +240,26 @@ public class Arena extends PluginArena {
     return specialBlocks;
   }
 
+  public int getTotalRoleChances(Role role) {
+    int totalRoleChances = 0;
+
+    for(Player p : getPlayers()) {
+      User user = getPlugin().getUserManager().getUser(p);
+      totalRoleChances += getContributorValue(role, user);
+    }
+    return totalRoleChances;
+  }
+
   public boolean isCharacterSet(Arena.CharacterType type) {
     return gameCharacters.containsKey(type);
   }
 
   public void setCharacter(Arena.CharacterType type, Player player) {
     gameCharacters.put(type, player);
+  }
+
+  public void setCharacter(Role role, Player player) {
+    gameCharacters.put(role == Role.MURDERER ? CharacterType.MURDERER : CharacterType.DETECTIVE, player);
   }
 
   @Nullable
@@ -271,7 +279,7 @@ public class Arena extends PluginArena {
     int alive = 0;
     for(Player player : getPlayersLeft()) {
       if(Role.isRole(Role.ANY_DETECTIVE, plugin.getUserManager().getUser(player), this)
-          && isDetectiveAlive(player)) {
+        && isDetectiveAlive(player)) {
         alive++;
       }
     }
@@ -383,6 +391,22 @@ public class Arena extends PluginArena {
 
   public void setPlayerSpawnPoints(@NotNull List<Location> playerSpawnPoints) {
     this.playerSpawnPoints = playerSpawnPoints;
+  }
+
+  public void adjustContributorValue(Role role, User user, int number) {
+    user.adjustStatistic("CONTRIBUTION_" + role.name(), number);
+  }
+
+  public int getContributorValue(Role role, User user) {
+    Player player = user.getPlayer();
+    int contributor = user.getStatistic("CONTRIBUTION_" + role.name());
+    int increase = plugin.getPermissionsManager().getPermissionCategoryValue(role.name() + "_BOOSTER", player);
+    int multiplicator = plugin.getPermissionsManager().getPermissionCategoryValue("CHANCES_BOOSTER", player);
+    return (contributor + increase) * multiplicator;
+  }
+
+  public void resetContributorValue(Role role, User user) {
+    user.setStatistic("CONTRIBUTION_" + role.name(), 1);
   }
 
   public enum CharacterType {

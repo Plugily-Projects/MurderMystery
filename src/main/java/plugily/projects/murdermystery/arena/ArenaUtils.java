@@ -59,7 +59,7 @@ public class ArenaUtils extends PluginArenaUtils {
       }
     }
     //we must call it ticks later due to instant respawn bug
-    Bukkit.getScheduler().runTaskLater(getPlugin(), () -> getPlugin().getArenaManager().stopGame(false, arena), 10);
+    Bukkit.getScheduler().runTask(getPlugin(), () -> getPlugin().getArenaManager().stopGame(false, arena));
   }
 
   public static void updateInnocentLocator(Arena arena) {
@@ -183,7 +183,7 @@ public class ArenaUtils extends PluginArenaUtils {
           .player(user.getPlayer())
           .arena(user.getArena())
           .integer(overallInnocents)
-          .value(action.action.replace("%amount%", Integer.toString(innocents)))
+          .value(new MessageBuilder(action.action).integer(innocents).build())
           .sendPlayer();
       return;
     }

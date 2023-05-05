@@ -55,6 +55,7 @@ public class AdditionalValueInitializer {
     getStatsStorage().registerStatistic("LOCAL_PRAY", new StatisticType("local_pray", false, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("LOCAL_GOLD", new StatisticType("local_gold", false, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("LOCAL_KILLS", new StatisticType("local_kills", false, "int(11) NOT NULL DEFAULT '0'"));
+    getStatsStorage().registerStatistic("LOCAL_CURRENT_PRAY", new StatisticType("local_current_pray", false, "int(11) NOT NULL DEFAULT '0'"));
   }
 
   private void registerPermission() {

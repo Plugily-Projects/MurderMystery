@@ -34,13 +34,15 @@ import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class RoleSelectorArgument implements Listener {
 
   public RoleSelectorArgument(ArgumentsRegistry registry) {
     registry.mapArgument("murdermystery", new LabeledCommandArgument("roleselector", "murdermystery.roleselector", CommandArgument.ExecutorType.PLAYER,
-        new LabelData("/mm roleselector", "/mm roleselector", "&7Select a role\n&6Permission: &7murdermystery.roleselector")) {
+      new LabelData("/mm roleselector", "/mm roleselector", "&7Select a role\n&6Permission: &7murdermystery.roleselector")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
@@ -54,32 +56,34 @@ public class RoleSelectorArgument implements Listener {
 
   public static void openRolePassMenu(Player player, PluginMain plugin) {
     NormalFastInv gui = new NormalFastInv(plugin.getBukkitHelper().serializeInt(Role.values().length), new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_NAME").asKey().build());
-
+    List<String> descriptionMurderer = new ArrayList<>();
+    plugin.getLanguageManager().getLanguageListFromKey("IN_GAME_MESSAGES_ARENA_PASS_ROLE_MURDERER_LORE").forEach(string -> descriptionMurderer.add(new MessageBuilder(string).integer(plugin.getUserManager().getUser(player).getStatistic("PASS_MURDERER")).build()));
     gui.addItem(new SimpleClickableItem(new ItemBuilder(XMaterial.IRON_SWORD.parseMaterial())
-        .name(new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_ROLE_MURDERER_NAME").asKey().build())
-        .lore(plugin.getLanguageManager().getLanguageListFromKey("IN_GAME_MESSAGES_ARENA_PASS_ROLE_MURDERER_LORE").stream().map(string -> string.replace("%amount%", plugin.getUserManager().getUser(player).getStatistic("PASS_DETECTIVE") + "")).collect(Collectors.toList()))
-        .build(), event -> {
+      .name(new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_ROLE_MURDERER_NAME").asKey().build())
+      .lore(descriptionMurderer)
+      .build(), event -> {
       User user = plugin.getUserManager().getUser(player);
       if(user.getStatistic("PASS_MURDERER") <= 0) {
         new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_FAIL").asKey().player(player).value(Role.MURDERER.name()).sendPlayer();
         return;
       }
       user.adjustStatistic("PASS_MURDERER", -1);
-      user.adjustStatistic("CONTRIBUTION_MURDERER", 999);
+      user.adjustStatistic("CONTRIBUTION_MURDERER", 999999999);
       new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_SUCCESS").asKey().player(player).value(Role.MURDERER.name()).sendPlayer();
     }));
-
+    List<String> descriptionDetective = new ArrayList<>();
+    plugin.getLanguageManager().getLanguageListFromKey("IN_GAME_MESSAGES_ARENA_PASS_ROLE_DETECTIVE_LORE").forEach(string -> descriptionDetective.add(new MessageBuilder(string).integer(plugin.getUserManager().getUser(player).getStatistic("PASS_DETECTIVE")).build()));
     gui.addItem(new SimpleClickableItem(new ItemBuilder(XMaterial.BOW.parseMaterial())
-        .name(new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_ROLE_DETECTIVE_NAME").asKey().build())
-        .lore(plugin.getLanguageManager().getLanguageListFromKey("IN_GAME_MESSAGES_ARENA_PASS_ROLE_DETECTIVE_LORE").stream().map(string -> string.replace("%amount%", plugin.getUserManager().getUser(player).getStatistic("PASS_DETECTIVE") + "")).collect(Collectors.toList()))
-        .build(), event -> {
+      .name(new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_ROLE_DETECTIVE_NAME").asKey().build())
+      .lore(descriptionDetective)
+      .build(), event -> {
       User user = plugin.getUserManager().getUser(player);
       if(user.getStatistic("PASS_DETECTIVE") <= 0) {
         new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_FAIL").asKey().player(player).value(Role.DETECTIVE.name()).sendPlayer();
         return;
       }
       user.adjustStatistic("PASS_DETECTIVE", -1);
-      user.adjustStatistic("CONTRIBUTION_DETECTIVE", 999);
+      user.adjustStatistic("CONTRIBUTION_DETECTIVE", 999999999);
       new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_SUCCESS").asKey().player(player).value(Role.DETECTIVE.name()).sendPlayer();
     }));
     gui.refresh();

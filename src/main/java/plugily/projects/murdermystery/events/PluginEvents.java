@@ -58,9 +58,7 @@ public class PluginEvents implements Listener {
 
   @EventHandler
   public void onSwordThrow(PlayerInteractEvent event) {
-    if(event.getAction() == Action.LEFT_CLICK_AIR
-        || event.getAction() == Action.LEFT_CLICK_BLOCK
-        || event.getAction() == Action.PHYSICAL) {
+    if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
       return;
     }
     Player attacker = event.getPlayer();
@@ -80,8 +78,7 @@ public class PluginEvents implements Listener {
       return;
     }
 
-    if(VersionUtils.getItemInHand(attacker).getType()
-        != murdererSword.getType()) {
+    if(VersionUtils.getItemInHand(attacker).getType() != murdererSword.getType()) {
       return;
     }
     if(attackerUser.getCooldown("sword_shoot") > 0) {
@@ -93,31 +90,22 @@ public class PluginEvents implements Listener {
     attackerUser.setCooldown("sword_shoot", swordFlyCooldown);
 
     if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_10_R1)) {
-      attackerUser.setCooldown(
-          "sword_attack", (plugin.getConfig().getInt("Sword.Cooldown.Attack", 1)));
+      attackerUser.setCooldown("sword_attack", (plugin.getConfig().getInt("Sword.Cooldown.Attack", 1)));
     } else {
-      attacker.setCooldown(
-          plugin.getSwordSkinManager().getMurdererSword(attacker).getType(),
-          20 * (plugin.getConfig().getInt("Sword.Cooldown.Attack", 1)));
+      attacker.setCooldown(plugin.getSwordSkinManager().getMurdererSword(attacker).getType(), 20 * (plugin.getConfig().getInt("Sword.Cooldown.Attack", 1)));
     }
 
-    createFlyingSword(arena, attacker, attackerUser);
+    createFlyingSword(attacker, attackerUser);
     plugin.getBukkitHelper().applyActionBarCooldown(attacker, swordFlyCooldown);
   }
 
-  private void createFlyingSword(Arena arena, Player attacker, User attackerUser) {
+  private void createFlyingSword(Player attacker, User attackerUser) {
     Location loc = attacker.getLocation();
     Vector vec = loc.getDirection();
     vec.normalize().multiply(plugin.getConfig().getDouble("Sword.Speed", 0.65));
-    Location standStart =
-        plugin
-            .getBukkitHelper()
-            .rotateAroundAxisY(new Vector(1.0D, 0.0D, 0.0D), loc.getYaw())
-            .toLocation(attacker.getWorld())
-            .add(loc);
+    Location standStart = plugin.getBukkitHelper().rotateAroundAxisY(new Vector(1.0D, 0.0D, 0.0D), loc.getYaw()).toLocation(attacker.getWorld()).add(loc);
     standStart.setYaw(loc.getYaw());
-    ArmorStand stand =
-        (ArmorStand) attacker.getWorld().spawnEntity(standStart, EntityType.ARMOR_STAND);
+    ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(standStart, EntityType.ARMOR_STAND);
     stand.setVisible(false);
     if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_8_R3)) {
       stand.setInvulnerable(true);
@@ -126,9 +114,7 @@ public class PluginEvents implements Listener {
 
     VersionUtils.setItemInHand(stand, plugin.getSwordSkinManager().getMurdererSword(attacker));
 
-    stand.setRightArmPose(
-        new EulerAngle(
-            Math.toRadians(350.0), Math.toRadians(loc.getPitch() * -1.0), Math.toRadians(90.0)));
+    stand.setRightArmPose(new EulerAngle(Math.toRadians(350.0), Math.toRadians(loc.getPitch() * -1.0), Math.toRadians(90.0)));
     VersionUtils.setCollidable(stand, false);
 
     stand.setGravity(false);
@@ -138,16 +124,8 @@ public class PluginEvents implements Listener {
       stand.setMarker(true);
     }
 
-    Location initialise =
-        plugin
-            .getBukkitHelper()
-            .rotateAroundAxisY(new Vector(-0.8D, 1.45D, 0.0D), loc.getYaw())
-            .toLocation(attacker.getWorld())
-            .add(standStart)
-            .add(
-                plugin.getBukkitHelper().rotateAroundAxisY(
-                    plugin.getBukkitHelper().rotateAroundAxisX(new Vector(0.0D, 0.0D, 1.0D), loc.getPitch()),
-                    loc.getYaw()));
+    Location initialise = plugin.getBukkitHelper().rotateAroundAxisY(new Vector(-0.8D, 1.45D, 0.0D), loc.getYaw()).toLocation(attacker.getWorld()).add(standStart)
+      .add(plugin.getBukkitHelper().rotateAroundAxisY(plugin.getBukkitHelper().rotateAroundAxisX(new Vector(0.0D, 0.0D, 1.0D), loc.getPitch()), loc.getYaw()));
     int maxRange = plugin.getConfig().getInt("Sword.Fly.Range", 20);
     double maxHitRange = plugin.getConfig().getDouble("Sword.Fly.Radius", 0.5);
     new BukkitRunnable() {
@@ -155,25 +133,21 @@ public class PluginEvents implements Listener {
       public void run() {
         VersionUtils.teleport(stand, standStart.add(vec));
         initialise.add(vec);
-        initialise
-            .getWorld()
-            .getNearbyEntities(initialise, maxHitRange, maxHitRange, maxHitRange)
-            .forEach(
-                entity -> {
-                  if(entity instanceof Player) {
-                    Player victim = (Player) entity;
-                    Arena arena = plugin.getArenaRegistry().getArena(victim);
-                    if(arena == null) {
-                      return;
-                    }
-                    if(!plugin.getUserManager().getUser(victim).isSpectator()
-                        && !victim.equals(attacker)) {
-                      killBySword(arena, attackerUser, victim);
-                      cancel();
-                      stand.remove();
-                    }
-                  }
-                });
+        initialise.getWorld().getNearbyEntities(initialise, maxHitRange, maxHitRange, maxHitRange)
+          .forEach(entity -> {
+            if(entity instanceof Player) {
+              Player victim = (Player) entity;
+              Arena arena = plugin.getArenaRegistry().getArena(victim);
+              if(arena == null) {
+                return;
+              }
+              if(!plugin.getUserManager().getUser(victim).isSpectator() && !victim.equals(attacker)) {
+                killBySword(arena, attackerUser, victim);
+                cancel();
+                stand.remove();
+              }
+            }
+          });
         if(loc.distance(initialise) > maxRange || initialise.getBlock().getType().isSolid()) {
           cancel();
           stand.remove();
@@ -197,6 +171,7 @@ public class PluginEvents implements Listener {
     victim.damage(100.0);
     attackerUser.adjustStatistic("LOCAL_KILLS", 1);
     attackerUser.adjustStatistic("KILLS", 1);
+    arena.adjustContributorValue(Role.DETECTIVE, user, plugin.getRandom().nextInt(2));
     ArenaUtils.addScore(attackerUser, ArenaUtils.ScoreAction.KILL_PLAYER, 0);
     if(Role.isRole(Role.ANY_DETECTIVE, user, victimArena) && arena.lastAliveDetective()) {
       if(Role.isRole(Role.FAKE_DETECTIVE, user, victimArena)) {
@@ -217,19 +192,14 @@ public class PluginEvents implements Listener {
     if(event.getBlock().getType() != XMaterial.ARMOR_STAND.parseMaterial()) {
       return;
     }
-    plugin
-        .getHologramManager()
-        .getArmorStands()
-        .removeIf(
-            armorStand -> {
-              boolean isSameType =
-                  armorStand.getLocation().getBlock().getType() == event.getBlock().getType();
-              if(isSameType) {
-                armorStand.remove();
-                armorStand.setCustomNameVisible(false);
-              }
-              return isSameType;
-            });
+    plugin.getHologramManager().getArmorStands().removeIf(armorStand -> {
+      boolean isSameType = armorStand.getLocation().getBlock().getType() == event.getBlock().getType();
+      if(isSameType) {
+        armorStand.remove();
+        armorStand.setCustomNameVisible(false);
+      }
+      return isSameType;
+    });
   }
 
   @EventHandler(priority = EventPriority.HIGH)

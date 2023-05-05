@@ -1,6 +1,6 @@
 /*
  *
- * BuildBattle - Ultimate building competition minigame
+ * MurderMystery
  * Copyright (C) 2021 Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
  *
  * This program is free software: you can redistribute it and/or modify

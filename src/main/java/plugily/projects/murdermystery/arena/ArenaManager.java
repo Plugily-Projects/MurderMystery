@@ -55,32 +55,6 @@ public class ArenaManager extends PluginArenaManager {
       return;
     }
     super.joinAttempt(player, arena);
-    int murderIncrease =
-        player.getEffectivePermissions().stream()
-            .filter(
-                permAttach -> permAttach.getPermission().startsWith("murdermystery.role.murderer."))
-            .mapToInt(
-                pai ->
-                    Integer.parseInt(
-                        pai.getPermission()
-                            .substring(28 /* remove the permission node to obtain the number*/)))
-            .max()
-            .orElse(0);
-    int detectiveIncrease =
-        player.getEffectivePermissions().stream()
-            .filter(
-                permAttach ->
-                    permAttach.getPermission().startsWith("murdermystery.role.detective."))
-            .mapToInt(
-                pai ->
-                    Integer.parseInt(
-                        pai.getPermission()
-                            .substring(29 /* remove the permission node to obtain the number*/)))
-            .max()
-            .orElse(0);
-    User user = plugin.getUserManager().getUser(player);
-    user.adjustStatistic("CONTRIBUTION_MURDERER", murderIncrease);
-    user.adjustStatistic("CONTRIBUTION_DETECTIVE", detectiveIncrease);
     ArenaUtils.updateNameTagsVisibility(player);
   }
 
@@ -101,47 +75,6 @@ public class ArenaManager extends PluginArenaManager {
       user.setStatistic("HIGHEST_SCORE", localScore);
     }
 
-    // todo change later
-    int murderDecrease =
-        player.getEffectivePermissions().stream()
-            .filter(
-                permAttach -> permAttach.getPermission().startsWith("murdermystery.role.murderer."))
-            .mapToInt(
-                pai ->
-                    Integer.parseInt(
-                        pai.getPermission()
-                            .substring(28 /* remove the permission node to obtain the number*/)))
-            .max()
-            .orElse(0);
-    int detectiveDecrease =
-        player.getEffectivePermissions().stream()
-            .filter(
-                permAttach ->
-                    permAttach.getPermission().startsWith("murdermystery.role.detective."))
-            .mapToInt(
-                pai ->
-                    Integer.parseInt(
-                        pai.getPermission()
-                            .substring(29 /* remove the permission node to obtain the number*/)))
-            .max()
-            .orElse(0);
-    user.adjustStatistic("CONTRIBUTION_MURDERER", -murderDecrease);
-    if(user.getStatistic("CONTRIBUTION_MURDERER") <= 0) {
-      user.setStatistic("CONTRIBUTION_MURDERER", 1);
-    }
-    user.adjustStatistic("CONTRIBUTION_DETECTIVE", -detectiveDecrease);
-    if(user.getStatistic("CONTRIBUTION_DETECTIVE") <= 0) {
-      user.setStatistic("CONTRIBUTION_DETECTIVE", 1);
-    }
-
-    if(arena.getArenaState() == ArenaState.IN_GAME) {
-      if(Role.isRole(Role.FAKE_DETECTIVE, user, arena)
-          || Role.isRole(Role.INNOCENT, user, arena)) {
-        user.setStatistic("CONTRIBUTION_MURDERER", ThreadLocalRandom.current().nextInt(4) + 1);
-        user.setStatistic("CONTRIBUTION_DETECTIVE", ThreadLocalRandom.current().nextInt(4) + 1);
-      }
-    }
-
     boolean playerHasMurdererRole = Role.isRole(Role.MURDERER, user, arena);
     if(playerHasMurdererRole) {
       pluginArena.removeFromMurdererList(player);
@@ -157,54 +90,32 @@ public class ArenaManager extends PluginArenaManager {
             List<Player> players = new ArrayList<>();
             for(Player gamePlayer : playersLeft) {
               User userGamePlayer = plugin.getUserManager().getUser(gamePlayer);
-              if(gamePlayer == player
-                  || Role.isRole(Role.ANY_DETECTIVE, userGamePlayer, arena)
-                  || Role.isRole(Role.MURDERER, userGamePlayer, arena)) {
+              if(gamePlayer == player || Role.isRole(Role.ANY_DETECTIVE, userGamePlayer, arena) || Role.isRole(Role.MURDERER, userGamePlayer, arena)) {
                 continue;
               }
               players.add(gamePlayer);
             }
 
-            Player newMurderer =
-                players.get(
-                    players.size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(players.size()));
+            Player newMurderer = players.get(players.size() == 1 ? 0 : ThreadLocalRandom.current().nextInt(players.size()));
             if(newMurderer != null) {
-              plugin
-                  .getDebugger()
-                  .debug("A murderer left the game. New murderer: {0}", newMurderer.getName());
+              plugin.getDebugger().debug("A murderer left the game. New murderer: {0}", newMurderer.getName());
               pluginArena.setCharacter(Arena.CharacterType.MURDERER, newMurderer);
               pluginArena.addToMurdererList(newMurderer);
             }
 
-            new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_CHANGE")
-                .asKey()
-                .player(player)
-                .arena(pluginArena)
-                .sendArena();
-
+            new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_CHANGE").asKey().player(player).arena(pluginArena).sendArena();
             if(newMurderer != null) {
-              new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_MURDERER")
-                  .asKey()
-                  .player(player)
-                  .arena(pluginArena)
-                  .sendArena();
-              ItemPosition.setItem(
-                  plugin.getUserManager().getUser(newMurderer),
-                  ItemPosition.MURDERER_SWORD,
-                  plugin.getSwordSkinManager().getRandomSwordSkin(player));
+              new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_MURDERER").asKey().player(player).arena(pluginArena).sendArena();
+              ItemPosition.setItem(plugin.getUserManager().getUser(newMurderer), ItemPosition.MURDERER_SWORD, plugin.getSwordSkinManager().getRandomSwordSkin(player));
             }
-
-            user.setStatistic("CONTRIBUTION_MURDERER", 1);
           } else {
             plugin.getDebugger().debug("No new murderer added as there are some");
           }
         } else if(Role.isRole(Role.ANY_DETECTIVE, user, arena)
-            && pluginArena.lastAliveDetective()) {
+          && pluginArena.lastAliveDetective()) {
           pluginArena.setDetectiveDead(true);
           if(Role.isRole(Role.FAKE_DETECTIVE, user, arena)) {
             pluginArena.setCharacter(Arena.CharacterType.FAKE_DETECTIVE, null);
-          } else {
-            user.setStatistic("CONTRIBUTION_DETECTIVE", 1);
           }
           ArenaUtils.dropBowAndAnnounce(pluginArena, player);
         }
@@ -233,36 +144,28 @@ public class ArenaManager extends PluginArenaManager {
         User user = plugin.getUserManager().getUser(player);
         if(!quickStop && Role.isAnyRole(user, arena)) {
           boolean hasDeathRole = Role.isRole(Role.DEATH, user, arena);
-
+          int multiplicator = 1;
+          if(!hasDeathRole) {
+            multiplicator = arena.getMaximumPlayers();
+          }
+          pluginArena.adjustContributorValue(Role.MURDERER, user, plugin.getRandom().nextInt(10 * multiplicator));
+          pluginArena.adjustContributorValue(Role.DETECTIVE, user, plugin.getRandom().nextInt(10 * multiplicator));
           if(!hasDeathRole && !Role.isRole(Role.SPECTATOR, user, arena)) {
-            if(Role.isRole(Role.FAKE_DETECTIVE, user, arena)
-                || Role.isRole(Role.INNOCENT, user, arena)) {
-              user.setStatistic(
-                  "CONTRIBUTION_MURDERER", ThreadLocalRandom.current().nextInt(4) + 1);
-              user.setStatistic(
-                  "CONTRIBUTION_DETECTIVE", ThreadLocalRandom.current().nextInt(4) + 1);
-            }
             boolean hasMurdererRole = Role.isRole(Role.MURDERER, user, arena);
             if(murderWon || !hasMurdererRole) {
               user.adjustStatistic("WINS", 1);
-              plugin
-                  .getRewardsHandler()
-                  .performReward(player, plugin.getRewardsHandler().getRewardType("WIN"));
+              plugin.getRewardsHandler().performReward(player, plugin.getRewardsHandler().getRewardType("WIN"));
             } else {
               user.adjustStatistic("LOSES", 1);
-              plugin
-                  .getRewardsHandler()
-                  .performReward(player, plugin.getRewardsHandler().getRewardType("LOSE"));
+              plugin.getRewardsHandler().performReward(player, plugin.getRewardsHandler().getRewardType("LOSE"));
             }
           } else if(hasDeathRole) {
             user.adjustStatistic("LOSES", 1);
-            plugin
-                .getRewardsHandler()
-                .performReward(player, plugin.getRewardsHandler().getRewardType("LOSE"));
+            plugin.getRewardsHandler().performReward(player, plugin.getRewardsHandler().getRewardType("LOSE"));
           }
         }
       }
-      super.stopGame(quickStop, arena);
     }
+    super.stopGame(quickStop, arena);
   }
 }

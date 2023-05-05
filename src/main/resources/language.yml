@@ -179,7 +179,7 @@ Bossbar:
 In-Game:
   #Used in most game messages.
   Plugin-Prefix: "(%plugin_name%)"
-  Game-Chat-Format: "[%user_statistic_level%][%kit%] %player% | %message%"
+  Game-Chat-Format: "[%user_statistic_level%] %player% | %message%"
   You-Leveled-Up: "%plugin_prefix% You leveled up! You're now level %number%!"
   Commands-Blocked: "%color_chat_issue%%plugin_prefix% You have to leave the game first to perform commands. The only command that works is /%plugin_short_command% leave!"
   Join:
@@ -271,15 +271,15 @@ In-Game:
         Name: "Role pass menu"
         Role:
           Murderer:
-            Name: "Be murderer"
+            Name: "&cBe murderer"
             Lore:
               - "Cost 1 murderer pass"
-              - "You got %amount%"
+              - "You got %number%"
           Detective:
-            Name: "Be detective"
+            Name: "&bBe detective"
             Lore:
               - "Cost 1 detective pass"
-              - "You got %amount%"
+              - "You got %number%"
         Fail: "You do not got enough passes for %value% role"
         Success: "You will be %value% next round!"
         Change: "You now got %number% %value% passes!"
@@ -291,7 +291,7 @@ In-Game:
           Detective: "5,20,5;ROLE | DETECTIVE;Find and kill the murderer!"
           Innocent: "5,20,5;ROLE | INNOCENT;Stay alive as long as possible!"
         Score:
-          Bonus: "+%score% score (%action%)"
+          Bonus: "+%number% score (%value%)"
           Gold: "Picked up gold!"
           Action:
             Kill:
@@ -311,7 +311,7 @@ In-Game:
           Cauldron:
             Potion: "Please drink your current potion!"
             Hologram: "Mystery Potion - &e1 Gold"
-          Not-Enough-Gold: "You need %amount% gold for this!"
+          Not-Enough-Gold: "You need %number% gold for this!"
           Pray:
             Hologram: "Click to give gift;Pull lever to pray"
             Chat: "You prayed to the developer! Hope he will hear that!"

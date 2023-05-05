@@ -52,7 +52,7 @@ public class SwordSkinManager {
     for (String id : section.getKeys(false)) {
       addSwordSkin(
           new SwordSkin(
-              XMaterial.matchXMaterial(config.getString(path + id + "Material", "BEDROCK"))
+              XMaterial.matchXMaterial(config.getString(path + id + ".Material", "BEDROCK"))
                   .orElse(XMaterial.BEDROCK)
                   .parseItem(),
               config.getString(path + id + ".Permission", "")));

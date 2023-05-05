@@ -31,9 +31,10 @@ import java.util.Map;
  * Created at 28.04.2019
  */
 public class HookManager {
-
+  //todo implement in minigamescore as bb citiziens could benefit from too
   private final Map<HookFeature, Boolean> hooks = new EnumMap<>(HookFeature.class);
   private final Main plugin;
+
   public HookManager(Main plugin) {
     this.plugin = plugin;
     enableHooks();
@@ -43,10 +44,10 @@ public class HookManager {
     for(HookFeature feature : HookFeature.values()) {
       boolean hooked = true;
       for(Hook requiredHook : feature.getRequiredHooks()) {
-        if(!Bukkit.getPluginManager().isPluginEnabled(requiredHook.pluginName)) {
+        if(!Bukkit.getPluginManager().isPluginEnabled(requiredHook.getPluginName())) {
           hooks.put(feature, false);
-          plugin.getDebugger().debug("[HookManager] Feature {0} won't be enabled because {1} is not installed! Please install it in order to enable this feature in-game!",
-            feature.name(), requiredHook.pluginName);
+          plugin.getDebugger().debug("[HookManager] Feature {0} won't be enabled because " + requiredHook.getPluginName() + " is not installed! Please install it in order to enable this feature in-game!",
+            feature.name());
           hooked = false;
           break;
         }

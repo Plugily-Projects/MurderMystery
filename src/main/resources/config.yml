@@ -232,8 +232,8 @@ Bow:
       Prayer: 2
       #How much arrows should the player get after x picked up gold
       Gold: 3
-    #How long should be the bow shoot cooldown in seconds?
-    Cooldown: 5
+  #How long should be the bow shoot cooldown in seconds?
+  Cooldown: 5
 
 
 Hide:
