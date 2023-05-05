@@ -86,7 +86,7 @@ public class StartingState extends PluginStartingState {
       Map<User, Double> detectiveChances = new HashMap<>();
       int size = pluginArena.getPlayerSpawnPoints().size();
       for(Player player : arena.getPlayers()) {
-        VersionUtils.teleport(player, pluginArena.getPlayerSpawnPoints().get(size == 1 ? 0 : getPlugin().getRandom().nextInt(size - 1)));
+        VersionUtils.teleport(player, pluginArena.getPlayerSpawnPoints().get(getPlugin().getRandom().nextInt(size)));
         User user = arena.getPlugin().getUserManager().getUser(player);
         /*
                    //reset local variables to be 100% sure

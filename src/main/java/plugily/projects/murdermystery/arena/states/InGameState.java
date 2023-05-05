@@ -145,7 +145,7 @@ public class InGameState extends PluginInGameState {
         getPlugin().getPowerupRegistry().spawnPowerup(location, arena);
       }
     } else {
-      Location loc = arena.getGoldSpawnPoints().get(spawnPointsSize == 1 ? 0 : getPlugin().getRandom().nextInt(spawnPointsSize - 1));
+      Location loc = arena.getGoldSpawnPoints().get(getPlugin().getRandom().nextInt(spawnPointsSize));
       arena.getGoldSpawned().add(loc.getWorld().dropItem(loc, new ItemStack(Material.GOLD_INGOT, 1)));
       getPlugin().getPowerupRegistry().spawnPowerup(loc, arena);
     }
