@@ -50,7 +50,7 @@ public class MysteryPotionRegistry {
       PotionEffectType effectType = PotionEffectType.getByName(section.getString(key + ".Type", "").toUpperCase());
 
       if(effectType == null) {
-        effectType = PotionEffectType.HEAL;
+        continue;
       }
 
       //amplifiers are counted from 0 so -1

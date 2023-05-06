@@ -278,8 +278,7 @@ public class Arena extends PluginArena {
   public int aliveDetective() {
     int alive = 0;
     for(Player player : getPlayersLeft()) {
-      if(Role.isRole(Role.ANY_DETECTIVE, plugin.getUserManager().getUser(player), this)
-        && isDetectiveAlive(player)) {
+      if(Role.isRole(Role.ANY_DETECTIVE, plugin.getUserManager().getUser(player), this) && isDetectiveAlive(player)) {
         alive++;
       }
     }
@@ -360,6 +359,10 @@ public class Arena extends PluginArena {
     return deaths.contains(player);
   }
 
+  public List<Player> getDeaths() {
+    return deaths;
+  }
+
   public void addSpectatorPlayer(Player player) {
     spectators.add(player);
   }
@@ -397,12 +400,34 @@ public class Arena extends PluginArena {
     user.adjustStatistic("CONTRIBUTION_" + role.name(), number);
   }
 
+  private Map<User, Integer> murdererContributions = new HashMap<>();
+  private Map<User, Integer> detectiveContributions = new HashMap<>();
+
+  public Map<User, Integer> getMurdererContributions() {
+    return murdererContributions;
+  }
+
+  public Map<User, Integer> getDetectiveContributions() {
+    return detectiveContributions;
+  }
+
   public int getContributorValue(Role role, User user) {
+    if(role == Role.MURDERER && murdererContributions.containsKey(user)) {
+      return murdererContributions.get(user);
+    } else if(detectiveContributions.containsKey(user)) {
+      return detectiveContributions.get(user);
+    }
     Player player = user.getPlayer();
     int contributor = user.getStatistic("CONTRIBUTION_" + role.name());
     int increase = plugin.getPermissionsManager().getPermissionCategoryValue(role.name() + "_BOOSTER", player);
     int multiplicator = plugin.getPermissionsManager().getPermissionCategoryValue("CHANCES_BOOSTER", player);
-    return (contributor + increase) * multiplicator;
+    int calculatedContributor = (contributor + increase) * multiplicator;
+    if(role == Role.MURDERER) {
+      murdererContributions.put(user, calculatedContributor);
+    } else {
+      detectiveContributions.put(user, calculatedContributor);
+    }
+    return calculatedContributor;
   }
 
   public void resetContributorValue(Role role, User user) {

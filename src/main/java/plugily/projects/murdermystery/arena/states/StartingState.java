@@ -92,6 +92,7 @@ public class StartingState extends PluginStartingState {
     String roleName = role.toString();
 
     List<User> chancesRanking = getPlugin().getUserManager().getUsers(arena).stream().filter(user -> playersToSet.contains(user.getPlayer())).sorted(Comparator.comparingInt(user -> arena.getContributorValue(role, user))).collect(Collectors.toList());
+    Collections.reverse(chancesRanking);
     List<Player> chancesPlayer = new ArrayList<>();
     for(User user : chancesRanking) {
       chancesPlayer.add(user.getPlayer());
@@ -120,12 +121,10 @@ public class StartingState extends PluginStartingState {
   private void getMaxRolesToSet(Arena arena) {
     int playersSize = arena.getPlayers().size();
     arena.getPlugin().getDebugger().debug("Before: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}", arena.getId(), maxdetectives, maxmurderer, playersSize, arena.getArenaOption("DETECTIVE_DIVIDER"), arena.getArenaOption("MURDERER_DIVIDER"));
-    if(arena.getArenaOption("MURDERER_DIVIDER") > 1
-      && playersSize > arena.getArenaOption("MURDERER_DIVIDER")) {
+    if(arena.getArenaOption("MURDERER_DIVIDER") > 1 && playersSize > arena.getArenaOption("MURDERER_DIVIDER")) {
       maxmurderer = (playersSize / arena.getArenaOption("MURDERER_DIVIDER"));
     }
-    if(arena.getArenaOption("DETECTIVE_DIVIDER") > 1
-      && playersSize > arena.getArenaOption("DETECTIVE_DIVIDER")) {
+    if(arena.getArenaOption("DETECTIVE_DIVIDER") > 1 && playersSize > arena.getArenaOption("DETECTIVE_DIVIDER")) {
       maxdetectives = (playersSize / arena.getArenaOption("DETECTIVE_DIVIDER"));
     }
     if(playersSize - (maxmurderer + maxdetectives) < 1) {

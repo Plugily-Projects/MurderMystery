@@ -48,9 +48,12 @@ public class MapRestorerManager extends PluginMapRestorerManager {
   public void cleanUpArena() {
     removeBowHolo();
     arena.setMurdererLocatorReceived(false);
+    arena.getDetectiveContributions().clear();
+    arena.getMurdererContributions().clear();
     arena.getGameCharacters().clear();
     arena.getMurdererList().clear();
     arena.getDetectiveList().clear();
+    arena.getDeaths().clear();
     arena.setDetectiveDead(false);
     clearCorpses();
     clearGold();
