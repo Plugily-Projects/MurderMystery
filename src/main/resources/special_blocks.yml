@@ -25,14 +25,26 @@ Special-Blocks:
       Duration: 10
       Amplifier: 1
       # Beware that we use '&f' at the end to make it different from above!
-      # Otherwise it will count as Mystery-I potion!
+      # Otherwise, it will count as Mystery-I potion!
       Name: "&7Mystery potion &8(???)&f"
-      Subtitle: "&a10S of Slowness"
+      Subtitle: "&c10S of Slowness"
     Mystery-III:
       Type: INVISIBILITY
       Duration: 10
       Amplifier: 1
       # Beware that we use '&a' at the end to make it different from above!
-      # Otherwise it will count as Mystery-I potion!
+      # Otherwise, it will count as Mystery-I potion!
       Name: "&7Mystery potion &8(???)&a"
       Subtitle: "&a10S of Invisibility"
+    Mystery-IV:
+      Type: BLINDNESS
+      Duration: 5
+      Amplifier: 1
+      Name: "&7Mystery potion &8(???)&b"
+      Subtitle: "&c5S of Blindness"
+    Mystery-V:
+      Type: NIGHT_VISION
+      Duration: 25
+      Amplifier: 1
+      Name: "&7Mystery potion &8(???)&c"
+      Subtitle: "&a25S of Night Vision"
