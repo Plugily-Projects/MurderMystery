@@ -1,8 +1,7 @@
-### Initial config.yml for all plugily projects
 ## Thanks for using our plugins! ~Tigerpanzer_02 from Plugily Projects
-#      PlugilyProjects configuration file
+#      murdermystery configuration file
 #
-#    You can edit here the basic things of PlugilyProjects
+#    You can edit here the basic things of murdermystery
 #      Please read everything CAREFULLY!
 #   You don't want to break anything, do you?
 #
@@ -11,18 +10,8 @@
 # Select locale of MurderMystery, default it's English.
 # Available locales:
 #    default - English language. Uses 'language.yml'.
-#    de - Deutsche sprache          pl - Język polski
-#    fr - Langue française          cn - 简体中文
-#    zh_tw - 中文(繁體)              kr - 한국어
-#    id - Bhasa Indonesia           hu - Magyar nyelv
-#    cs - Český jazyk               ro - Limba română
-#    vn - Tiếng Việt                it - Lingua italiana
-#    ru - Русский язык              es - Idioma español
-#    nl - Nederlandse taal          pt_br - Português (Brasil)
-#    tr - Türk dili                 sk - Slovenský jazyk
-#    ja - Japanese                  af - Afrikaans
-#    dk - Danish                    th - Thai
-#    uk - Ukrainian
+#    See https://github.com/Plugily-Projects/locale_storage/tree/master/plugins/minecraft/murdermystery
+#    Use filename of the language e.g. de_DE.yml -> locale: de_DE
 locale: default
 
 
@@ -55,23 +44,23 @@ Commands:
   Shorter:
     '1':
       Short: "start"
-      Executes: "plugilyprojectsadmin forcestart"
+      Executes: "murdermysteryadmin forcestart"
       Enabled: true
     '2':
       Short: "leave"
-      Executes: "plugilyprojects leave"
+      Executes: "murdermystery leave"
       Enabled: true
     '3':
       Short: "kit"
-      Executes: "plugilyprojects selectkit"
+      Executes: "murdermystery selectkit"
       Enabled: false
     '4':
       Short: "stats"
-      Executes: "plugilyprojects stats"
+      Executes: "murdermystery stats"
       Enabled: false
     '5':
       Short: "top"
-      Executes: "plugilyprojects top"
+      Executes: "murdermystery top"
       Enabled: true
 
 
