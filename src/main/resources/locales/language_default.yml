@@ -93,7 +93,7 @@ Scoreboard:
     Innocent: "&eInnocent"
     Dead: "Dead"
   Detective:
-    Alive: "Detective: &aAlive"
+    Alive: "Detective &aAlive"
     Bow:
       Dropped: "%color_chat_issue%Bow Dropped"
       Picked: "Bow Not Dropped"
@@ -119,28 +119,28 @@ Scoreboard:
       - ""
       - "■ Role | %arena_player_role%"
       - "&f"
-      - "■ Innocents | %arena_innocents%"
+      - "■ Innocents | %arena_innocent_size%"
       - "&f"
       - "■ Time | %arena_time%"
       - ""
       - "■ %arena_detective_status%"
       - ""
-      - "■ Score | %USERSTATISTC SCORE%"
+      - "■ Score | %user_statistic_local_score%"
       - ""
       - "   www.plugily.xyz"
     In-Game-Murderer:
       - ""
       - "■ Role | %arena_player_role%"
       - "&f"
-      - "■ Innocents | %arena_innocents%"
+      - "■ Innocents | %arena_innocent_size%"
       - "&f"
       - "■ Time | %arena_time%"
       - ""
       - "■ %arena_detective_status%"
       - ""
-      - "■ Kills | %USER STATISTIC LOCAL KILLS%"
+      - "■ Kills | %user_statistic_local_kills%"
       - ""
-      - "■ Score | %USERSTATISTC SCORE%"
+      - "■ Score | %user_statistic_local_score%"
       - ""
       - "   www.plugily.xyz"
     # Contents of scoreboard while state is ending
@@ -190,7 +190,7 @@ Bossbar:
 In-Game:
   #Used in most game messages.
   Plugin-Prefix: "(%plugin_name%)"
-  Game-Chat-Format: "[%user_statistic_level%][%kit%] %player% | %message%"
+  Game-Chat-Format: "[%user_statistic_level%] %player% | %message%"
   You-Leveled-Up: "%plugin_prefix% You leveled up! You're now level %number%!"
   Commands-Blocked: "%color_chat_issue%%plugin_prefix% You have to leave the game first to perform commands. The only command that works is /%plugin_short_command% leave!"
   Join:
@@ -210,7 +210,7 @@ In-Game:
     Blocked: "%color_chat_issue%%plugin_prefix% Spectators are disabled for this arena"
     You-Are-Spectator: "%plugin_prefix% You're now a spectator! You can fly now!"
     Spectator-Menu-Name: "%color_chat_issue%Alive players list"
-    Target-Player-Health: "%color_chat_issue%Health: %number% | Role: %arena_role%"
+    Target-Player-Health: "%color_chat_issue%Health: %number% | Role: %arena_player_role%"
     Spectator-Warning: "%plugin_prefix% You are a spectator!"
     Teleport: "%plugin_prefix% Teleported to %player%"
     Menu:
@@ -282,27 +282,27 @@ In-Game:
         Name: "Role pass menu"
         Role:
           Murderer:
-            Name: "Be murderer"
+            Name: "&cBe murderer"
             Lore:
               - "Cost 1 murderer pass"
-              - "You got %amount%"
+              - "You got %number%"
           Detective:
-            Name: "Be detective"
+            Name: "&bBe detective"
             Lore:
               - "Cost 1 detective pass"
-              - "You got %amount%"
+              - "You got %number%"
         Fail: "You do not got enough passes for %value% role"
         Success: "You will be %value% next round!"
         Change: "You now got %number% %value% passes!"
       Playing:
         Time-Left: "5,20,5;%arena_time% seconds left!;After %arena_time%s the Murderer will lose"
         Role:
-          Change: "5,20,5;Previous %arena_role% has left!"
+          Change: "5,20,5;Previous %arena_player_role% has left!"
           Murderer: "5,20,5;ROLE | MURDERER; Kill all players!"
           Detective: "5,20,5;ROLE | DETECTIVE;Find and kill the murderer!"
           Innocent: "5,20,5;ROLE | INNOCENT;Stay alive as long as possible!"
         Score:
-          Bonus: "+%score% score (%action%)"
+          Bonus: "+%number% score (%value%)"
           Gold: "Picked up gold!"
           Action:
             Kill:
@@ -322,7 +322,7 @@ In-Game:
           Cauldron:
             Potion: "Please drink your current potion!"
             Hologram: "Mystery Potion - &e1 Gold"
-          Not-Enough-Gold: "You need %amount% gold for this!"
+          Not-Enough-Gold: "You need %number% gold for this!"
           Pray:
             Hologram: "Click to give gift;Pull lever to pray"
             Chat: "You prayed to the developer! Hope he will hear that!"
