@@ -60,7 +60,7 @@ public class SpecificCategory extends PluginSpecificCategory {
     gui.setItem((getInventoryLine() * 9) + 4, goldSpawn);
     getItemList().add(goldSpawn);
 
-    MaterialMultiLocationItem mysteryCauldron = new MaterialMultiLocationItem(getSetupInventory(), new ItemBuilder(XMaterial.CAULDRON.parseMaterial()), "Mystery Cauldron", "Target a cauldron and add it to the game\nit will cost 1 gold per potion!\nConfigure cauldron potions \nin special_blocks.yml file!", "mystery-cauldrons", Collections.singleton(XMaterial.CAULDRON.parseMaterial()), false, 0);
+    MaterialMultiLocationItem mysteryCauldron = new MaterialMultiLocationItem(getSetupInventory(), new ItemBuilder(XMaterial.CAULDRON.parseMaterial()), "Mystery Cauldron", "Target a cauldron and add it to the game\nit will cost 1 gold per potion!\nConfigure cauldron potions \nin special_blocks.yml file!", "mystery-cauldrons", Collections.singleton(Material.CAULDRON), false, 0);
     gui.setItem((getInventoryLine() * 9) + 5, mysteryCauldron);
     getItemList().add(mysteryCauldron);
 
