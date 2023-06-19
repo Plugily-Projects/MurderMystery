@@ -92,7 +92,7 @@ public class PluginEvents implements Listener {
     if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_10_R1)) {
       attackerUser.setCooldown("sword_attack", (plugin.getConfig().getInt("Sword.Cooldown.Attack", 1)));
     } else {
-      attacker.setCooldown(plugin.getSwordSkinManager().getMurdererSword(attacker).getType(), 20 * (plugin.getConfig().getInt("Sword.Cooldown.Attack", 1)));
+      VersionUtils.setMaterialCooldown(attacker ,plugin.getSwordSkinManager().getMurdererSword(attacker).getType(), 20 * (plugin.getConfig().getInt("Sword.Cooldown.Attack", 1)));
     }
 
     createFlyingSword(attacker, attackerUser);
