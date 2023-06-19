@@ -65,7 +65,7 @@ public class SpecificCategory extends PluginSpecificCategory {
     getItemList().add(mysteryCauldron);
 
     MaterialMultiLocationItem confessional = new MaterialMultiLocationItem(getSetupInventory(), new ItemBuilder(XMaterial.ENCHANTING_TABLE.parseMaterial()), "Confessional", "Target enchanting table and\nadd praise to the developer\nconfessional, gift for\nthe developer costs 1 gold!\nAdd some levers in radius\nof 3 blocks near the enchant table\nto allow users to pray there!\nYou can either get gifts\nor curses from prayer!", "confessionals", Collections.singleton(XMaterial.ENCHANTING_TABLE.parseMaterial()), false, 0);
-    gui.setItem((getInventoryLine() * 9) + 5, confessional);
+    gui.setItem((getInventoryLine() * 9) + 6, confessional);
     getItemList().add(confessional);
 
   }
