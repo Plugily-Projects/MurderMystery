@@ -43,6 +43,7 @@ import plugily.projects.murdermystery.arena.states.RestartingState;
 import plugily.projects.murdermystery.arena.states.StartingState;
 import plugily.projects.murdermystery.HookManager;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
+import plugily.projects.murdermystery.arena.states.WaitingState;
 
 import java.util.*;
 
@@ -84,6 +85,7 @@ public class Arena extends PluginArena {
     addGameStateHandler(ArenaState.IN_GAME, new InGameState());
     addGameStateHandler(ArenaState.RESTARTING, new RestartingState());
     addGameStateHandler(ArenaState.STARTING, new StartingState());
+    addGameStateHandler(ArenaState.WAITING_FOR_PLAYERS, new WaitingState());
   }
 
   public static void init(Main plugin) {
@@ -169,14 +171,6 @@ public class Arena extends PluginArena {
     this.goldSpawnPoints = goldSpawnPoints;
   }
 
-  public void toggleGoldVisuals() {
-    if(goldSpawnPoints.isEmpty() || goldVisuals) {
-      goldVisuals = false;
-      return;
-    }
-    setGoldVisuals(true);
-  }
-
   private BukkitTask visualTask;
 
   public void startGoldVisuals() {
@@ -189,14 +183,10 @@ public class Arena extends PluginArena {
         visualTask.cancel();
         return;
       }
-
       for(Location goldLocations : goldSpawnPoints) {
         Location goldLocation = goldLocations.clone();
         goldLocation.add(0, 0.4, 0);
-        java.util.Iterator<? extends Player> iterator = Bukkit.getOnlinePlayers().iterator();
-        if(iterator.hasNext()) {
-          VersionUtils.sendParticles("REDSTONE", iterator.next(), goldLocation, 10);
-        }
+        Bukkit.getOnlinePlayers().forEach(player -> VersionUtils.sendParticles("REDSTONE", player, goldLocation, 10));
       }
     }, 20L, 20L);
   }
