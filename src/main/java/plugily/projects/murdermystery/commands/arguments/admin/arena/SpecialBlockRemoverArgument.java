@@ -64,8 +64,7 @@ public class SpecialBlockRemoverArgument {
                 || targetBlock.getType() == XMaterial.ENCHANTING_TABLE.parseMaterial()) {
               for(PluginArena arena : registry.getPlugin().getArenaRegistry().getArenas()) {
 
-                Arena pluginArena =
-                    (Arena) registry.getPlugin().getArenaRegistry().getArena(player);
+                Arena pluginArena = (Arena) registry.getPlugin().getArenaRegistry().getArena(arena.getId());
                 if(arena == null) {
                   return;
                 }
