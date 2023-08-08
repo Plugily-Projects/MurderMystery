@@ -31,6 +31,7 @@ import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaUtils;
 import plugily.projects.murdermystery.arena.role.Role;
+import plugily.projects.murdermystery.arena.special.pray.PrayerRegistry;
 import plugily.projects.murdermystery.utils.ItemPosition;
 
 import java.util.*;
@@ -66,6 +67,8 @@ public class StartingState extends PluginStartingState {
         VersionUtils.teleport(player, pluginArena.getPlayerSpawnPoints().get(getPlugin().getRandom().nextInt(size)));
         User user = arena.getPlugin().getUserManager().getUser(player);
         user.resetNonePersistentStatistics();
+        PrayerRegistry.getRush().remove(player);
+        PrayerRegistry.getBan().remove(player);
         ArenaUtils.updateNameTagsVisibility(player);
         player.setGameMode(GameMode.ADVENTURE);
       }
