@@ -1,5 +1,5 @@
-# MySQL database configuration, you no need to touch this unless you enabled MySQL support.
-# To enable MySQL support go to > config.yml and set 'DatabaseEnabled' to true
+# MySQL database configuration, you don't need to touch this unless you enabled MySQL support.
+# To enable MySQL support go to > config.yml and set 'Database' to true
 
 # Replace <databasename> with your database
 address: jdbc:mysql://localhost:3306/<databasename>?useSSL=false&autoReConnect=true
@@ -11,9 +11,16 @@ user: <user>
 password: <password>
 
 # MySQL tablename
-table: playerstats
+table: mm_playerstats
 
 # Maximum life time for HikariCP database.
 # For documentation, see https://github.com/brettwooldridge/HikariCP#frequently-used
 # Default 1800000 = 30 minute
 maxLifeTime: 1800000
+
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

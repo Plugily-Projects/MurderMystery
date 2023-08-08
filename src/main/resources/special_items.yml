@@ -1,57 +1,140 @@
-# Custom in-game items.
-# Probably you will only translate displayname and lore so don't mess with it.
+# Custom special items.
+# You can also add your own special items!
 #
-# Please don't modify 'Leave-Lobby', 'Leave-Spectator', 'Player-List' and 'Spectator-Options'
+# Stage: SERVER_JOIN, WAITING_FOR_PLAYERS, ENOUGH_PLAYERS_TO_START, LOBBY, IN_GAME, SPECTATOR, ENDING
+#
+# Please don't modify 'Kit-Menu', 'Leave-Lobby', 'Leave-Spectator', 'Player-List' and 'Spectator-Options', 'Forcestart'
 # nodes as they are hardcoded in code!
-
-Forcestart:
-  displayname: "&c&lClick to start the game &7(Right Click)"
-  lore:
-    - "&7You need the following permission for it"
-    - "&7murdermystery.admin.forcestart"
-  material-name: EMERALD
-  slot: 0
-  stage: lobby
+#
+# Also see the wiki for further reference!
 
 Role-Pass:
+  permission: ""
+  execute:
+    - "p:mm roleselector"
   displayname: "&c&lClick to open role pass menu &7(Right Click)"
   lore:
     - "&7Enjoy one round of guaranteed role with pass"
-  material-name: CHEST
+  material: CHEST
   slot: 4
   stage: lobby
+  force: true
+  move: false
 
-Leave-Lobby:
+# Uses bungee.yml configuration - if enabled it tries to connect to your hub
+Lobby-Leave:
+  permission: ""
+  execute:
+    - ""
   displayname: "&c&lReturn to Lobby &7(Right Click)"
   lore:
     - "&7Right-click to leave to the lobby"
-  material-name: BED
+  material: BED
   slot: 8
-  stage: lobby
+  stage: LOBBY
+  force: true
+  move: false
 
-Leave-Spectator:
+# Uses bungee.yml configuration - if enabled it tries to connect to your hub
+Spectator-Leave:
+  permission: ""
+  execute:
+    - ""
   displayname: "&c&lLeave the Game &7(Right Click)"
   lore:
     - "&7Right-click to leave to the lobby"
-  material-name: BED
+  material: BED
   slot: 8
-  stage: spectator
+  stage: SPECTATOR
+  force: true
+  move: false
 
 Player-List:
+  permission: ""
+  execute:
+    - ""
   displayname: "&a&lAlive Players &7(Right Click)"
   lore:
     - "&7Right-click to see alive players list"
-  material-name: PLAYER_HEAD
+  material: PLAYER_HEAD
   slot: 0
-  stage: spectator
+  stage: SPECTATOR
+  force: true
+  move: false
 
-Spectator-Options:
+Spectator-Settings:
+  permission: ""
+  execute:
+    - ""
   displayname: "&b&lSpectator Settings &7(Right Click)"
   lore:
     - "&7Right-click to adjust spectator settings"
-  material-name: COMPARATOR
+  material: COMPASS
   slot: 4
-  stage: spectator
+  stage: SPECTATOR
+  force: true
+  move: false
 
-# Don't touch this
-Version: 1
+Forcestart:
+  permission: "plugily.projects.forcestart"
+  execute:
+    - ""
+  displayname: "&c&lStart the game &7(Right Click)"
+  lore:
+    - "&7You need the following permission for it"
+    - "&7plugily.projects.forcestart"
+  material: EMERALD
+  slot: 2
+  stage: ENOUGH_PLAYERS_TO_START
+  force: true
+  move: false
+
+Arena-Selector:
+  disabled: true # disabled by default
+  permission: ""
+  execute:
+    - "p:mm arenas"
+  displayname: "&c&lArena selector &7(Right Click)"
+  lore:
+    - "&7Right-click to see all arenas"
+  material: CHEST
+  slot: 4
+  stage: SERVER_JOIN
+  force: false
+  move: false
+
+Stats:
+  disabled: true # disabled by default
+  permission: ""
+  execute:
+    - "p:mm stats"
+  displayname: "&c&lStats &7(Right Click)"
+  lore:
+    - "&7Right-click to see your Stats"
+  material: PLAYER_HEAD
+  slot: 0
+  stage: SERVER_JOIN
+  force: false
+  move: false
+
+# Uses bungee.yml configuration - if enabled it tries to connect to your hub
+Back-To-Hub:
+  disabled: true # disabled by default
+  permission: ""
+  execute:
+    - "p:hub"
+  displayname: "&c&lBack to Hub &7(Right Click)"
+  lore:
+    - "&7Right-click to return to lobby"
+  material: Bed
+  slot: 8
+  stage: SERVER_JOIN
+  force: false
+  move: false
+
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

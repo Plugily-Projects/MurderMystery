@@ -1,80 +1,93 @@
+/*
+ * MurderMystery - Find the murderer, kill him and survive!
+ * Copyright (c) 2022  Plugily Projects - maintained by Tigerpanzer_02 and contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package plugily.projects.murdermystery.commands.arguments.game;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
-import plugily.projects.commonsbox.minecraft.item.ItemBuilder;
-import plugily.projects.inventoryframework.gui.GuiItem;
-import plugily.projects.inventoryframework.gui.type.ChestGui;
-import plugily.projects.inventoryframework.pane.OutlinePane;
-import plugily.projects.murdermystery.Main;
-import plugily.projects.murdermystery.api.StatsStorage;
+import plugily.projects.minigamesbox.classic.PluginMain;
+import plugily.projects.minigamesbox.classic.commands.arguments.data.CommandArgument;
+import plugily.projects.minigamesbox.classic.commands.arguments.data.LabelData;
+import plugily.projects.minigamesbox.classic.commands.arguments.data.LabeledCommandArgument;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.user.User;
+import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
+import plugily.projects.minigamesbox.inventory.common.item.SimpleClickableItem;
+import plugily.projects.minigamesbox.inventory.normal.NormalFastInv;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
-import plugily.projects.murdermystery.commands.arguments.data.CommandArgument;
-import plugily.projects.murdermystery.commands.arguments.data.LabelData;
-import plugily.projects.murdermystery.commands.arguments.data.LabeledCommandArgument;
-import plugily.projects.murdermystery.handlers.language.LanguageManager;
-import plugily.projects.murdermystery.user.User;
-import plugily.projects.murdermystery.utils.Utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class RoleSelectorArgument implements Listener {
 
-
   public RoleSelectorArgument(ArgumentsRegistry registry) {
-    registry.mapArgument("murdermystery", new LabeledCommandArgument("roleselector", "murdermystery.roleselector", CommandArgument.ExecutorType.PLAYER,
-        new LabelData("/mm roleselector", "/mm roleselector", "&7Select a role\n&6Permission: &7murdermystery.roleselector")) {
+    registry.mapArgument("murdermystery", new LabeledCommandArgument("roleselector", "murdermystery.command.roleselector", CommandArgument.ExecutorType.PLAYER,
+      new LabelData("/mm roleselector", "/mm roleselector", "&7Select a role\n&6Permission: &7murdermystery.command.roleselector")) {
       @Override
       public void execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
-        if(!Utils.checkIsInGameInstance(player)) {
-          return;
+
+        if(registry.getPlugin().getBukkitHelper().checkIsInGameInstance(player)) {
+          openRolePassMenu(player, registry.getPlugin());
         }
-        openRolePassMenu((Player) sender, registry.getPlugin());
       }
     });
   }
 
-  public static void openRolePassMenu(Player player, Main plugin) {
-    int rows = Utils.serializeInt(Role.values().length) / 9;
-    ChestGui gui = new ChestGui(rows, plugin.getChatManager().colorMessage("In-Game.Role-Pass.Menu-Name"));
-    gui.setOnGlobalClick(event -> event.setCancelled(true));
-    OutlinePane pane = new OutlinePane(9, rows);
-    gui.addPane(pane);
-
-    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.IRON_SWORD.parseMaterial())
-        .name(plugin.getChatManager().colorMessage("In-Game.Role-Pass.Role.Murderer.Name"))
-        .lore(LanguageManager.getLanguageList("In-Game.Role-Pass.Role.Murderer.Lore").stream().map(string -> string.replace("%amount%", Integer.toString(plugin.getUserManager().getUser(player).getStat(StatsStorage.StatisticType.DETECTIVE_PASS)))).collect(Collectors.toList()))
-        .build(), event -> {
-      event.setCancelled(true);
+  public static void openRolePassMenu(Player player, PluginMain plugin) {
+    NormalFastInv gui = new NormalFastInv(plugin.getBukkitHelper().serializeInt(Role.values().length), new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_NAME").asKey().build());
+    List<String> descriptionMurderer = new ArrayList<>();
+    plugin.getLanguageManager().getLanguageListFromKey("IN_GAME_MESSAGES_ARENA_PASS_ROLE_MURDERER_LORE").forEach(string -> descriptionMurderer.add(new MessageBuilder(string).integer(plugin.getUserManager().getUser(player).getStatistic("PASS_MURDERER")).build()));
+    gui.addItem(new SimpleClickableItem(new ItemBuilder(XMaterial.IRON_SWORD.parseMaterial())
+      .name(new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_ROLE_MURDERER_NAME").asKey().build())
+      .lore(descriptionMurderer)
+      .build(), event -> {
       User user = plugin.getUserManager().getUser(player);
-      if(user.getStat(StatsStorage.StatisticType.MURDERER_PASS) <= 0) {
-        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Role-Pass.Fail").replace("%role%", Role.MURDERER.name()));
+      if(user.getStatistic("PASS_MURDERER") <= 0) {
+        new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_FAIL").asKey().player(player).value(Role.MURDERER.name()).sendPlayer();
         return;
       }
-      user.addStat(StatsStorage.StatisticType.MURDERER_PASS, -1);
-      user.addStat(StatsStorage.StatisticType.CONTRIBUTION_MURDERER, 999);
-      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Role-Pass.Success").replace("%role%", Role.MURDERER.name()));
+      user.adjustStatistic("PASS_MURDERER", -1);
+      user.adjustStatistic("CONTRIBUTION_MURDERER", 999999999);
+      new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_SUCCESS").asKey().player(player).value(Role.MURDERER.name()).sendPlayer();
     }));
-
-    pane.addItem(new GuiItem(new ItemBuilder(XMaterial.BOW.parseMaterial())
-        .name(plugin.getChatManager().colorMessage("In-Game.Role-Pass.Role.Detective.Name"))
-        .lore(LanguageManager.getLanguageList("In-Game.Role-Pass.Role.Detective.Lore").stream().map(string -> string.replace("%amount%", Integer.toString(plugin.getUserManager().getUser(player).getStat(StatsStorage.StatisticType.DETECTIVE_PASS)))).collect(Collectors.toList()))
-        .build(), event -> {
-      event.setCancelled(true);
+    List<String> descriptionDetective = new ArrayList<>();
+    plugin.getLanguageManager().getLanguageListFromKey("IN_GAME_MESSAGES_ARENA_PASS_ROLE_DETECTIVE_LORE").forEach(string -> descriptionDetective.add(new MessageBuilder(string).integer(plugin.getUserManager().getUser(player).getStatistic("PASS_DETECTIVE")).build()));
+    gui.addItem(new SimpleClickableItem(new ItemBuilder(XMaterial.BOW.parseMaterial())
+      .name(new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_ROLE_DETECTIVE_NAME").asKey().build())
+      .lore(descriptionDetective)
+      .build(), event -> {
       User user = plugin.getUserManager().getUser(player);
-      if(user.getStat(StatsStorage.StatisticType.DETECTIVE_PASS) <= 0) {
-        player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Role-Pass.Fail").replace("%role%", Role.DETECTIVE.name()));
+      if(user.getStatistic("PASS_DETECTIVE") <= 0) {
+        new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_FAIL").asKey().player(player).value(Role.DETECTIVE.name()).sendPlayer();
         return;
       }
-      user.addStat(StatsStorage.StatisticType.DETECTIVE_PASS, -1);
-      user.addStat(StatsStorage.StatisticType.CONTRIBUTION_DETECTIVE, 999);
-      player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Role-Pass.Success").replace("%role%", Role.DETECTIVE.name()));
+      user.adjustStatistic("PASS_DETECTIVE", -1);
+      user.adjustStatistic("CONTRIBUTION_DETECTIVE", 999999999);
+      new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_SUCCESS").asKey().player(player).value(Role.DETECTIVE.name()).sendPlayer();
     }));
-    gui.show(player);
+    gui.refresh();
+    gui.open(player);
   }
 
 }

@@ -1,0 +1,6 @@
+#Add trails that you want to blacklist from all trails(particles)
+Blacklisted-Trails:
+  - "elder_guardian"
+  - "block_crack"
+  - "item_crack"
+  - "block_dust"

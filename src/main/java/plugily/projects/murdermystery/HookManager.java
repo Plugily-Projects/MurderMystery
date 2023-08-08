@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (c) 2022  Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,8 @@
 package plugily.projects.murdermystery;
 
 import org.bukkit.Bukkit;
-import plugily.projects.murdermystery.utils.Debugger;
+import org.bukkit.plugin.java.JavaPlugin;
+import plugily.projects.murdermystery.Main;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -30,10 +31,12 @@ import java.util.Map;
  * Created at 28.04.2019
  */
 public class HookManager {
-
+  //todo implement in minigamescore as bb citiziens could benefit from too
   private final Map<HookFeature, Boolean> hooks = new EnumMap<>(HookFeature.class);
+  private final Main plugin;
 
-  public HookManager() {
+  public HookManager(Main plugin) {
+    this.plugin = plugin;
     enableHooks();
   }
 
@@ -41,28 +44,26 @@ public class HookManager {
     for(HookFeature feature : HookFeature.values()) {
       boolean hooked = true;
       for(Hook requiredHook : feature.getRequiredHooks()) {
-        if(!Bukkit.getPluginManager().isPluginEnabled(requiredHook.pluginName)) {
+        if(!Bukkit.getPluginManager().isPluginEnabled(requiredHook.getPluginName())) {
           hooks.put(feature, false);
-          Debugger.debug("[HookManager] Feature {0} won't be enabled because {1} is not installed! Please install it in order to enable this feature in-game!",
-            feature.name(), requiredHook.pluginName);
+          plugin.getDebugger().debug("[HookManager] Feature {0} won't be enabled because " + requiredHook.getPluginName() + " is not installed! Please install it in order to enable this feature in-game!",
+            feature.name());
           hooked = false;
           break;
         }
       }
       if(hooked) {
         hooks.put(feature, true);
-        Debugger.debug("[HookManager] Feature {0} enabled!", feature.name());
+        plugin.getDebugger().debug("[HookManager] Feature {0} enabled!", feature.name());
       }
     }
   }
 
   public boolean isFeatureEnabled(HookFeature feature) {
-    Boolean b = hooks.get(feature);
-    return b != null && b;
+    return hooks.getOrDefault(feature, false);
   }
 
   public enum HookFeature {
-    //todo hidden name tags hook
     CORPSES(Hook.CORPSE_REBORN);
 
     private final Hook[] requiredHooks;

@@ -1,0 +1,7 @@
+Skins:
+  Sword:
+    'default':
+      Material: IRON_SWORD
+    'Stone':
+      Material: STONE_SWORD
+      Permission: "murdermystery.skins.sword.stone"

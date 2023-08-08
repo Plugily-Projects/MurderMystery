@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (c) 2022  Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@ package plugily.projects.murdermystery.handlers.lastwords;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
-import plugily.projects.murdermystery.utils.Debugger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,30 +38,28 @@ public class LastWordsManager {
 
   private final List<LastWord> registeredLastWords = new ArrayList<>();
 
+  private String hologramTitle = "";
+
   public LastWordsManager(Main plugin) {
     registerLastWords(plugin);
   }
 
   public void registerLastWords(Main plugin) {
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "language");
-    ConfigurationSection section = config.getConfigurationSection("In-Game.Messages.Last-Words");
-    if(section == null) {
-      //use old formatting under v1.7.5
-      addLastWord(new LastWord(plugin.getChatManager().colorMessage("In-Game.Messages.Last-Words.Meme"), "murdermystery.lastwords.meme"));
-      addLastWord(new LastWord(plugin.getChatManager().colorMessage("In-Game.Messages.Last-Words.Rage"), "murdermystery.lastwords.rage"));
-      addLastWord(new LastWord(plugin.getChatManager().colorMessage("In-Game.Messages.Last-Words.Pro"), "murdermystery.lastwords.pro"));
-      addLastWord(new LastWord(plugin.getChatManager().colorMessage("In-Game.Messages.Last-Words.Default"), ""));
-      Debugger.sendConsoleMsg("[Murder Mystery] Please check your language.yml and update it to the new last words design that can be found on the latest language.yml");
-      return;
-    }
-    String path = "In-Game.Messages.Last-Words.";
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "lastwords");
+    hologramTitle = config.getString("Last-Words.Hologram.Title", "-");
+    ConfigurationSection section = config.getConfigurationSection("Last-Words.Hologram.Content");
+    String path = "Last-Words.Hologram.Content.";
     for(String id : section.getKeys(false)) {
-      addLastWord(new LastWord(plugin.getChatManager().colorMessage(path + id + ".Message"), config.getString(path + id + ".Permission", "")));
+      addLastWord(new LastWord(new MessageBuilder(config.getString(path + id + ".Message")).build(), config.getString(path + id + ".Permission", "")));
     }
   }
 
   public List<LastWord> getRegisteredLastWords() {
     return registeredLastWords;
+  }
+
+  public String getHologramTitle() {
+    return hologramTitle;
   }
 
   public void addLastWord(LastWord lastWord) {

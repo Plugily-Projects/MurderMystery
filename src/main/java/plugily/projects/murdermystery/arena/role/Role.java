@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (c) 2022  Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,10 +19,9 @@
 package plugily.projects.murdermystery.arena.role;
 
 import org.bukkit.entity.Player;
+import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.murdermystery.arena.Arena;
-import plugily.projects.murdermystery.arena.ArenaRegistry;
-
-import java.util.Arrays;
 
 /**
  * @author Plajer
@@ -65,40 +64,44 @@ public enum Role {
    * Checks whether player is playing specified role or not
    *
    * @param role   role to check
-   * @param player player to check
+   * @param user player to check
    * @return true if is playing it, false otherwise
    */
-  public static boolean isRole(Role role, Player player) {
-    return isRole(role, player, ArenaRegistry.getArena(player));
+  public static boolean isRole(Role role, User user) {
+    return isRole(role, user, user.getArena());
   }
 
   /**
    * Checks whether player is playing specified role or not
    *
    * @param role   role to check
-   * @param player player to check
+   * @param user player to check
    * @param arena  the arena where to check
    * @return true if is playing it, false otherwise
    */
-  public static boolean isRole(Role role, Player player, Arena arena) {
-    if (arena == null)
+  public static boolean isRole(Role role, User user, PluginArena arena) {
+    if(arena == null)
       return false;
-
+    Arena pluginArena = (Arena) arena.getPlugin().getArenaRegistry().getArena(arena.getId());
+    if(pluginArena == null) {
+      return false;
+    }
+    Player player = user.getPlayer();
     switch(role) {
       case DETECTIVE:
-        return arena.isCharacterSet(Arena.CharacterType.DETECTIVE) && arena.getDetectiveList().contains(player);
+        return pluginArena.isCharacterSet(Arena.CharacterType.DETECTIVE) && pluginArena.getDetectiveList().contains(player);
       case FAKE_DETECTIVE:
-        return player.equals(arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE));
+        return player.equals(pluginArena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE));
       case MURDERER:
-        return arena.isCharacterSet(Arena.CharacterType.MURDERER) && arena.getMurdererList().contains(player);
+        return pluginArena.isCharacterSet(Arena.CharacterType.MURDERER) && pluginArena.getMurdererList().contains(player);
       case ANY_DETECTIVE:
-        return isRole(Role.DETECTIVE, player) || isRole(Role.FAKE_DETECTIVE, player);
+        return isRole(Role.DETECTIVE, user) || isRole(Role.FAKE_DETECTIVE, user);
       case INNOCENT:
-        return !isRole(Role.MURDERER, player) && !isRole(Role.ANY_DETECTIVE, player);
+        return !isRole(Role.MURDERER, user) && !isRole(Role.ANY_DETECTIVE, user);
       case DEATH:
-        return arena.isDeathPlayer(player);
+        return pluginArena.isDeathPlayer(player);
       case SPECTATOR:
-        return arena.isSpectatorPlayer(player);
+        return pluginArena.isSpectatorPlayer(player);
       default:
         return false;
     }
@@ -107,21 +110,23 @@ public enum Role {
   /**
    * Checks whether player is playing a role or not
    *
-   * @param player player to check
+   * @param user player to check
    * @return true if is playing one role, false otherwise
    */
-  public static boolean isAnyRole(Player player) {
-    return isAnyRole(player, ArenaRegistry.getArena(player));
+  public static boolean isAnyRole(User user) {
+    return isAnyRole(user, user.getArena());
   }
+
+  private static final Role[] roles = Role.values();
 
   /**
    * Checks whether player is playing a role or not
    *
-   * @param player player to check
-   * @param arena the player's arena
+   * @param user player to check
+   * @param arena  the player's arena
    * @return true if is playing one role, false otherwise
    */
-  public static boolean isAnyRole(Player player, Arena arena) {
-    return arena != null && Arrays.stream(Role.values()).anyMatch(role -> isRole(role, player, arena));
+  public static boolean isAnyRole(User user, PluginArena arena) {
+    return arena != null && java.util.Arrays.stream(roles).anyMatch(role -> isRole(role, user, arena));
   }
 }
