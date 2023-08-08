@@ -20,7 +20,6 @@ public class MessageInitializer {
 
   public MessageInitializer(Main plugin) {
     this.plugin = plugin;
-    registerLocales();
   }
 
   public void registerMessages() {
@@ -98,22 +97,6 @@ public class MessageInitializer {
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_KILLS", new Message("Leaderboard.Statistics.Kills", ""));
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_DEATHS", new Message("Leaderboard.Statistics.Deaths", ""));
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_HIGHEST_SCORE", new Message("Leaderboard.Statistics.Highest-Score", ""));
-  }
-
-  private void registerLocales() {
-    Arrays.asList(new Locale("Chinese", "简体中文", "zh_CN", "POEditor contributors", Arrays.asList("chinese", "zh-zn")),
-        new Locale("Chinese (Simplified)", "简体中文", "zh_HANS", "POEditor contributors", Arrays.asList("chinese_simplified", "cn-hans")),
-        new Locale("Chinese (TW)", "简体中文", "zh_TW", "POEditor contributors", Arrays.asList("chinese", "zh-zn")),
-        new Locale("Czech", "Český", "cs_CZ", "POEditor contributors", Arrays.asList("czech", "cesky", "český", "cs")),
-        new Locale("English", "English", "en_GB", "Tigerpanzer_02", Arrays.asList("default", "english", "en")),
-        new Locale("French", "Français", "fr_FR", "POEditor contributors", Arrays.asList("french", "francais", "français", "fr")),
-        new Locale("German", "Deutsch", "de_DE", "Tigerkatze and POEditor contributors", Arrays.asList("deutsch", "german", "de")),
-        new Locale("Portuguese (BR)", "Português Brasileiro", "pt_BR", "POEditor contributors", Arrays.asList("brazilian", "brasil", "brasileiro", "pt-br", "pt_br")),
-        new Locale("Russian", "Pусский", "ru_RU", "POEditor contributors", Arrays.asList("russian", "pусский", "pyccknn", "russkiy", "ru")),
-        new Locale("Spanish", "Español", "es_ES", "POEditor contributors", Arrays.asList("spanish", "espanol", "español", "es")),
-        new Locale("Thai", "Thai", "th_TH", "POEditor contributors", Arrays.asList("thai", "th")),
-        new Locale("Turkish", "Türk", "tr_TR", "POEditor contributors", Arrays.asList("turkish", "turk", "türk", "tr")))
-      .forEach(LocaleRegistry::registerLocale);
   }
 
   private MessageManager getMessageManager() {
