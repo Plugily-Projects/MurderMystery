@@ -1,4 +1,13 @@
-### 1.8.0 Release (05.08.2021 - xx.xx.202x)
+### 2.0.0 Release (08.08.2023)
+* Added up to 1.20 compatibility
+* Added sword skins.yml
+* Added trails.yml
+* Changed supported languages [https://translate.plugily.xyz]
+* Changed plugin base is based on MinigamesCore [https://github.com/Plugily-Projects/MiniGamesBox]
+* Changed native java building to java17, java 8 downloadable on our discord [https://discord.plugily.xyz]
+* Fixed all known bugs
+
+### 1.8.0 Release (05.08.2021 - 2022)
 * Improved leaderboard command
 * Added murderer and detective chance placeholders to scoreboard
 * Now weather changing will be cancelled when a game is running
