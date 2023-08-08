@@ -1,0 +1,97 @@
+# Make sure to read the wiki for further reference!
+# section keys with DEFAULT_SPEED, SPEED1, SPEED2, SPEED3, SPEED4, AUTO_TELEPORT, NIGHT_VISION, FIRST_PERSON_MODE, SPECTATORS_VISIBILITY have a defined function
+
+Settings-Menu:
+  Inventory-name: "&7Spectator settings"
+  Content:
+    'DEFAULT_SPEED':
+      material: LEATHER_BOOTS
+      # slot at the inventory, 0 is first slot
+      slot: 11
+      name: "Default Speed"
+      description:
+        - "Sets the default minecraft speed"
+      permission: ""
+      execute:
+        # You could also add a potion effect by console command
+        - ""
+    'SPEED1':
+      material: CHAINMAIL_BOOTS
+      slot: 12
+      name: "Speed I"
+      description:
+        - "Adds a speed 1 potion"
+      permission: ""
+      execute:
+        - ""
+    'SPEED2':
+      material: IRON_BOOTS
+      slot: 13
+      name: "Speed II"
+      description:
+        - "Adds a speed 2 potion"
+      permission: ""
+      execute:
+        - ""
+    'SPEED3':
+      material: GOLDEN_BOOTS
+      slot: 14
+      name: "Speed III"
+      description:
+        - "Adds a speed 3 potion"
+      permission: ""
+      execute:
+        - ""
+    'SPEED4':
+      material: DIAMOND_BOOTS
+      slot: 15
+      name: "Speed IV"
+      description:
+        - "Adds a speed 4 potion"
+      permission: ""
+      execute:
+        - ""
+    'AUTO_TELEPORT':
+      material: COMPASS
+      slot: 20
+      name: "Automatically teleport"
+      description:
+        - "Automatically teleports you to your targeted player"
+      permission: ""
+      execute:
+        - ""
+    'NIGHT_VISION':
+      material: ENDER_PEARL
+      slot: 21
+      name: "Night vision"
+      description:
+        - "With nigh vision you will be able to see ghosts"
+      permission: ""
+      execute:
+        - ""
+    'FIRST_PERSON_MODE':
+      material: CLOCK
+      slot: 23
+      name: "First person mode"
+      description:
+        - "When in first person mode you will spectate like you would play yourself"
+      permission: ""
+      execute:
+        - ""
+    'SPECTATORS_VISIBILITY':
+      material: REDSTONE
+      slot: 24
+      name: "Spectators visibility"
+      description:
+        - "Its a good choice if you hate other players"
+      permission: ""
+      execute:
+        - ""
+
+
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

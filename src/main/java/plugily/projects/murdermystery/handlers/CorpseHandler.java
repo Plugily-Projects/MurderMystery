@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (c) 2022  Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,15 +31,15 @@ import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 
-import plugily.projects.commonsbox.minecraft.compat.ServerVersion;
-import plugily.projects.commonsbox.minecraft.compat.VersionUtils;
-import plugily.projects.commonsbox.minecraft.compat.xseries.XMaterial;
-import plugily.projects.commonsbox.minecraft.hologram.ArmorStandHologram;
-import plugily.projects.commonsbox.minecraft.hologram.HologramManager;
-import plugily.projects.murdermystery.HookManager;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
+import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.murdermystery.Main;
+import plugily.projects.murdermystery.api.events.game.MurderGameCorpseSpawnEvent;
 import plugily.projects.murdermystery.arena.Arena;
-import plugily.projects.murdermystery.arena.ArenaRegistry;
+import plugily.projects.murdermystery.HookManager;
 import plugily.projects.murdermystery.arena.corpse.Corpse;
 import plugily.projects.murdermystery.arena.corpse.Stand;
 
@@ -54,7 +54,6 @@ import java.util.Map;
 public class CorpseHandler implements Listener {
 
   private final Main plugin;
-  private final ChatManager chatManager;
   private Corpses.CorpseData lastSpawnedCorpse;
 
   private final Map<String, String> registeredLastWords = new HashMap<>();
@@ -62,7 +61,6 @@ public class CorpseHandler implements Listener {
 
   public CorpseHandler(Main plugin) {
     this.plugin = plugin;
-    chatManager = plugin.getChatManager();
     //run bit later than hook manager to ensure it's not null
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       if(plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
@@ -76,11 +74,16 @@ public class CorpseHandler implements Listener {
   }
 
   @SuppressWarnings("deprecation")
-  public void spawnCorpse(Player p, Arena arena) {
+  public void spawnCorpse(Player player, Arena arena) {
+    MurderGameCorpseSpawnEvent murderGameCorpseSpawnEvent = new MurderGameCorpseSpawnEvent(arena, player.getPlayer(), player.getLocation());
+    Bukkit.getPluginManager().callEvent(murderGameCorpseSpawnEvent);
+    if(murderGameCorpseSpawnEvent.isCancelled()) {
+      return;
+    }
     if(!plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
-      ArmorStand stand = p.getLocation().getWorld().spawn(p.getLocation().add(0.0D, -1.25D, 0.0D), ArmorStand.class);
+      ArmorStand stand = player.getLocation().getWorld().spawn(player.getLocation().add(0.0D, -1.25D, 0.0D), ArmorStand.class);
       SkullMeta meta = (SkullMeta) head.getItemMeta();
-      meta = VersionUtils.setPlayerHead(p, meta);
+      meta = VersionUtils.setPlayerHead(player, meta);
       head.setItemMeta(meta);
 
       stand.setVisible(false);
@@ -91,22 +94,22 @@ public class CorpseHandler implements Listener {
       }
       stand.setGravity(false);
       stand.setCustomNameVisible(false);
-      stand.setHeadPose(new EulerAngle(Math.toRadians(p.getLocation().getX()), Math.toRadians(p.getLocation().getPitch()), Math.toRadians(p.getLocation().getZ())));
+      stand.setHeadPose(new EulerAngle(Math.toRadians(player.getLocation().getX()), Math.toRadians(player.getLocation().getPitch()), Math.toRadians(player.getLocation().getZ())));
 
-      HologramManager.getArmorStands().add(stand);
-      ArmorStandHologram hologram = getLastWordsHologram(p);
+      plugin.getHologramManager().getArmorStands().add(stand);
+      ArmorStandHologram hologram = getLastWordsHologram(player);
       arena.addHead(new Stand(hologram, stand));
       Bukkit.getScheduler().runTaskLater(plugin, () -> {
         hologram.delete();
-        HologramManager.getArmorStands().remove(stand);
+        plugin.getHologramManager().getArmorStands().remove(stand);
         Bukkit.getScheduler().runTaskLater(plugin, stand::remove, 20 * 20);
       }, 15 * 20);
       return;
     }
-    ArmorStandHologram hologram = getLastWordsHologram(p);
-    Corpses.CorpseData corpse = CorpseAPI.spawnCorpse(p, p.getLocation());
+    ArmorStandHologram hologram = getLastWordsHologram(player);
+    Corpses.CorpseData corpse = CorpseAPI.spawnCorpse(player, player.getLocation());
     lastSpawnedCorpse = corpse;
-    //spawns 2 corpses - Corpses.CorpseData corpse = lastSpawnedCorpse = CorpseAPI.spawnCorpse(p, p.getLocation());
+    //spawns 2 corpses - Corpses.CorpseData corpse = lastSpawnedCorpse = CorpseAPI.spawnCorpse(player, player.getLocation());
     arena.addCorpse(new Corpse(hologram, corpse));
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       hologram.delete();
@@ -116,24 +119,24 @@ public class CorpseHandler implements Listener {
 
   private ArmorStandHologram getLastWordsHologram(Player player) {
     ArmorStandHologram hologram = new ArmorStandHologram(player.getLocation());
-    hologram.appendLine(chatManager.colorMessage("In-Game.Messages.Corpse-Last-Words", player).replace("%player%", player.getName()));
+    hologram.appendLine(new MessageBuilder(plugin.getLastWordsManager().getHologramTitle()).player(player).build());
     hologram.appendLine(plugin.getLastWordsManager().getRandomLastWord(player));
     return hologram;
   }
 
   @EventHandler
   public void onCorpseSpawn(CorpseSpawnEvent e) {
-    if(!plugin.getConfig().getBoolean("Override-Corpses-Spawn", true) || lastSpawnedCorpse == null) {
+    if(lastSpawnedCorpse == null) {
       return;
     }
-    if(!lastSpawnedCorpse.equals(e.getCorpse())) {
+    if(plugin.getConfigPreferences().getOption("CORPSES_INTEGRATION_OVERWRITE") && !lastSpawnedCorpse.equals(e.getCorpse())) {
       e.setCancelled(true);
     }
   }
 
   @EventHandler
   public void onCorpseClick(CorpseClickEvent e) {
-    if(ArenaRegistry.isInArena(e.getClicker())) {
+    if(plugin.getArenaRegistry().isInArena(e.getClicker())) {
       e.setCancelled(true);
       e.getClicker().closeInventory();
     }

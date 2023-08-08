@@ -1,7 +1,7 @@
 # Configuration for Bungeecord support.
-# Remember to enable it in config.yml (BungeeActivated option)
+# Remember to enable it in config.yml (Bungee-Mode: true)
 
-# Your bungeecord server name where player will be teleported after game (main lobby with signs etc.)
+# Your bungeecord server name where players will be teleported after game (main lobby with signs etc.)
 Hub: lobby
 
 # Should game server be closed after game?
@@ -17,7 +17,7 @@ End-Location-Hub: true
 # %state% - Game state will be visible at MOTD.
 MOTD:
   Manager: false
-  Message: "The actual game state of mm is %state%"
+  Message: "The actual game state of the minigame is %state%"
   Game-States:
     Inactive: "&lInactive..."
     In-Game: "&lIn-game"
@@ -25,3 +25,10 @@ MOTD:
     Full-Game: "&4&lFULL"
     Ending: "&lEnding"
     Restarting: "&c&lRestarting"
+
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

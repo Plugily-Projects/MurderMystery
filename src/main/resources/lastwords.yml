@@ -1,0 +1,18 @@
+Last-Words:
+  Hologram:
+    Title: "%player%'s last words:"
+    Content:
+      'default':
+        Message: "&fPlease respawn :("
+      'meme':
+        Message: "&fDespacito 2 is confirmed by God"
+        Permission: "murdermystery.lastwords.meme"
+      'rage':
+        Message: "&fWHY YOU KILLED ME?!!?"
+        Permission: "murdermystery.lastwords.rage"
+      'pro':
+        Message: "&fIt was lagging..."
+        Permission: "murdermystery.lastwords.pro"
+      'hacker':
+        Message: "Turn off your hacks..."
+        Permission: "murdermystery.lastwords.hacker"

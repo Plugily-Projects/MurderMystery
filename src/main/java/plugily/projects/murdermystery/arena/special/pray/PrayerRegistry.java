@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (c) 2022  Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,16 +25,13 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import plugily.projects.commonsbox.minecraft.misc.MiscUtils;
+import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.user.User;
+import plugily.projects.minigamesbox.classic.utils.misc.MiscUtils;
 import plugily.projects.murdermystery.Main;
-import plugily.projects.murdermystery.api.StatsStorage;
 import plugily.projects.murdermystery.arena.Arena;
-import plugily.projects.murdermystery.arena.ArenaRegistry;
-import plugily.projects.murdermystery.arena.ArenaState;
 import plugily.projects.murdermystery.arena.role.Role;
-import plugily.projects.murdermystery.handlers.ChatManager;
-import plugily.projects.murdermystery.handlers.language.LanguageManager;
-import plugily.projects.murdermystery.user.User;
 import plugily.projects.murdermystery.utils.ItemPosition;
 
 import java.util.ArrayList;
@@ -49,7 +46,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class PrayerRegistry {
 
   private static Main plugin;
-  private static ChatManager chatManager;
   private static final List<Prayer> prayers = new ArrayList<>();
   private static final List<Player> ban = new ArrayList<>(), rush = new ArrayList<>();
 
@@ -58,18 +54,17 @@ public class PrayerRegistry {
 
   public static void init(Main plugin) {
     PrayerRegistry.plugin = plugin;
-    chatManager = plugin.getChatManager();
     //good prayers
-    prayers.add(new Prayer(Prayer.PrayerType.DETECTIVE_REVELATION, true, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Detective-Revelation")));
-    prayers.add(new Prayer(Prayer.PrayerType.GOLD_RUSH, true, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Gold-Rush")));
-    prayers.add(new Prayer(Prayer.PrayerType.SINGLE_COMPENSATION, true, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Single-Compensation")));
-    prayers.add(new Prayer(Prayer.PrayerType.BOW_TIME, true, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Gifts.Bow-Time")));
+    prayers.add(new Prayer(Prayer.PrayerType.DETECTIVE_REVELATION, true, new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_PRAY_PRAISE_GIFTS_DETECTIVE_REVELATION").asKey().build()));
+    prayers.add(new Prayer(Prayer.PrayerType.GOLD_RUSH, true, new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_PRAY_PRAISE_GIFTS_GOLD_RUSH").asKey().build()));
+    prayers.add(new Prayer(Prayer.PrayerType.SINGLE_COMPENSATION, true, new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_PRAY_PRAISE_GIFTS_SINGLE_COMPENSATION").asKey().build()));
+    prayers.add(new Prayer(Prayer.PrayerType.BOW_TIME, true, new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_PRAY_PRAISE_GIFTS_BOW").asKey().build()));
 
     //bad prayers
-    prayers.add(new Prayer(Prayer.PrayerType.SLOWNESS_CURSE, false, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Slowness-Curse")));
-    prayers.add(new Prayer(Prayer.PrayerType.BLINDNESS_CURSE, false, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Blindness-Curse")));
-    prayers.add(new Prayer(Prayer.PrayerType.GOLD_BAN, false, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Gold-Ban")));
-    prayers.add(new Prayer(Prayer.PrayerType.INCOMING_DEATH, false, chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Curses.Incoming-Death")));
+    prayers.add(new Prayer(Prayer.PrayerType.SLOWNESS_CURSE, false, new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_PRAY_PRAISE_CURSES_SLOWNESS").asKey().build()));
+    prayers.add(new Prayer(Prayer.PrayerType.BLINDNESS_CURSE, false, new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_PRAY_PRAISE_CURSES_BLINDNESS").asKey().build()));
+    prayers.add(new Prayer(Prayer.PrayerType.GOLD_BAN, false, new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_PRAY_PRAISE_CURSES_GOLD").asKey().build()));
+    prayers.add(new Prayer(Prayer.PrayerType.INCOMING_DEATH, false, new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_PRAY_PRAISE_CURSES_DEATH").asKey().build()));
   }
 
   public static Prayer getRandomPray() {
@@ -83,16 +78,16 @@ public class PrayerRegistry {
   public static void applyRandomPrayer(User user) {
     Prayer prayer = getRandomPray();
 
-    user.setStat(StatsStorage.StatisticType.LOCAL_CURRENT_PRAY, prayer.getPrayerType().ordinal());
+    user.setStatistic("LOCAL_CURRENT_PRAY", prayer.getPrayerType().ordinal());
 
     Player player = user.getPlayer();
-    Arena arena = ArenaRegistry.getArena(player);
-    List<String> prayMessage = LanguageManager.getLanguageList("In-Game.Messages.Special-Blocks.Praises.Message");
+    Arena arena = plugin.getArenaRegistry().getArena(player);
+    List<String> prayMessage = plugin.getLanguageManager().getLanguageList("In-Game.Messages.Arena.Playing.Special-Blocks.Pray.Praise.Heard");
 
-    String feeling = chatManager.colorMessage("In-Game.Messages.Special-Blocks.Praises.Feelings." + (prayer.isGoodPray() ? "Blessed" : "Cursed"), player);
+    String feeling = plugin.getLanguageManager().getLanguageMessage("In-Game.Messages.Arena.Playing.Special-Blocks.Pray.Praise.Feeling." + (prayer.isGoodPray() ? "Blessed" : "Cursed"));
     int praySize = prayMessage.size();
 
-    for (int a = 0; a < praySize; a++) {
+    for(int a = 0; a < praySize; a++) {
       prayMessage.set(a, prayMessage.get(a).replace("%feeling%", feeling).replace("%praise%", prayer.getPrayerDescription()));
     }
 
@@ -101,21 +96,25 @@ public class PrayerRegistry {
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
         break;
       case BOW_TIME:
-        if(!Role.isRole(Role.ANY_DETECTIVE, player, arena)) {
-          ItemPosition.addItem(player, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+        if(!Role.isRole(Role.ANY_DETECTIVE, user, arena)) {
+          ItemPosition.addItem(user, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
         }
-        ItemPosition.setItem(player, ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Detective-Prayer-Arrows", 2)));
+        ItemPosition.setItem(user, ItemPosition.ARROWS, new ItemStack(Material.ARROW, plugin.getConfig().getInt("Bow.Amount.Arrows.Prayer", 2)));
         break;
       case DETECTIVE_REVELATION:
-        Player characterType = arena.getCharacter(Arena.CharacterType.DETECTIVE);
+        Player characterType = null;
 
-        if (characterType == null) {
-          characterType = arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE);
+        if(arena != null) {
+          characterType = arena.getCharacter(Arena.CharacterType.DETECTIVE);
+
+          if(characterType == null) {
+            characterType = arena.getCharacter(Arena.CharacterType.FAKE_DETECTIVE);
+          }
         }
 
         String charName = characterType == null ? "????" : characterType.getName();
 
-        for (int a = 0; a < praySize; a++) {
+        for(int a = 0; a < praySize; a++) {
           prayMessage.set(a, prayMessage.get(a).replace("%detective%", charName));
         }
 
@@ -139,8 +138,8 @@ public class PrayerRegistry {
         }.runTaskTimer(plugin, 20, 20);
         break;
       case SINGLE_COMPENSATION:
-        ItemPosition.addItem(player, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, 5));
-        user.setStat(StatsStorage.StatisticType.LOCAL_GOLD, user.getStat(StatsStorage.StatisticType.LOCAL_GOLD) + 5);
+        ItemPosition.addItem(user, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, 5));
+        user.adjustStatistic("LOCAL_GOLD", 5);
         break;
       case SLOWNESS_CURSE:
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0, false, false));

@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (c) 2022  Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
 
 package plugily.projects.murdermystery.utils;
 
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.murdermystery.arena.role.Role;
 
 /**
@@ -45,23 +45,19 @@ public enum ItemPosition {
    * Adds target item to specified hotbar position sorta different for each role.
    * Item will be added if there is already set or will be set when no item is set in the position.
    *
-   * @param player       player to add item to
+   * @param user       player to add item to
    * @param itemPosition position of item to set/add
    * @param itemStack    itemstack to be added at itemPostion or set at itemPosition
    */
-  public static void addItem(Player player, ItemPosition itemPosition, ItemStack itemStack) {
-    if(player == null) {
-      return;
-    }
-
-    int itemPos = Role.isRole(Role.MURDERER, player) ? itemPosition.getMurdererItemPosition()
+  public static void addItem(User user, ItemPosition itemPosition, ItemStack itemStack) {
+    int itemPos = Role.isRole(Role.MURDERER, user) ? itemPosition.getMurdererItemPosition()
         : itemPosition.getOtherRolesItemPosition();
 
     if (itemPos < 0) {
       return;
     }
 
-    Inventory inv = player.getInventory();
+    Inventory inv = user.getPlayer().getInventory();
     ItemStack item = inv.getItem(itemPos);
 
     if(item != null) {
@@ -76,19 +72,15 @@ public enum ItemPosition {
    * Sets target item in specified hotbar position sorta different for each role.
    * If item there is already set it will be incremented by itemStack amount if possible.
    *
-   * @param player       player to set item to
+   * @param user       player to set item to
    * @param itemPosition position of item to set
    * @param itemStack    itemstack to set at itemPosition
    */
-  public static void setItem(Player player, ItemPosition itemPosition, ItemStack itemStack) {
-    if(player == null) {
-      return;
-    }
-
-    if(itemPosition.getMurdererItemPosition() >= 0 && Role.isRole(Role.MURDERER, player)) {
-      player.getInventory().setItem(itemPosition.getMurdererItemPosition(), itemStack);
+  public static void setItem(User user, ItemPosition itemPosition, ItemStack itemStack) {
+    if(itemPosition.getMurdererItemPosition() >= 0 && Role.isRole(Role.MURDERER, user)) {
+      user.getPlayer().getInventory().setItem(itemPosition.getMurdererItemPosition(), itemStack);
     } else if (itemPosition.getOtherRolesItemPosition() >= 0) {
-      player.getInventory().setItem(itemPosition.getOtherRolesItemPosition(), itemStack);
+      user.getPlayer().getInventory().setItem(itemPosition.getOtherRolesItemPosition(), itemStack);
     }
   }
 

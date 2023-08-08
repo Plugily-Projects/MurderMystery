@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (c) 2022  Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import plugily.projects.commonsbox.minecraft.configuration.ConfigUtils;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
+import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.murdermystery.Main;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class MysteryPotionRegistry {
   private static final List<MysteryPotion> mysteryPotions = new ArrayList<>();
 
   public static void init(Main plugin) {
-    FileConfiguration config = ConfigUtils.getConfig(plugin, "specialblocks");
+    FileConfiguration config = ConfigUtils.getConfig(plugin, "special_blocks");
     org.bukkit.configuration.ConfigurationSection section = config.getConfigurationSection("Special-Blocks.Cauldron-Potions");
     if(section == null) {
       return;
@@ -48,16 +49,16 @@ public class MysteryPotionRegistry {
     for(String key : section.getKeys(false)) {
       PotionEffectType effectType = PotionEffectType.getByName(section.getString(key + ".Type", "").toUpperCase());
 
-      if (effectType == null) {
-        effectType = PotionEffectType.HEAL;
+      if(effectType == null) {
+        continue;
       }
 
       //amplifiers are counted from 0 so -1
       PotionEffect effect = new PotionEffect(effectType,
           section.getInt(key + ".Duration") * 20, section.getInt(key + ".Amplifier") - 1, false, false);
 
-      mysteryPotions.add(new MysteryPotion(plugin.getChatManager().colorRawMessage(section.getString(key + ".Name")),
-        plugin.getChatManager().colorRawMessage(section.getString(key + ".Subtitle")), effect));
+      mysteryPotions.add(new MysteryPotion(new MessageBuilder(section.getString(key + ".Name")).build(),
+          new MessageBuilder(section.getString(key + ".Subtitle")).build(), effect));
     }
   }
 

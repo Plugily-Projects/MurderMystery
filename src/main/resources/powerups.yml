@@ -1,0 +1,47 @@
+## Murder Mystery powerups.yml
+#
+Powerups:
+  Pickup:
+    Chat: "&a%player% picked the &4Powerup %value% up"
+  Ended:
+    Title: "&4Powerup %value% from %player%"
+    Subtitle: "&chas ended"
+    Chat: "&4Powerup %value% from %player% has ended%"
+  Drop:
+    Chance: 1
+  Content:
+    Speed:
+      active: true
+      name: "&a&lSPEED BOOSTER"
+      description: "&7Double speed for %number% seconds!"
+      material: FEATHER
+      # Add as many potion effects as you want
+      # Format: PotionName, Duration, Amplifier
+      potion-effect:
+        - "SPEED, 15, 1"
+      # PLAYER for pickup player | ALL for all arena players
+      potion-type: PLAYER
+      # like rewards
+      execute:
+        - ""
+    Speed-All:
+      active: true
+      name: "&a&lSPEED BOOSTER FOR ALL"
+      description: "&7Double speed for all players in the next %number% seconds!"
+      material: FEATHER
+      # Add as many potion effects as you want
+      # Format: PotionName, Duration, Amplifier
+      potion-effect:
+        - "SPEED, 15, 1"
+      # PLAYER for pickup player | ALL for all arena players
+      potion-type: ALL
+      # like rewards
+      execute:
+        - ""
+
+# Don't edit it. But who's stopping you? It's your server!
+# Really, don't edit ;p
+# You edited it, huh? Next time hurt yourself!
+Do-Not-Edit:
+  File-Version: 1
+  Core-Version: 1

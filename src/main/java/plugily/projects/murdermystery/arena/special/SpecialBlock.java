@@ -1,6 +1,6 @@
 /*
  * MurderMystery - Find the murderer, kill him and survive!
- * Copyright (C) 2020  Plugily Projects - maintained by Tigerpanzer_02, 2Wild4You and contributors
+ * Copyright (c) 2022  Plugily Projects - maintained by Tigerpanzer_02 and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ package plugily.projects.murdermystery.arena.special;
 
 import org.bukkit.Location;
 
-import plugily.projects.commonsbox.minecraft.hologram.ArmorStandHologram;
+import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
 
 /**
  * @author Plajer
