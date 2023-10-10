@@ -238,7 +238,6 @@ public class Arena extends PluginArena {
       totalRoleChances += getContributorValue(role, user);
     }
     //avoid division / 0
-    Bukkit.getConsoleSender().sendMessage(role.name() + "->T:" + totalRoleChances);
     return totalRoleChances == 0 ? 1 : totalRoleChances;
   }
 
