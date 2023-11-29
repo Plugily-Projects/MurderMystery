@@ -92,11 +92,13 @@ Rewards: true
 # You can use PlaceholderAPI placeholders in chat format!
 Plugin-Chat-Format: true
 
-
-# Should we enable a separate arena chat for players inside a arena
-# Useful on multi arena servers that don't want the same chat for all players on the server
-Separate-Arena-Chat: true
-
+Chat:
+  Separate:
+    # Should we enable a separate arena chat for players inside a arena
+    # Useful on multi arena servers that don't want the same chat for all players on the server
+    Arena: true
+    # Should spectators only write with other spectators
+    Spectators: true
 
 # Should we fire some cool fireworks at locations of every player at special events such as the game end?
 Firework: true
@@ -264,4 +266,4 @@ Sword:
 # You edited it, huh? Next time hurt yourself!
 Do-Not-Edit:
   File-Version: 1
-  Core-Version: 1
+  Core-Version: 2

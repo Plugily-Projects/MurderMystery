@@ -1,3 +1,12 @@
+### 2.0.2 Release (29.11.2023)
+* Fixed cauldronclick adds gold instead of removing gold
+* Fixed IAE on particles 
+* Removed debug messages
+* Updated to minigamesbox 1.3.3
+
+### 2.0.1 Release (21.08.2023)
+* Updated to minigamesbox 1.3.2-SNAPSHOT to fix urgent bugs
+
 ### 2.0.0 Release (08.08.2023)
 * Added up to 1.20 compatibility
 * Added sword skins.yml

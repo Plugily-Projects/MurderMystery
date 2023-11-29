@@ -122,7 +122,7 @@ public class SpecialBlockEvents implements Listener {
     Item item = blockLoc.getWorld().dropItemNaturally(blockLoc.clone().add(0, 1, 0), new ItemStack(Material.POTION, 1));
     item.setPickupDelay(10000);
     Bukkit.getScheduler().runTaskLater(plugin, item::remove, 20);
-    user.adjustStatistic("LOCAL_GOLD", 1);
+    user.adjustStatistic("LOCAL_GOLD", -1);
     ItemPosition.addItem(user, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, -1));
     ItemPosition.setItem(user, ItemPosition.POTION, new ItemBuilder(XMaterial.POTION.parseItem()).name(MysteryPotionRegistry.getRandomPotion().getName()).build());
   }
