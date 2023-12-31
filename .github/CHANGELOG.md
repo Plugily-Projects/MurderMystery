@@ -1,3 +1,7 @@
+### 2.0.3 Release (31.12.2023)
+* Added 1.20.3 & 1.20.4 support
+* Updated to minigamesbox 1.3.4
+
 ### 2.0.2 Release (29.11.2023)
 * Fixed cauldronclick adds gold instead of removing gold
 * Fixed IAE on particles 
