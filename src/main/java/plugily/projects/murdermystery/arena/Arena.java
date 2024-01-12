@@ -410,7 +410,6 @@ public class Arena extends PluginArena {
     }
     Player player = user.getPlayer();
     int contributor = user.getStatistic("CONTRIBUTION_" + role.name());
-    Bukkit.getConsoleSender().sendMessage(user.getPlayer().getName() + role.name() + "->C:" + contributor + user.getStatistic(plugin.getStatsStorage().getStatisticType("CONTRIBUTION_" + role.name())));
     int increase = plugin.getPermissionsManager().getPermissionCategoryValue(role.name() + "_BOOSTER", player);
     int multiplicator = plugin.getPermissionsManager().getPermissionCategoryValue("CHANCES_BOOSTER", player);
     int calculatedContributor = (contributor + increase) * (multiplicator == 0 ? 1 :multiplicator);
@@ -419,7 +418,6 @@ public class Arena extends PluginArena {
     } else {
       detectiveContributions.put(user, calculatedContributor);
     }
-    Bukkit.getConsoleSender().sendMessage(user.getPlayer().getName() + role.name() + "->" + calculatedContributor);
     return calculatedContributor;
   }
 
