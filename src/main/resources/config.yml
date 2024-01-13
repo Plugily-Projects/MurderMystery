@@ -51,14 +51,10 @@ Commands:
       Executes: "murdermystery leave"
       Enabled: true
     '3':
-      Short: "kit"
-      Executes: "murdermystery selectkit"
-      Enabled: false
-    '4':
       Short: "stats"
       Executes: "murdermystery stats"
       Enabled: false
-    '5':
+    '4':
       Short: "top"
       Executes: "murdermystery top"
       Enabled: true
@@ -84,21 +80,21 @@ Database: false
 
 # Should we enable in game rewards? See rewards.yml for more...
 # You should also check out our script engine tutorial for rewards! https://tutorial.plugily.xyz
-Rewards: true
+Rewards: false
 
-
-# Enable in game (eg. '[KIT][LEVEL] Tigerpanzer_02: hey') special formatting?
-# Formatting is configurable in language.yml
-# You can use PlaceholderAPI placeholders in chat format!
-Plugin-Chat-Format: true
 
 Chat:
+  # Enable in game (eg. '[KIT][LEVEL] Tigerpanzer_02: hey') special formatting?
+  # Formatting is configurable in language.yml
+  # You can use PlaceholderAPI placeholders in chat format!
+  Format: true
   Separate:
     # Should we enable a separate arena chat for players inside a arena
     # Useful on multi arena servers that don't want the same chat for all players on the server
     Arena: true
     # Should spectators only write with other spectators
     Spectators: true
+
 
 # Should we fire some cool fireworks at locations of every player at special events such as the game end?
 Firework: true
@@ -266,4 +262,4 @@ Sword:
 # You edited it, huh? Next time hurt yourself!
 Do-Not-Edit:
   File-Version: 1
-  Core-Version: 2
+  Core-Version: 3

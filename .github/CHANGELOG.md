@@ -1,3 +1,6 @@
+### 2.0.5 Release (13.01.2024)
+* Updated to minigamesbox 1.3.6
+
 ### 2.0.4 Release (03.01.2024)
 * Added new command /mma locale <locale> to set your locale
 * Fixed GameProfile API 1.20 change
