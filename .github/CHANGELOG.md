@@ -1,6 +1,7 @@
-### 2.0.6 Release
+### 2.0.6 Release (15.01.2024)
 * Fixed Hungerlose option in config.yml
 * Changed Round chances are now full numbers (no ,xx)
+* Updated to minigamesbox 1.3.7
 
 ### 2.0.5 Release (13.01.2024)
 * Updated to minigamesbox 1.3.6
