@@ -118,7 +118,7 @@ public class PlaceholderInitializer {
         }
 
         User user = getUserManager().getUser(player);
-        return NumberUtils.round(((double) pluginArena.getContributorValue(Role.MURDERER, user) / (double) pluginArena.getTotalRoleChances(Role.MURDERER)) * 100.0, 2) + "%";
+        return NumberUtils.round(((double) pluginArena.getContributorValue(Role.MURDERER, user) / (double) pluginArena.getTotalRoleChances(Role.MURDERER)) * 100.0, 0) + "%";
       }
     });
 
@@ -131,7 +131,7 @@ public class PlaceholderInitializer {
         }
 
         User user = getUserManager().getUser(player);
-        return NumberUtils.round(((double) pluginArena.getContributorValue(Role.DETECTIVE, user) / (double) pluginArena.getTotalRoleChances(Role.DETECTIVE)) * 100.0, 2) + "%";
+        return NumberUtils.round(((double) pluginArena.getContributorValue(Role.DETECTIVE, user) / (double) pluginArena.getTotalRoleChances(Role.DETECTIVE)) * 100.0, 0) + "%";
       }
     });
 
