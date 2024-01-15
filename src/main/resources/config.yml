@@ -142,8 +142,8 @@ Damage:
   Drowning: false
   # Should players get fire damage?
   Fire: false
-  # Should players lose food ingame?
-  Food: false
+  # Should players lose food ingame & get damage?
+  Hunger: false
 
 
 Option:
@@ -262,4 +262,4 @@ Sword:
 # You edited it, huh? Next time hurt yourself!
 Do-Not-Edit:
   File-Version: 1
-  Core-Version: 3
+  Core-Version: 4

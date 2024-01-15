@@ -1,3 +1,6 @@
+### 2.0.6 Release
+* Fixed Hungerlose option in config.yml
+
 ### 2.0.5 Release (13.01.2024)
 * Updated to minigamesbox 1.3.6
 
