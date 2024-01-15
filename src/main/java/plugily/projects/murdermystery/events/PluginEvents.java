@@ -84,18 +84,18 @@ public class PluginEvents implements Listener {
     if(attackerUser.getCooldown("sword_shoot") > 0) {
       return;
     }
+    createFlyingSword(attacker, attackerUser);
 
     int swordFlyCooldown = plugin.getConfig().getInt("Sword.Cooldown.Fly", 5);
-
+    if(swordFlyCooldown <= 0) {
+      return;
+    }
     attackerUser.setCooldown("sword_shoot", swordFlyCooldown);
-
-    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_10_R1)) {
+    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_11_R1)) {
       attackerUser.setCooldown("sword_attack", (plugin.getConfig().getInt("Sword.Cooldown.Attack", 1)));
     } else {
       VersionUtils.setMaterialCooldown(attacker ,plugin.getSwordSkinManager().getMurdererSword(attacker).getType(), 20 * (plugin.getConfig().getInt("Sword.Cooldown.Attack", 1)));
     }
-
-    createFlyingSword(attacker, attackerUser);
     plugin.getBukkitHelper().applyActionBarCooldown(attacker, swordFlyCooldown);
   }
 

@@ -101,6 +101,9 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     int bowCooldown = plugin.getConfig().getInt("Bow.Cooldown", 5);
+    if(bowCooldown <= 0) {
+      return;
+    }
     user.setCooldown("bow_shot", bowCooldown);
     plugin.getBukkitHelper().applyActionBarCooldown(player, bowCooldown);
     VersionUtils.setMaterialCooldown(player, event.getBow().getType(), 20 * (plugin.getConfig().getInt("Bow.Cooldown", 5)));
