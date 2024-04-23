@@ -1,3 +1,7 @@
+### 2.0.7 Release (24.04.2024)
+* Fixed bug where the murderer gets teleported to the lobby to fast when arena ends
+* Updated to minigamesbox 1.3.8
+
 ### 2.0.6 Release (15.01.2024)
 * Fixed Hungerlose option in config.yml
 * Changed Round chances are now full numbers (no ,xx)
