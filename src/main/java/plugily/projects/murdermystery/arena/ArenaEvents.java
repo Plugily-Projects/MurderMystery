@@ -421,7 +421,7 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setRespawnLocation(arena.getLobbyLocation());
       return;
     }
-    if(arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
+    if(arena.getArenaState() == ArenaState.RESTARTING) {
       event.setRespawnLocation(arena.getEndLocation());
       return;
     }
