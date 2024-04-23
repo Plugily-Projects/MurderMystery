@@ -8,11 +8,11 @@ api-version: 1.13
 commands:
   MurderMystery:
     description: MurderMystery Commands
-    usage: "\u00A76Correct usage: /murdermystery [option]"
+    usage: "Correct usage: /murdermystery [option]"
     aliases: [mm, murder]
   MurderMysteryAdmin:
     description: MurderMysteryAdmin commands
-    usage: "\u00A76Correct usage: /murdermysterya [option]"
+    usage: "Correct usage: /murdermysterya [option]"
     aliases: [mma, murderadmin]
 
 permissions:
