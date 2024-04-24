@@ -267,7 +267,6 @@ In-Game:
           Killed:
             You: "A player killed you with a Bow!"
             Wrongly: "You killed an innocent player!"
-            All: "Innocent killed all murder players"
         Nobody: "Nobody"
     Admin:
       Set-Starting-In-To-0: "%plugin_prefix% An admin set waiting time to 0. The game starts now!"
