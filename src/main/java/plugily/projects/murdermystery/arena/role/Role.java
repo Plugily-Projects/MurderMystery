@@ -19,6 +19,8 @@
 package plugily.projects.murdermystery.arena.role;
 
 import org.bukkit.entity.Player;
+import plugily.projects.minigamesbox.api.arena.IPluginArena;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.murdermystery.arena.Arena;
@@ -67,7 +69,7 @@ public enum Role {
    * @param user player to check
    * @return true if is playing it, false otherwise
    */
-  public static boolean isRole(Role role, User user) {
+  public static boolean isRole(Role role, IUser user) {
     return isRole(role, user, user.getArena());
   }
 
@@ -79,7 +81,7 @@ public enum Role {
    * @param arena  the arena where to check
    * @return true if is playing it, false otherwise
    */
-  public static boolean isRole(Role role, User user, PluginArena arena) {
+  public static boolean isRole(Role role, IUser user, IPluginArena arena) {
     if(arena == null)
       return false;
     Arena pluginArena = (Arena) arena.getPlugin().getArenaRegistry().getArena(arena.getId());
@@ -126,7 +128,7 @@ public enum Role {
    * @param arena  the player's arena
    * @return true if is playing one role, false otherwise
    */
-  public static boolean isAnyRole(User user, PluginArena arena) {
+  public static boolean isAnyRole(IUser user, IPluginArena arena) {
     return arena != null && java.util.Arrays.stream(roles).anyMatch(role -> isRole(role, user, arena));
   }
 }

@@ -22,6 +22,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.states.PluginStartingState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
@@ -65,7 +66,7 @@ public class StartingState extends PluginStartingState {
       int size = pluginArena.getPlayerSpawnPoints().size();
       for(Player player : arena.getPlayers()) {
         VersionUtils.teleport(player, pluginArena.getPlayerSpawnPoints().get(getPlugin().getRandom().nextInt(size)));
-        User user = arena.getPlugin().getUserManager().getUser(player);
+        IUser user = arena.getPlugin().getUserManager().getUser(player);
         user.resetNonePersistentStatistics();
         PrayerRegistry.getRush().remove(player);
         PrayerRegistry.getBan().remove(player);
@@ -94,17 +95,17 @@ public class StartingState extends PluginStartingState {
   private void addRole(Arena arena, Role role, Set<Player> playersToSet) {
     String roleName = role.toString();
 
-    List<User> chancesRanking = getPlugin().getUserManager().getUsers(arena).stream().filter(user -> playersToSet.contains(user.getPlayer())).sorted(Comparator.comparingInt(user -> arena.getContributorValue(role, user))).collect(Collectors.toList());
+    List<IUser> chancesRanking = getPlugin().getUserManager().getUsers(arena).stream().filter(user -> playersToSet.contains(user.getPlayer())).sorted(Comparator.comparingInt(user -> arena.getContributorValue(role, user))).collect(Collectors.toList());
     Collections.reverse(chancesRanking);
     List<Player> chancesPlayer = new ArrayList<>();
-    for(User user : chancesRanking) {
+    for(IUser user : chancesRanking) {
       chancesPlayer.add(user.getPlayer());
     }
     getPlugin().getDebugger().debug("Arena {0} | Role add {1} | List {2}", arena.getId(), roleName, chancesPlayer);
 
     int amount = role == Role.MURDERER ? maxmurderer : maxdetectives;
     for(int i = 0; i < amount; i++) {
-      User user = chancesRanking.get(i);
+      IUser user = chancesRanking.get(i);
       Player userPlayer = user.getPlayer();
       arena.setCharacter(role, userPlayer);
       arena.resetContributorValue(role, user);

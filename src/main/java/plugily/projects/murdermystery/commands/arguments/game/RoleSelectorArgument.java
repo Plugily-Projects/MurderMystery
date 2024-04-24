@@ -21,6 +21,7 @@ package plugily.projects.murdermystery.commands.arguments.game;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.PluginMain;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.CommandArgument;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.LabelData;
@@ -62,7 +63,7 @@ public class RoleSelectorArgument implements Listener {
       .name(new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_ROLE_MURDERER_NAME").asKey().build())
       .lore(descriptionMurderer)
       .build(), event -> {
-      User user = plugin.getUserManager().getUser(player);
+      IUser user = plugin.getUserManager().getUser(player);
       if(user.getStatistic("PASS_MURDERER") <= 0) {
         new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_FAIL").asKey().player(player).value(Role.MURDERER.name()).sendPlayer();
         return;
@@ -77,7 +78,7 @@ public class RoleSelectorArgument implements Listener {
       .name(new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_ROLE_DETECTIVE_NAME").asKey().build())
       .lore(descriptionDetective)
       .build(), event -> {
-      User user = plugin.getUserManager().getUser(player);
+      IUser user = plugin.getUserManager().getUser(player);
       if(user.getStatistic("PASS_DETECTIVE") <= 0) {
         new MessageBuilder("IN_GAME_MESSAGES_ARENA_PASS_FAIL").asKey().player(player).value(Role.DETECTIVE.name()).sendPlayer();
         return;
