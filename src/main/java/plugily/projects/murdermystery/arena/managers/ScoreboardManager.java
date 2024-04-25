@@ -19,13 +19,12 @@
 package plugily.projects.murdermystery.arena.managers;
 
 import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.scoreboard.common.EntryBuilder;
+import plugily.projects.minigamesbox.api.scoreboard.type.Entry;
 import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.managers.PluginScoreboardManager;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
-import plugily.projects.minigamesbox.classic.utils.scoreboard.common.EntryBuilder;
-import plugily.projects.minigamesbox.classic.utils.scoreboard.type.Entry;
 import plugily.projects.murdermystery.arena.role.Role;
 
 import java.util.List;
