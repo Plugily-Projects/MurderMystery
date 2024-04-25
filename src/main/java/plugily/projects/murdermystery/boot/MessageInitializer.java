@@ -4,11 +4,7 @@ package plugily.projects.murdermystery.boot;
 
 import plugily.projects.minigamesbox.classic.handlers.language.Message;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageManager;
-import plugily.projects.minigamesbox.classic.utils.services.locale.Locale;
-import plugily.projects.minigamesbox.classic.utils.services.locale.LocaleRegistry;
 import plugily.projects.murdermystery.Main;
-
-import java.util.Arrays;
 
 /**
  * @author Tigerpanzer_02
@@ -36,7 +32,7 @@ public class MessageInitializer {
     getMessageManager().registerMessage("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_MURDERER_KILLED_YOU", new Message("In-Game.Messages.Game-End.Placeholders.Murderer.Killed.You", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_MURDERER_KILLED_ALL", new Message("In-Game.Messages.Game-End.Placeholders.Murderer.Killed.All", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_INNOCENT_KILLED_YOU", new Message("In-Game.Messages.Game-End.Placeholders.Innocent.Killed.You", ""));
-    getMessageManager().registerMessage("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_INNOCENT_KILLED_WRONGLY", new Message("In-Game.Messages.Game-End.Placeholders.Innocent.Killed.All", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_INNOCENT_KILLED_WRONGLY", new Message("In-Game.Messages.Game-End.Placeholders.Innocent.Killed.Wrongly", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_NOBODY", new Message("In-Game.Messages.Game-End.Placeholders.Nobody", ""));
 
     getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_ROLE_CHANCES_ACTION_BAR", new Message("In-Game.Messages.Arena.Chances.Action-Bar", ""));

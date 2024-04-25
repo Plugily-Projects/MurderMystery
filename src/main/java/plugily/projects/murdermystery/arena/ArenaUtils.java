@@ -24,12 +24,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
-import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.arena.IPluginArena;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaUtils;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
 import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
@@ -50,7 +50,7 @@ public class ArenaUtils extends PluginArenaUtils {
   public static void onMurdererDeath(Arena arena) {
     for(Player player : arena.getPlayers()) {
       VersionUtils.sendSubTitle(player, getPlugin().getLanguageManager().getLanguageMessage("In-Game.Messages.Game-End.Placeholders.Murderer.Stopped"), 5, 40, 5);
-      User loopUser = getPlugin().getUserManager().getUser(player);
+      IUser loopUser = getPlugin().getUserManager().getUser(player);
       if(Role.isRole(Role.INNOCENT, loopUser, arena)) {
         addScore(loopUser, ScoreAction.SURVIVE_GAME, 0);
       } else if(Role.isRole(Role.ANY_DETECTIVE, loopUser, arena)) {
@@ -126,7 +126,7 @@ public class ArenaUtils extends PluginArenaUtils {
             bowMeta, new MessageBuilder("IN_GAME_MESSAGES_ARENA_LOCATOR_BOW").asKey().build());
     bowLocator.setItemMeta(bowMeta);
     for(Player p : arena.getPlayersLeft()) {
-      User user = getPlugin().getUserManager().getUser(p);
+      IUser user = getPlugin().getUserManager().getUser(p);
       if(Role.isRole(Role.INNOCENT, user, arena)) {
         ItemPosition.setItem(user, ItemPosition.BOW_LOCATOR, bowLocator);
         p.setCompassTarget(loc);
@@ -139,16 +139,16 @@ public class ArenaUtils extends PluginArenaUtils {
       return;
     }
     for(Player players : getPlugin().getServer().getOnlinePlayers()) {
-      PluginArena arena = getPlugin().getArenaRegistry().getArena(players);
+      IPluginArena arena = getPlugin().getArenaRegistry().getArena(players);
       if(arena == null) {
         continue;
       }
       VersionUtils.updateNameTagsVisibility(
-          p, players, "MMHide", arena.getArenaState() != ArenaState.IN_GAME);
+          p, players, "MMHide", arena.getArenaState() != IArenaState.IN_GAME);
     }
   }
 
-  public static void addScore(User user, ScoreAction action, int amount) {
+  public static void addScore(IUser user, ScoreAction action, int amount) {
     XSound.matchXSound(XSound.ENTITY_EXPERIENCE_ORB_PICKUP.parseSound())
         .play(user.getPlayer().getLocation(), 1F, 2F);
 

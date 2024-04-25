@@ -1,5 +1,6 @@
 package plugily.projects.murdermystery.boot;
 
+import plugily.projects.minigamesbox.api.preferences.IConfigPreferences;
 import plugily.projects.minigamesbox.classic.api.StatisticType;
 import plugily.projects.minigamesbox.classic.api.StatsStorage;
 import plugily.projects.minigamesbox.classic.arena.options.ArenaOption;
@@ -10,7 +11,6 @@ import plugily.projects.minigamesbox.classic.handlers.permissions.PermissionsMan
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardType;
 import plugily.projects.minigamesbox.classic.handlers.reward.RewardsFactory;
 import plugily.projects.minigamesbox.classic.preferences.ConfigOption;
-import plugily.projects.minigamesbox.classic.preferences.ConfigPreferences;
 import plugily.projects.murdermystery.Main;
 
 /**
@@ -82,7 +82,7 @@ public class AdditionalValueInitializer {
     getArenaOptionManager().registerArenaOption("MURDERER_DIVIDER", new ArenaOption("null", 1));
   }
 
-  private ConfigPreferences getConfigPreferences() {
+  private IConfigPreferences getConfigPreferences() {
     return plugin.getConfigPreferences();
   }
 

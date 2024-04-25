@@ -24,6 +24,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import plugily.projects.minigamesbox.api.arena.IPluginArena;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.CommandArgument;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.LabelData;
@@ -62,7 +63,7 @@ public class SpecialBlockRemoverArgument {
             Block targetBlock = player.getTargetBlock(null, 7);
             if(targetBlock.getType() == Material.CAULDRON
                 || targetBlock.getType() == XMaterial.ENCHANTING_TABLE.parseMaterial()) {
-              for(PluginArena arena : registry.getPlugin().getArenaRegistry().getArenas()) {
+              for(IPluginArena arena : registry.getPlugin().getArenaRegistry().getArenas()) {
 
                 Arena pluginArena = (Arena) registry.getPlugin().getArenaRegistry().getArena(arena.getId());
                 if(arena == null) {
