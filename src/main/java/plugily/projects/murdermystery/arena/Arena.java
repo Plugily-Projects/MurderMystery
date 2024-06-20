@@ -73,7 +73,7 @@ public class Arena extends PluginArena {
   private boolean hideChances;
   private boolean goldVisuals = false;
   private final Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
-  private MapRestorerManager mapRestorerManager;
+  private final MapRestorerManager mapRestorerManager;
   private ArmorStandHologram bowHologram;
 
   public Arena(String id) {
@@ -391,8 +391,8 @@ public class Arena extends PluginArena {
     user.adjustStatistic("CONTRIBUTION_" + role.name(), number);
   }
 
-  private Map<IUser, Integer> murdererContributions = new HashMap<>();
-  private Map<IUser, Integer> detectiveContributions = new HashMap<>();
+  private final Map<IUser, Integer> murdererContributions = new HashMap<>();
+  private final Map<IUser, Integer> detectiveContributions = new HashMap<>();
 
   public Map<IUser, Integer> getMurdererContributions() {
     return murdererContributions;

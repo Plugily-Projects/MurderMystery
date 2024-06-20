@@ -254,7 +254,7 @@ public class ArenaEvents extends PluginArenaEvents {
       plugin.getRewardsHandler().performReward(attacker, plugin.getRewardsHandler().getRewardType("KILL_DETECTIVE"));
     }
 
-    XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation(), 50, 1);
+    XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation());
     victim.damage(100.0);
 
     IUser user = plugin.getUserManager().getUser(attacker);
@@ -308,11 +308,14 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     Arena arena = plugin.getArenaRegistry().getArena(attacker);
+    if (arena == null) {
+      return;
+    }
     //we need to set it before the victim die, because of hero character
     if(Role.isRole(Role.MURDERER, userVictim)) {
       arena.setCharacter(Arena.CharacterType.HERO, attacker);
     }
-    XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation(), 50, 1);
+    XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation());
     victim.damage(100.0);
 
 
