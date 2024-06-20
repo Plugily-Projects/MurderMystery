@@ -26,7 +26,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
@@ -71,7 +72,7 @@ public class SpecialBlockEvents implements Listener {
       return;
     }
 
-    if(arena.getArenaState() != ArenaState.IN_GAME || plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
+    if(arena.getArenaState() != IArenaState.IN_GAME || plugin.getUserManager().getUser(event.getPlayer()).isSpectator()) {
       return;
     }
 
@@ -108,7 +109,7 @@ public class SpecialBlockEvents implements Listener {
       return;
     }
 
-    User user = plugin.getUserManager().getUser(event.getPlayer());
+    IUser user = plugin.getUserManager().getUser(event.getPlayer());
 
     int localGold = user.getStatistic("LOCAL_GOLD");
     if(localGold < 1) {
@@ -134,7 +135,7 @@ public class SpecialBlockEvents implements Listener {
 
     event.setCancelled(true);
 
-    User user = plugin.getUserManager().getUser(event.getPlayer());
+    IUser user = plugin.getUserManager().getUser(event.getPlayer());
     int localGold = user.getStatistic("LOCAL_GOLD");
 
     if(localGold < 1) {
@@ -149,7 +150,7 @@ public class SpecialBlockEvents implements Listener {
   }
 
   private void onPrayLeverClick(PlayerInteractEvent event) {
-    User user = plugin.getUserManager().getUser(event.getPlayer());
+    IUser user = plugin.getUserManager().getUser(event.getPlayer());
     if(user.getStatistic("LOCAL_PRAISES") < 1) {
       new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_PRAY_PAY").asKey().player(event.getPlayer()).sendPlayer();
       return;
@@ -170,7 +171,7 @@ public class SpecialBlockEvents implements Listener {
     }
 
     String itemDisplayName = ComplementAccessor.getComplement().getDisplayName(item.getItemMeta());
-    User user = plugin.getUserManager().getUser(event.getPlayer());
+    IUser user = plugin.getUserManager().getUser(event.getPlayer());
     for(MysteryPotion potion : MysteryPotionRegistry.getMysteryPotions()) {
       if(itemDisplayName.equals(potion.getName())) {
         event.setCancelled(true);

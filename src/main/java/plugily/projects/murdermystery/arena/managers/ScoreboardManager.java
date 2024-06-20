@@ -18,11 +18,11 @@
 
 package plugily.projects.murdermystery.arena.managers;
 
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.managers.PluginScoreboardManager;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.scoreboard.common.EntryBuilder;
 import plugily.projects.minigamesbox.classic.utils.scoreboard.type.Entry;
 import plugily.projects.murdermystery.arena.role.Role;
@@ -43,16 +43,16 @@ public class ScoreboardManager extends PluginScoreboardManager {
   }
 
   @Override
-  public List<Entry> formatScoreboard(User user) {
+  public List<Entry> formatScoreboard(IUser user) {
     EntryBuilder builder = new EntryBuilder();
     List<String> lines;
-    if(user.getArena().getArenaState() == ArenaState.FULL_GAME) {
+    if(user.getArena().getArenaState() == IArenaState.FULL_GAME) {
       lines =
           user.getArena()
               .getPlugin()
               .getLanguageManager()
               .getLanguageList("Scoreboard.Content.Starting");
-    } else if(user.getArena().getArenaState() == ArenaState.IN_GAME) {
+    } else if(user.getArena().getArenaState() == IArenaState.IN_GAME) {
       lines =
           user.getArena()
               .getPlugin()

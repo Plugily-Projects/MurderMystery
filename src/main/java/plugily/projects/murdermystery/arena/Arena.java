@@ -25,24 +25,24 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.managers.PluginMapRestorerManager;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.hologram.ArmorStandHologram;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
+import plugily.projects.murdermystery.HookManager;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.corpse.Corpse;
 import plugily.projects.murdermystery.arena.corpse.Stand;
 import plugily.projects.murdermystery.arena.managers.MapRestorerManager;
 import plugily.projects.murdermystery.arena.managers.ScoreboardManager;
 import plugily.projects.murdermystery.arena.role.Role;
+import plugily.projects.murdermystery.arena.special.SpecialBlock;
 import plugily.projects.murdermystery.arena.states.InGameState;
 import plugily.projects.murdermystery.arena.states.RestartingState;
 import plugily.projects.murdermystery.arena.states.StartingState;
-import plugily.projects.murdermystery.HookManager;
-import plugily.projects.murdermystery.arena.special.SpecialBlock;
 import plugily.projects.murdermystery.arena.states.WaitingState;
 
 import java.util.*;
@@ -73,7 +73,7 @@ public class Arena extends PluginArena {
   private boolean hideChances;
   private boolean goldVisuals = false;
   private final Map<CharacterType, Player> gameCharacters = new EnumMap<>(CharacterType.class);
-  private MapRestorerManager mapRestorerManager;
+  private final MapRestorerManager mapRestorerManager;
   private ArmorStandHologram bowHologram;
 
   public Arena(String id) {
@@ -82,10 +82,10 @@ public class Arena extends PluginArena {
     setScoreboardManager(new ScoreboardManager(this));
     mapRestorerManager = new MapRestorerManager(this);
     setMapRestorerManager(mapRestorerManager);
-    addGameStateHandler(ArenaState.IN_GAME, new InGameState());
-    addGameStateHandler(ArenaState.RESTARTING, new RestartingState());
-    addGameStateHandler(ArenaState.STARTING, new StartingState());
-    addGameStateHandler(ArenaState.WAITING_FOR_PLAYERS, new WaitingState());
+    addGameStateHandler(IArenaState.IN_GAME, new InGameState());
+    addGameStateHandler(IArenaState.RESTARTING, new RestartingState());
+    addGameStateHandler(IArenaState.STARTING, new StartingState());
+    addGameStateHandler(IArenaState.WAITING_FOR_PLAYERS, new WaitingState());
   }
 
   public static void init(Main plugin) {
@@ -178,7 +178,7 @@ public class Arena extends PluginArena {
       return;
     }
     visualTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-      if(!goldVisuals || !plugin.isEnabled() || goldSpawnPoints.isEmpty() || getArenaState() != ArenaState.WAITING_FOR_PLAYERS) {
+      if(!goldVisuals || !plugin.isEnabled() || goldSpawnPoints.isEmpty() || getArenaState() != IArenaState.WAITING_FOR_PLAYERS) {
         //we need to cancel it that way as the arena class is an task
         visualTask.cancel();
         return;
@@ -234,7 +234,7 @@ public class Arena extends PluginArena {
     int totalRoleChances = 0;
 
     for(Player p : getPlayers()) {
-      User user = getPlugin().getUserManager().getUser(p);
+      IUser user = getPlugin().getUserManager().getUser(p);
       totalRoleChances += getContributorValue(role, user);
     }
     //avoid division / 0
@@ -387,22 +387,22 @@ public class Arena extends PluginArena {
     this.playerSpawnPoints = playerSpawnPoints;
   }
 
-  public void adjustContributorValue(Role role, User user, int number) {
+  public void adjustContributorValue(Role role, IUser user, int number) {
     user.adjustStatistic("CONTRIBUTION_" + role.name(), number);
   }
 
-  private Map<User, Integer> murdererContributions = new HashMap<>();
-  private Map<User, Integer> detectiveContributions = new HashMap<>();
+  private final Map<IUser, Integer> murdererContributions = new HashMap<>();
+  private final Map<IUser, Integer> detectiveContributions = new HashMap<>();
 
-  public Map<User, Integer> getMurdererContributions() {
+  public Map<IUser, Integer> getMurdererContributions() {
     return murdererContributions;
   }
 
-  public Map<User, Integer> getDetectiveContributions() {
+  public Map<IUser, Integer> getDetectiveContributions() {
     return detectiveContributions;
   }
 
-  public int getContributorValue(Role role, User user) {
+  public int getContributorValue(Role role, IUser user) {
     if(role == Role.MURDERER && murdererContributions.containsKey(user)) {
       return murdererContributions.get(user);
     } else if(detectiveContributions.containsKey(user)) {
@@ -421,7 +421,7 @@ public class Arena extends PluginArena {
     return calculatedContributor;
   }
 
-  public void resetContributorValue(Role role, User user) {
+  public void resetContributorValue(Role role, IUser user) {
     user.setStatistic("CONTRIBUTION_" + role.name(), 1);
   }
 

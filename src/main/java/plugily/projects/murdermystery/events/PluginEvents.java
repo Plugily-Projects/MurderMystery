@@ -33,7 +33,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
-import plugily.projects.minigamesbox.classic.user.User;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
@@ -67,7 +67,7 @@ public class PluginEvents implements Listener {
       return;
     }
 
-    User attackerUser = plugin.getUserManager().getUser(attacker);
+    IUser attackerUser = plugin.getUserManager().getUser(attacker);
     if(!Role.isRole(Role.MURDERER, attackerUser, arena)) {
       return;
     }
@@ -99,7 +99,7 @@ public class PluginEvents implements Listener {
     plugin.getBukkitHelper().applyActionBarCooldown(attacker, swordFlyCooldown);
   }
 
-  private void createFlyingSword(Player attacker, User attackerUser) {
+  private void createFlyingSword(Player attacker, IUser attackerUser) {
     Location loc = attacker.getLocation();
     Vector vec = loc.getDirection();
     vec.normalize().multiply(plugin.getConfig().getDouble("Sword.Speed", 0.65));
@@ -156,12 +156,12 @@ public class PluginEvents implements Listener {
     }.runTaskTimer(plugin, 0, 1);
   }
 
-  private void killBySword(Arena arena, User attackerUser, Player victim) {
+  private void killBySword(Arena arena, IUser attackerUser, Player victim) {
     Arena victimArena = plugin.getArenaRegistry().getArena(victim);
     if(arena == null) {
       return;
     }
-    User user = plugin.getUserManager().getUser(victim);
+    IUser user = plugin.getUserManager().getUser(victim);
 
     // check if victim is murderer
     if(Role.isRole(Role.MURDERER, user, victimArena)) {

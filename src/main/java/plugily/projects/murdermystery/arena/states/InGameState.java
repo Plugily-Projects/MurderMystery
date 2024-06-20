@@ -22,11 +22,11 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.states.PluginInGameState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XSound;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaUtils;
@@ -89,7 +89,7 @@ public class InGameState extends PluginInGameState {
         if(pluginArena.getMurdererList().isEmpty()) getPlugin().getArenaManager().stopGame(false, pluginArena);
 
         for(Player p : pluginArena.getMurdererList()) {
-          User murderer = getPlugin().getUserManager().getUser(p);
+          IUser murderer = getPlugin().getUserManager().getUser(p);
 
           if(murderer.isSpectator() || !p.isOnline())
             continue;
@@ -115,7 +115,7 @@ public class InGameState extends PluginInGameState {
     if(pluginArena.getTimer() % 30 == 0) {
       new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_TIME_LEFT").arena(pluginArena).sendArena();
       for(Player p : pluginArena.getPlayersLeft()) {
-        User user = getPlugin().getUserManager().getUser(p);
+        IUser user = getPlugin().getUserManager().getUser(p);
         if(Role.isRole(Role.INNOCENT, user, pluginArena)) {
           ArenaUtils.addScore(user, ArenaUtils.ScoreAction.SURVIVE_TIME, 0);
         }

@@ -22,12 +22,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.CommandArgument;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.LabelData;
 import plugily.projects.minigamesbox.classic.commands.arguments.data.LabeledCommandArgument;
-import plugily.projects.minigamesbox.number.NumberUtils;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
+import plugily.projects.minigamesbox.number.NumberUtils;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.commands.arguments.ArgumentsRegistry;
 
@@ -77,7 +77,7 @@ public class RolePassArgument {
           new MessageBuilder("COMMANDS_PLAYER_NOT_FOUND").asKey().send(sender);
           return;
         }
-        User user = registry.getPlugin().getUserManager().getUser(player);
+        IUser user = registry.getPlugin().getUserManager().getUser(player);
         switch(addOrRemove.toLowerCase()) {
           case "add":
             if(role == Role.MURDERER) {

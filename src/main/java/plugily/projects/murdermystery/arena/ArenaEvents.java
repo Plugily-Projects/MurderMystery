@@ -21,7 +21,6 @@ package plugily.projects.murdermystery.arena;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -40,14 +39,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.spigotmc.event.entity.EntityDismountEvent;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
-import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.arena.IPluginArena;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaEvents;
 import plugily.projects.minigamesbox.classic.handlers.items.SpecialItem;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
 import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
@@ -75,13 +73,13 @@ public class ArenaEvents extends PluginArenaEvents {
   }
 
   @Override
-  public void handleIngameVoidDeath(Player victim, PluginArena arena) {
+  public void handleIngameVoidDeath(Player victim, IPluginArena arena) {
     Arena pluginArena = plugin.getArenaRegistry().getArena(arena.getId());
     if(pluginArena == null) {
       return;
     }
     victim.damage(1000.0);
-    if(arena.getArenaState() == ArenaState.IN_GAME) {
+    if(arena.getArenaState() == IArenaState.IN_GAME) {
       VersionUtils.teleport(victim, pluginArena.getPlayerSpawnPoints().get(0));
     }
   }
@@ -92,7 +90,7 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     Player player = (Player) event.getEntity();
-    User user = plugin.getUserManager().getUser(player);
+    IUser user = plugin.getUserManager().getUser(player);
     if(!Role.isRole(Role.ANY_DETECTIVE, user)) {
       return;
     }
@@ -127,7 +125,7 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena == null) {
       return;
     }
-    User user = plugin.getUserManager().getUser(player);
+    IUser user = plugin.getUserManager().getUser(player);
     e.setCancelled(true);
     if(arena.getBowHologram() != null
       && e.getItem().equals(arena.getBowHologram().getEntityItem())) {
@@ -138,7 +136,7 @@ public class ArenaEvents extends PluginArenaEvents {
         e.getItem().remove();
 
         for(Player loopPlayer : arena.getPlayersLeft()) {
-          User loopUser = plugin.getUserManager().getUser(loopPlayer);
+          IUser loopUser = plugin.getUserManager().getUser(loopPlayer);
           if(Role.isRole(Role.INNOCENT, loopUser)) {
             ItemPosition.setItem(loopUser, ItemPosition.BOW_LOCATOR, new ItemStack(Material.AIR, 1));
           }
@@ -157,7 +155,7 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
 
-    if(user.isSpectator() || arena.getArenaState() != ArenaState.IN_GAME) {
+    if(user.isSpectator() || arena.getArenaState() != IArenaState.IN_GAME) {
       return;
     }
 
@@ -215,9 +213,9 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     Player attacker = (Player) e.getDamager();
-    User userAttacker = plugin.getUserManager().getUser(attacker);
+    IUser userAttacker = plugin.getUserManager().getUser(attacker);
     Player victim = (Player) e.getEntity();
-    User userVictim = plugin.getUserManager().getUser(victim);
+    IUser userVictim = plugin.getUserManager().getUser(victim);
     if(!ArenaUtils.areInSameArena(attacker, victim)) {
       return;
     }
@@ -256,10 +254,10 @@ public class ArenaEvents extends PluginArenaEvents {
       plugin.getRewardsHandler().performReward(attacker, plugin.getRewardsHandler().getRewardType("KILL_DETECTIVE"));
     }
 
-    XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation(), 50, 1);
+    XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation());
     victim.damage(100.0);
 
-    User user = plugin.getUserManager().getUser(attacker);
+    IUser user = plugin.getUserManager().getUser(attacker);
 
     user.adjustStatistic("KILLS", 1);
     user.adjustStatistic("LOCAL_KILLS", 1);
@@ -286,7 +284,7 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     Player attacker = (Player) ((Arrow) e.getDamager()).getShooter();
-    User userAttacker = plugin.getUserManager().getUser(attacker);
+    IUser userAttacker = plugin.getUserManager().getUser(attacker);
     if(plugin.getArenaRegistry().isInArena(attacker)) {
       e.setCancelled(true);
       e.getDamager().remove();
@@ -295,7 +293,7 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     Player victim = (Player) e.getEntity();
-    User userVictim = plugin.getUserManager().getUser(victim);
+    IUser userVictim = plugin.getUserManager().getUser(victim);
     if(!ArenaUtils.areInSameArena(attacker, victim)) {
       return;
     }
@@ -310,11 +308,14 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
     Arena arena = plugin.getArenaRegistry().getArena(attacker);
+    if (arena == null) {
+      return;
+    }
     //we need to set it before the victim die, because of hero character
     if(Role.isRole(Role.MURDERER, userVictim)) {
       arena.setCharacter(Arena.CharacterType.HERO, attacker);
     }
-    XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation(), 50, 1);
+    XSound.ENTITY_PLAYER_DEATH.play(victim.getLocation());
     victim.damage(100.0);
 
 
@@ -362,15 +363,15 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena == null) {
       return;
     }
-    User user = plugin.getUserManager().getUser(player);
+    IUser user = plugin.getUserManager().getUser(player);
     ComplementAccessor.getComplement().setDeathMessage(e, "");
     e.getDrops().clear();
     e.setDroppedExp(0);
     plugin.getCorpseHandler().spawnCorpse(player, arena);
     player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
-    if(arena.getArenaState() == ArenaState.STARTING) {
+    if(arena.getArenaState() == IArenaState.STARTING) {
       return;
-    } else if(arena.getArenaState() == ArenaState.ENDING || arena.getArenaState() == ArenaState.RESTARTING) {
+    } else if(arena.getArenaState() == IArenaState.ENDING || arena.getArenaState() == IArenaState.RESTARTING) {
       player.getInventory().clear();
       player.setFlying(false);
       player.setAllowFlight(false);
@@ -400,7 +401,7 @@ public class ArenaEvents extends PluginArenaEvents {
       new MessageBuilder(MessageBuilder.ActionType.DEATH).player(player).arena(arena).sendArena();
     }
 
-    if(arena.getArenaState() != ArenaState.ENDING && arena.getArenaState() != ArenaState.RESTARTING) {
+    if(arena.getArenaState() != IArenaState.ENDING && arena.getArenaState() != IArenaState.RESTARTING) {
       arena.addDeathPlayer(player);
     }
     //we must call it ticks later due to instant respawn bug
@@ -417,16 +418,16 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena == null) {
       return;
     }
-    if(arena.getArenaState() == ArenaState.STARTING || arena.getArenaState() == ArenaState.WAITING_FOR_PLAYERS) {
+    if(arena.getArenaState() == IArenaState.STARTING || arena.getArenaState() == IArenaState.WAITING_FOR_PLAYERS) {
       event.setRespawnLocation(arena.getLobbyLocation());
       return;
     }
-    if(arena.getArenaState() == ArenaState.RESTARTING) {
+    if(arena.getArenaState() == IArenaState.RESTARTING) {
       event.setRespawnLocation(arena.getEndLocation());
       return;
     }
     if(arena.getPlayers().contains(player)) {
-      User user = plugin.getUserManager().getUser(player);
+      IUser user = plugin.getUserManager().getUser(player);
       org.bukkit.Location firstSpawn = arena.getPlayerSpawnPoints().get(0);
 
       if(player.getLocation().getWorld().equals(firstSpawn.getWorld())) {
@@ -454,12 +455,12 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena == null) {
       return;
     }
-    User user = plugin.getUserManager().getUser(player);
+    IUser user = plugin.getUserManager().getUser(player);
     //skip spectators
     if(user.isSpectator()) {
       return;
     }
-    if(arena.getArenaState() == ArenaState.IN_GAME) {
+    if(arena.getArenaState() == IArenaState.IN_GAME) {
       if(Role.isRole(Role.INNOCENT, user, arena)) {
         if(player.getInventory().getItem(ItemPosition.BOW_LOCATOR.getOtherRolesItemPosition()) != null) {
           ItemStack bowLocator = new ItemStack(Material.COMPASS, 1);
@@ -475,7 +476,7 @@ public class ArenaEvents extends PluginArenaEvents {
         ItemMeta innocentMeta = innocentLocator.getItemMeta();
         for(Player p : arena.getPlayersLeft()) {
           Arena playerArena = plugin.getArenaRegistry().getArena(p);
-          User playerUser = plugin.getUserManager().getUser(p);
+          IUser playerUser = plugin.getUserManager().getUser(p);
 
           if(Role.isRole(Role.INNOCENT, playerUser, playerArena) || Role.isRole(Role.ANY_DETECTIVE, playerUser, playerArena)) {
             ComplementAccessor.getComplement().setDisplayName(innocentMeta, new MessageBuilder("IN_GAME_MESSAGES_ARENA_LOCATOR_INNOCENT").asKey().player(player).arena(arena).build() + " §7| §a" + (int) Math.round(player.getLocation().distance(p.getLocation())));
@@ -489,7 +490,7 @@ public class ArenaEvents extends PluginArenaEvents {
 
   @EventHandler
   public void onDrop(PlayerDropItemEvent event) {
-    if(plugin.getArenaRegistry().getArena(event.getPlayer()) != null && plugin.getArenaRegistry().getArena(event.getPlayer()).getArenaState() == ArenaState.IN_GAME) {
+    if(plugin.getArenaRegistry().getArena(event.getPlayer()) != null && plugin.getArenaRegistry().getArena(event.getPlayer()).getArenaState() == IArenaState.IN_GAME) {
       event.setCancelled(true);
     }
   }
