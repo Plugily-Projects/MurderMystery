@@ -20,6 +20,7 @@ package plugily.projects.murdermystery.utils;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.murdermystery.arena.role.Role;
 
@@ -49,7 +50,7 @@ public enum ItemPosition {
    * @param itemPosition position of item to set/add
    * @param itemStack    itemstack to be added at itemPostion or set at itemPosition
    */
-  public static void addItem(User user, ItemPosition itemPosition, ItemStack itemStack) {
+  public static void addItem(IUser user, ItemPosition itemPosition, ItemStack itemStack) {
     int itemPos = Role.isRole(Role.MURDERER, user) ? itemPosition.getMurdererItemPosition()
         : itemPosition.getOtherRolesItemPosition();
 
@@ -76,7 +77,7 @@ public enum ItemPosition {
    * @param itemPosition position of item to set
    * @param itemStack    itemstack to set at itemPosition
    */
-  public static void setItem(User user, ItemPosition itemPosition, ItemStack itemStack) {
+  public static void setItem(IUser user, ItemPosition itemPosition, ItemStack itemStack) {
     if(itemPosition.getMurdererItemPosition() >= 0 && Role.isRole(Role.MURDERER, user)) {
       user.getPlayer().getInventory().setItem(itemPosition.getMurdererItemPosition(), itemStack);
     } else if (itemPosition.getOtherRolesItemPosition() >= 0) {

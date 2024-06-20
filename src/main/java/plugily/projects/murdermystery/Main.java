@@ -18,18 +18,12 @@
 
 package plugily.projects.murdermystery;
 
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.TestOnly;
 import plugily.projects.minigamesbox.classic.PluginMain;
 import plugily.projects.minigamesbox.classic.handlers.setup.SetupInventory;
 import plugily.projects.minigamesbox.classic.handlers.setup.categories.PluginSetupCategoryManager;
 import plugily.projects.minigamesbox.classic.utils.services.metrics.Metrics;
-import plugily.projects.murdermystery.arena.Arena;
-import plugily.projects.murdermystery.arena.ArenaEvents;
-import plugily.projects.murdermystery.arena.ArenaManager;
-import plugily.projects.murdermystery.arena.ArenaRegistry;
-import plugily.projects.murdermystery.arena.ArenaUtils;
+import plugily.projects.murdermystery.arena.*;
 import plugily.projects.murdermystery.arena.special.SpecialBlockEvents;
 import plugily.projects.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
 import plugily.projects.murdermystery.arena.special.pray.PrayerRegistry;
@@ -44,8 +38,6 @@ import plugily.projects.murdermystery.handlers.setup.SetupCategoryManager;
 import plugily.projects.murdermystery.handlers.skins.sword.SwordSkinManager;
 import plugily.projects.murdermystery.handlers.trails.BowTrailsHandler;
 import plugily.projects.murdermystery.handlers.trails.TrailsManager;
-
-import java.io.File;
 
 /**
  * Created by Tigerpanzer_02 on 13.03.2022
@@ -63,12 +55,6 @@ public class Main extends PluginMain {
   @TestOnly
   public Main() {
     super();
-  }
-
-  @TestOnly
-  protected Main(
-    JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
-    super(loader, description, dataFolder, file);
   }
 
   @Override

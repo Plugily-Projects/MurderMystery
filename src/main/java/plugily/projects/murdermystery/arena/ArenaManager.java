@@ -20,11 +20,11 @@ package plugily.projects.murdermystery.arena;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
-import plugily.projects.minigamesbox.classic.arena.PluginArena;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.arena.IPluginArena;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaManager;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.managers.MapRestorerManager;
 import plugily.projects.murdermystery.arena.role.Role;
@@ -49,7 +49,7 @@ public class ArenaManager extends PluginArenaManager {
   }
 
   @Override
-  public void joinAttempt(@NotNull Player player, @NotNull PluginArena arena) {
+  public void joinAttempt(@NotNull Player player, @NotNull IPluginArena arena) {
     Arena pluginArena = (Arena) plugin.getArenaRegistry().getArena(arena.getId());
     if(pluginArena == null) {
       return;
@@ -59,7 +59,7 @@ public class ArenaManager extends PluginArenaManager {
   }
 
   @Override
-  public void leaveAttempt(@NotNull Player player, @NotNull PluginArena arena) {
+  public void leaveAttempt(@NotNull Player player, @NotNull IPluginArena arena) {
     Arena pluginArena = (Arena) plugin.getArenaRegistry().getArena(arena.getId());
     if(pluginArena == null) {
       return;
@@ -68,7 +68,7 @@ public class ArenaManager extends PluginArenaManager {
     if(pluginArena.isDeathPlayer(player)) {
       pluginArena.removeDeathPlayer(player);
     }
-    User user = plugin.getUserManager().getUser(player);
+    IUser user = plugin.getUserManager().getUser(player);
 
     int localScore = user.getStatistic("LOCAL_SCORE");
     if(localScore > user.getStatistic("HIGHEST_SCORE")) {
@@ -80,7 +80,7 @@ public class ArenaManager extends PluginArenaManager {
       pluginArena.removeFromMurdererList(player);
     }
 
-    if(arena.getArenaState() == ArenaState.IN_GAME && !user.isSpectator()) {
+    if(arena.getArenaState() == IArenaState.IN_GAME && !user.isSpectator()) {
       List<Player> playersLeft = arena.getPlayersLeft();
 
       // -1 cause we didn't remove player yet
@@ -89,7 +89,7 @@ public class ArenaManager extends PluginArenaManager {
           if(pluginArena.getMurdererList().isEmpty()) {
             List<Player> players = new ArrayList<>();
             for(Player gamePlayer : playersLeft) {
-              User userGamePlayer = plugin.getUserManager().getUser(gamePlayer);
+              IUser userGamePlayer = plugin.getUserManager().getUser(gamePlayer);
               if(gamePlayer == player || Role.isRole(Role.ANY_DETECTIVE, userGamePlayer, arena) || Role.isRole(Role.MURDERER, userGamePlayer, arena)) {
                 continue;
               }
@@ -127,7 +127,7 @@ public class ArenaManager extends PluginArenaManager {
   }
 
   @Override
-  public void stopGame(boolean quickStop, @NotNull PluginArena arena) {
+  public void stopGame(boolean quickStop, @NotNull IPluginArena arena) {
     Arena pluginArena = (Arena) plugin.getArenaRegistry().getArena(arena.getId());
     if(pluginArena == null) {
       return;
@@ -141,8 +141,8 @@ public class ArenaManager extends PluginArenaManager {
     boolean murderWon = arena.getPlayersLeft().size() == pluginArena.aliveMurderer();
     for(Player player : arena.getPlayers()) {
       if(!quickStop) {
-        User user = plugin.getUserManager().getUser(player);
-        if(!quickStop && Role.isAnyRole(user, arena)) {
+        IUser user = plugin.getUserManager().getUser(player);
+        if(Role.isAnyRole(user, arena)) {
           boolean hasDeathRole = Role.isRole(Role.DEATH, user, arena);
           int multiplicator = 1;
           if(!hasDeathRole) {

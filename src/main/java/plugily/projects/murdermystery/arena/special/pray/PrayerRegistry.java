@@ -24,10 +24,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import plugily.projects.minigamesbox.classic.arena.ArenaState;
+import plugily.projects.minigamesbox.api.arena.IArenaState;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.misc.MiscUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
@@ -75,7 +74,7 @@ public class PrayerRegistry {
     return prayers;
   }
 
-  public static void applyRandomPrayer(User user) {
+  public static void applyRandomPrayer(IUser user) {
     Prayer prayer = getRandomPray();
 
     user.setStatistic("LOCAL_CURRENT_PRAY", prayer.getPrayerType().ordinal());
@@ -125,7 +124,7 @@ public class PrayerRegistry {
 
           @Override
           public void run() {
-            if(arena == null || arena.getArenaState() != ArenaState.IN_GAME || !arena.getPlayersLeft().contains(player)) {
+            if(arena == null || arena.getArenaState() != IArenaState.IN_GAME || !arena.getPlayersLeft().contains(player)) {
               cancel();
               return;
             }
