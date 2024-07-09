@@ -78,8 +78,8 @@ public class AdditionalValueInitializer {
   }
 
   private void registerArenaOptions() {
-    getArenaOptionManager().registerArenaOption("DETECTIVE_DIVIDER", new ArenaOption("null", 1));
-    getArenaOptionManager().registerArenaOption("MURDERER_DIVIDER", new ArenaOption("null", 1));
+    getArenaOptionManager().registerArenaOption("DETECTIVE_DIVIDER", new ArenaOption("playerperdetective", 1));
+    getArenaOptionManager().registerArenaOption("MURDERER_DIVIDER", new ArenaOption("playerpermurderer", 1));
   }
 
   private IConfigPreferences getConfigPreferences() {

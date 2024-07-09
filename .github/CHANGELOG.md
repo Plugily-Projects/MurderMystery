@@ -1,3 +1,14 @@
+### 2.0.10 Release (09.07.2024)
+* Updated to minigamesbox 1.3.11
+* Fixed arena after playing does not reset the arena options from config
+
+### 2.0.9 Release (25.06.2024)
+* Updated to minigamesbox 1.3.10
+
+### 2.0.8 Release (18.06.2024)
+* Updated to minigamesbox 1.3.9
+* Updated API
+
 ### 2.0.7 Release (24.04.2024)
 * Fixed bug where the murderer gets teleported to the lobby to fast when arena ends
 * Updated to minigamesbox 1.3.8
