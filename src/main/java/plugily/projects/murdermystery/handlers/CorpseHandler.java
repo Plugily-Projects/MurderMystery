@@ -87,7 +87,7 @@ public class CorpseHandler implements Listener {
       head.setItemMeta(meta);
 
       stand.setVisible(false);
-      if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16_R1)) {
+      if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16)) {
         stand.getEquipment().setHelmet(head);
       } else {
         stand.setHelmet(head);

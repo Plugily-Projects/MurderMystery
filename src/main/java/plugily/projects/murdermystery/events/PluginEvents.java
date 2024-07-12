@@ -91,7 +91,7 @@ public class PluginEvents implements Listener {
       return;
     }
     attackerUser.setCooldown("sword_shoot", swordFlyCooldown);
-    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_11_R1)) {
+    if(ServerVersion.Version.isCurrentLower(ServerVersion.Version.v1_11)) {
       attackerUser.setCooldown("sword_attack", (plugin.getConfig().getInt("Sword.Cooldown.Attack", 1)));
     } else {
       VersionUtils.setMaterialCooldown(attacker ,plugin.getSwordSkinManager().getMurdererSword(attacker).getType(), 20 * (plugin.getConfig().getInt("Sword.Cooldown.Attack", 1)));
@@ -107,7 +107,7 @@ public class PluginEvents implements Listener {
     standStart.setYaw(loc.getYaw());
     ArmorStand stand = (ArmorStand) attacker.getWorld().spawnEntity(standStart, EntityType.ARMOR_STAND);
     stand.setVisible(false);
-    if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_8_R3)) {
+    if(ServerVersion.Version.isCurrentHigher(ServerVersion.Version.v1_8_8)) {
       stand.setInvulnerable(true);
       stand.setSilent(true);
     }
@@ -120,7 +120,7 @@ public class PluginEvents implements Listener {
     stand.setGravity(false);
     stand.setRemoveWhenFarAway(true);
 
-    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_8_R3)) {
+    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_8_8)) {
       stand.setMarker(true);
     }
 
