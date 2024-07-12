@@ -63,7 +63,7 @@ public class SpecialBlockEvents implements Listener {
     if(event.getClickedBlock() == null)
       return;
 
-    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_11_R1) && event.getHand() == org.bukkit.inventory.EquipmentSlot.OFF_HAND) {
+    if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_11) && event.getHand() == org.bukkit.inventory.EquipmentSlot.OFF_HAND) {
       return;
     }
 
