@@ -144,7 +144,7 @@ public class SpecialBlockEvents implements Listener {
     new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_PRAY_CHAT").asKey().player(event.getPlayer()).sendPlayer();
     user.adjustStatistic("LOCAL_PRAISES", 1);
     VersionUtils.sendParticles("FIREWORKS_SPARK", event.getPlayer(), event.getClickedBlock().getLocation(), 10);
-    ItemPosition.addItem(user, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, -1));
+    user.adjustStatistic("LOCAL_GOLD", -1);
     ItemPosition.removeItem(user, new ItemStack(Material.GOLD_INGOT, 1));
   }
 
