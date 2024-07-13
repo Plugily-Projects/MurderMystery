@@ -18,6 +18,7 @@
 
 package plugily.projects.murdermystery.arena.states;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,7 +28,6 @@ import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.states.PluginStartingState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaUtils;
@@ -116,8 +116,10 @@ public class StartingState extends PluginStartingState {
       } else if(role == Role.DETECTIVE) {
         arena.getDetectiveList().add(userPlayer);
         userPlayer.getInventory().setHeldItemSlot(0);
-        ItemPosition.setItem(user, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
-        ItemPosition.setItem(user, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, getPlugin().getConfig().getInt("Bow.Amount.Arrows.Detective", 3)));
+        Bukkit.getScheduler().runTaskLater(arena.getPlugin(), () -> {
+          ItemPosition.setItem(user, ItemPosition.BOW, new ItemStack(Material.BOW, 1));
+          ItemPosition.setItem(user, ItemPosition.INFINITE_ARROWS, new ItemStack(Material.ARROW, getPlugin().getConfig().getInt("Bow.Amount.Arrows.Detective", 3)));
+        }, 20);
       }
     }
   }
