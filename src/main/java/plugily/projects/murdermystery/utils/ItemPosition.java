@@ -21,7 +21,6 @@ package plugily.projects.murdermystery.utils;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import plugily.projects.minigamesbox.api.user.IUser;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.murdermystery.arena.role.Role;
 
 /**
@@ -46,15 +45,15 @@ public enum ItemPosition {
    * Adds target item to specified hotbar position sorta different for each role.
    * Item will be added if there is already set or will be set when no item is set in the position.
    *
-   * @param user       player to add item to
+   * @param user         player to add item to
    * @param itemPosition position of item to set/add
    * @param itemStack    itemstack to be added at itemPostion or set at itemPosition
    */
   public static void addItem(IUser user, ItemPosition itemPosition, ItemStack itemStack) {
     int itemPos = Role.isRole(Role.MURDERER, user) ? itemPosition.getMurdererItemPosition()
-        : itemPosition.getOtherRolesItemPosition();
+      : itemPosition.getOtherRolesItemPosition();
 
-    if (itemPos < 0) {
+    if(itemPos < 0) {
       return;
     }
 
@@ -73,17 +72,22 @@ public enum ItemPosition {
    * Sets target item in specified hotbar position sorta different for each role.
    * If item there is already set it will be incremented by itemStack amount if possible.
    *
-   * @param user       player to set item to
+   * @param user         player to set item to
    * @param itemPosition position of item to set
    * @param itemStack    itemstack to set at itemPosition
    */
   public static void setItem(IUser user, ItemPosition itemPosition, ItemStack itemStack) {
-    if(itemPosition.getMurdererItemPosition() >= 0 && Role.isRole(Role.MURDERER, user)) {
+    if(Role.isRole(Role.MURDERER, user)) {
       user.getPlayer().getInventory().setItem(itemPosition.getMurdererItemPosition(), itemStack);
-    } else if (itemPosition.getOtherRolesItemPosition() >= 0) {
+    } else {
       user.getPlayer().getInventory().setItem(itemPosition.getOtherRolesItemPosition(), itemStack);
     }
   }
+
+  public static void removeItem(IUser user, ItemStack itemStack) {
+    user.getPlayer().getInventory().removeItem(itemStack);
+  }
+
 
   public int getMurdererItemPosition() {
     return murdererItemPosition;

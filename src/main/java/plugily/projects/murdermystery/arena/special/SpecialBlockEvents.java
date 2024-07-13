@@ -29,7 +29,6 @@ import org.bukkit.inventory.ItemStack;
 import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.user.User;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemBuilder;
 import plugily.projects.minigamesbox.classic.utils.helper.ItemUtils;
 import plugily.projects.minigamesbox.classic.utils.misc.complement.ComplementAccessor;
@@ -124,7 +123,7 @@ public class SpecialBlockEvents implements Listener {
     item.setPickupDelay(10000);
     Bukkit.getScheduler().runTaskLater(plugin, item::remove, 20);
     user.adjustStatistic("LOCAL_GOLD", -1);
-    ItemPosition.addItem(user, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, -1));
+    ItemPosition.removeItem(user, new ItemStack(Material.GOLD_INGOT, 1));
     ItemPosition.setItem(user, ItemPosition.POTION, new ItemBuilder(XMaterial.POTION.parseItem()).name(MysteryPotionRegistry.getRandomPotion().getName()).build());
   }
 
@@ -145,8 +144,8 @@ public class SpecialBlockEvents implements Listener {
     new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_PRAY_CHAT").asKey().player(event.getPlayer()).sendPlayer();
     user.adjustStatistic("LOCAL_PRAISES", 1);
     VersionUtils.sendParticles("FIREWORKS_SPARK", event.getPlayer(), event.getClickedBlock().getLocation(), 10);
-    user.adjustStatistic("LOCAL_GOLD", 1);
-    ItemPosition.addItem(user, ItemPosition.GOLD_INGOTS, new ItemStack(Material.GOLD_INGOT, -1));
+    user.adjustStatistic("LOCAL_GOLD", -1);
+    ItemPosition.removeItem(user, new ItemStack(Material.GOLD_INGOT, 1));
   }
 
   private void onPrayLeverClick(PlayerInteractEvent event) {
