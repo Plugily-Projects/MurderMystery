@@ -25,7 +25,7 @@ dependencies {
 }
 
 group = "plugily.projects"
-version = "2.0.12-SNAPSHOT0"
+version = "2.0.12-SNAPSHOT1"
 description = "MurderMystery"
 
 java {
