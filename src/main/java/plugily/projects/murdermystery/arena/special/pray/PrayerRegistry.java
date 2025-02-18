@@ -29,6 +29,7 @@ import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.misc.MiscUtils;
 import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XPotion;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.role.Role;
@@ -93,7 +94,7 @@ public class PrayerRegistry {
 
     switch(prayer.getPrayerType()) {
       case BLINDNESS_CURSE:
-        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
+        XPotion.BLINDNESS.buildPotionEffect(Integer.MAX_VALUE, 1).apply(player);
         break;
       case BOW_TIME:
         if(!Role.isRole(Role.ANY_DETECTIVE, user, arena)) {
@@ -142,11 +143,7 @@ public class PrayerRegistry {
         user.adjustStatistic("LOCAL_GOLD", 5);
         break;
       case SLOWNESS_CURSE:
-        if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_21)) {
-          player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, Integer.MAX_VALUE, 0, false, false));
-        } else {
-          player.addPotionEffect(new PotionEffect(PotionEffectType.getByName("SLOW"), Integer.MAX_VALUE, 0, false, false));
-        }
+        XPotion.SLOWNESS.buildPotionEffect(Integer.MAX_VALUE, 1).apply(player);
         break;
       case GOLD_BAN:
         ban.add(player);

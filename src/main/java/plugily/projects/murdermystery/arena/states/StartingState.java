@@ -56,7 +56,7 @@ public class StartingState extends PluginStartingState {
     }
 
     if(!pluginArena.isHideChances()) {
-      for(Player player : arena.getPlayers()) {
+      for(Player player : arena.getPlayersLeft()) {
         String message = new MessageBuilder("IN_GAME_MESSAGES_ARENA_ROLE_CHANCES_ACTION_BAR").asKey().player(player).arena(pluginArena).build();
         VersionUtils.sendActionBar(player, message);
       }
@@ -64,7 +64,7 @@ public class StartingState extends PluginStartingState {
 
     if(arena.getTimer() == 0 || arena.isForceStart()) {
       int size = pluginArena.getPlayerSpawnPoints().size();
-      for(Player player : arena.getPlayers()) {
+      for(Player player : arena.getPlayersLeft()) {
         VersionUtils.teleport(player, pluginArena.getPlayerSpawnPoints().get(getPlugin().getRandom().nextInt(size)));
         IUser user = arena.getPlugin().getUserManager().getUser(player);
         user.resetNonePersistentStatistics();
@@ -74,7 +74,7 @@ public class StartingState extends PluginStartingState {
         player.setGameMode(GameMode.ADVENTURE);
       }
 
-      Set<Player> playersToSet = new HashSet<>(arena.getPlayers());
+      Set<Player> playersToSet = new HashSet<>(arena.getPlayersLeft());
 
       getMaxRolesToSet(pluginArena);
 
@@ -85,7 +85,7 @@ public class StartingState extends PluginStartingState {
         new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_INNOCENT").asKey().player(player).arena(pluginArena).sendPlayer();
       }
 
-      arena.getPlugin().getDebugger().debug("After: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Players: Detectives = {4}, Murders = {5}", arena.getId(), maxdetectives, maxmurderer, arena.getPlayers().size(), pluginArena.getDetectiveList(), pluginArena.getMurdererList());
+      arena.getPlugin().getDebugger().debug("After: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Players: Detectives = {4}, Murders = {5}", arena.getId(), maxdetectives, maxmurderer, arena.getPlayersLeft().size(), pluginArena.getDetectiveList(), pluginArena.getMurdererList());
 
       // Load and append special blocks hologram
       pluginArena.getSpecialBlocks().forEach(pluginArena::loadSpecialBlock);
@@ -125,7 +125,7 @@ public class StartingState extends PluginStartingState {
   }
 
   private void getMaxRolesToSet(Arena arena) {
-    int playersSize = arena.getPlayers().size();
+    int playersSize = arena.getPlayersLeft().size();
     arena.getPlugin().getDebugger().debug("Before: Arena: {0} | Detectives = {1}, Murders = {2}, Players = {3} | Configured: Detectives = {4}, Murders = {5}", arena.getId(), maxdetectives, maxmurderer, playersSize, arena.getArenaOption("DETECTIVE_DIVIDER"), arena.getArenaOption("MURDERER_DIVIDER"));
     if(arena.getArenaOption("MURDERER_DIVIDER") > 1 && playersSize > arena.getArenaOption("MURDERER_DIVIDER")) {
       maxmurderer = (playersSize / arena.getArenaOption("MURDERER_DIVIDER"));

@@ -19,11 +19,10 @@
 package plugily.projects.murdermystery.arena.special.mysterypotion;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XPotion;
 import plugily.projects.murdermystery.Main;
 
 import java.util.ArrayList;
@@ -47,18 +46,10 @@ public class MysteryPotionRegistry {
     }
 
     for(String key : section.getKeys(false)) {
-      PotionEffectType effectType = PotionEffectType.getByName(section.getString(key + ".Type", "").toUpperCase());
 
-      if(effectType == null) {
-        continue;
-      }
-
-      //amplifiers are counted from 0 so -1
-      PotionEffect effect = new PotionEffect(effectType,
-          section.getInt(key + ".Duration") * 20, section.getInt(key + ".Amplifier") - 1, false, false);
 
       mysteryPotions.add(new MysteryPotion(new MessageBuilder(section.getString(key + ".Name")).build(),
-          new MessageBuilder(section.getString(key + ".Subtitle")).build(), effect));
+          new MessageBuilder(section.getString(key + ".Subtitle")).build(), XPotion.of(section.getString(key + ".Type", "").toUpperCase()).get().buildPotionEffect(section.getInt(key + ".Duration") * 20, section.getInt(key + ".Amplifier"))));
     }
   }
 
