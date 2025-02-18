@@ -369,7 +369,7 @@ public class ArenaEvents extends PluginArenaEvents {
     e.getDrops().clear();
     e.setDroppedExp(0);
     plugin.getCorpseHandler().spawnCorpse(player, arena);
-    XPotion.BLINDNESS.buildPotionEffect(3 * 20, 0).apply(player);
+    XPotion.BLINDNESS.buildPotionEffect(3 * 20, 1).apply(player);
     if(arena.getArenaState() == IArenaState.STARTING) {
       return;
     } else if(arena.getArenaState() == IArenaState.ENDING || arena.getArenaState() == IArenaState.RESTARTING) {
