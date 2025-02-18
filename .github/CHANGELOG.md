@@ -1,3 +1,9 @@
+### 2.1.0 Release (13.07.2024)
+* Changed onDisable process to make sure all data gets saved even on mysql
+* Fixed Detective bow glitches away on startup
+* Fixed gold removing and therefore not working mystery cauldrons and prayers on newer mc versions
+* Fixed prayer grants new gold after usage
+
 ### 2.0.10 Release (09.07.2024)
 * Updated to minigamesbox 1.3.11
 * Fixed arena after playing does not reset the arena options from config
