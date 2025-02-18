@@ -1,3 +1,8 @@
+### 2.1.1 Release (18.02.2025)
+* Fixed PotionEffects on different server versions
+* Fixed Spectators sometimes counted as players
+* Updated to minigamesbox 1.3.16
+
 ### 2.1.0 Release (13.07.2024)
 * Changed onDisable process to make sure all data gets saved even on mysql
 * Fixed Detective bow glitches away on startup
