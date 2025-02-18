@@ -28,6 +28,7 @@ import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.utils.misc.MiscUtils;
+import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.role.Role;
@@ -141,7 +142,11 @@ public class PrayerRegistry {
         user.adjustStatistic("LOCAL_GOLD", 5);
         break;
       case SLOWNESS_CURSE:
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0, false, false));
+        if (ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_21)) {
+          player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, Integer.MAX_VALUE, 0, false, false));
+        } else {
+          player.addPotionEffect(new PotionEffect(PotionEffectType.getByName("SLOW"), Integer.MAX_VALUE, 0, false, false));
+        }
         break;
       case GOLD_BAN:
         ban.add(player);
