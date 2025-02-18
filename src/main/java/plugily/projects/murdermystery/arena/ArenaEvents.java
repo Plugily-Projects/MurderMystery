@@ -51,6 +51,7 @@ import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyEntityPickupItemEvent;
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerPickupArrow;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.XPotion;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XSound;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.managers.MapRestorerManager;
@@ -368,7 +369,7 @@ public class ArenaEvents extends PluginArenaEvents {
     e.getDrops().clear();
     e.setDroppedExp(0);
     plugin.getCorpseHandler().spawnCorpse(player, arena);
-    player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 3 * 20, 0));
+    XPotion.BLINDNESS.buildPotionEffect(3 * 20, 1).apply(player);
     if(arena.getArenaState() == IArenaState.STARTING) {
       return;
     } else if(arena.getArenaState() == IArenaState.ENDING || arena.getArenaState() == IArenaState.RESTARTING) {
@@ -426,7 +427,7 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setRespawnLocation(arena.getEndLocation());
       return;
     }
-    if(arena.getPlayers().contains(player)) {
+    if(arena.getPlayersLeft().contains(player)) {
       IUser user = plugin.getUserManager().getUser(player);
       org.bukkit.Location firstSpawn = arena.getPlayerSpawnPoints().get(0);
 

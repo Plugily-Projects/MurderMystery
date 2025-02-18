@@ -69,6 +69,15 @@ Block:
     Leave: false
     # Cancels Item Movement into player crafting, enchantment tables, anvils ...
     Item-Move: true
+    ArmorStand:
+      # Should we block armor stand destroy with double click?
+      Destroy: true
+      # Should we block armor stand interaction?
+      Interact: true
+      # Should these only be blocked while ingame and arena state is in_game? (e.g. Lobby and Ending is blocked)
+      # Setting it to false means on all stages of the game the event will be cancelled.
+      # Setting it to true means only while IN_GAME the event will be cancelled.
+      Check: true
 
 
 # Enable this option when you're using MySQL, otherwise it won't work.
@@ -262,4 +271,4 @@ Sword:
 # You edited it, huh? Next time hurt yourself!
 Do-Not-Edit:
   File-Version: 1
-  Core-Version: 4
+  Core-Version: 5

@@ -233,7 +233,7 @@ public class Arena extends PluginArena {
   public int getTotalRoleChances(Role role) {
     int totalRoleChances = 0;
 
-    for(Player p : getPlayers()) {
+    for(Player p : getPlayersLeft()) {
       IUser user = getPlugin().getUserManager().getUser(p);
       totalRoleChances += getContributorValue(role, user);
     }

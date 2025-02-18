@@ -139,7 +139,7 @@ public class ArenaManager extends PluginArenaManager {
     }
     ((MapRestorerManager) pluginArena.getMapRestorerManager()).removeBowHolo();
     boolean murderWon = arena.getPlayersLeft().size() == pluginArena.aliveMurderer();
-    for(Player player : arena.getPlayers()) {
+    for(Player player : arena.getPlayersLeft()) {
       if(!quickStop) {
         IUser user = plugin.getUserManager().getUser(player);
         if(Role.isAnyRole(user, arena)) {
@@ -150,7 +150,7 @@ public class ArenaManager extends PluginArenaManager {
           }
           pluginArena.adjustContributorValue(Role.MURDERER, user, plugin.getRandom().nextInt(10 * multiplicator));
           pluginArena.adjustContributorValue(Role.DETECTIVE, user, plugin.getRandom().nextInt(10 * multiplicator));
-          if(!hasDeathRole && !Role.isRole(Role.SPECTATOR, user, arena)) {
+          if(!hasDeathRole) {
             boolean hasMurdererRole = Role.isRole(Role.MURDERER, user, arena);
             if(murderWon || !hasMurdererRole) {
               user.adjustStatistic("WINS", 1);
@@ -159,7 +159,7 @@ public class ArenaManager extends PluginArenaManager {
               user.adjustStatistic("LOSES", 1);
               plugin.getRewardsHandler().performReward(player, plugin.getRewardsHandler().getRewardType("LOSE"));
             }
-          } else if(hasDeathRole) {
+          } else {
             user.adjustStatistic("LOSES", 1);
             plugin.getRewardsHandler().performReward(player, plugin.getRewardsHandler().getRewardType("LOSE"));
           }
