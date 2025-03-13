@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation("plugily.projects:MiniGamesBox-Classic:1.3.16-SNAPSHOT1") { isTransitive = false }
+    implementation("plugily.projects:MiniGamesBox-Classic:1.3.17") { isTransitive = false }
 
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:24.0.1")
@@ -28,7 +28,7 @@ dependencies {
 }
 
 group = "plugily.projects"
-version = "2.1.1"
+version = "2.1.1-SNAPSHOT1"
 description = "MurderMystery"
 
 java {

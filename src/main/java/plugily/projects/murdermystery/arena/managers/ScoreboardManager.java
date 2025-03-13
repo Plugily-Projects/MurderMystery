@@ -18,15 +18,15 @@
 
 package plugily.projects.murdermystery.arena.managers;
 
+import org.bukkit.entity.Player;
 import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.managers.PluginScoreboardManager;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
-import plugily.projects.minigamesbox.classic.utils.scoreboard.common.EntryBuilder;
-import plugily.projects.minigamesbox.classic.utils.scoreboard.type.Entry;
 import plugily.projects.murdermystery.arena.role.Role;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,33 +43,23 @@ public class ScoreboardManager extends PluginScoreboardManager {
   }
 
   @Override
-  public List<Entry> formatScoreboard(IUser user) {
-    EntryBuilder builder = new EntryBuilder();
-    List<String> lines;
-    if(user.getArena().getArenaState() == IArenaState.FULL_GAME) {
+  public List<String> formatScoreboardLines(List<String> lines, Player player) {
+  if(arena.getArenaState() == IArenaState.IN_GAME) {
+    IUser user = arena.getPlugin().getUserManager().getUser(player);
       lines =
-          user.getArena()
-              .getPlugin()
-              .getLanguageManager()
-              .getLanguageList("Scoreboard.Content.Starting");
-    } else if(user.getArena().getArenaState() == IArenaState.IN_GAME) {
-      lines =
-          user.getArena()
+          arena
               .getPlugin()
               .getLanguageManager()
               .getLanguageList(
-                  "Scoreboard.Content." + user.getArena().getArenaState().getFormattedName() + (Role.isRole(Role.MURDERER, user) ? "-Murderer" : ""));
+                  "Scoreboard.Content." + arena.getArenaState().getFormattedName() + (Role.isRole(Role.MURDERER, user) ? "-Murderer" : ""));
     } else {
-      lines =
-          user.getArena()
-              .getPlugin()
-              .getLanguageManager()
-              .getLanguageList(
-                  "Scoreboard.Content." + user.getArena().getArenaState().getFormattedName());
+      lines = arena.getPlugin().getLanguageManager().getLanguageList(arena.getArenaState() == IArenaState.FULL_GAME ? "Scoreboard.Content.Starting"
+        : "Scoreboard.Content." + arena.getArenaState().getFormattedName());
     }
+    List<String> formattedLines = new ArrayList<>();
     for(String line : lines) {
-      builder.next(new MessageBuilder(line).player(user.getPlayer()).arena(arena).build());
+      formattedLines.add(new MessageBuilder(line).player(player).arena(arena).build());
     }
-    return builder.build();
+    return formattedLines;
   }
 }

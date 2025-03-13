@@ -1,3 +1,6 @@
+### 2.1.2 Release (13.03.2025)
+* Updated to minigamesbox 1.4.0
+
 ### 2.1.1 Release (18.02.2025)
 * Fixed PotionEffects on different server versions
 * Fixed Spectators sometimes counted as players
