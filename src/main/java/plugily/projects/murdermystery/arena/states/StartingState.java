@@ -110,7 +110,7 @@ public class StartingState extends PluginStartingState {
       arena.setCharacter(role, userPlayer);
       arena.resetContributorValue(role, user);
       playersToSet.remove(userPlayer);
-      new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_" + roleName).asKey().arena(arena).player(user.getPlayer()).sendPlayer();
+      new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_" + roleName).asKey().arena(arena).player(userPlayer).sendPlayer();
       if(role == Role.MURDERER) {
         arena.getMurdererList().add(userPlayer);
       } else if(role == Role.DETECTIVE) {
