@@ -28,6 +28,7 @@ import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.states.PluginStartingState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
+import plugily.projects.minigamesbox.classic.utils.actionbar.ActionBar;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaUtils;
@@ -57,8 +58,7 @@ public class StartingState extends PluginStartingState {
 
     if(!pluginArena.isHideChances()) {
       for(Player player : arena.getPlayersLeft()) {
-        String message = new MessageBuilder("IN_GAME_MESSAGES_ARENA_ROLE_CHANCES_ACTION_BAR").asKey().player(player).arena(pluginArena).build();
-        VersionUtils.sendActionBar(player, message);
+        pluginArena.getPlugin().getActionBarManager().addActionBar(player, new ActionBar((new MessageBuilder("IN_GAME_MESSAGES_ARENA_ROLE_CHANCES_ACTION_BAR")).asKey().player(player).arena(pluginArena), ActionBar.ActionBarType.DISPLAY));
       }
     }
 
