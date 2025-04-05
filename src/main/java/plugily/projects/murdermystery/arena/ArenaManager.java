@@ -83,8 +83,7 @@ public class ArenaManager extends PluginArenaManager {
     if(arena.getArenaState() == IArenaState.IN_GAME && !user.isSpectator()) {
       List<Player> playersLeft = arena.getPlayersLeft();
 
-      // -1 cause we didn't remove player yet
-      if(playersLeft.size() - 1 > 1) {
+      if(playersLeft.size() > 1) {
         if(playerHasMurdererRole) {
           if(pluginArena.getMurdererList().isEmpty()) {
             List<Player> players = new ArrayList<>();
