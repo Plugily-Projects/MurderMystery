@@ -49,7 +49,7 @@ public class ArenaUtils extends PluginArenaUtils {
 
   public static void onMurdererDeath(Arena arena) {
     for(Player player : arena.getPlayers()) {
-      VersionUtils.sendSubTitle(player, getPlugin().getLanguageManager().getLanguageMessage("In-Game.Messages.Game-End.Placeholders.Murderer.Stopped"), 5, 40, 5);
+      VersionUtils.sendSubTitle(player, new MessageBuilder("IN_GAME_MESSAGES_GAME_END_PLACEHOLDERS_MURDERER_STOPPED").asKey().build(), 5, 40, 5);
       IUser loopUser = getPlugin().getUserManager().getUser(player);
       if(Role.isRole(Role.INNOCENT, loopUser, arena)) {
         addScore(loopUser, ScoreAction.SURVIVE_GAME, 0);
