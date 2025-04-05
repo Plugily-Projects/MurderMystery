@@ -39,6 +39,7 @@ public class AdditionalValueInitializer {
     getConfigPreferences().registerOption("HIDE_NAMETAGS", new ConfigOption("Hide.Nametags", false));
     getConfigPreferences().registerOption("GOLD_SPAWNER_MODE_ALL", new ConfigOption("Gold.Spawner-Mode", false));
     getConfigPreferences().registerOption("GOLD_LIMITER", new ConfigOption("Gold.Limiter", false));
+    getConfigPreferences().registerOption("GOLD_MULTIPLE", new ConfigOption("Gold.Multiple", false));
     getConfigPreferences().registerOption("MURDERER_LOCATOR", new ConfigOption("Murderer.Locator", true));
   }
 
