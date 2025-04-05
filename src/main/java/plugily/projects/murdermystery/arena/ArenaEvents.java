@@ -427,7 +427,7 @@ public class ArenaEvents extends PluginArenaEvents {
       event.setRespawnLocation(arena.getEndLocation());
       return;
     }
-    if(arena.getPlayersLeft().contains(player)) {
+    if(arena.getPlayers().contains(player)) {
       IUser user = plugin.getUserManager().getUser(player);
       org.bukkit.Location firstSpawn = arena.getPlayerSpawnPoints().get(0);
 
