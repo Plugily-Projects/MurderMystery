@@ -43,23 +43,19 @@ public class ScoreboardManager extends PluginScoreboardManager {
   }
 
   @Override
-  public List<String> formatScoreboardLines(List<String> lines, Player player) {
-  if(arena.getArenaState() == IArenaState.IN_GAME) {
-    IUser user = arena.getPlugin().getUserManager().getUser(player);
+  public List<String> getScoreboardLines(Player player) {
+    List<String> lines;
+    if(arena.getArenaState() == IArenaState.IN_GAME) {
+      IUser user = arena.getPlugin().getUserManager().getUser(player);
       lines =
-          arena
-              .getPlugin()
-              .getLanguageManager()
-              .getLanguageList(
-                  "Scoreboard.Content." + arena.getArenaState().getFormattedName() + (Role.isRole(Role.MURDERER, user) ? "-Murderer" : ""));
+        arena
+          .getPlugin()
+          .getLanguageManager()
+          .getLanguageList(
+            "Scoreboard.Content." + arena.getArenaState().getFormattedName() + (Role.isRole(Role.MURDERER, user) ? "-Murderer" : ""));
     } else {
-      lines = arena.getPlugin().getLanguageManager().getLanguageList(arena.getArenaState() == IArenaState.FULL_GAME ? "Scoreboard.Content.Starting"
-        : "Scoreboard.Content." + arena.getArenaState().getFormattedName());
+      lines = super.getScoreboardLines(player);
     }
-    List<String> formattedLines = new ArrayList<>();
-    for(String line : lines) {
-      formattedLines.add(new MessageBuilder(line).player(player).arena(arena).build());
-    }
-    return formattedLines;
+    return lines;
   }
 }
