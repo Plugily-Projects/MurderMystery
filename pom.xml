@@ -75,7 +75,7 @@
         <dependency>
             <groupId>plugily.projects</groupId>
             <artifactId>MiniGamesBox-Classic</artifactId>
-            <version>1.4.0-SNAPSHOT3</version>
+            <version>1.4.1</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
