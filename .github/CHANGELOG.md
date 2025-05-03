@@ -1,3 +1,13 @@
+### 2.1.3 Release (03.05.2025)
+* Added config option to not spawn more than 1 gold per spawner "GOLD_MULTIPLE"
+* Fixed respawn location of spectators
+* Changed bow dropped message now gets only to players without the role murderer
+* Fixed on Murderer Leave the new murderer message was send to all players instead of new murderer
+* Fixed default rewards.yml
+* Fixed onMurdererDeath the subtitle did not translate placeholders
+* Fixed spectator mode - since core usage its not needed to substract by one the playersleft value
+* Updated to minigamesbox 1.4.1
+
 ### 2.1.2 Release (13.03.2025)
 * Updated to minigamesbox 1.4.0
 
