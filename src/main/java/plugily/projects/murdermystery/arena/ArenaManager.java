@@ -24,7 +24,10 @@ import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.api.arena.IPluginArena;
 import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.arena.PluginArenaManager;
+import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
+import plugily.projects.minigamesbox.classic.utils.actionbar.ActionBar;
+import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.managers.MapRestorerManager;
 import plugily.projects.murdermystery.arena.role.Role;
@@ -83,8 +86,7 @@ public class ArenaManager extends PluginArenaManager {
     if(arena.getArenaState() == IArenaState.IN_GAME && !user.isSpectator()) {
       List<Player> playersLeft = arena.getPlayersLeft();
 
-      // -1 cause we didn't remove player yet
-      if(playersLeft.size() - 1 > 1) {
+      if(playersLeft.size() > 1) {
         if(playerHasMurdererRole) {
           if(pluginArena.getMurdererList().isEmpty()) {
             List<Player> players = new ArrayList<>();
@@ -105,7 +107,8 @@ public class ArenaManager extends PluginArenaManager {
 
             new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_CHANGE").asKey().player(player).arena(pluginArena).sendArena();
             if(newMurderer != null) {
-              new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_MURDERER").asKey().player(player).arena(pluginArena).sendArena();
+              new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_MURDERER").asKey().player(player).arena(pluginArena).sendPlayer();
+              plugin.getActionBarManager().addActionBar(player, new ActionBar((new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_CHANGE")).asKey(), ActionBar.ActionBarType.DISPLAY, 5));
               ItemPosition.setItem(plugin.getUserManager().getUser(newMurderer), ItemPosition.MURDERER_SWORD, plugin.getSwordSkinManager().getRandomSwordSkin(player));
             }
           } else {

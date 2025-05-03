@@ -28,6 +28,7 @@ import plugily.projects.minigamesbox.classic.arena.PluginArena;
 import plugily.projects.minigamesbox.classic.arena.states.PluginStartingState;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
+import plugily.projects.minigamesbox.classic.utils.actionbar.ActionBar;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaUtils;
@@ -57,8 +58,7 @@ public class StartingState extends PluginStartingState {
 
     if(!pluginArena.isHideChances()) {
       for(Player player : arena.getPlayersLeft()) {
-        String message = new MessageBuilder("IN_GAME_MESSAGES_ARENA_ROLE_CHANCES_ACTION_BAR").asKey().player(player).arena(pluginArena).build();
-        VersionUtils.sendActionBar(player, message);
+        pluginArena.getPlugin().getActionBarManager().addActionBar(player, new ActionBar((new MessageBuilder("IN_GAME_MESSAGES_ARENA_ROLE_CHANCES_ACTION_BAR")).asKey().player(player).arena(pluginArena), ActionBar.ActionBarType.DISPLAY));
       }
     }
 
@@ -110,7 +110,7 @@ public class StartingState extends PluginStartingState {
       arena.setCharacter(role, userPlayer);
       arena.resetContributorValue(role, user);
       playersToSet.remove(userPlayer);
-      new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_" + roleName).asKey().arena(arena).player(user.getPlayer()).sendPlayer();
+      new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_" + roleName).asKey().arena(arena).player(userPlayer).sendPlayer();
       if(role == Role.MURDERER) {
         arena.getMurdererList().add(userPlayer);
       } else if(role == Role.DETECTIVE) {

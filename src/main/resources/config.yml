@@ -11,6 +11,7 @@
 # Available locales:
 #    default - English language. Uses 'language.yml'.
 #    See https://github.com/Plugily-Projects/locale_storage/tree/master/plugins/minecraft/murdermystery
+#    Help us translate the project -> https://translate.plugily.xyz
 #    Use filename of the language e.g. de_DE.yml -> locale: de_DE
 locale: default
 
@@ -206,6 +207,8 @@ Gold:
   Spawner-Mode: false
   #Should we disable the gold spawn limit (It does not spawn more gold than spawner locations)
   Limiter: false
+  #Should we spawn more than 1 gold at a spawner at the same time
+  Multiple: false
   Amount:
     #How much gold should a player need to get a bow
     Bow: 10
@@ -270,5 +273,5 @@ Sword:
 # Really, don't edit ;p
 # You edited it, huh? Next time hurt yourself!
 Do-Not-Edit:
-  File-Version: 1
+  File-Version: 2
   Core-Version: 5
