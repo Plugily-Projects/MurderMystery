@@ -203,7 +203,7 @@ public class ArenaEvents extends PluginArenaEvents {
         .getInventory()
         .setItem(
           /* same for all roles */ ItemPosition.GOLD_INGOTS.getOtherRolesItemPosition(),
-          new ItemStack(Material.GOLD_INGOT, 0));
+          null);
     }
   }
 
