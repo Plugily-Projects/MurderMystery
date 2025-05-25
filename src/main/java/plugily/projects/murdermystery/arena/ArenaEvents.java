@@ -499,8 +499,9 @@ public class ArenaEvents extends PluginArenaEvents {
   @EventHandler
   public void onItemMove(InventoryClickEvent event) {
     if(event.getWhoClicked() instanceof Player && plugin.getArenaRegistry().isInArena((Player) event.getWhoClicked())) {
-      InventoryView view = event.getView();
-      if(view.getType() == InventoryType.CRAFTING || view.getType() == InventoryType.PLAYER) {
+      // Do not use as it causes IncompatibleClassChangeError: Found class org.bukkit.inventory.InventoryView
+      // InventoryView view = event.getView();
+      if(event.getView().getType() == InventoryType.CRAFTING || event.getView().getType() == InventoryType.PLAYER) {
         event.setResult(Event.Result.DENY);
       }
     }
