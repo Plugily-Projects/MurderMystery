@@ -53,6 +53,7 @@ import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyEnt
 import plugily.projects.minigamesbox.classic.utils.version.events.api.PlugilyPlayerPickupArrow;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XPotion;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XSound;
+import plugily.projects.minigamesbox.classic.utils.version.xseries.inventory.XInventoryView;
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.arena.managers.MapRestorerManager;
 import plugily.projects.murdermystery.arena.role.Role;
@@ -203,7 +204,7 @@ public class ArenaEvents extends PluginArenaEvents {
         .getInventory()
         .setItem(
           /* same for all roles */ ItemPosition.GOLD_INGOTS.getOtherRolesItemPosition(),
-          new ItemStack(Material.GOLD_INGOT, 0));
+          null);
     }
   }
 
@@ -499,8 +500,7 @@ public class ArenaEvents extends PluginArenaEvents {
   @EventHandler
   public void onItemMove(InventoryClickEvent event) {
     if(event.getWhoClicked() instanceof Player && plugin.getArenaRegistry().isInArena((Player) event.getWhoClicked())) {
-      InventoryView view = event.getView();
-      if(view.getType() == InventoryType.CRAFTING || view.getType() == InventoryType.PLAYER) {
+      if(XInventoryView.of(event.getView()).getType() == InventoryType.CRAFTING || XInventoryView.of(event.getView()).getType() == InventoryType.PLAYER) {
         event.setResult(Event.Result.DENY);
       }
     }
