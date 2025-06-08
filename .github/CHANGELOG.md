@@ -1,3 +1,8 @@
+### 2.1.4 Release (09.06.2025)
+* Fixed ICCE: Found class org.bukkit.inventory.InventoryView
+* Fixed PlugilyEntityPickupItemEvent IAE greater 0 on paper 1.21 +
+* Updated to minigamesbox 1.4.2
+
 ### 2.1.3 Release (03.05.2025)
 * Added config option to not spawn more than 1 gold per spawner "GOLD_MULTIPLE"
 * Fixed respawn location of spectators

@@ -72,6 +72,7 @@ public class StartingState extends PluginStartingState {
         PrayerRegistry.getBan().remove(player);
         ArenaUtils.updateNameTagsVisibility(player);
         player.setGameMode(GameMode.ADVENTURE);
+        getPlugin().getActionBarManager().clearActionBarsFromPlayer(player);
       }
 
       Set<Player> playersToSet = new HashSet<>(arena.getPlayersLeft());
