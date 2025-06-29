@@ -97,6 +97,8 @@ public class MessageInitializer {
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_KILLS", new Message("Leaderboard.Statistics.Kills", ""));
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_DEATHS", new Message("Leaderboard.Statistics.Deaths", ""));
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_HIGHEST_SCORE", new Message("Leaderboard.Statistics.Highest-Score", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_DETECTIVE_WINS", new Message("Leaderboard.Statistics.Detective-Wins", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_MURDERER_WINS", new Message("Leaderboard.Statistics.Murderer-Wins", ""));
   }
 
   private MessageManager getMessageManager() {

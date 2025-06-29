@@ -155,9 +155,17 @@ public class ArenaManager extends PluginArenaManager {
           pluginArena.adjustContributorValue(Role.DETECTIVE, user, plugin.getRandom().nextInt(10 * multiplicator));
           if(!hasDeathRole) {
             boolean hasMurdererRole = Role.isRole(Role.MURDERER, user, arena);
+            boolean hasDetectiveRole = Role.isRole(Role.ANY_DETECTIVE, user, arena);
+
             if(murderWon || !hasMurdererRole) {
               user.adjustStatistic("WINS", 1);
               plugin.getRewardsHandler().performReward(player, plugin.getRewardsHandler().getRewardType("WIN"));
+
+              if(hasMurdererRole && murderWon) {
+                user.adjustStatistic("MURDERER_WINS", 1);
+              } else if(hasDetectiveRole && !murderWon) {
+                user.adjustStatistic("DETECTIVE_WINS", 1);
+              }
             } else {
               user.adjustStatistic("LOSES", 1);
               plugin.getRewardsHandler().performReward(player, plugin.getRewardsHandler().getRewardType("LOSE"));

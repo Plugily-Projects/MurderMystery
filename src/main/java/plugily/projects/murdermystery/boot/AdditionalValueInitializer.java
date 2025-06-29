@@ -52,6 +52,8 @@ public class AdditionalValueInitializer {
     getStatsStorage().registerStatistic("CONTRIBUTION_MURDERER", new StatisticType("contribution_murderer", true, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("PASS_MURDERER", new StatisticType("pass_murderer", true, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("PASS_DETECTIVE", new StatisticType("pass_detective", true, "int(11) NOT NULL DEFAULT '0'"));
+    getStatsStorage().registerStatistic("DETECTIVE_WINS", new StatisticType("detective_wins", true, "int(11) NOT NULL DEFAULT '0'"));
+    getStatsStorage().registerStatistic("MURDERER_WINS", new StatisticType("murderer_wins", true, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("LOCAL_PRAISES", new StatisticType("local_praises", false, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("LOCAL_SCORE", new StatisticType("local_score", false, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("LOCAL_PRAY", new StatisticType("local_pray", false, "int(11) NOT NULL DEFAULT '0'"));

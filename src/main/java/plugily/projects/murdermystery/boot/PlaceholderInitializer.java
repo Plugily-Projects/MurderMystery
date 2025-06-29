@@ -317,10 +317,8 @@ public class PlaceholderInitializer {
     getPlaceholderManager().registerPlaceholder(new Placeholder("arena_current_max_players", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
       @Override
       public String getValue(Player player) {
-        // 查找玩家当前所在的竞技场
         IPluginArena playerArena = getArenaRegistry().getArena(player);
         if(playerArena != null) {
-          // 返回当前竞技场的最大玩家数量
           return Integer.toString(playerArena.getMaximumPlayers());
         }
         return "";
@@ -328,7 +326,6 @@ public class PlaceholderInitializer {
 
       @Override
       public String getValue() {
-        // 全局调用时返回空字符串
         return "";
       }
     });
@@ -337,10 +334,8 @@ public class PlaceholderInitializer {
     getPlaceholderManager().registerPlaceholder(new Placeholder("arena_current_timer", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
       @Override
       public String getValue(Player player) {
-        // 查找玩家当前所在的竞技场
         IPluginArena playerArena = getArenaRegistry().getArena(player);
         if(playerArena != null) {
-          // 返回竞技场计时器
           return Integer.toString(playerArena.getTimer());
         }
         return "";
@@ -356,10 +351,8 @@ public class PlaceholderInitializer {
     getPlaceholderManager().registerPlaceholder(new Placeholder("arena_current_detective_status", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
       @Override
       public String getValue(Player player) {
-        // 查找玩家当前所在的竞技场
         IPluginArena playerArena = getArenaRegistry().getArena(player);
         if(playerArena != null) {
-          // 检查是否有侦探存活
           boolean hasDetective = false;
           for(Player p : playerArena.getPlayers()) {
             if(Role.isRole(Role.DETECTIVE, getUserManager().getUser(p)) && !getUserManager().getUser(p).isSpectator()) {
@@ -382,10 +375,8 @@ public class PlaceholderInitializer {
     getPlaceholderManager().registerPlaceholder(new Placeholder("arena_current_innocent_size", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
       @Override
       public String getValue(Player player) {
-        // 查找玩家当前所在的竞技场
         IPluginArena playerArena = getArenaRegistry().getArena(player);
         if(playerArena != null) {
-          // 计算无辜者数量
           int innocentCount = 0;
           for(Player p : playerArena.getPlayers()) {
             if(Role.isRole(Role.INNOCENT, getUserManager().getUser(p)) && !getUserManager().getUser(p).isSpectator()) {
@@ -407,10 +398,8 @@ public class PlaceholderInitializer {
     getPlaceholderManager().registerPlaceholder(new Placeholder("arena_current_player_role", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
       @Override
       public String getValue(Player player) {
-        // 查找玩家当前所在的竞技场
         IPluginArena playerArena = getArenaRegistry().getArena(player);
         if(playerArena != null) {
-          // 返回玩家角色
           IUser user = getUserManager().getUser(player);
           if(Role.isRole(Role.MURDERER, user)) {
             return "murderer";
@@ -430,6 +419,8 @@ public class PlaceholderInitializer {
         return "";
       }
     });
+
+
   }
 
   private PlaceholderManager getPlaceholderManager() {
