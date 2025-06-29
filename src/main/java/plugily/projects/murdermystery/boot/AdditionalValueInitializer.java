@@ -41,6 +41,7 @@ public class AdditionalValueInitializer {
     getConfigPreferences().registerOption("GOLD_LIMITER", new ConfigOption("Gold.Limiter", false));
     getConfigPreferences().registerOption("GOLD_MULTIPLE", new ConfigOption("Gold.Multiple", false));
     getConfigPreferences().registerOption("MURDERER_LOCATOR", new ConfigOption("Murderer.Locator", true));
+    getConfigPreferences().registerOption("SCOREBOARD_DISPLAY", new ConfigOption("Scoreboard.Display", true));
   }
 
   private void registerStatistics() {

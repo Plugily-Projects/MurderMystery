@@ -44,6 +44,10 @@ public class ScoreboardManager extends PluginScoreboardManager {
 
   @Override
   public List<String> getScoreboardLines(Player player) {
+    if(!arena.getPlugin().getConfigPreferences().getOption("SCOREBOARD_DISPLAY")) {
+      return new ArrayList<>();
+    }
+
     List<String> lines;
     if(arena.getArenaState() == IArenaState.IN_GAME) {
       IUser user = arena.getPlugin().getUserManager().getUser(player);
@@ -57,5 +61,23 @@ public class ScoreboardManager extends PluginScoreboardManager {
       lines = super.getScoreboardLines(player);
     }
     return lines;
+  }
+
+  @Override
+  public void createScoreboard(IUser user) {
+    if(!arena.getPlugin().getConfigPreferences().getOption("SCOREBOARD_DISPLAY")) {
+      return;
+    }
+    super.createScoreboard(user);
+  }
+
+  @Override
+  public void removeScoreboard(IUser user) {
+    super.removeScoreboard(user);
+  }
+
+  @Override
+  public void stopAllScoreboards() {
+    super.stopAllScoreboards();
   }
 }

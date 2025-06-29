@@ -24,10 +24,8 @@ Bossbar:
 
 
 # Should we display scoreboard with game information?
-# 是否显示包含游戏信息的计分板？
 Scoreboard:
   # Enable or disable the scoreboard feature
-  # 启用或禁用计分板功能
   Display: true
 
 
