@@ -360,7 +360,9 @@ public class PlaceholderInitializer {
               break;
             }
           }
-          return hasDetective ? "alive" : "dead";
+          return hasDetective ?
+            new MessageBuilder("PLACEHOLDERS_DETECTIVE_STATUS_ALIVE").asKey().build() :
+            new MessageBuilder("PLACEHOLDERS_DETECTIVE_STATUS_DEAD").asKey().build();
         }
         return "";
       }
@@ -402,13 +404,13 @@ public class PlaceholderInitializer {
         if(playerArena != null) {
           IUser user = getUserManager().getUser(player);
           if(Role.isRole(Role.MURDERER, user)) {
-            return "murderer";
+            return new MessageBuilder("PLACEHOLDERS_PLAYER_ROLE_MURDERER").asKey().build();
           } else if(Role.isRole(Role.DETECTIVE, user)) {
-            return "detective";
+            return new MessageBuilder("PLACEHOLDERS_PLAYER_ROLE_DETECTIVE").asKey().build();
           } else if(Role.isRole(Role.INNOCENT, user)) {
-            return "innocent";
+            return new MessageBuilder("PLACEHOLDERS_PLAYER_ROLE_INNOCENT").asKey().build();
           } else {
-            return "spectator";
+            return new MessageBuilder("PLACEHOLDERS_PLAYER_ROLE_SPECTATOR").asKey().build();
           }
         }
         return "";

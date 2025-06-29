@@ -99,6 +99,12 @@ public class MessageInitializer {
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_HIGHEST_SCORE", new Message("Leaderboard.Statistics.Highest-Score", ""));
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_DETECTIVE_WINS", new Message("Leaderboard.Statistics.Detective-Wins", ""));
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_MURDERER_WINS", new Message("Leaderboard.Statistics.Murderer-Wins", ""));
+    getMessageManager().registerMessage("PLACEHOLDERS_DETECTIVE_STATUS_ALIVE", new Message("Placeholders.Detective-Status.Alive", "alive"));
+    getMessageManager().registerMessage("PLACEHOLDERS_DETECTIVE_STATUS_DEAD", new Message("Placeholders.Detective-Status.Dead", "dead"));
+    getMessageManager().registerMessage("PLACEHOLDERS_PLAYER_ROLE_MURDERER", new Message("Placeholders.Player-Role.Murderer", "murderer"));
+    getMessageManager().registerMessage("PLACEHOLDERS_PLAYER_ROLE_DETECTIVE", new Message("Placeholders.Player-Role.Detective", "detective"));
+    getMessageManager().registerMessage("PLACEHOLDERS_PLAYER_ROLE_INNOCENT", new Message("Placeholders.Player-Role.Innocent", "innocent"));
+    getMessageManager().registerMessage("PLACEHOLDERS_PLAYER_ROLE_SPECTATOR", new Message("Placeholders.Player-Role.Spectator", "spectator"));
   }
 
   private MessageManager getMessageManager() {
