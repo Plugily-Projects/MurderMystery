@@ -247,6 +247,20 @@ public class PlaceholderInitializer {
         return summaryEnding;
       }
     });
+
+    // %murdermystery_current_arena_id%
+    getPlaceholderManager().registerPlaceholder(new Placeholder("current_arena_id", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
+      @Override
+      public String getValue(Player player) {
+        IPluginArena playerArena = getArenaRegistry().getArena(player);
+        return playerArena != null ? playerArena.getId() : "";
+      }
+
+      @Override
+      public String getValue() {
+        return "";
+      }
+    });
   }
 
   private PlaceholderManager getPlaceholderManager() {
