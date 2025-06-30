@@ -109,7 +109,7 @@ public class ArenaManager extends PluginArenaManager {
             if(newMurderer != null) {
               new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_MURDERER").asKey().player(player).arena(pluginArena).sendPlayer();
               plugin.getActionBarManager().addActionBar(player, new ActionBar((new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_CHANGE")).asKey(), ActionBar.ActionBarType.DISPLAY, 5));
-              ItemPosition.setItem(plugin.getUserManager().getUser(newMurderer), ItemPosition.MURDERER_SWORD, plugin.getSwordSkinManager().getRandomSwordSkin(player));
+              ItemPosition.setItem(plugin.getUserManager().getUser(newMurderer), ItemPosition.MURDERER_SWORD, plugin.getSwordSkinManager().getPlayerSelectedSwordSkin(newMurderer));
             }
           } else {
             plugin.getDebugger().debug("No new murderer added as there are some");

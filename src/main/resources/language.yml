@@ -45,6 +45,10 @@ Commands:
   Player-Not-Found: "%color_chat_issue%%plugin_prefix% Target player %player% doesn't exist!"
   Invalid-Location-Teleport: "%color_chat_issue%%plugin_prefix% Location to teleport is invalid!"
   Wrong-Usage: "%color_chat_issue%%plugin_prefix% Wrong usage. Do %value%"
+  Sword-Skins:
+    Skin-Not-Found: "%color_chat_issue%%plugin_prefix% 皮肤 '%value%' 不存在！"
+    No-Permission: "%color_chat_issue%%plugin_prefix% 您没有权限使用皮肤 '%value%'！"
+    Skin-Selected: "%plugin_prefix% 成功选择剑皮肤: &f%value%"
   Admin:
     Adjust-Statistic: "%plugin_prefix% Statistic %value% of %player% is now %number%!"
     Reload-Success: "%plugin_prefix% Arenas reloaded!"

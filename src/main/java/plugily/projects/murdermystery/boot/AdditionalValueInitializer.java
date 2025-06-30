@@ -54,6 +54,8 @@ public class AdditionalValueInitializer {
     getStatsStorage().registerStatistic("PASS_DETECTIVE", new StatisticType("pass_detective", true, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("DETECTIVE_WINS", new StatisticType("detective_wins", true, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("MURDERER_WINS", new StatisticType("murderer_wins", true, "int(11) NOT NULL DEFAULT '0'"));
+    // 添加剑皮肤选择统计（使用哈希码存储）
+    getStatsStorage().registerStatistic("SELECTED_SWORD_SKIN", new StatisticType("selected_sword_skin", true, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("LOCAL_PRAISES", new StatisticType("local_praises", false, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("LOCAL_SCORE", new StatisticType("local_score", false, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("LOCAL_PRAY", new StatisticType("local_pray", false, "int(11) NOT NULL DEFAULT '0'"));

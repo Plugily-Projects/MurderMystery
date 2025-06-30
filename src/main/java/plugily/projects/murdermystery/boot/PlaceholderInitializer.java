@@ -422,6 +422,19 @@ public class PlaceholderInitializer {
       }
     });
 
+    // %murdermystery_user_current_sword_skin%
+    getPlaceholderManager().registerPlaceholder(new Placeholder("user_current_sword_skin", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
+      @Override
+      public String getValue(Player player) {
+        // 返回玩家当前使用的剑皮肤名称
+        return plugin.getSwordSkinManager().getPlayerCurrentSkinName(player);
+      }
+
+      @Override
+      public String getValue() {
+        return "";
+      }
+    });
 
   }
 

@@ -105,6 +105,11 @@ public class MessageInitializer {
     getMessageManager().registerMessage("PLACEHOLDERS_PLAYER_ROLE_DETECTIVE", new Message("Placeholders.Player-Role.Detective", "detective"));
     getMessageManager().registerMessage("PLACEHOLDERS_PLAYER_ROLE_INNOCENT", new Message("Placeholders.Player-Role.Innocent", "innocent"));
     getMessageManager().registerMessage("PLACEHOLDERS_PLAYER_ROLE_SPECTATOR", new Message("Placeholders.Player-Role.Spectator", "spectator"));
+
+    // 添加剑皮肤命令相关消息
+    getMessageManager().registerMessage("COMMANDS_SWORD_SKINS_SKIN_NOT_FOUND", new Message("Commands.Sword-Skins.Skin-Not-Found", "&c皮肤 '%value%' 不存在！"));
+    getMessageManager().registerMessage("COMMANDS_SWORD_SKINS_NO_PERMISSION", new Message("Commands.Sword-Skins.No-Permission", "&c您没有权限使用皮肤 '%value%'！"));
+    getMessageManager().registerMessage("COMMANDS_SWORD_SKINS_SKIN_SELECTED", new Message("Commands.Sword-Skins.Skin-Selected", "&a成功选择剑皮肤: &f%value%"));
   }
 
   private MessageManager getMessageManager() {
