@@ -212,6 +212,14 @@ Corpses:
   # WARNING: If disabled, two corpses will be spawned when player in-game dies
   Integration-Overwrite: true
 
+Last-Words:
+  # Should we enable the last words system (master switch)
+  Enable: true
+  # Should we display last words hologram text
+  Show-Hologram: true
+  # Should we display death skulls/corpses
+  Show-Corpse: false
+
 
 Gold:
   #Should we change spawner mode to spawn on all spawners instant of random one

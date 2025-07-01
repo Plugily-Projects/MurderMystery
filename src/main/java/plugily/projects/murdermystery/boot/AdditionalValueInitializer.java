@@ -39,6 +39,10 @@ public class AdditionalValueInitializer {
     getConfigPreferences().registerOption("HIDE_NAMETAGS", new ConfigOption("Hide.Nametags", false));
     getConfigPreferences().registerOption("GOLD_SPAWNER_MODE_ALL", new ConfigOption("Gold.Spawner-Mode", false));
     getConfigPreferences().registerOption("GOLD_LIMITER", new ConfigOption("Gold.Limiter", false));
+    // 亡语系统配置选项 - Last words system configuration options
+    getConfigPreferences().registerOption("LAST_WORDS_ENABLE", new ConfigOption("Last-Words.Enable", true));
+    getConfigPreferences().registerOption("LAST_WORDS_SHOW_HOLOGRAM", new ConfigOption("Last-Words.Show-Hologram", true));
+    getConfigPreferences().registerOption("LAST_WORDS_SHOW_CORPSE", new ConfigOption("Last-Words.Show-Corpse", true));
     getConfigPreferences().registerOption("GOLD_MULTIPLE", new ConfigOption("Gold.Multiple", false));
     getConfigPreferences().registerOption("MURDERER_LOCATOR", new ConfigOption("Murderer.Locator", true));
     getConfigPreferences().registerOption("SCOREBOARD_DISPLAY", new ConfigOption("Scoreboard.Display", true));
