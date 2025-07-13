@@ -24,7 +24,7 @@
 
     <groupId>plugily.projects</groupId>
     <artifactId>murdermystery</artifactId>
-    <version>2.1.4-SNAPSHOT1</version>
+    <version>2.1.5</version>
     <name>MurderMystery</name>
 
     <properties>
