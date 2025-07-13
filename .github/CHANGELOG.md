@@ -1,3 +1,6 @@
+### 2.1.5 Release (13.07.2025)
+* Updated minigamesbox to 1.4.3
+
 ### 2.1.4 Release (09.06.2025)
 * Fixed ICCE: Found class org.bukkit.inventory.InventoryView
 * Fixed PlugilyEntityPickupItemEvent IAE greater 0 on paper 1.21 +
