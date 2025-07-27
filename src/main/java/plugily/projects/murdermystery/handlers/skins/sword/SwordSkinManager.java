@@ -21,6 +21,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import plugily.projects.minigamesbox.api.user.IUser;
 import plugily.projects.minigamesbox.classic.utils.configuration.ConfigUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.murdermystery.Main;
@@ -40,8 +41,12 @@ public class SwordSkinManager {
 
   private final List<SwordSkin> registeredSwordSkins = new ArrayList<>();
   private final Map<Player, ItemStack> murdererSwords = new HashMap<>();
+  private final Map<String, SwordSkin> skinsByName = new HashMap<>();
+  private final Map<Integer, String> hashToName = new HashMap<>();
+  private final Main plugin;
 
   public SwordSkinManager(Main plugin) {
+    this.plugin = plugin;
     registerSwordSkins(plugin);
   }
 
@@ -50,12 +55,16 @@ public class SwordSkinManager {
     ConfigurationSection section = config.getConfigurationSection("Skins.Sword");
     String path = "Skins.Sword.";
     for (String id : section.getKeys(false)) {
-      addSwordSkin(
-          new SwordSkin(
+      SwordSkin skin = new SwordSkin(
               XMaterial.matchXMaterial(config.getString(path + id + ".Material", "BEDROCK"))
                   .orElse(XMaterial.BEDROCK)
                   .parseItem(),
-              config.getString(path + id + ".Permission", "")));
+              config.getString(path + id + ".Permission", ""));
+      addSwordSkin(skin);
+      // 将皮肤名称映射到皮肤对象
+      skinsByName.put(id, skin);
+      // 将哈希码映射到皮肤名称
+      hashToName.put(id.hashCode(), id);
     }
   }
 
@@ -102,5 +111,85 @@ public class SwordSkinManager {
 
   public ItemStack getMurdererSword(Player player) {
     return murdererSwords.get(player);
+  }
+
+  /**
+   * 根据皮肤名称获取剑皮肤
+   */
+  public SwordSkin getSkinByName(String skinName) {
+    return skinsByName.get(skinName);
+  }
+
+  /**
+   * 根据ItemStack获取皮肤名称
+   */
+  public String getSkinNameByItemStack(ItemStack itemStack) {
+    for(Map.Entry<String, SwordSkin> entry : skinsByName.entrySet()) {
+      if(entry.getValue().getItemStack().getType() == itemStack.getType()) {
+        return entry.getKey();
+      }
+    }
+    return null;
+  }
+
+  /**
+   * 获取玩家选择的剑皮肤，如果没有选择则使用随机皮肤
+   */
+  public ItemStack getPlayerSelectedSwordSkin(Player player) {
+    IUser user = plugin.getUserManager().getUser(player);
+    String selectedSkinName = getPlayerSelectedSkinName(player);
+
+    // 如果玩家选择了皮肤
+    if(selectedSkinName != null && !selectedSkinName.isEmpty() && !selectedSkinName.equals("0")) {
+      SwordSkin selectedSkin = getSkinByName(selectedSkinName);
+      if(selectedSkin != null) {
+        // 检查权限
+        if(!selectedSkin.hasPermission() || player.hasPermission(selectedSkin.getPermission())) {
+          ItemStack itemStack = selectedSkin.getItemStack();
+          murdererSwords.put(player, itemStack);
+          return itemStack;
+        }
+      }
+    }
+
+    // 如果没有选择皮肤或选择的皮肤无效，使用随机皮肤
+    return getRandomSwordSkin(player);
+  }
+
+  /**
+   * 获取玩家当前使用的剑皮肤名称
+   */
+  public String getPlayerCurrentSkinName(Player player) {
+    String selectedSkinName = getPlayerSelectedSkinName(player);
+
+    // 如果玩家选择了皮肤且有权限使用
+    if(selectedSkinName != null && !selectedSkinName.isEmpty() && !selectedSkinName.equals("0")) {
+      SwordSkin selectedSkin = getSkinByName(selectedSkinName);
+      if(selectedSkin != null) {
+        if(!selectedSkin.hasPermission() || player.hasPermission(selectedSkin.getPermission())) {
+          return selectedSkinName;
+        }
+      }
+    }
+
+    // 返回默认皮肤
+    return "default";
+  }
+
+  /**
+   * 获取玩家选择的剑皮肤名称
+   */
+  private String getPlayerSelectedSkinName(Player player) {
+    IUser user = plugin.getUserManager().getUser(player);
+    int skinHash = user.getStatistic("SELECTED_SWORD_SKIN");
+
+    // 如果哈希码为0，表示没有选择皮肤
+    if(skinHash == 0) {
+      return "default";
+    }
+
+    // 根据哈希码获取皮肤名称
+    String skinName = hashToName.get(skinHash);
+    return skinName != null ? skinName : "default";
   }
 }

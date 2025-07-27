@@ -24,10 +24,8 @@ Bossbar:
 
 
 # Should we display scoreboard with game information?
-# 是否显示包含游戏信息的计分板？
 Scoreboard:
   # Enable or disable the scoreboard feature
-  # 启用或禁用计分板功能
   Display: true
 
 
@@ -211,14 +209,6 @@ Corpses:
   # Disable this if you don't want this!
   # WARNING: If disabled, two corpses will be spawned when player in-game dies
   Integration-Overwrite: true
-
-Last-Words:
-  # Should we enable the last words system (master switch)
-  Enable: true
-  # Should we display last words hologram text
-  Show-Hologram: true
-  # Should we display death skulls/corpses
-  Show-Corpse: false
 
 
 Gold:

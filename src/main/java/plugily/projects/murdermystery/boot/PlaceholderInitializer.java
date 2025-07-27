@@ -247,6 +247,195 @@ public class PlaceholderInitializer {
         return summaryEnding;
       }
     });
+
+    // %murdermystery_current_arena_id%
+    getPlaceholderManager().registerPlaceholder(new Placeholder("current_arena_id", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
+      @Override
+      public String getValue(Player player) {
+        IPluginArena playerArena = getArenaRegistry().getArena(player);
+        return playerArena != null ? playerArena.getId() : "";
+      }
+
+      @Override
+      public String getValue() {
+        return "";
+      }
+    });
+
+    // %murdermystery_arena_current_state%
+    getPlaceholderManager().registerPlaceholder(new Placeholder("arena_current_state", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
+      @Override
+      public String getValue(Player player) {
+        IPluginArena playerArena = getArenaRegistry().getArena(player);
+        if(playerArena != null) {
+          return playerArena.getArenaState().toString().toLowerCase();
+        }
+        return "";
+      }
+
+      @Override
+      public String getValue() {
+        return "";
+      }
+    });
+
+    // %murdermystery_arena_current_name%
+    getPlaceholderManager().registerPlaceholder(new Placeholder("arena_current_name", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
+      @Override
+      public String getValue(Player player) {
+        IPluginArena playerArena = getArenaRegistry().getArena(player);
+        if(playerArena != null) {
+          return playerArena.getMapName();
+        }
+        return "";
+      }
+
+      @Override
+      public String getValue() {
+        return "";
+      }
+    });
+
+    // %murdermystery_arena_current_players%
+    getPlaceholderManager().registerPlaceholder(new Placeholder("arena_current_players", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
+      @Override
+      public String getValue(Player player) {
+        IPluginArena playerArena = getArenaRegistry().getArena(player);
+        if(playerArena != null) {
+          return Integer.toString(playerArena.getPlayers().size());
+        }
+        return "";
+      }
+
+      @Override
+      public String getValue() {
+        return "";
+      }
+    });
+
+    // %murdermystery_arena_current_max_players%
+    getPlaceholderManager().registerPlaceholder(new Placeholder("arena_current_max_players", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
+      @Override
+      public String getValue(Player player) {
+        IPluginArena playerArena = getArenaRegistry().getArena(player);
+        if(playerArena != null) {
+          return Integer.toString(playerArena.getMaximumPlayers());
+        }
+        return "";
+      }
+
+      @Override
+      public String getValue() {
+        return "";
+      }
+    });
+
+    // %murdermystery_arena_current_timer%
+    getPlaceholderManager().registerPlaceholder(new Placeholder("arena_current_timer", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
+      @Override
+      public String getValue(Player player) {
+        IPluginArena playerArena = getArenaRegistry().getArena(player);
+        if(playerArena != null) {
+          return Integer.toString(playerArena.getTimer());
+        }
+        return "";
+      }
+
+      @Override
+      public String getValue() {
+        return "";
+      }
+    });
+
+    // %murdermystery_arena_current_detective_status%
+    getPlaceholderManager().registerPlaceholder(new Placeholder("arena_current_detective_status", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
+      @Override
+      public String getValue(Player player) {
+        IPluginArena playerArena = getArenaRegistry().getArena(player);
+        if(playerArena != null) {
+          boolean hasDetective = false;
+          for(Player p : playerArena.getPlayers()) {
+            if(Role.isRole(Role.DETECTIVE, getUserManager().getUser(p)) && !getUserManager().getUser(p).isSpectator()) {
+              hasDetective = true;
+              break;
+            }
+          }
+          return hasDetective ?
+            new MessageBuilder("PLACEHOLDERS_DETECTIVE_STATUS_ALIVE").asKey().build() :
+            new MessageBuilder("PLACEHOLDERS_DETECTIVE_STATUS_DEAD").asKey().build();
+        }
+        return "";
+      }
+
+      @Override
+      public String getValue() {
+        return "";
+      }
+    });
+
+    // %murdermystery_arena_current_innocent_size%
+    getPlaceholderManager().registerPlaceholder(new Placeholder("arena_current_innocent_size", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
+      @Override
+      public String getValue(Player player) {
+        IPluginArena playerArena = getArenaRegistry().getArena(player);
+        if(playerArena != null) {
+          int innocentCount = 0;
+          for(Player p : playerArena.getPlayers()) {
+            if(Role.isRole(Role.INNOCENT, getUserManager().getUser(p)) && !getUserManager().getUser(p).isSpectator()) {
+              innocentCount++;
+            }
+          }
+          return Integer.toString(innocentCount);
+        }
+        return "";
+      }
+
+      @Override
+      public String getValue() {
+        return "";
+      }
+    });
+
+    // %murdermystery_arena_current_player_role%
+    getPlaceholderManager().registerPlaceholder(new Placeholder("arena_current_player_role", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
+      @Override
+      public String getValue(Player player) {
+        IPluginArena playerArena = getArenaRegistry().getArena(player);
+        if(playerArena != null) {
+          IUser user = getUserManager().getUser(player);
+          if(Role.isRole(Role.MURDERER, user)) {
+            return new MessageBuilder("PLACEHOLDERS_PLAYER_ROLE_MURDERER").asKey().build();
+          } else if(Role.isRole(Role.DETECTIVE, user)) {
+            return new MessageBuilder("PLACEHOLDERS_PLAYER_ROLE_DETECTIVE").asKey().build();
+          } else if(Role.isRole(Role.INNOCENT, user)) {
+            return new MessageBuilder("PLACEHOLDERS_PLAYER_ROLE_INNOCENT").asKey().build();
+          } else {
+            return new MessageBuilder("PLACEHOLDERS_PLAYER_ROLE_SPECTATOR").asKey().build();
+          }
+        }
+        return "";
+      }
+
+      @Override
+      public String getValue() {
+        return "";
+      }
+    });
+
+    // %murdermystery_user_current_sword_skin%
+    getPlaceholderManager().registerPlaceholder(new Placeholder("user_current_sword_skin", Placeholder.PlaceholderType.GLOBAL, Placeholder.PlaceholderExecutor.PLACEHOLDER_API) {
+      @Override
+      public String getValue(Player player) {
+        // 返回玩家当前使用的剑皮肤名称
+        return plugin.getSwordSkinManager().getPlayerCurrentSkinName(player);
+      }
+
+      @Override
+      public String getValue() {
+        return "";
+      }
+    });
+
   }
 
   private PlaceholderManager getPlaceholderManager() {
