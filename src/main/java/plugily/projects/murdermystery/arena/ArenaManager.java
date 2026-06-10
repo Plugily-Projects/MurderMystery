@@ -109,7 +109,7 @@ public class ArenaManager extends PluginArenaManager {
             if(newMurderer != null) {
               new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_MURDERER").asKey().player(player).arena(pluginArena).sendPlayer();
               plugin.getActionBarManager().addActionBar(player, new ActionBar((new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_CHANGE")).asKey(), ActionBar.ActionBarType.DISPLAY, 5));
-              ItemPosition.setItem(plugin.getUserManager().getUser(newMurderer), ItemPosition.MURDERER_SWORD, plugin.getSwordSkinManager().getRandomSwordSkin(player));
+              ItemPosition.setItem(plugin.getUserManager().getUser(newMurderer), ItemPosition.MURDERER_SWORD, plugin.getSwordSkinManager().getPlayerSelectedSwordSkin(newMurderer));
             }
           } else {
             plugin.getDebugger().debug("No new murderer added as there are some");
@@ -155,9 +155,17 @@ public class ArenaManager extends PluginArenaManager {
           pluginArena.adjustContributorValue(Role.DETECTIVE, user, plugin.getRandom().nextInt(10 * multiplicator));
           if(!hasDeathRole) {
             boolean hasMurdererRole = Role.isRole(Role.MURDERER, user, arena);
+            boolean hasDetectiveRole = Role.isRole(Role.ANY_DETECTIVE, user, arena);
+
             if(murderWon || !hasMurdererRole) {
               user.adjustStatistic("WINS", 1);
               plugin.getRewardsHandler().performReward(player, plugin.getRewardsHandler().getRewardType("WIN"));
+
+              if(hasMurdererRole && murderWon) {
+                user.adjustStatistic("MURDERER_WINS", 1);
+              } else if(hasDetectiveRole && !murderWon) {
+                user.adjustStatistic("DETECTIVE_WINS", 1);
+              }
             } else {
               user.adjustStatistic("LOSES", 1);
               plugin.getRewardsHandler().performReward(player, plugin.getRewardsHandler().getRewardType("LOSE"));

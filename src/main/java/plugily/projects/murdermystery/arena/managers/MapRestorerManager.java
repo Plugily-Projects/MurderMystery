@@ -74,7 +74,8 @@ public class MapRestorerManager extends PluginMapRestorerManager {
   public void clearCorpses() {
     if(!arena.getPlugin().getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
       for(Stand stand : arena.getStands()) {
-        if(!stand.getHologram().isDeleted()) {
+        // 检查hologram是否为null并且未被删除 - Check if hologram is not null and not deleted
+        if(stand.getHologram() != null && !stand.getHologram().isDeleted()) {
           stand.getHologram().delete();
         }
         if(stand.getStand() != null) {
@@ -85,7 +86,8 @@ public class MapRestorerManager extends PluginMapRestorerManager {
       return;
     }
     for(Corpse corpse : arena.getCorpses()) {
-      if(!corpse.getHologram().isDeleted()) {
+      // 检查hologram是否为null并且未被删除 - Check if hologram is not null and not deleted
+      if(corpse.getHologram() != null && !corpse.getHologram().isDeleted()) {
         corpse.getHologram().delete();
       }
       if(corpse.getCorpseData() != null) {

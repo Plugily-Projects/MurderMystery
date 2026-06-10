@@ -80,44 +80,102 @@ public class CorpseHandler implements Listener {
     if(murderGameCorpseSpawnEvent.isCancelled()) {
       return;
     }
-    if(!plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
-      ArmorStand stand = player.getLocation().getWorld().spawn(player.getLocation().add(0.0D, -1.25D, 0.0D), ArmorStand.class);
-      SkullMeta meta = (SkullMeta) head.getItemMeta();
-      meta = VersionUtils.setPlayerHead(player, meta);
-      head.setItemMeta(meta);
 
-      stand.setVisible(false);
-      if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16)) {
-        stand.getEquipment().setHelmet(head);
-      } else {
-        stand.setHelmet(head);
-      }
-      stand.setGravity(false);
-      stand.setCustomNameVisible(false);
-      stand.setHeadPose(new EulerAngle(Math.toRadians(player.getLocation().getX()), Math.toRadians(player.getLocation().getPitch()), Math.toRadians(player.getLocation().getZ())));
-
-      plugin.getHologramManager().getArmorStands().add(stand);
-      ArmorStandHologram hologram = getLastWordsHologram(player);
-      arena.addHead(new Stand(hologram, stand));
-      Bukkit.getScheduler().runTaskLater(plugin, () -> {
-        hologram.delete();
-        plugin.getHologramManager().getArmorStands().remove(stand);
-        Bukkit.getScheduler().runTaskLater(plugin, stand::remove, 20 * 20);
-      }, 15 * 20);
+    // 检查亡语系统是否启用 - Check if last words system is enabled
+    if(!plugin.getConfigPreferences().getOption("LAST_WORDS_ENABLE")) {
       return;
     }
-    ArmorStandHologram hologram = getLastWordsHologram(player);
-    Corpses.CorpseData corpse = CorpseAPI.spawnCorpse(player, player.getLocation());
-    lastSpawnedCorpse = corpse;
-    //spawns 2 corpses - Corpses.CorpseData corpse = lastSpawnedCorpse = CorpseAPI.spawnCorpse(player, player.getLocation());
-    arena.addCorpse(new Corpse(hologram, corpse));
-    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      hologram.delete();
-      Bukkit.getScheduler().runTaskLater(plugin, corpse::destroyCorpseFromEveryone, 20 * 20);
-    }, 15 * 20);
+
+    // 获取配置选项 - Get configuration options
+    boolean showHologram = plugin.getConfigPreferences().getOption("LAST_WORDS_SHOW_HOLOGRAM");
+    boolean showCorpse = plugin.getConfigPreferences().getOption("LAST_WORDS_SHOW_CORPSE");
+
+    // 如果浮空字和尸体都不显示，则直接返回 - Return if both hologram and corpse are disabled
+    if(!showHologram && !showCorpse) {
+      return;
+    }
+
+    if(!plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.CORPSES)) {
+      // 处理内置头颅系统 - Handle built-in skull system
+      ArmorStand stand = null;
+      if(showCorpse) {
+        stand = player.getLocation().getWorld().spawn(player.getLocation().add(0.0D, -1.25D, 0.0D), ArmorStand.class);
+        SkullMeta meta = (SkullMeta) head.getItemMeta();
+        meta = VersionUtils.setPlayerHead(player, meta);
+        head.setItemMeta(meta);
+
+        stand.setVisible(false);
+        if(ServerVersion.Version.isCurrentEqualOrHigher(ServerVersion.Version.v1_16)) {
+          stand.getEquipment().setHelmet(head);
+        } else {
+          stand.setHelmet(head);
+        }
+        stand.setGravity(false);
+        stand.setCustomNameVisible(false);
+        stand.setHeadPose(new EulerAngle(Math.toRadians(player.getLocation().getX()), Math.toRadians(player.getLocation().getPitch()), Math.toRadians(player.getLocation().getZ())));
+
+        plugin.getHologramManager().getArmorStands().add(stand);
+      }
+
+      ArmorStandHologram hologram = null;
+      if(showHologram) {
+        hologram = getLastWordsHologram(player);
+      }
+
+      if(stand != null || hologram != null) {
+        arena.addHead(new Stand(hologram, stand));
+
+        // 清理任务 - Cleanup task
+        ArmorStandHologram finalHologram = hologram;
+        ArmorStand finalStand = stand;
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+          if(finalHologram != null) {
+            finalHologram.delete();
+          }
+          if(finalStand != null) {
+            plugin.getHologramManager().getArmorStands().remove(finalStand);
+            Bukkit.getScheduler().runTaskLater(plugin, finalStand::remove, 20 * 20);
+          }
+        }, 15 * 20);
+      }
+      return;
+    }
+
+    // 处理CorpseReborn插件系统 - Handle CorpseReborn plugin system
+    ArmorStandHologram hologram = null;
+    if(showHologram) {
+      hologram = getLastWordsHologram(player);
+    }
+
+    Corpses.CorpseData corpse = null;
+    if(showCorpse) {
+      corpse = CorpseAPI.spawnCorpse(player, player.getLocation());
+      lastSpawnedCorpse = corpse;
+    }
+
+    if(hologram != null || corpse != null) {
+      arena.addCorpse(new Corpse(hologram, corpse));
+
+      // 清理任务 - Cleanup task
+      ArmorStandHologram finalHologram = hologram;
+      Corpses.CorpseData finalCorpse = corpse;
+      Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        if(finalHologram != null) {
+          finalHologram.delete();
+        }
+        if(finalCorpse != null) {
+          Bukkit.getScheduler().runTaskLater(plugin, finalCorpse::destroyCorpseFromEveryone, 20 * 20);
+        }
+      }, 15 * 20);
+    }
   }
 
   private ArmorStandHologram getLastWordsHologram(Player player) {
+    // 检查是否启用浮空字显示 - Check if hologram display is enabled
+    if(!plugin.getConfigPreferences().getOption("LAST_WORDS_SHOW_HOLOGRAM")) {
+      return null;
+    }
+
     ArmorStandHologram hologram = new ArmorStandHologram(player.getLocation());
     hologram.appendLine(new MessageBuilder(plugin.getLastWordsManager().getHologramTitle()).player(player).build());
     hologram.appendLine(plugin.getLastWordsManager().getRandomLastWord(player));

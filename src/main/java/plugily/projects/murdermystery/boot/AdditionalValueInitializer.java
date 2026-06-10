@@ -39,8 +39,13 @@ public class AdditionalValueInitializer {
     getConfigPreferences().registerOption("HIDE_NAMETAGS", new ConfigOption("Hide.Nametags", false));
     getConfigPreferences().registerOption("GOLD_SPAWNER_MODE_ALL", new ConfigOption("Gold.Spawner-Mode", false));
     getConfigPreferences().registerOption("GOLD_LIMITER", new ConfigOption("Gold.Limiter", false));
+    // 亡语系统配置选项 - Last words system configuration options
+    getConfigPreferences().registerOption("LAST_WORDS_ENABLE", new ConfigOption("Last-Words.Enable", true));
+    getConfigPreferences().registerOption("LAST_WORDS_SHOW_HOLOGRAM", new ConfigOption("Last-Words.Show-Hologram", true));
+    getConfigPreferences().registerOption("LAST_WORDS_SHOW_CORPSE", new ConfigOption("Last-Words.Show-Corpse", true));
     getConfigPreferences().registerOption("GOLD_MULTIPLE", new ConfigOption("Gold.Multiple", false));
     getConfigPreferences().registerOption("MURDERER_LOCATOR", new ConfigOption("Murderer.Locator", true));
+    getConfigPreferences().registerOption("SCOREBOARD_DISPLAY", new ConfigOption("Scoreboard.Display", true));
   }
 
   private void registerStatistics() {
@@ -51,6 +56,10 @@ public class AdditionalValueInitializer {
     getStatsStorage().registerStatistic("CONTRIBUTION_MURDERER", new StatisticType("contribution_murderer", true, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("PASS_MURDERER", new StatisticType("pass_murderer", true, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("PASS_DETECTIVE", new StatisticType("pass_detective", true, "int(11) NOT NULL DEFAULT '0'"));
+    getStatsStorage().registerStatistic("DETECTIVE_WINS", new StatisticType("detective_wins", true, "int(11) NOT NULL DEFAULT '0'"));
+    getStatsStorage().registerStatistic("MURDERER_WINS", new StatisticType("murderer_wins", true, "int(11) NOT NULL DEFAULT '0'"));
+    // 添加剑皮肤选择统计（使用哈希码存储）
+    getStatsStorage().registerStatistic("SELECTED_SWORD_SKIN", new StatisticType("selected_sword_skin", true, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("LOCAL_PRAISES", new StatisticType("local_praises", false, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("LOCAL_SCORE", new StatisticType("local_score", false, "int(11) NOT NULL DEFAULT '0'"));
     getStatsStorage().registerStatistic("LOCAL_PRAY", new StatisticType("local_pray", false, "int(11) NOT NULL DEFAULT '0'"));
