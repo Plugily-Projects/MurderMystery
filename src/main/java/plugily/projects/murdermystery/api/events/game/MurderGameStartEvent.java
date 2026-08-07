@@ -18,36 +18,23 @@
 
 package plugily.projects.murdermystery.api.events.game;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.Nullable;
 import plugily.projects.minigamesbox.api.events.PlugilyEvent;
 import plugily.projects.murdermystery.arena.Arena;
 
-/**
- * @author Tigerpanzer_02
- * <p>
- * Created at 15.04.2022
- */
-public class MurderGameCorpseSpawnEvent extends PlugilyEvent implements Cancellable {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class MurderGameStartEvent extends PlugilyEvent {
 
   private static final HandlerList HANDLERS = new HandlerList();
-  private boolean isCancelled = false;
-  private final Player player;
-  private final Location location;
-  private final Player killer;
+  private final List<Player> players;
 
-  public MurderGameCorpseSpawnEvent(Arena arena, Player player, Location location) {
-    this(arena, player, location, null);
-  }
-
-  public MurderGameCorpseSpawnEvent(Arena arena, Player player, Location location, @Nullable Player killer) {
+  public MurderGameStartEvent(Arena arena, List<Player> players) {
     super(arena);
-    this.player = player;
-    this.location = location;
-    this.killer = killer;
+    this.players = Collections.unmodifiableList(new ArrayList<>(players));
   }
 
   public static HandlerList getHandlerList() {
@@ -59,27 +46,7 @@ public class MurderGameCorpseSpawnEvent extends PlugilyEvent implements Cancella
     return HANDLERS;
   }
 
-  @Override
-  public boolean isCancelled() {
-    return isCancelled;
+  public List<Player> getPlayers() {
+    return players;
   }
-
-  @Override
-  public void setCancelled(boolean cancelled) {
-    isCancelled = cancelled;
-  }
-
-  public Player getPlayer() {
-    return player;
-  }
-
-  public Location getLocation() {
-    return location;
-  }
-
-  @Nullable
-  public Player getKiller() {
-    return killer;
-  }
-
 }

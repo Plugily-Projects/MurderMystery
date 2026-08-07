@@ -55,6 +55,9 @@ import plugily.projects.minigamesbox.classic.utils.version.xseries.XPotion;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XSound;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.inventory.XInventoryView;
 import plugily.projects.murdermystery.Main;
+import plugily.projects.murdermystery.api.events.game.MurderGameGetBowEvent;
+import plugily.projects.murdermystery.api.events.game.MurderGameGoldPickupEvent;
+import plugily.projects.murdermystery.api.events.game.MurderGamePowerUpPickupEvent;
 import plugily.projects.murdermystery.arena.managers.MapRestorerManager;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.arena.special.pray.PrayerRegistry;
@@ -132,6 +135,12 @@ public class ArenaEvents extends PluginArenaEvents {
     if(arena.getBowHologram() != null
       && e.getItem().equals(arena.getBowHologram().getEntityItem())) {
       if(!user.isSpectator() && Role.isRole(Role.INNOCENT, user, arena)) {
+        MurderGameGetBowEvent murderGameGetBowEvent = new MurderGameGetBowEvent(arena, player);
+        Bukkit.getPluginManager().callEvent(murderGameGetBowEvent);
+        if(murderGameGetBowEvent.isCancelled()) {
+          return;
+        }
+
         XSound.BLOCK_LAVA_POP.play(player.getLocation(), 1F, 2F);
 
         ((MapRestorerManager) arena.getMapRestorerManager()).removeBowHolo();
@@ -154,6 +163,10 @@ public class ArenaEvents extends PluginArenaEvents {
     }
 
     if(e.getItem().getItemStack().getType() != Material.GOLD_INGOT) {
+      if(!user.isSpectator() && arena.getArenaState() == IArenaState.IN_GAME) {
+        MurderGamePowerUpPickupEvent murderGamePowerUpPickupEvent = new MurderGamePowerUpPickupEvent(arena, player, e.getItem().getItemStack());
+        Bukkit.getPluginManager().callEvent(murderGamePowerUpPickupEvent);
+      }
       return;
     }
 
@@ -166,16 +179,22 @@ public class ArenaEvents extends PluginArenaEvents {
       return;
     }
 
+    int pickedUpAmount = e.getItem().getItemStack().getAmount();
+    if(PrayerRegistry.getRush().contains(player)) {
+      pickedUpAmount = 3 * pickedUpAmount;
+    }
+    MurderGameGoldPickupEvent murderGameGoldPickupEvent = new MurderGameGoldPickupEvent(arena, player, pickedUpAmount);
+    Bukkit.getPluginManager().callEvent(murderGameGoldPickupEvent);
+    if(murderGameGoldPickupEvent.isCancelled()) {
+      return;
+    }
+
     e.getItem().remove();
 
     XSound.BLOCK_LAVA_POP.play(player.getLocation(), 1, 1);
     arena.getGoldSpawned().remove(e.getItem());
 
-    ItemStack stack = new ItemStack(Material.GOLD_INGOT, e.getItem().getItemStack().getAmount());
-    if(PrayerRegistry.getRush().contains(player)) {
-      stack.setAmount(3 * e.getItem().getItemStack().getAmount());
-    }
-
+    ItemStack stack = new ItemStack(Material.GOLD_INGOT, murderGameGoldPickupEvent.getAmount());
     ItemPosition.addItem(user, ItemPosition.GOLD_INGOTS, stack);
     user.adjustStatistic("LOCAL_GOLD", stack.getAmount());
     ArenaUtils.addScore(user, ArenaUtils.ScoreAction.GOLD_PICKUP, stack.getAmount());
@@ -189,6 +208,12 @@ public class ArenaEvents extends PluginArenaEvents {
     }
 
     if(user.getStatistic("LOCAL_GOLD") >= plugin.getConfig().getInt("Gold.Amount.Bow", 10)) {
+      MurderGameGetBowEvent murderGameGetBowEvent = new MurderGameGetBowEvent(arena, player);
+      Bukkit.getPluginManager().callEvent(murderGameGetBowEvent);
+      if(murderGameGetBowEvent.isCancelled()) {
+        return;
+      }
+
       user.setStatistic("LOCAL_GOLD", 0);
       new TitleBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_BOW_SHOT_TITLE")
         .asKey()
@@ -369,7 +394,7 @@ public class ArenaEvents extends PluginArenaEvents {
     ComplementAccessor.getComplement().setDeathMessage(e, "");
     e.getDrops().clear();
     e.setDroppedExp(0);
-    plugin.getCorpseHandler().spawnCorpse(player, arena);
+    plugin.getCorpseHandler().spawnCorpse(player, arena, player.getKiller());
     XPotion.BLINDNESS.buildPotionEffect(3 * 20, 1).apply(player);
     if(arena.getArenaState() == IArenaState.STARTING) {
       return;

@@ -18,36 +18,23 @@
 
 package plugily.projects.murdermystery.api.events.game;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.Nullable;
 import plugily.projects.minigamesbox.api.events.PlugilyEvent;
 import plugily.projects.murdermystery.arena.Arena;
 
-/**
- * @author Tigerpanzer_02
- * <p>
- * Created at 15.04.2022
- */
-public class MurderGameCorpseSpawnEvent extends PlugilyEvent implements Cancellable {
+public class MurderGameGoldPickupEvent extends PlugilyEvent implements Cancellable {
 
   private static final HandlerList HANDLERS = new HandlerList();
   private boolean isCancelled = false;
   private final Player player;
-  private final Location location;
-  private final Player killer;
+  private final int amount;
 
-  public MurderGameCorpseSpawnEvent(Arena arena, Player player, Location location) {
-    this(arena, player, location, null);
-  }
-
-  public MurderGameCorpseSpawnEvent(Arena arena, Player player, Location location, @Nullable Player killer) {
+  public MurderGameGoldPickupEvent(Arena arena, Player player, int amount) {
     super(arena);
     this.player = player;
-    this.location = location;
-    this.killer = killer;
+    this.amount = amount;
   }
 
   public static HandlerList getHandlerList() {
@@ -73,13 +60,7 @@ public class MurderGameCorpseSpawnEvent extends PlugilyEvent implements Cancella
     return player;
   }
 
-  public Location getLocation() {
-    return location;
+  public int getAmount() {
+    return amount;
   }
-
-  @Nullable
-  public Player getKiller() {
-    return killer;
-  }
-
 }
