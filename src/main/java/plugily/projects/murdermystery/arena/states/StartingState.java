@@ -30,6 +30,7 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.utils.actionbar.ActionBar;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
+import plugily.projects.murdermystery.api.events.game.MurderGameStartEvent;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaUtils;
 import plugily.projects.murdermystery.arena.role.Role;
@@ -90,6 +91,7 @@ public class StartingState extends PluginStartingState {
 
       // Load and append special blocks hologram
       pluginArena.getSpecialBlocks().forEach(pluginArena::loadSpecialBlock);
+      Bukkit.getPluginManager().callEvent(new MurderGameStartEvent(pluginArena, new ArrayList<>(arena.getPlayers())));
     }
   }
 

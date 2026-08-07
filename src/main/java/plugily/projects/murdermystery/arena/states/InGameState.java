@@ -18,6 +18,7 @@
 
 package plugily.projects.murdermystery.arena.states;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -31,6 +32,7 @@ import plugily.projects.minigamesbox.classic.handlers.language.MessageBuilder;
 import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XSound;
+import plugily.projects.murdermystery.api.events.game.MurderGameGoldSpawnEvent;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.ArenaUtils;
 import plugily.projects.murdermystery.arena.role.Role;
@@ -166,7 +168,14 @@ public class InGameState extends PluginInGameState {
         }
       }
     }
-    arena.getGoldSpawned().add(location.getWorld().dropItem(location, new ItemStack(Material.GOLD_INGOT, 1)));
-    getPlugin().getPowerupRegistry().spawnPowerup(location, arena);
+    MurderGameGoldSpawnEvent murderGameGoldSpawnEvent = new MurderGameGoldSpawnEvent(arena, location.clone());
+    Bukkit.getPluginManager().callEvent(murderGameGoldSpawnEvent);
+    if(murderGameGoldSpawnEvent.isCancelled()) {
+      return;
+    }
+
+    Location dropLocation = murderGameGoldSpawnEvent.getLocation();
+    arena.getGoldSpawned().add(dropLocation.getWorld().dropItem(dropLocation, new ItemStack(Material.GOLD_INGOT, 1)));
+    getPlugin().getPowerupRegistry().spawnPowerup(dropLocation, arena);
   }
 }
