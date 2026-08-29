@@ -19,23 +19,18 @@
 package plugily.projects.murdermystery.api.events.game;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
-import plugily.projects.minigamesbox.api.events.PlugilyEvent;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
 
-public class MurderGameBuyEvent extends PlugilyEvent implements Cancellable {
+public class MurderGameBuyEvent extends MurderPlayerEvent {
 
   private static final HandlerList HANDLERS = new HandlerList();
-  private boolean isCancelled = false;
-  private final Player player;
   private final SpecialBlock.SpecialBlockType specialBlockType;
   private final int cost;
 
   public MurderGameBuyEvent(Arena arena, Player player, SpecialBlock.SpecialBlockType specialBlockType, int cost) {
-    super(arena);
-    this.player = player;
+    super(arena, player);
     this.specialBlockType = specialBlockType;
     this.cost = cost;
   }
@@ -47,20 +42,6 @@ public class MurderGameBuyEvent extends PlugilyEvent implements Cancellable {
   @Override
   public HandlerList getHandlers() {
     return HANDLERS;
-  }
-
-  @Override
-  public boolean isCancelled() {
-    return isCancelled;
-  }
-
-  @Override
-  public void setCancelled(boolean cancelled) {
-    isCancelled = cancelled;
-  }
-
-  public Player getPlayer() {
-    return player;
   }
 
   public SpecialBlock.SpecialBlockType getSpecialBlockType() {

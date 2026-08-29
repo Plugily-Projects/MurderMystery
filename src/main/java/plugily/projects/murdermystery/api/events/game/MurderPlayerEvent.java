@@ -19,24 +19,18 @@
 package plugily.projects.murdermystery.api.events.game;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
 import plugily.projects.murdermystery.arena.Arena;
 
-public class MurderGameGetBowEvent extends MurderPlayerEvent {
+public abstract class MurderPlayerEvent extends MurderCancellableGameEvent {
 
-  private static final HandlerList HANDLERS = new HandlerList();
+  private final Player player;
 
-  public MurderGameGetBowEvent(Arena arena, Player player) {
-    super(arena, player);
+  protected MurderPlayerEvent(Arena arena, Player player) {
+    super(arena);
+    this.player = player;
   }
 
-  public static HandlerList getHandlerList() {
-    return HANDLERS;
+  public Player getPlayer() {
+    return player;
   }
-
-  @Override
-  public HandlerList getHandlers() {
-    return HANDLERS;
-  }
-
 }

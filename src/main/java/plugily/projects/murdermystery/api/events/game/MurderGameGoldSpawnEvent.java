@@ -19,15 +19,12 @@
 package plugily.projects.murdermystery.api.events.game;
 
 import org.bukkit.Location;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
-import plugily.projects.minigamesbox.api.events.PlugilyEvent;
 import plugily.projects.murdermystery.arena.Arena;
 
-public class MurderGameGoldSpawnEvent extends PlugilyEvent implements Cancellable {
+public class MurderGameGoldSpawnEvent extends MurderCancellableGameEvent {
 
   private static final HandlerList HANDLERS = new HandlerList();
-  private boolean isCancelled = false;
   private final Location location;
 
   public MurderGameGoldSpawnEvent(Arena arena, Location location) {
@@ -42,16 +39,6 @@ public class MurderGameGoldSpawnEvent extends PlugilyEvent implements Cancellabl
   @Override
   public HandlerList getHandlers() {
     return HANDLERS;
-  }
-
-  @Override
-  public boolean isCancelled() {
-    return isCancelled;
-  }
-
-  @Override
-  public void setCancelled(boolean cancelled) {
-    isCancelled = cancelled;
   }
 
   public Location getLocation() {
