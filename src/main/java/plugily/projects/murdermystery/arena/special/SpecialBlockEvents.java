@@ -36,6 +36,7 @@ import plugily.projects.minigamesbox.classic.utils.version.ServerVersion;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.minigamesbox.classic.utils.version.xseries.XMaterial;
 import plugily.projects.murdermystery.Main;
+import plugily.projects.murdermystery.api.events.game.MurderGameBuyEvent;
 import plugily.projects.murdermystery.arena.Arena;
 import plugily.projects.murdermystery.arena.special.mysterypotion.MysteryPotion;
 import plugily.projects.murdermystery.arena.special.mysterypotion.MysteryPotionRegistry;
@@ -117,6 +118,15 @@ public class SpecialBlockEvents implements Listener {
     }
 
     org.bukkit.Location blockLoc = event.getClickedBlock().getLocation();
+    Arena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
+    if(arena == null) {
+      return;
+    }
+    MurderGameBuyEvent murderGameBuyEvent = new MurderGameBuyEvent(arena, event.getPlayer(), SpecialBlock.SpecialBlockType.MYSTERY_CAULDRON, 1);
+    Bukkit.getPluginManager().callEvent(murderGameBuyEvent);
+    if(murderGameBuyEvent.isCancelled()) {
+      return;
+    }
 
     VersionUtils.sendParticles("FIREWORKS_SPARK", event.getPlayer(), blockLoc, 10);
     Item item = blockLoc.getWorld().dropItemNaturally(blockLoc.clone().add(0, 1, 0), new ItemStack(Material.POTION, 1));
@@ -141,6 +151,16 @@ public class SpecialBlockEvents implements Listener {
       new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_NOT_ENOUGH_GOLD").asKey().player(event.getPlayer()).integer(1).sendPlayer();
       return;
     }
+    Arena arena = plugin.getArenaRegistry().getArena(event.getPlayer());
+    if(arena == null) {
+      return;
+    }
+    MurderGameBuyEvent murderGameBuyEvent = new MurderGameBuyEvent(arena, event.getPlayer(), SpecialBlock.SpecialBlockType.PRAISE_DEVELOPER, 1);
+    Bukkit.getPluginManager().callEvent(murderGameBuyEvent);
+    if(murderGameBuyEvent.isCancelled()) {
+      return;
+    }
+
     new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_PRAY_CHAT").asKey().player(event.getPlayer()).sendPlayer();
     user.adjustStatistic("LOCAL_PRAISES", 1);
     VersionUtils.sendParticles("FIREWORKS_SPARK", event.getPlayer(), event.getClickedBlock().getLocation(), 10);

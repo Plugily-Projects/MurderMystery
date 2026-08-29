@@ -26,6 +26,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.util.EulerAngle;
+import org.jetbrains.annotations.Nullable;
 import org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
@@ -75,7 +76,12 @@ public class CorpseHandler implements Listener {
 
   @SuppressWarnings("deprecation")
   public void spawnCorpse(Player player, Arena arena) {
-    MurderGameCorpseSpawnEvent murderGameCorpseSpawnEvent = new MurderGameCorpseSpawnEvent(arena, player.getPlayer(), player.getLocation());
+    spawnCorpse(player, arena, null);
+  }
+
+  @SuppressWarnings("deprecation")
+  public void spawnCorpse(Player player, Arena arena, @Nullable Player killer) {
+    MurderGameCorpseSpawnEvent murderGameCorpseSpawnEvent = new MurderGameCorpseSpawnEvent(arena, player.getPlayer(), player.getLocation(), killer);
     Bukkit.getPluginManager().callEvent(murderGameCorpseSpawnEvent);
     if(murderGameCorpseSpawnEvent.isCancelled()) {
       return;
