@@ -57,7 +57,6 @@ import plugily.projects.minigamesbox.classic.utils.version.xseries.inventory.XIn
 import plugily.projects.murdermystery.Main;
 import plugily.projects.murdermystery.api.events.game.MurderGameGetBowEvent;
 import plugily.projects.murdermystery.api.events.game.MurderGameGoldPickupEvent;
-import plugily.projects.murdermystery.api.events.game.MurderGamePowerUpPickupEvent;
 import plugily.projects.murdermystery.arena.managers.MapRestorerManager;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.arena.special.pray.PrayerRegistry;
@@ -163,10 +162,6 @@ public class ArenaEvents extends PluginArenaEvents {
     }
 
     if(e.getItem().getItemStack().getType() != Material.GOLD_INGOT) {
-      if(!user.isSpectator() && arena.getArenaState() == IArenaState.IN_GAME) {
-        MurderGamePowerUpPickupEvent murderGamePowerUpPickupEvent = new MurderGamePowerUpPickupEvent(arena, player, e.getItem().getItemStack());
-        Bukkit.getPluginManager().callEvent(murderGamePowerUpPickupEvent);
-      }
       return;
     }
 

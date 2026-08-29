@@ -18,7 +18,6 @@
 
 package plugily.projects.murdermystery.arena;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import plugily.projects.minigamesbox.api.arena.IArenaState;
@@ -30,7 +29,6 @@ import plugily.projects.minigamesbox.classic.handlers.language.TitleBuilder;
 import plugily.projects.minigamesbox.classic.utils.actionbar.ActionBar;
 import plugily.projects.minigamesbox.classic.utils.version.VersionUtils;
 import plugily.projects.murdermystery.Main;
-import plugily.projects.murdermystery.api.events.game.MurderGameEndEvent;
 import plugily.projects.murdermystery.arena.managers.MapRestorerManager;
 import plugily.projects.murdermystery.arena.role.Role;
 import plugily.projects.murdermystery.arena.special.SpecialBlock;
@@ -137,7 +135,6 @@ public class ArenaManager extends PluginArenaManager {
     if(pluginArena == null) {
       return;
     }
-    Bukkit.getPluginManager().callEvent(new MurderGameEndEvent(pluginArena, new ArrayList<>(arena.getPlayers())));
     for(SpecialBlock specialBlock : pluginArena.getSpecialBlocks()) {
       if(specialBlock.getArmorStandHologram() != null) {
         specialBlock.getArmorStandHologram().delete();
