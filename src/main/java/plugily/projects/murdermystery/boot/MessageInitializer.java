@@ -4,11 +4,7 @@ package plugily.projects.murdermystery.boot;
 
 import plugily.projects.minigamesbox.classic.handlers.language.Message;
 import plugily.projects.minigamesbox.classic.handlers.language.MessageManager;
-import plugily.projects.minigamesbox.classic.utils.services.locale.Locale;
-import plugily.projects.minigamesbox.classic.utils.services.locale.LocaleRegistry;
 import plugily.projects.murdermystery.Main;
-
-import java.util.Arrays;
 
 /**
  * @author Tigerpanzer_02
@@ -57,16 +53,16 @@ public class MessageInitializer {
     getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_MURDERER", new Message("In-Game.Messages.Arena.Playing.Role.Murderer", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_DETECTIVE", new Message("In-Game.Messages.Arena.Playing.Role.Detective", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_ROLE_INNOCENT", new Message("In-Game.Messages.Arena.Playing.Role.Innocent", ""));
-    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_BONUS", new Message("In-Game.Messages.Arena.Playing.Score.Bonus", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_BONUS", new Message("In-Game.Messages.Arena.Playing.Score.Bonus", "+%number% score (%value%)"));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_GOLD", new Message("In-Game.Messages.Arena.Playing.Score.Gold", ""));
-    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_ACTION_KILL_PLAYER", new Message("In-Game.Messages.Arena.Playing.Score.Action.Kill.Player", ""));
-    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_ACTION_KILL_MURDERER", new Message("In-Game.Messages.Arena.Playing.Score.Action.Kill.Murderer", ""));
-    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_ACTION_KILL_INNOCENT", new Message("In-Game.Messages.Arena.Playing.Score.Action.Kill.Innocent", ""));
-    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_ACTION_PICKUP_GOLD", new Message("In-Game.Messages.Arena.Playing.Score.Action.Pickup.Gold", ""));
-    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_ACTION_SURVIVING_TIME", new Message("In-Game.Messages.Arena.Playing.Score.Action.Surviving.Time", ""));
-    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_ACTION_SURVIVING_END", new Message("In-Game.Messages.Arena.Playing.Score.Action.Surviving.End", ""));
-    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_ACTION_WIN", new Message("In-Game.Messages.Arena.Playing.Score.Action.Win", ""));
-    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_ACTION_DETECTIVE", new Message("In-Game.Messages.Arena.Playing.Score.Action.Detective", ""));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_ACTION_KILL_PLAYER", new Message("In-Game.Messages.Arena.Playing.Score.Action.Kill.Player", "for killing players"));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_ACTION_KILL_MURDERER", new Message("In-Game.Messages.Arena.Playing.Score.Action.Kill.Murderer", "for killing murderer"));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_ACTION_KILL_INNOCENT", new Message("In-Game.Messages.Arena.Playing.Score.Action.Kill.Innocent", "for killing innocent"));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_ACTION_PICKUP_GOLD", new Message("In-Game.Messages.Arena.Playing.Score.Action.Pickup.Gold", "for gold pickup"));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_ACTION_SURVIVING_TIME", new Message("In-Game.Messages.Arena.Playing.Score.Action.Surviving.Time", "for surviving 30 seconds"));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_ACTION_SURVIVING_END", new Message("In-Game.Messages.Arena.Playing.Score.Action.Surviving.End", "for surviving till end"));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_ACTION_WIN", new Message("In-Game.Messages.Arena.Playing.Score.Action.Win", "for winning the game"));
+    getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_ACTION_DETECTIVE", new Message("In-Game.Messages.Arena.Playing.Score.Action.Detective", "for %number% innocents survived"));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SWORD_SOON", new Message("In-Game.Messages.Arena.Playing.Sword.Soon", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_CAULDRON_POTION", new Message("In-Game.Messages.Arena.Playing.Special-Blocks.Cauldron.Potion", ""));
     getMessageManager().registerMessage("IN_GAME_MESSAGES_ARENA_PLAYING_SPECIAL_BLOCKS_CAULDRON_HOLOGRAM", new Message("In-Game.Messages.Arena.Playing.Special-Blocks.Cauldron.Hologram", ""));
@@ -97,6 +93,19 @@ public class MessageInitializer {
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_KILLS", new Message("Leaderboard.Statistics.Kills", ""));
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_DEATHS", new Message("Leaderboard.Statistics.Deaths", ""));
     getMessageManager().registerMessage("LEADERBOARD_STATISTICS_HIGHEST_SCORE", new Message("Leaderboard.Statistics.Highest-Score", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_DETECTIVE_WINS", new Message("Leaderboard.Statistics.Detective-Wins", ""));
+    getMessageManager().registerMessage("LEADERBOARD_STATISTICS_MURDERER_WINS", new Message("Leaderboard.Statistics.Murderer-Wins", ""));
+    getMessageManager().registerMessage("PLACEHOLDERS_DETECTIVE_STATUS_ALIVE", new Message("Placeholders.Detective-Status.Alive", "alive"));
+    getMessageManager().registerMessage("PLACEHOLDERS_DETECTIVE_STATUS_DEAD", new Message("Placeholders.Detective-Status.Dead", "dead"));
+    getMessageManager().registerMessage("PLACEHOLDERS_PLAYER_ROLE_MURDERER", new Message("Placeholders.Player-Role.Murderer", "murderer"));
+    getMessageManager().registerMessage("PLACEHOLDERS_PLAYER_ROLE_DETECTIVE", new Message("Placeholders.Player-Role.Detective", "detective"));
+    getMessageManager().registerMessage("PLACEHOLDERS_PLAYER_ROLE_INNOCENT", new Message("Placeholders.Player-Role.Innocent", "innocent"));
+    getMessageManager().registerMessage("PLACEHOLDERS_PLAYER_ROLE_SPECTATOR", new Message("Placeholders.Player-Role.Spectator", "spectator"));
+
+    // 添加剑皮肤命令相关消息
+    getMessageManager().registerMessage("COMMANDS_SWORD_SKINS_SKIN_NOT_FOUND", new Message("Commands.Sword-Skins.Skin-Not-Found", "&c皮肤 '%value%' 不存在！"));
+    getMessageManager().registerMessage("COMMANDS_SWORD_SKINS_NO_PERMISSION", new Message("Commands.Sword-Skins.No-Permission", "&c您没有权限使用皮肤 '%value%'！"));
+    getMessageManager().registerMessage("COMMANDS_SWORD_SKINS_SKIN_SELECTED", new Message("Commands.Sword-Skins.Skin-Selected", "&a成功选择剑皮肤: &f%value%"));
   }
 
   private MessageManager getMessageManager() {

@@ -24,6 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
 import plugily.projects.minigamesbox.api.arena.IArenaState;
 import plugily.projects.minigamesbox.api.arena.IPluginArena;
 import plugily.projects.minigamesbox.api.user.IUser;
@@ -194,21 +195,23 @@ public class ArenaUtils extends PluginArenaUtils {
         .sendPlayer();
       return;
     }
-    String msg =
-      new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_BONUS")
+    // 构建分数奖励消息 - Build score bonus message
+    MessageBuilder messageBuilder = new MessageBuilder("IN_GAME_MESSAGES_ARENA_PLAYING_SCORE_BONUS")
         .asKey()
         .player(user.getPlayer())
         .arena(user.getArena())
         .integer(action.points)
-        .value(action.action)
-        .build();
+        .value(action.action);
 
+    // 如果是负分，需要特殊处理显示 - Special handling for negative scores
     if(action.points < 0) {
-      msg = msg.replace("+", "");
+      String msg = messageBuilder.build().replace("+", "");
+      user.getPlayer().sendMessage(msg);
+    } else {
+      messageBuilder.sendPlayer();
     }
 
     user.adjustStatistic("LOCAL_SCORE", action.points);
-    user.getPlayer().sendMessage(msg);
   }
 
   public enum ScoreAction {
